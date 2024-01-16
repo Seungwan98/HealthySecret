@@ -1,20 +1,48 @@
 PODS:
   - Alamofire (5.1.0)
+  - Charts (4.1.0):
+    - Charts/Core (= 4.1.0)
+  - Charts/Core (4.1.0):
+    - SwiftAlgorithms (~> 1.0)
+  - FSCalendar (2.8.4)
+  - RxCocoa (6.6.0):
+    - RxRelay (= 6.6.0)
+    - RxSwift (= 6.6.0)
+  - RxRelay (6.6.0):
+    - RxSwift (= 6.6.0)
+  - RxSwift (6.6.0)
+  - SwiftAlgorithms (1.0.0)
   - SwiftyJSON (5.0.1)
 
 DEPENDENCIES:
   - Alamofire (= 5.1)
+  - Charts
+  - FSCalendar
+  - RxCocoa (= 6.6.0)
+  - RxSwift (= 6.6.0)
   - SwiftyJSON
 
 SPEC REPOS:
   trunk:
     - Alamofire
+    - Charts
+    - FSCalendar
+    - RxCocoa
+    - RxRelay
+    - RxSwift
+    - SwiftAlgorithms
     - SwiftyJSON
 
 SPEC CHECKSUMS:
   Alamofire: 9d5c5f602928e512395b30950c5984eca840093c
+  Charts: ce0768268078eee0336f122c3c4ca248e4e204c5
+  FSCalendar: 2d1d0d9398f12d439f55c1fe0f01525b151b8260
+  RxCocoa: 44a80de90e25b739b5aeaae3c8c371a32e3343cc
+  RxRelay: 45eaa5db8ee4fb50e5ebd57deec0159e97fa51e6
+  RxSwift: a4b44f7d24599f674deebd1818eab82e58410632
+  SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
   SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
 
-PODFILE CHECKSUM: c12eaedb94e25182d0c303727c592d10f2578d43
+PODFILE CHECKSUM: 4ccffae89011f7d66c51a2a07af473f4cae70f18
 
 COCOAPODS: 1.13.0

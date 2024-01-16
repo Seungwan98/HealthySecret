@@ -8,13 +8,14 @@
 import Foundation
 import Firebase
 import FirebaseFirestore
-class getDataFromFireStore {
-    static let share = getDataFromFireStore()
+import RxSwift
+
+class FireStoreService {
     let db =  Firestore.firestore()
     
     
-    func getAll(completionHandler: @escaping([Row]) -> () ) {
-        db.collection("HealthySecret").getDocuments() { (querySnapshot , err) in
+    func getAllIngredients(completionHandler: @escaping([Row]) -> () ) {
+        self.db.collection("HealthySecret").getDocuments() { (querySnapshot , err) in
             var parsed : [Row] = []
 
             if let err = err {
@@ -27,7 +28,7 @@ class getDataFromFireStore {
                         
                         
                         
-                        let responseFile  = try JSONDecoder().decode(ResponseFile.self, from: jsonData)
+                        let responseFile  = try JSONDecoder().decode(IngredientsModel.self, from: jsonData)
                         
                         parsed = responseFile.row
                         
@@ -46,5 +47,7 @@ class getDataFromFireStore {
         }
         
     }
+
+    
 }
 

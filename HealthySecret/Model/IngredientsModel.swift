@@ -6,7 +6,7 @@
 import Foundation
 
 // MARK: - ResponseFile
-struct ResponseFile: Codable {
+struct IngredientsModel: Codable {
     let row: [Row]
 
     enum CodingKeys: String, CodingKey {
@@ -21,15 +21,15 @@ struct Row: Codable {
     let groupName: String
     let makerName: MakerName
     let num: String
-    let nutrCont1: String
-    let nutrCont2: String
-    let nutrCont3: String
-    let nutrCont4: String
-    let nutrCont5: String
-    let nutrCont6: String
-    let nutrCont7: String
-    let nutrCont8: String
-    let nutrCont9: String
+    let kcal: String
+    let carbohydrates: String
+    let protein: String
+    let province: String
+    let sugars: String
+    let sodium: String
+    let cholesterol: String
+    let fattyAcid: String
+    let transFat: String
     let researchYear: String
     let samplingMonthCd: SamplingMonthCd
     let samplingMonthName: SamplingMonthName
@@ -44,15 +44,15 @@ struct Row: Codable {
         case groupName = "GROUP_NAME"
         case makerName = "MAKER_NAME"
         case num = "NUM"
-        case nutrCont1 = "NUTR_CONT1"
-        case nutrCont2 = "NUTR_CONT2"
-        case nutrCont3 = "NUTR_CONT3"
-        case nutrCont4 = "NUTR_CONT4"
-        case nutrCont5 = "NUTR_CONT5"
-        case nutrCont6 = "NUTR_CONT6"
-        case nutrCont7 = "NUTR_CONT7"
-        case nutrCont8 = "NUTR_CONT8"
-        case nutrCont9 = "NUTR_CONT9"
+        case kcal = "NUTR_CONT1"
+        case carbohydrates = "NUTR_CONT2" //탄수화물
+        case protein = "NUTR_CONT3" //단백질
+        case province = "NUTR_CONT4" //지방
+        case sugars = "NUTR_CONT5" //당류
+        case sodium = "NUTR_CONT6" //나트륨
+        case cholesterol = "NUTR_CONT7" //콜레스테롤
+        case fattyAcid = "NUTR_CONT8" //포화지방산
+        case transFat = "NUTR_CONT9" //트랜스지방
         case researchYear = "RESEARCH_YEAR"
         case samplingMonthCd = "SAMPLING_MONTH_CD"
         case samplingMonthName = "SAMPLING_MONTH_NAME"

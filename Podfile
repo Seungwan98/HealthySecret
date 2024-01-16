@@ -10,7 +10,14 @@ target 'HealthySecret' do
 pod 'Alamofire', '5.1'
   
   pod 'SwiftyJSON'
+  
+ pod 'RxSwift', '6.6.0'
+    pod 'RxCocoa', '6.6.0'
+	pod 'Charts'
+    pod 'FSCalendar'
 end
+
+
   post_install do |installer|
     installer.pods_project.targets.each do |target|
       if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
