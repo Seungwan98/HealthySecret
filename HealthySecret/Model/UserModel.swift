@@ -11,11 +11,14 @@ import Foundation
     
 struct UserModel : Codable {
     var id : String
-    var password : String
-    var recentAdd : [String]
-    var recentSearch : [String]
-    var tall : Int
-    var ingredients : [ingredients]?
+    var recentAdd : [String]?
+    var recentSearch : [String]?
+    var tall : String
+    var age : String
+    var sex : String
+    var calorie : Int
+    var weight : Double
+    var ingredients : [ingredients]
     }
 
 struct ingredients : Codable {

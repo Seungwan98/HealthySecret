@@ -3,7 +3,9 @@
 import UIKit
 import RxSwift
 import RxCocoa
-
+import KakaoSDKAuth
+import KakaoSDKUser
+import FirebaseAuth
 class LoginViewController : UIViewController {
     
   
@@ -18,14 +20,20 @@ class LoginViewController : UIViewController {
     /// 버튼
     ///
     ///
-    var forgetPassword : UIButton = {
+    
+    var kakaoButton : UIButton = {
         let button = UIButton()
-        button.tintColor = .black
-        button.backgroundColor = .white
-        button.setTitle("비밀번호를 잊어셨나요?" , for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor( UIColor(red: 0.686, green: 0.776, blue: 0.627, alpha: 1) , for: .normal )
-        button.layer.cornerRadius = 10
+        button.setImage(UIImage(named: "kakao_login.png"), for: .normal)
+        button.layer.cornerRadius = 5
+        return button
+    }()
+    
+    var appleButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "apple_login.png"), for: .normal)
+        button.layer.cornerRadius = 5
         return button
     }()
     
@@ -38,7 +46,7 @@ class LoginViewController : UIViewController {
         button.tintColor = .black
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 10
+        button.layer.cornerRadius = 5
         return button
     }()
     
@@ -46,10 +54,10 @@ class LoginViewController : UIViewController {
         let button = UIButton()
         button.tintColor = .black
         button.backgroundColor = .white
-        button.setTitle("계정생성" , for: .normal)
+        button.setTitle("회원가입" , for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor( UIColor(red: 0.686, green: 0.776, blue: 0.627, alpha: 1), for: .normal )
-        button.layer.cornerRadius = 10
+        button.layer.cornerRadius = 5
         return button
     }()
     
@@ -70,20 +78,18 @@ class LoginViewController : UIViewController {
         stackView.alignment = .fill
         stackView.distribution = .fillEqually
         
-        
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
         
     }()
     lazy var loginStackView : UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [ loginButton , forgetPassword ])
+        let stackView = UIStackView(arrangedSubviews: [ loginButton , kakaoButton ,appleButton ])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.spacing = 30
+        stackView.spacing = 15
         stackView.distribution = .fillEqually
         stackView.alignment = .fill
-        
         
         
         
@@ -130,7 +136,7 @@ class LoginViewController : UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.frame.size.height = 48
         view.backgroundColor = .lightGray
-        view.layer.cornerRadius = 10
+        view.layer.cornerRadius = 5
         view.clipsToBounds = true
         view.addSubview(emailField)
         view.addSubview(emailInfoLabel)
@@ -144,7 +150,7 @@ class LoginViewController : UIViewController {
         view.frame.size.height = 48
         
         view.backgroundColor = .lightGray
-        view.layer.cornerRadius = 10
+        view.layer.cornerRadius = 5
         view.clipsToBounds = true
         
         view.addSubview(passwordField)
@@ -243,7 +249,7 @@ class LoginViewController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("loginViewCOntroller")
-        
+
         emailField.delegate = self
         passwordField.delegate = self
         self.setUI()
@@ -254,7 +260,90 @@ class LoginViewController : UIViewController {
     }
  
     
-    
+//    @objc
+//    func kakaoLoginButtonTapped(_ sender: UIButton) {
+//
+//        // 카카오 토큰이 존재한다면
+//        if AuthApi.hasToken() {
+//            UserApi.shared.accessTokenInfo { accessTokenInfo, error in
+//                if let error = error {
+//                    print("DEBUG: 카카오톡 토큰 가져오기 에러 \(error.localizedDescription)")
+//                    self.kakaoLogin()
+//                } else {
+//                    self.kakaoLogin()
+//                    // 토큰 유효성 체크 성공 (필요 시 토큰 갱신됨)
+//                }
+//            }
+//        } else {
+//            // 토큰이 없는 상태 로그인 필요
+//            kakaoLogin()
+//        }
+//    }
+//
+//    private func kakaoLogin() {
+//
+//        if UserApi.isKakaoTalkLoginAvailable() {
+//            kakaoLoginInApp() // 카카오톡 앱이 있다면 앱으로 로그인
+//        } else {
+//            print("as")
+//            kakaoLoginInWeb() // 앱이 없다면 웹으로 로그인 (시뮬레이터)
+//        }
+//    }
+//
+//    private func kakaoLoginInApp() {
+//
+//        UserApi.shared.loginWithKakaoTalk { oauthToken, error in
+//            if let error = error {
+//                print("DEBUG: 카카오톡 로그인 에러 \(error.localizedDescription)")
+//            } else {
+//                print("DEBUG: 카카오톡 로그인 Success")
+//                if let token = oauthToken {
+//                    print("DEBUG: 카카오톡 토큰 \(token)")
+//                    self.loginInFirebase()
+//                }
+//            }
+//        }
+//    }
+//
+//    private func kakaoLoginInWeb() {
+//
+//        UserApi.shared.loginWithKakaoAccount { oauthToken, error in
+//            if let error = error {
+//                print("DEBUG: 카카오톡 로그인 에러 \(error.localizedDescription)")
+//            } else {
+//                print("DEBUG: 카카오톡 로그인 Success")
+//                if let token = oauthToken {
+//                    print("DEBUG: 카카오톡 토큰 \(token)")
+//                    self.loginInFirebase()
+//                }
+//            }
+//        }
+//    }
+//
+//    private func loginInFirebase() {
+//
+//        UserApi.shared.me() { user, error in
+//            if let error = error {
+//                print("DEBUG: 카카오톡 사용자 정보가져오기 에러 \(error.localizedDescription)")
+//            } else {
+//                print("DEBUG: 카카오톡 사용자 정보가져오기 success.")
+//
+//                // 파이어베이스 유저 생성 (이메일로 회원가입)
+//                Auth.auth().createUser(withEmail: (user?.kakaoAccount?.email)!,
+//                                                        password: "\(String(describing: user?.id))") { result, error in
+//                    if let error = error {
+//                        print("DEBUG: 파이어베이스 사용자 생성 실패 \(error.localizedDescription)")
+//                        Auth.auth().signIn(withEmail: (user?.kakaoAccount?.email)!,
+//                                           password: "\(String(describing: user?.id))")
+//
+//                    } else {
+//                        print("DEBUG: 파이어베이스 사용자 생성")
+//                        self.dismiss(animated: true) // 창닫기
+//                    }
+//                }
+//            }
+//        }
+//    }
     
     
     func setUI(){
@@ -311,7 +400,7 @@ class LoginViewController : UIViewController {
             passwordView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor ),
             passwordView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor ),
             
-            loginStackView.heightAnchor.constraint(equalToConstant: HEIGHT * 2 + 30),
+            loginStackView.heightAnchor.constraint(equalToConstant: HEIGHT * 3 + 70),
             loginStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             loginStackView.topAnchor.constraint(equalTo: stackView.bottomAnchor , constant: 40),
             loginStackView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
@@ -333,11 +422,11 @@ class LoginViewController : UIViewController {
 
        
         
-        
+
         let input = LoginVM.Input(emailText: emailField.rx.text.orEmpty.asObservable(),
                                   passwordText: passwordField.rx.text.orEmpty.asObservable(),
                                   loginButtonTapped: loginButton.rx.tap.asObservable(),
-                                  signUpButtonTapped: signUpButton.rx.tap.asObservable())
+                                  signUpButtonTapped: signUpButton.rx.tap.asObservable(), kakaoLoginButtonTapped: kakaoButton.rx.tap.asObservable())
         
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else {return}
     }

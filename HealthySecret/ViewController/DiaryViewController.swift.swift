@@ -24,6 +24,19 @@ class DiaryViewController : UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private let contentScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = false
+        return scrollView
+    }()
+    
+    private let contentView : UIView = {
+      let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     
     
     var pieChart : PieChartView = {
@@ -35,24 +48,27 @@ class DiaryViewController : UIViewController {
         pieChart.noDataTextAlignment = .left
         pieChart.highlightPerTapEnabled = false
         
-       
+        
         
         pieChart.holeRadiusPercent = 0.8
         pieChart.holeColor? =  UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
         pieChart.legend.enabled = false
-
+        
         return pieChart
         
         
     }()
     
-
+    
+    
+    
+    
     let nutrientsLabel1 = UILabel()
     let nutrientsLabel2 = UILabel()
     let nutrientsLabel3 = UILabel()
     lazy var nutrientsLabelsArr : [UILabel] =  [self.nutrientsLabel1 , self.nutrientsLabel2 , self.nutrientsLabel3]
     
- 
+    
     
     
     var chartView : UIView = {
@@ -65,7 +81,7 @@ class DiaryViewController : UIViewController {
         
         
     }()
-
+    
     
     
     
@@ -91,7 +107,7 @@ class DiaryViewController : UIViewController {
         return view
     }()
     
-   
+    
     
     
     
@@ -135,7 +151,7 @@ class DiaryViewController : UIViewController {
         return view
     }()
     
-  
+    
     
     
     
@@ -168,7 +184,7 @@ class DiaryViewController : UIViewController {
             return label
         })
         let view = UIStackView(arrangedSubviews: labels)
-    
+        
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isHidden = true
         view.backgroundColor = UIColor(red: 0.686, green: 0.776, blue: 0.627, alpha: 1)
@@ -231,8 +247,8 @@ class DiaryViewController : UIViewController {
         label.font = UIFont.boldSystemFont(ofSize: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         
-      
-    
+        
+        
         return label
         
     }()
@@ -264,9 +280,9 @@ class DiaryViewController : UIViewController {
     
     
     var leftBarButton : UIBarButtonItem = {
-       let barButton = UIBarButtonItem(image: UIImage(systemName: "calendar"),
-                                       style:  .plain,
-                                       target:  DiaryViewController.self , action: nil)
+        let barButton = UIBarButtonItem(image: UIImage(systemName: "calendar"),
+                                        style:  .plain,
+                                        target:  DiaryViewController.self , action: nil)
         barButton.tintColor = .white
         return barButton
         
@@ -275,17 +291,21 @@ class DiaryViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+         
+     
+        
+        
         addSubView()
         
         setBinds()
-
-  
+        
+        
         self.navigationItem.rightBarButtonItem = rightBarButton
         self.navigationItem.leftBarButtonItem = leftBarButton
         self.navigationController?.navigationBar.backgroundColor = UIColor(red: 0.09, green: 0.176, blue: 0.031, alpha: 1)
-     
-
-
+        
+        
+        
         
         
         
@@ -294,7 +314,7 @@ class DiaryViewController : UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-       
+        
         
         
     }
@@ -313,7 +333,7 @@ class DiaryViewController : UIViewController {
     
     lazy var testView : UIView = {
         let view = UIView()
-       
+        
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor(red: 0.686, green: 0.776, blue: 0.627, alpha: 1)
         return view
@@ -330,77 +350,99 @@ class DiaryViewController : UIViewController {
         label.isHidden = true
         return label
     }()
-
+    
+    var checkImageView : UIImageView = {
+       let imageView = UIImageView(image: UIImage(named: "check.png"))
+        imageView.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+        
+    }()
+    
     
     
     
     
     func staggerAnimations() {
-           let duration1 = 0.4
-           let duration2 = 0.2
-
-           // initially hide...
-      
+        let duration1 = 0.4
+        let duration2 = 0.2
+        
+        // initially hide...
+        
         
         self.ingredientsStackView.alpha = 0
         
         _ = self.ingredientsLabels.map { $0.alpha = 0 }
-
-
+        
+        
         let firstAnimation = UIViewPropertyAnimator(duration: duration1, curve: .easeInOut ) { [self] in
-
-               ingredientsStackView.isHidden = !showAll
-
-               _ = ingredientsLabels.map { $0.isHidden = !showAll }
-           
-          
-
-           }
-
-           firstAnimation.addCompletion { position in
-               if position == .end {
-                   // followed by alpha
+            
+            ingredientsStackView.isHidden = !showAll
+            
+            _ = ingredientsLabels.map { $0.isHidden = !showAll }
+            
+            
+            
+        }
+        
+        firstAnimation.addCompletion { position in
+            if position == .end {
+                // followed by alpha
                 
+                
+                let secondAnimation = UIViewPropertyAnimator(duration: duration2, curve: .easeInOut) {
+                    
+                    self.ingredientsStackView.alpha = 1
+                    
+                    
+                    _ = self.ingredientsLabels.map { $0.alpha = 1 }
+                    if(self.showAll) {
+                        
+                        self.contentScrollView.contentSize.height = self.contentScrollView.contentSize.height + 400
 
-                   let secondAnimation = UIViewPropertyAnimator(duration: duration2, curve: .easeInOut) {
+                        
+                        self.buttonStackView.frame = CGRect(x: self.buttonStackView.frame.minX, y: self.ingredientsStackView.frame.maxY, width: self.buttonStackView.frame.width, height: self.buttonStackView.frame.height)
+                        
+                        
+                        
+                        
+                        self.bottomView.frame = CGRect(x: self.bottomView.frame.minX, y: self.buttonStackView.frame.maxY, width: self.bottomView.frame.width, height: self.bottomView.frame.height)
+                        
+                    }
+                    else {
+                        
+                        self.contentScrollView.contentSize.height = self.contentScrollView.contentSize.height - 400
 
-                       self.ingredientsStackView.alpha = 1
-
+                        
+                        self.sangsaeButton.setImage(UIImage(named: "sangsaeButton.png"), for: .normal)
+                        
+                        self.buttonStackView.frame = CGRect(x: self.buttonStackView.frame.minX, y: self.chartView.frame.maxY, width: self.buttonStackView.frame.width, height: self.buttonStackView.frame.height)
+                        
+                        
+                        self.bottomView.frame = CGRect(x: self.bottomView.frame.minX, y: self.buttonStackView.frame.maxY, width: self.bottomView.frame.width, height: self.bottomView.frame.height)
+                        
                        
-                       _ = self.ingredientsLabels.map { $0.alpha = 1 }
-                       if(self.showAll) {
-                           self.buttonStackView.frame = CGRect(x: self.buttonStackView.frame.minX, y: self.ingredientsStackView.frame.maxY, width: self.buttonStackView.frame.width, height: self.buttonStackView.frame.height)
-                           
-                           
-                           self.bottomView.frame = CGRect(x: self.bottomView.frame.minX, y: self.buttonStackView.frame.maxY, width: self.bottomView.frame.width, height: self.bottomView.frame.height)
-                       }
-                       else {
-                           self.sangsaeButton.setImage(UIImage(named: "sangsaeButton.png"), for: .normal)
 
-                           self.buttonStackView.frame = CGRect(x: self.buttonStackView.frame.minX, y: self.chartView.frame.maxY, width: self.buttonStackView.frame.width, height: self.buttonStackView.frame.height)
-                           
-                           
-                           self.bottomView.frame = CGRect(x: self.bottomView.frame.minX, y: self.buttonStackView.frame.maxY, width: self.bottomView.frame.width, height: self.bottomView.frame.height)
-                           
-                       }
-                       
-                       
-                       
-
-                   }
-                   
-                   secondAnimation.startAnimation()
-
-               }
-           }
-           firstAnimation.startAnimation()
+                        
+                    }
+                    
+                    
+                    
+                    
+                }
+                
+                secondAnimation.startAnimation()
+                
+            }
+        }
+        firstAnimation.startAnimation()
         
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.8) {
             self.preventButtonTouch = false
         }
-
-       }
+        
+    }
     var showAll = false
     var preventButtonTouch = false
     
@@ -410,84 +452,85 @@ class DiaryViewController : UIViewController {
     @objc
     func pressed(){
         
+        
         if preventButtonTouch == true {
-                         return
-
-                     }
+            return
+            
+        }
         preventButtonTouch = true
         
         if(showAll == false){
             self.sangsaeButton.setImage(UIImage(named: "sangsaeButton2.png"), for: .normal)
-
+            
         }
         else{
             self.sangsaeButton.setImage(UIImage(named: "sangsaeButton.png"), for: .normal)
-
+            
             
         }
-
-
-
-//let showAll = true
-//        let animation = UIViewPropertyAnimator(duration: duration, curve: .easeInOut) { [self] in
-//            _ = self.ingredientsLabels.map { $0.isHidden = !showAll }
-//        }
-//        animation.startAnimation()
-//
+        
+        
+        
+        //let showAll = true
+        //        let animation = UIViewPropertyAnimator(duration: duration, curve: .easeInOut) { [self] in
+        //            _ = self.ingredientsLabels.map { $0.isHidden = !showAll }
+        //        }
+        //        animation.startAnimation()
+        //
         
         showAll = !showAll
         staggerAnimations()
-            
-            
-              
-              
-//
-//        self.testView.frame  = CGRect(x: self.sangsaeButton.frame.minX , y: self.sangsaeButton.frame.maxY , width: self.sangsaeButton.frame.width, height: 0)
         
         
         
-  
         
-//        UIView.animate(withDuration: 0.2, delay: 0.001 , options: .transitionCurlDown ) {
-//
-//            self.testView.frame  = CGRect(x: self.sangsaeButton.frame.minX , y: self.sangsaeButton.frame.maxY , width: self.sangsaeButton.frame.width, height: 320)
-            
-           
+        //
+        //        self.testView.frame  = CGRect(x: self.sangsaeButton.frame.minX , y: self.sangsaeButton.frame.maxY , width: self.sangsaeButton.frame.width, height: 0)
         
-           
-            
-
-//            let labels = self.ingredientsLabels.map({ (label : UILabel ) -> UILabel in
-//                self.ingredientsStackView.addArrangedSubview(label)
-//
-//                label.font = UIFont.boldSystemFont(ofSize: 12)
-//                return label
-//            })
-            
-//            self.ingredientsStackView.frame.size = CGSize(width: self.ingredientsStackView.frame.width , height: 100)
-            
-//            stackv.heightAnchor.constraint(equalToConstant: 100).isActive = true
-
-//        } completion: { _ in
-            
-//            self.view.addSubview(self.ingredientsStackView)
-//
-//
-//            _ = self.ingredientsLabels.map({ (label : UILabel ) -> UILabel in
-//                self.ingredientsStackView.addArrangedSubview(label)
-//                label.font = UIFont.boldSystemFont(ofSize: 12)
-//                return label
-//            })
-//
-                 
-                
-
-//
-//
-  
-//
-//            self.buttonStackView.frame = CGRect(x: self.sangsaeButton.frame.minX , y: self.testView.frame.maxY , width: UIScreen.main.bounds.width , height: UIScreen.main.bounds.height)
-
+        
+        
+        
+        
+        //        UIView.animate(withDuration: 0.2, delay: 0.001 , options: .transitionCurlDown ) {
+        //
+        //            self.testView.frame  = CGRect(x: self.sangsaeButton.frame.minX , y: self.sangsaeButton.frame.maxY , width: self.sangsaeButton.frame.width, height: 320)
+        
+        
+        
+        
+        
+        
+        //            let labels = self.ingredientsLabels.map({ (label : UILabel ) -> UILabel in
+        //                self.ingredientsStackView.addArrangedSubview(label)
+        //
+        //                label.font = UIFont.boldSystemFont(ofSize: 12)
+        //                return label
+        //            })
+        
+        //            self.ingredientsStackView.frame.size = CGSize(width: self.ingredientsStackView.frame.width , height: 100)
+        
+        //            stackv.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        
+        //        } completion: { _ in
+        
+        //            self.view.addSubview(self.ingredientsStackView)
+        //
+        //
+        //            _ = self.ingredientsLabels.map({ (label : UILabel ) -> UILabel in
+        //                self.ingredientsStackView.addArrangedSubview(label)
+        //                label.font = UIFont.boldSystemFont(ofSize: 12)
+        //                return label
+        //            })
+        //
+        
+        
+        
+        //
+        //
+        
+        //
+        //            self.buttonStackView.frame = CGRect(x: self.sangsaeButton.frame.minX , y: self.testView.frame.maxY , width: UIScreen.main.bounds.width , height: UIScreen.main.bounds.height)
+        
         
         
         
@@ -498,16 +541,22 @@ class DiaryViewController : UIViewController {
     func addSubView(){
         self.navigationItem.titleView = UIImageView(image: UIImage(named: "Diary.png"))
         self.view.backgroundColor = UIColor(red: 0.09, green: 0.176, blue: 0.031, alpha: 1)
-        self.view.addSubview(chartView)
-        self.view.addSubview(chartStackview)
-        self.view.addSubview(buttonStackView)
-        self.view.addSubview(bottomView)
-        self.view.addSubview(sangsaeButton)
-        self.view.addSubview(line)
-        self.view.addSubview(testView)
-        self.view.addSubview(ingredientsStackView)
-        self.view.addSubview(calendarLabel)
-            
+        
+        self.view.addSubview(contentScrollView)
+        
+        self.contentScrollView.addSubview(contentView)
+        
+        
+        self.contentView.addSubview(chartView)
+        self.contentView.addSubview(chartStackview)
+        self.contentView.addSubview(buttonStackView)
+        self.contentView.addSubview(bottomView)
+        self.contentView.addSubview(sangsaeButton)
+        self.contentView.addSubview(line)
+        self.contentView.addSubview(testView)
+        self.contentView.addSubview(ingredientsStackView)
+        self.contentView.addSubview(calendarLabel)
+        
         chartView.layer.shadowOpacity = 1
         chartView.layer.shadowRadius = 1
         chartView.layer.shadowOffset = CGSize(width: 0, height: 4)
@@ -529,10 +578,10 @@ class DiaryViewController : UIViewController {
         imageAttachment[0].bounds = CGRect(x: 0, y: 0, width: 12, height: 12)
         imageAttachment[1].image = imgArr[1]
         imageAttachment[1].bounds = CGRect(x: 0, y: 0, width: 12, height: 12)
-
+        
         imageAttachment[2].image = imgArr[2]
         imageAttachment[2].bounds = CGRect(x: 0, y: 0, width: 12, height: 12)
-
+        
         
         
         attributedString[0].append(NSAttributedString(attachment: imageAttachment[0]))
@@ -540,27 +589,27 @@ class DiaryViewController : UIViewController {
         
         attributedString[1].append(NSAttributedString(attachment: imageAttachment[1]))
         attributedString[1].append(NSAttributedString("  단백질"))
-
+        
         attributedString[2].append(NSAttributedString(attachment: imageAttachment[2]))
         
         attributedString[2].append(NSAttributedString("  지방"))
-
         
- 
-       
+        
+        
+        
         
         nutrientsLabelsArr[0].attributedText = attributedString[0]
         nutrientsLabelsArr[1].attributedText = attributedString[1]
         nutrientsLabelsArr[2].attributedText = attributedString[2]
         
-       
+        
         
         
         nutrientsLabelsArr[0].font =  UIFont.boldSystemFont(ofSize: 15)
         nutrientsLabelsArr[1].font =  UIFont.boldSystemFont(ofSize: 15)
         nutrientsLabelsArr[2].font =  UIFont.boldSystemFont(ofSize: 15)
         
-     
+        
         
         nutrientsLabelsArr2[0].font =  UIFont.boldSystemFont(ofSize: 15)
         nutrientsLabelsArr2[1].font =  UIFont.boldSystemFont(ofSize: 15)
@@ -571,24 +620,37 @@ class DiaryViewController : UIViewController {
         
         
         
-       
+        
         
         NSLayoutConstraint.activate([
             
+            self.contentScrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
+            self.contentScrollView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.contentScrollView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            self.contentScrollView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+           
+            self.contentView.topAnchor.constraint(equalTo: self.contentScrollView.topAnchor ),
+            self.contentView.leadingAnchor.constraint(equalTo: self.contentScrollView.leadingAnchor),
+            self.contentView.trailingAnchor.constraint(equalTo: self.contentScrollView.trailingAnchor),
+            self.contentView.bottomAnchor.constraint(equalTo: self.contentScrollView.bottomAnchor),
+            
+            self.contentView.widthAnchor.constraint(equalTo: self.contentScrollView.widthAnchor , multiplier: 1.0),
+            
+            
             self.piechartCenterLabel.centerXAnchor.constraint(equalTo: pieChart.centerXAnchor),
             self.piechartCenterLabel.centerYAnchor.constraint(equalTo: pieChart.centerYAnchor , constant: 9),
-         
+            
             self.calendarLabel.topAnchor.constraint(equalTo: chartView.topAnchor , constant: 10),
             self.calendarLabel.centerXAnchor.constraint(equalTo: chartView.centerXAnchor ),
             self.calendarLabel.bottomAnchor.constraint(equalTo: line.topAnchor , constant: 0 ),
             
-
+            
             self.line.topAnchor.constraint(equalTo: self.chartView.topAnchor , constant: 45  ),
             self.line.leadingAnchor.constraint(equalTo: self.chartStackview.leadingAnchor , constant: 20),
             self.line.trailingAnchor.constraint(equalTo: self.chartStackview.trailingAnchor , constant: -20),
             
-         
-
+            
+            
             
             
             self.majorLabelsStackView.widthAnchor.constraint(equalToConstant: 80),
@@ -600,14 +662,14 @@ class DiaryViewController : UIViewController {
             self.majorLabelsStackView2.heightAnchor.constraint(equalToConstant: 73 ),
             self.majorLabelsStackView2.centerYAnchor.constraint(equalTo: majorView.centerYAnchor ),
             self.majorLabelsStackView2.leadingAnchor.constraint(equalTo: majorLabelsStackView.trailingAnchor , constant : 0),
-
-
             
-            self.chartView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
-            self.chartView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
-            self.chartView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
+            
+            
+            self.chartView.topAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.topAnchor ),
+            self.chartView.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            self.chartView.trailingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.trailingAnchor, constant: -10),
             self.chartView.heightAnchor.constraint(equalToConstant: 250),
-        
+            
             
             
             self.sangsaeButton.bottomAnchor.constraint(equalTo: self.chartView.safeAreaLayoutGuide.bottomAnchor, constant: -13),
@@ -617,9 +679,10 @@ class DiaryViewController : UIViewController {
             
             
             self.ingredientsStackView.topAnchor.constraint(equalTo: self.chartView.bottomAnchor  , constant: 0.2),
-            self.ingredientsStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor ,constant: -100 ),
+           // self.ingredientsStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor ,constant: -100 ),
             self.ingredientsStackView.trailingAnchor.constraint(equalTo: self.sangsaeButton.trailingAnchor ) ,
             self.ingredientsStackView.leadingAnchor.constraint(equalTo: self.sangsaeButton.leadingAnchor ) ,
+            self.ingredientsStackView.heightAnchor.constraint(equalToConstant: 400),
             
             
             
@@ -630,15 +693,18 @@ class DiaryViewController : UIViewController {
             
             
             self.buttonStackView.topAnchor.constraint(equalTo: self.chartView.bottomAnchor , constant: 5),
-            self.buttonStackView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor ),
-            self.buttonStackView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ),
+            self.buttonStackView.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor ),
+            self.buttonStackView.trailingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.trailingAnchor ),
             self.buttonStackView.heightAnchor.constraint(equalToConstant: 120),
             
             
             self.bottomView.topAnchor.constraint(equalTo: buttonStackView.bottomAnchor , constant: 5),
-            self.bottomView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor ,constant: 10 ),
-            self.bottomView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ,constant: -10),
-            self.bottomView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
+            self.bottomView.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor ,constant: 10 ),
+            self.bottomView.trailingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.trailingAnchor ,constant: -10),
+            self.bottomView.heightAnchor.constraint(equalToConstant: 280),
+            self.bottomView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+            
+            
             
             
             
@@ -646,10 +712,10 @@ class DiaryViewController : UIViewController {
             
             
         ])
-   
-
-    
-
+        
+        
+        
+        
         
     }
     
@@ -659,28 +725,28 @@ class DiaryViewController : UIViewController {
         
         let breakfast = breakfastButton.rx.tap.map { _ in return UserDefaults.standard.set("아침", forKey: "meal")}
         let lunch = lunchButton.rx.tap.map {  _ in return UserDefaults.standard.set("점심", forKey: "meal")}
-        let dinner = dinnerButton.rx.tap.map {  _ in  UserDefaults.standard.set("저녁", forKey: "meal")
-           
+        let dinner = dinnerButton.rx.tap.map {  _ in return UserDefaults.standard.set("저녁", forKey: "meal")
+            
         }
         let tags = Observable.of(breakfast, lunch , dinner).merge()
         
         
         let input = DiaryVM.Input( viewWillApearEvent :  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable(),
-            rightBarButtonTapped : Observable.merge(rightBarButton.rx.tap.asObservable() ,
+                                   rightBarButtonTapped : Observable.merge(rightBarButton.rx.tap.asObservable() ,
                                                                            tags.asObservable()  ), leftBarButtonTapped: leftBarButton.rx.tap.asObservable() )
         
         guard let output = viewModel?.transform(input: input, disposeBag: disposeBag) else {return}
-//        output.searchedIngredients.subscribe(onNext: { ingredient in
-//            _ = ingredient.map { row in
-//            }
-//        }).disposed(by: disposeBag)
+        //        output.searchedIngredients.subscribe(onNext: { ingredient in
+        //            _ = ingredient.map { row in
+        //            }
+        //        }).disposed(by: disposeBag)
         
         
         
         output.date.subscribe(onNext: { date in
             
             self.calendarLabel.attributedText = date
-
+            
             
         }).disposed(by: disposeBag)
         
@@ -690,8 +756,8 @@ class DiaryViewController : UIViewController {
         output.totalIngredients.subscribe(onNext: {
             total in
             
-            print("\(total)  total")
-
+            print("\(total)  output")
+            
             let totalValues = (total["carbohydrates"]! * 4) + (total["protein"]! * 4) + (total["province"]! * 9)
             
             
@@ -707,7 +773,7 @@ class DiaryViewController : UIViewController {
                 
                 self.ingredientsColor =  [   UIColor(red: 0.686, green: 0.776, blue: 0.627, alpha: 1),  UIColor(red: 0.487, green: 0.555, blue: 0.448, alpha: 1) , UIColor(red: 0.835, green: 0.886, blue: 0.8, alpha: 1) ]
                 
-
+                
                 
                 self.setPieData(pieChartView: self.pieChart, pieChartDataEntries: self.entryData(values: self.ingredientsPercent , dataPoints: []))
             }
@@ -720,13 +786,13 @@ class DiaryViewController : UIViewController {
                 self.ingredientsColor = [.lightGray]
                 self.setPieData(pieChartView: self.pieChart, pieChartDataEntries: self.entryData(values: [1] , dataPoints: []))
             }
-           
-            
-           
             
             
             
-       
+            
+            
+            
+            
             
             
             
@@ -736,7 +802,7 @@ class DiaryViewController : UIViewController {
                 
                 
             }
-        
+            
             
             
             
@@ -750,7 +816,7 @@ class DiaryViewController : UIViewController {
             
             
             self.pieChart.centerAttributedText = attrString
-
+            
             self.kcalLabel.text = " 칼로리: " + String(total["kcal"]!) + "kcal"
             self.carbohydratesLabel.text = " 탄수화물: " + String(total["carbohydrates"]!) + "g"
             self.proteinLabel.text = " 단백질: " + String(total["protein"]!) + "g"
@@ -768,7 +834,7 @@ class DiaryViewController : UIViewController {
         
         
         
-
+        
     }
     
     // 데이터 적용하기
@@ -783,7 +849,7 @@ class DiaryViewController : UIViewController {
         
         // 색상 추가
         pieChartdataSet.colors = self.ingredientsColor
-
+        
         // DataSet을 차트 데이터로 넣기
         let pieChartData = PieChartData(dataSet: pieChartdataSet)
         // 데이터 출력

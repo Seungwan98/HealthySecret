@@ -46,6 +46,10 @@ class DiaryVM : ViewModel {
         let searchedIngredients = PublishSubject<[Row]>()
         let totalIngredients = PublishSubject<[String : Double]>()
         let date = BehaviorRelay<NSAttributedString>(value: (NSAttributedString()))
+        
+        let checkBreakFast = BehaviorRelay<Bool>(value: false)
+        let checkLunch = BehaviorRelay<Bool>(value: false)
+        let checkDinner = BehaviorRelay<Bool>(value: false)
     }
     
     
@@ -80,7 +84,7 @@ class DiaryVM : ViewModel {
                 
                 switch event{
                 case .success(let user):
-                    self.recentAdd = user.recentAdd
+                    self.recentAdd = user.recentAdd ?? []
                     
                     
                 case .failure(_):
@@ -99,7 +103,7 @@ class DiaryVM : ViewModel {
         input.viewWillApearEvent.subscribe(onNext: { _ in
             
             
-            print("view")
+            print("appear!")
             
             var morning : [String] = []
             var lunch : [String] = []
@@ -155,7 +159,7 @@ class DiaryVM : ViewModel {
 
                 self.firebaseService.getDocument(key: userEmail).subscribe( { event in
                     
-                    print("firebase")
+                    print("업뎃")
                     
                     
                     var dic : [String : Double] = ["kcal" : 0.0 , "carbohydrates" : 0.0 , "protein" : 0.0 , "province" : 0.0 , "cholesterol" : 0.0 , "fattyAcid" : 0.0 , "sugars" : 0.0 , "transFat" : 0.0 ,
@@ -165,20 +169,29 @@ class DiaryVM : ViewModel {
                     switch event{
                     case .success(let user):
                         
-                        let ingredients = user.ingredients?.filter {(
+                        let ingredients = user.ingredients.filter {(
                             $0.date == pickedDate
                             
                         )}
                         
 
-                        if let ingredients = ingredients?.first{
+                        if let ingredients = ingredients.first{
                             morning  = ingredients.morning ?? []
                             lunch = ingredients.lunch ?? []
                             dinner = ingredients.dinner ?? []
+                            
+                            //
+                            if morning.isEmpty{
+                                
+                                
+                                
+                            }else{
+                                
+                            }
+                            
                             total = morning + lunch + dinner
                             
                             
-
 
                             self.firebaseService.getUsersIngredients(key: total).subscribe({
                                 
@@ -188,7 +201,6 @@ class DiaryVM : ViewModel {
 
                                 case .success(let ingredients):
                                     
-                                    print("\(ingredients)  totalllllllll")
 
                                     for ingredient in ingredients {
                                         dic["kcal"]! += Double(ingredient.kcal) ?? 0
@@ -210,7 +222,7 @@ class DiaryVM : ViewModel {
                                     
                                     output.totalIngredients.onNext(dic)
 
-                                    
+                                    print("if")
 
                                     
                                     
@@ -230,6 +242,8 @@ class DiaryVM : ViewModel {
 
                             
                         }else{
+                            
+                            print("else")
                             
                             output.totalIngredients.onNext(dic)
 

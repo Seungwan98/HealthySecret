@@ -65,7 +65,7 @@ class HomeVM : ViewModel {
                 event in
                 switch event {
                 case.success(let user):
-                    output.testLabel.onNext(user.recentSearch)
+                    output.testLabel.onNext(user.recentSearch ?? [])
                     
                     
                 case .failure(_):

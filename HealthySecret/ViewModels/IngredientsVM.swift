@@ -76,9 +76,20 @@ class IngredientsVM : ViewModel {
                 })
                 print(self.filteredArr)
                 print(self.filteredNumbersArr)
-            self.firebaseService.addIngredients(meal: meal ?? "" , date: date ?? "" , key: key ?? "" , mealArr : self.filteredNumbersArr )
+            self.firebaseService.addIngredients(meal: meal ?? "" , date: date ?? "" , key: key ?? "" , mealArr : self.filteredNumbersArr ).subscribe({
+                event in
+                switch event{
+                case.completed:
+                    self.coordinator?.backToDiaryVC()
 
-            self.coordinator?.backToDiaryVC()
+                case .error(_):
+                    print("error")
+                }
+                
+                
+                
+            }).disposed(by: disposeBag)
+
                 
             
         
@@ -90,6 +101,7 @@ class IngredientsVM : ViewModel {
         
         
         input.viewWillAppear.subscribe(onNext: { [self] in
+            print("appear")
             self.firebaseService.getAllFromStore { [self]
                 parsed in self.ingredientsArr = parsed
             }
@@ -99,7 +111,7 @@ class IngredientsVM : ViewModel {
                     
                     switch event{
                     case .success(let user):
-                        self.recentSearchArr = user.recentSearch
+                        self.recentSearchArr = user.recentSearch ?? []
                         output.recentsearchArr.onNext(self.recentSearchArr)
                         
                     case .failure(_):

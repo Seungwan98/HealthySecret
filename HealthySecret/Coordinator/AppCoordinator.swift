@@ -29,6 +29,7 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
     var finishDelegate: CoordinatorFinishDelegate?
     var type: CoordinatorType
     var firebaseService: FirebaseService
+    var kakaoService : KakaoService
     var disposeBag = DisposeBag()
     
     // MARK: - Initializers
@@ -36,7 +37,7 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
         self.navigationController = navigationController
         self.type = CoordinatorType.tab
         self.firebaseService = FirebaseService()
-        
+        self.kakaoService = KakaoService()
        
     }
     
@@ -157,6 +158,7 @@ class LoginCoordinator : Coordinator  {
     var type: CoordinatorType
     
     private var firebaseService : FirebaseService!
+    private var kakaoService : KakaoService!
     
     var childCoordinator: [Coordinator] = []
     
@@ -172,13 +174,14 @@ class LoginCoordinator : Coordinator  {
         self.navigationController = navigationController
         self.type = CoordinatorType.tab
         self.firebaseService = FirebaseService()
+        self.kakaoService = KakaoService()
         
     }
     
     
     
     func start() {
-        let loginVm = LoginVM(firebaseService: self.firebaseService, loginCoordinator: self)
+        let loginVm = LoginVM(firebaseService: self.firebaseService, loginCoordinator: self , kakaoService: self.kakaoService)
         let loginViewController = LoginViewController(viewModel: loginVm)
         loginViewController.view.backgroundColor = .white
         
@@ -189,8 +192,8 @@ class LoginCoordinator : Coordinator  {
     
     
     func pushSignUpVC() {
-        let signUpVm = signUpVM(coordinator: self, firebaseService: self.firebaseService)
-        let viewController = SignUpViewController()
+        let viewModel = SignUpVM(coordinator: self, firebaseService: self.firebaseService)
+        let viewController = SignUpViewController(viewModel: viewModel)
         self.navigationController.viewControllers = [viewController]
     }
     

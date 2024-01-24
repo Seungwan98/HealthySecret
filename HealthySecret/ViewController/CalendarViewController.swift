@@ -48,8 +48,22 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         
     }()
     
-    var CalendarView = UIView()
+    var calendarView : UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 30
+        view.backgroundColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
+        return view
+    }()
     
+    var informationView : UIStackView = {
+        let view = UIStackView(arrangedSubviews: [UILabel() , UILabel()])
+        view.backgroundColor = .white.withAlphaComponent(0.5)
+        view.layer.cornerRadius = 30
+        view.axis = .horizontal
+        view.spacing = 5
+        return view
+        
+    }()
     
     var selectedDate: Date = Date()
     
@@ -81,25 +95,31 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         
     }
     func addView(){
-        CalendarView.backgroundColor = UIColor(red: 0.09, green: 0.176, blue: 0.031, alpha: 1)
+//        calendarView.backgroundColor = UIColor(red: 0.09, green: 0.176, blue: 0.031, alpha: 1)
         
-        self.view.addSubview(CalendarView)
-        self.CalendarView.addSubview(calendar)
+        self.view.addSubview(calendarView)
+        self.calendarView.addSubview(calendar)
+        self.calendarView.addSubview(informationView)
         
+        self.informationView.translatesAutoresizingMaskIntoConstraints = false
         self.calendar.translatesAutoresizingMaskIntoConstraints = false
-        self.CalendarView.translatesAutoresizingMaskIntoConstraints = false
+        self.calendarView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            CalendarView.centerXAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerXAnchor),
-            CalendarView.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerYAnchor),
-            CalendarView.widthAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.widthAnchor),
-            CalendarView.heightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.heightAnchor),
-            calendar.centerXAnchor.constraint(equalTo: CalendarView.safeAreaLayoutGuide.centerXAnchor),
-            calendar.centerYAnchor.constraint(equalTo: CalendarView.safeAreaLayoutGuide.centerYAnchor),
-            calendar.widthAnchor.constraint(equalTo: CalendarView.safeAreaLayoutGuide.widthAnchor),
-            calendar.heightAnchor.constraint(equalTo: CalendarView.safeAreaLayoutGuide.heightAnchor),
+            calendarView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor , constant: 15),
+            calendarView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor , constant: -15),
+            calendarView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            calendarView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
             
+//
+            calendar.topAnchor.constraint(equalTo: calendarView.safeAreaLayoutGuide.topAnchor),
+            calendar.bottomAnchor.constraint(equalTo: calendarView.safeAreaLayoutGuide.bottomAnchor ,constant:  -150),
+            calendar.widthAnchor.constraint(equalTo: calendarView.safeAreaLayoutGuide.widthAnchor ),
             
+            informationView.topAnchor.constraint(equalTo: calendar.bottomAnchor),
+            informationView.leadingAnchor.constraint(equalTo: calendar.leadingAnchor , constant: 10),
+            informationView.trailingAnchor.constraint(equalTo: calendar.trailingAnchor , constant: -10),
+            informationView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor , constant: -10),
             
             
         ])
@@ -130,7 +150,7 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         self.calendar.delegate = self
         self.calendar.dataSource = self
         
-        self.calendar.backgroundColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
+        self.calendar.backgroundColor = .clear
         
         
         // calendar locale > 한국으로 설정
@@ -172,8 +192,7 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         // 캘린더 높이 지정
         self.calendar.headerHeight = 68
         
-        // 캘린더의 cornerRadius 지정
-        self.calendar.layer.cornerRadius = 50
+       
         
         
         // 양옆 년도, 월 지우기

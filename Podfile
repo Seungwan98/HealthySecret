@@ -7,8 +7,7 @@ target 'HealthySecret' do
 
   # Pods for HealthySecret
 
-pod 'Alamofire', '5.1'
-  
+  pod 'KakaoSDK'
   pod 'SwiftyJSON'
   
  pod 'RxSwift', '6.6.0'
