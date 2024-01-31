@@ -1,20 +1,117 @@
 PODS:
-  - Alamofire (5.1.0)
+  - Alamofire (5.8.1)
+  - Charts (4.1.0):
+    - Charts/Core (= 4.1.0)
+  - Charts/Core (4.1.0):
+    - SwiftAlgorithms (~> 1.0)
+  - FSCalendar (2.8.4)
+  - KakaoSDK (2.20.0):
+    - KakaoSDKAuth (= 2.20.0)
+    - KakaoSDKCert (= 2.20.0)
+    - KakaoSDKCommon (= 2.20.0)
+    - KakaoSDKFriend (= 2.20.0)
+    - KakaoSDKNavi (= 2.20.0)
+    - KakaoSDKShare (= 2.20.0)
+    - KakaoSDKTalk (= 2.20.0)
+    - KakaoSDKTemplate (= 2.20.0)
+    - KakaoSDKUser (= 2.20.0)
+  - KakaoSDKAuth (2.20.0):
+    - KakaoSDKCommon (= 2.20.0)
+  - KakaoSDKCert (2.20.0):
+    - KakaoSDKCertCore (= 2.20.0)
+    - KakaoSDKUser (= 2.20.0)
+  - KakaoSDKCertCore (2.20.0)
+  - KakaoSDKCommon (2.20.0):
+    - KakaoSDKCommon/Common (= 2.20.0)
+    - KakaoSDKCommon/Network (= 2.20.0)
+  - KakaoSDKCommon/Common (2.20.0)
+  - KakaoSDKCommon/Network (2.20.0):
+    - Alamofire (~> 5.1)
+    - KakaoSDKCommon/Common (= 2.20.0)
+  - KakaoSDKFriend (2.20.0):
+    - KakaoSDKFriendCore (= 2.20.0)
+    - KakaoSDKUser (= 2.20.0)
+  - KakaoSDKFriendCore (2.20.0)
+  - KakaoSDKNavi (2.20.0):
+    - KakaoSDKCommon/Common (= 2.20.0)
+  - KakaoSDKShare (2.20.0):
+    - KakaoSDKCommon (= 2.20.0)
+    - KakaoSDKTemplate (= 2.20.0)
+  - KakaoSDKTalk (2.20.0):
+    - KakaoSDKTemplate (= 2.20.0)
+    - KakaoSDKUser (= 2.20.0)
+  - KakaoSDKTemplate (2.20.0):
+    - KakaoSDKCommon/Common (= 2.20.0)
+  - KakaoSDKUser (2.20.0):
+    - KakaoSDKAuth (= 2.20.0)
+  - RxCocoa (6.6.0):
+    - RxRelay (= 6.6.0)
+    - RxSwift (= 6.6.0)
+  - RxGesture (4.0.4):
+    - RxCocoa (~> 6.0)
+    - RxSwift (~> 6.0)
+  - RxRelay (6.6.0):
+    - RxSwift (= 6.6.0)
+  - RxSwift (6.6.0)
+  - SwiftAlgorithms (1.0.0)
   - SwiftyJSON (5.0.1)
 
 DEPENDENCIES:
-  - Alamofire (= 5.1)
+  - Charts
+  - FSCalendar
+  - KakaoSDK
+  - RxCocoa (= 6.6.0)
+  - RxGesture
+  - RxSwift (= 6.6.0)
   - SwiftyJSON
 
 SPEC REPOS:
   trunk:
     - Alamofire
+    - Charts
+    - FSCalendar
+    - KakaoSDK
+    - KakaoSDKAuth
+    - KakaoSDKCert
+    - KakaoSDKCertCore
+    - KakaoSDKCommon
+    - KakaoSDKFriend
+    - KakaoSDKFriendCore
+    - KakaoSDKNavi
+    - KakaoSDKShare
+    - KakaoSDKTalk
+    - KakaoSDKTemplate
+    - KakaoSDKUser
+    - RxCocoa
+    - RxGesture
+    - RxRelay
+    - RxSwift
+    - SwiftAlgorithms
     - SwiftyJSON
 
 SPEC CHECKSUMS:
-  Alamofire: 9d5c5f602928e512395b30950c5984eca840093c
+  Alamofire: 3ca42e259043ee0dc5c0cdd76c4bc568b8e42af7
+  Charts: ce0768268078eee0336f122c3c4ca248e4e204c5
+  FSCalendar: 2d1d0d9398f12d439f55c1fe0f01525b151b8260
+  KakaoSDK: 65a0075a6bc53405a225d391c11f032ff5ebf0a1
+  KakaoSDKAuth: 02742f4681af6da8c4aa7b0f71df98ca9e7df834
+  KakaoSDKCert: 0b27ec4edbc9e5ee689ae568ac5be6956b96ce4d
+  KakaoSDKCertCore: 5ebd4da00140178b4fb7ad30c317cfe5fe8c02ba
+  KakaoSDKCommon: 060a8085733a215a048f9bf9b39a846d1be1daee
+  KakaoSDKFriend: 965d0fabf8ee217b36fef281dd90efeaf9c2c138
+  KakaoSDKFriendCore: 688edf9c36f72d56662670e0f6452bbe8ffc28e3
+  KakaoSDKNavi: 7134d95f1cb3182c301cc919a1b1d2231e7307bf
+  KakaoSDKShare: 70a86eb93016d8e4e64f3adda1650a8646cbbc01
+  KakaoSDKTalk: 245db634d63f8a21e8b80bcfe5ca1aff407b1018
+  KakaoSDKTemplate: d0481c3d8a7e74646a585fc0e551fc18f7fdc6ac
+  KakaoSDKUser: 0594b37675fb634304da3ecc83830c0ec84ceef5
+  RxCocoa: 44a80de90e25b739b5aeaae3c8c371a32e3343cc
+  RxGesture: f3efb47ed2d26a8082f7b660d4a59970e275a7f8
+  RxRelay: 45eaa5db8ee4fb50e5ebd57deec0159e97fa51e6
+  RxSwift: a4b44f7d24599f674deebd1818eab82e58410632
+  SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
   SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
 
-PODFILE CHECKSUM: c12eaedb94e25182d0c303727c592d10f2578d43
+PODFILE CHECKSUM: 52c16e4cc40c3c06efab9be0ab307fb66722acf1
 
 COCOAPODS: 1.13.0

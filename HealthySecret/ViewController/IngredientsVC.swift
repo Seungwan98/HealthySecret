@@ -265,7 +265,7 @@ class IngredientsViewController : UIViewController   {
         
         output.titleLabelTexts.subscribe(onNext: { arr in
             
-            self.titleLabel.text = arr[0] + "식사"
+            self.titleLabel.text = arr[0]
             self.titleLabel2.text = arr[1]
             
             

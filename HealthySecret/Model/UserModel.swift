@@ -19,6 +19,7 @@ struct UserModel : Codable {
     var calorie : Int
     var weight : Double
     var ingredients : [ingredients]
+    var exercise : [Exercise]
     }
 
 struct ingredients : Codable {
@@ -26,22 +27,48 @@ struct ingredients : Codable {
     var morning : [String]?
     var lunch : [String]?
     var dinner : [String]?
+    var snack : [String]?
     
     enum Codingkeys : String , CodingKey {
-        case date , morning , lunch , dinner
+        case date , morning , lunch , dinner , snack
         
         
         
     }
     
-    init(date: String?, morning: [String]? , lunch : [String]? , dinner : [String]?) {
+    init(date: String?, morning: [String]? , lunch : [String]? , dinner : [String]? , snack : [String]?) {
         self.date = date
         self.morning = morning
         self.dinner = dinner
         self.lunch = lunch
+        self.snack = snack
        
     }
     
+    
+}
+struct Exercise : Codable {
+    var date : String
+    var name : String
+    var time : String
+    var finalCalorie : String
+    var memo : String
+
+    
+    enum Codingkeys : String , CodingKey {
+        case date , name , time , finalCalorie , memo
+        
+        
+        
+    }
+    
+    init(date : String , name : String , time : String , finalCalorie : String , memo : String){
+        self.date = date
+        self.name = name
+        self.time = time
+        self.finalCalorie = finalCalorie
+        self.memo = memo
+    }
     
 }
 extension Encodable {

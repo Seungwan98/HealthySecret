@@ -8,6 +8,7 @@
 import Foundation
 import RxSwift
 import RxRelay
+import RxCocoa
 
 class DiaryVM : ViewModel {
     
@@ -36,8 +37,9 @@ class DiaryVM : ViewModel {
     
     struct Input {
         let viewWillApearEvent : Observable<Void>
+        let mealButtonsTapped : Observable<Void>
+        let leftBarButtonTapped : ControlEvent<UITapGestureRecognizer>
         let rightBarButtonTapped : Observable<Void>
-        let leftBarButtonTapped : Observable<Void>
                                                 
 
     }
@@ -50,19 +52,99 @@ class DiaryVM : ViewModel {
         let checkBreakFast = BehaviorRelay<Bool>(value: false)
         let checkLunch = BehaviorRelay<Bool>(value: false)
         let checkDinner = BehaviorRelay<Bool>(value: false)
+        let checkSnack = BehaviorRelay<Bool>(value: false)
+        
+        let minuteLabel = BehaviorRelay<String>(value: "0")
+        let calorieLabel = BehaviorRelay<String>(value: "0")
     }
     
     
+    func pushIngredients(){
+        self.coordinator?.user = self.user
+        self.coordinator?.pushIngredientsVC()
+    }
+    
     func transform(input: Input, disposeBag: DisposeBag) -> Output {
         
+        let output = Output()
+
         input.rightBarButtonTapped.subscribe(onNext: { [weak self] _ in
-            print("rightBarButton")
-            self?.coordinator?.user = self?.user
-            self?.coordinator?.pushIngredientsVC()
+            
+            self?.coordinator?.pushExerciseVC()
+            
+            
             
         }).disposed(by: disposeBag)
         
-        input.leftBarButtonTapped.subscribe(onNext: {
+        input.mealButtonsTapped.subscribe(onNext: { [weak self] _ in
+            let disposeBag2 = DisposeBag()
+            let meal : String = UserDefaults.standard.value(forKey: "meal") as! String
+            switch meal {
+            case "아침식사":
+                output.checkBreakFast.subscribe(onNext: { [weak self]
+                    valid in
+                    if valid{
+                        print("gotoInform")
+                    }
+                    else{
+                        print("push")
+                        self?.pushIngredients()
+                    }
+                    
+                }).disposed(by: disposeBag2)
+                
+            case "점심식사":
+                output.checkLunch.subscribe(onNext: { [weak self]
+                    valid in
+                    if valid{
+                        print("gotoInform")
+                    }
+                    else{
+                        print("push")
+
+                        self?.pushIngredients()
+                    }
+                    
+                }).disposed(by: disposeBag2)
+                
+            case "저녁식사":
+                output.checkDinner.subscribe(onNext: { [weak self]
+                    valid in
+                    if valid{
+                        print("gotoInform")
+                    }
+                    else{
+                        print("push")
+
+                        self?.pushIngredients()
+                    }
+                
+                                             
+                                             
+                }).disposed(by: disposeBag2)
+            case "간식":
+                output.checkSnack.subscribe(onNext: { [weak self]
+                    valid in
+                    if valid{
+                        print("gotoInform")
+                    }
+                    else{
+                        print("push")
+
+                        self?.pushIngredients()
+                    }
+                
+                                             
+                                             
+                }).disposed(by: disposeBag2)
+                
+                
+            default:
+                break
+            }
+        }).disposed(by: disposeBag)
+        
+        input.leftBarButtonTapped.when(.recognized).subscribe(onNext: {
             [weak self] _ in
             print("leftBarButton")
             self?.coordinator?.pushCalendarVC()
@@ -72,12 +154,12 @@ class DiaryVM : ViewModel {
         
         
         
-        let output = Output()
         
         
 
         
-
+        
+        
         
         if let userEmail = UserDefaults.standard.string(forKey: "email") {
             self.firebaseService.getDocument(key: userEmail).subscribe( { event in
@@ -169,6 +251,24 @@ class DiaryVM : ViewModel {
                     switch event{
                     case .success(let user):
                         
+                        UserDefaults.standard.set(user.weight , forKey: "weight")
+                        
+                        print(user.exercise)
+                        
+                        let exercises = user.exercise.filter({
+
+                            $0.date == pickedDate
+                            
+                        })
+                        print(exercises)
+            
+                       let totalTime = exercises.map({ $0.time }).reduce(0) { Int($0) + (Int($1) ?? 0) }
+                       let totalCal = exercises.map({ $0.finalCalorie }).reduce(0) { Double($0) + (Double($1) ?? 0.0) }
+         
+                        output.calorieLabel.accept(String(totalCal))
+                        output.minuteLabel.accept(String(totalTime))
+                     
+                        
                         let ingredients = user.ingredients.filter {(
                             $0.date == pickedDate
                             
@@ -181,16 +281,14 @@ class DiaryVM : ViewModel {
                             dinner = ingredients.dinner ?? []
                             
                             //
-                            if morning.isEmpty{
-                                
-                                
-                                
-                            }else{
-                                
-                            }
+                           
+                            
                             
                             total = morning + lunch + dinner
                             
+                            print("\(morning)")
+           
+                 
                             
 
                             self.firebaseService.getUsersIngredients(key: total).subscribe({
@@ -243,11 +341,14 @@ class DiaryVM : ViewModel {
                             
                         }else{
                             
-                            print("else")
                             
                             output.totalIngredients.onNext(dic)
 
                         }
+                        output.checkBreakFast.accept(!(morning.isEmpty))
+                        output.checkLunch.accept(!(lunch.isEmpty))
+                        output.checkDinner.accept(!(dinner.isEmpty))
+                        
                         
 
 
@@ -262,6 +363,10 @@ class DiaryVM : ViewModel {
                 }).disposed(by: disposeBag)
                 
             }
+            
+            print(morning)
+           
+            
         }).disposed(by: disposeBag)
         
        
@@ -269,7 +374,6 @@ class DiaryVM : ViewModel {
         
 
 
-        
         
         
         return output

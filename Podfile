@@ -12,7 +12,9 @@ target 'HealthySecret' do
   
  pod 'RxSwift', '6.6.0'
     pod 'RxCocoa', '6.6.0'
+	pod 'RxGesture'
 	pod 'Charts'
+
     pod 'FSCalendar'
 end
 

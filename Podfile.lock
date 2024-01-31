@@ -47,6 +47,9 @@ PODS:
   - RxCocoa (6.6.0):
     - RxRelay (= 6.6.0)
     - RxSwift (= 6.6.0)
+  - RxGesture (4.0.4):
+    - RxCocoa (~> 6.0)
+    - RxSwift (~> 6.0)
   - RxRelay (6.6.0):
     - RxSwift (= 6.6.0)
   - RxSwift (6.6.0)
@@ -58,6 +61,7 @@ DEPENDENCIES:
   - FSCalendar
   - KakaoSDK
   - RxCocoa (= 6.6.0)
+  - RxGesture
   - RxSwift (= 6.6.0)
   - SwiftyJSON
 
@@ -79,6 +83,7 @@ SPEC REPOS:
     - KakaoSDKTemplate
     - KakaoSDKUser
     - RxCocoa
+    - RxGesture
     - RxRelay
     - RxSwift
     - SwiftAlgorithms
@@ -101,11 +106,12 @@ SPEC CHECKSUMS:
   KakaoSDKTemplate: d0481c3d8a7e74646a585fc0e551fc18f7fdc6ac
   KakaoSDKUser: 0594b37675fb634304da3ecc83830c0ec84ceef5
   RxCocoa: 44a80de90e25b739b5aeaae3c8c371a32e3343cc
+  RxGesture: f3efb47ed2d26a8082f7b660d4a59970e275a7f8
   RxRelay: 45eaa5db8ee4fb50e5ebd57deec0159e97fa51e6
   RxSwift: a4b44f7d24599f674deebd1818eab82e58410632
   SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
   SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
 
-PODFILE CHECKSUM: 587739328ec0f53b988a92f30ba9a745968c1cc6
+PODFILE CHECKSUM: 52c16e4cc40c3c06efab9be0ab307fb66722acf1
 
 COCOAPODS: 1.13.0

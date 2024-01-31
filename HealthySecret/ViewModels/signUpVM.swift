@@ -59,7 +59,7 @@ class SignUpVM : ViewModel {
         let id : String = UserDefaults.standard.value(forKey: "email") as! String
         let password : String = UserDefaults.standard.value(forKey: "password") as! String
         
-        var userModel = UserModel(id: id , tall: "", age: "", sex: "", calorie: 0 , weight: 0.0 , ingredients: [])
+        var userModel = UserModel(id: id , tall: "", age: "", sex: "", calorie: 0 , weight: 0.0 , ingredients: []  , exercise: [] )
         
         
         input.nextButtonTapped.subscribe(onNext: {

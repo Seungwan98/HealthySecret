@@ -77,8 +77,9 @@ class TabBarCoordinator : Coordinator {
     func getTabBarItems() -> [UITabBarItem] {
         let firstItem = UITabBarItem(title: "홈" , image: UIImage.init(systemName: "house") , tag:0)
         let secondItem = UITabBarItem(title: "다이어리" , image: UIImage.init(systemName: "fork.knife") , tag:1)
+        let thridItem = UITabBarItem(title: "test" , image: UIImage.init(systemName: "fork.knife") , tag:2)
         
-        return [firstItem , secondItem]
+        return [firstItem , secondItem , thridItem]
     }
     
     func startCoordinator(_ navigationTabController : UINavigationController ) {
@@ -99,6 +100,8 @@ class TabBarCoordinator : Coordinator {
             childCoordinator.append(diaryCoordinator)
             diaryCoordinator.finishDelegate = self
             diaryCoordinator.pushDiaryVC()
+
+       
 
             
     
@@ -274,13 +277,22 @@ class DiaryCoordinator : Coordinator  {
         
     }
     
-    
+    func pushExerciseVC() {
+        let exerciseCoordinator =  ExerciseCoordinator( self.navigationController )
+        exerciseCoordinator.finishDelegate = self
+        exerciseCoordinator.parentCoordinator = self
+        childCoordinator.append(exerciseCoordinator)
+        exerciseCoordinator.start()
+    }
+  
     
     
     func pushDiaryVC() {
         
         let firebaseService = self.firebaseService
         let viewController = DiaryViewController(viewModel : DiaryVM ( coordinator : self , firebaseService: firebaseService ))
+        
+     
         self.navigationController.pushViewController( viewController , animated: true )
     
     }

@@ -1,4 +1,4 @@
-//'//
+////
 ////  RequestFile.swift
 ////  HealthySecrets
 ////
@@ -7,17 +7,18 @@
 //
 //import Alamofire
 //import UIKit
-//
+//import RxSwift
 //class RequestFile{
 //
-//    func getRequestData(_ ingredientsViewController: IngredientsViewController){
+//    func getRequestData(_ ingredientsViewController: IngredientsViewController) -> Completable {
+//
 //
 //        var url = "https://openapi.foodsafetykorea.go.kr/api/0953eeacbbde4438b716/I2790/json/1/2"
 //        AF.request(url,
 //                   method: .post,
 //                   parameters: nil,
 //                   headers: nil)
-//        .responseDecodable(of: ResponseFile.self) {response in
+//        .responseDecodable(of: ResponseFile.self) { response in
 //
 //            switch response.result{
 //
@@ -25,7 +26,7 @@
 //
 //                print("DEBUG>> OpenWeather Response \(data)")
 //                print("success")
-//                ingredientsViewController.toAppendList(data.i2790.row)
+//                ingredientsViewController.toAppendList()
 //
 //
 //
@@ -86,6 +87,6 @@
 //
 //
 //
-
-
-
+//
+//
+//

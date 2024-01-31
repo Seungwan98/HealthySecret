@@ -43,7 +43,7 @@ protocol CoordinatorFinishDelegate: AnyObject {
 
 // MARK: - CoordinatorType
 enum CoordinatorType {
-    case home , tab , detailPage , diaryPage , ingredients , calendar
+    case home , tab , detailPage , diaryPage , ingredients , calendar , exercise
 }
 
 

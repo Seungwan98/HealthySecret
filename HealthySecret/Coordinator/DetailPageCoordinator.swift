@@ -11,7 +11,10 @@ import Foundation
 
 
 class DetailPageCoordinator: Coordinator {
-    var detailPageViewController : DetailPageViewController
+    func start() {
+        //
+    }
+    
     
     var childCoordinator: [Coordinator] = []
         
@@ -23,13 +26,11 @@ class DetailPageCoordinator: Coordinator {
     
     required init(_ navigationController: UINavigationController ) {
         self.navigationController = navigationController
-        self.detailPageViewController = DetailPageViewController()
       //  self.coordinatorDidFinish(childCoordinator: self)
     }
     
-    func start() {
-        self.detailPageViewController.view.backgroundColor = .white
-        self.navigationController.pushViewController(detailPageViewController, animated: true)
+    func startVC(model : Data) {
+       
     }
     
 

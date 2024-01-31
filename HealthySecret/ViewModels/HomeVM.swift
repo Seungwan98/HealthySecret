@@ -41,6 +41,9 @@ class HomeVM : ViewModel {
     
     
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
+        
+        
+        
         let output = Output()
         
         input.logoutButtonTapped.subscribe(onNext: { [weak self] _ in
@@ -75,6 +78,9 @@ class HomeVM : ViewModel {
             }).disposed(by: disposeBag)
             
         }
+        
+       
+        
         
         return output
     }
