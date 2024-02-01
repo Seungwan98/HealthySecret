@@ -72,7 +72,7 @@
 		60BC98E32B02A0590013FAD9 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BC98E22B02A0590013FAD9 /* AppCoordinator.swift */; };
 		60BC98E52B0361950013FAD9 /* IngredientsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BC98E42B0361950013FAD9 /* IngredientsCoordinator.swift */; };
 		60BC98E82B0B4FA60013FAD9 /* DetailPageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BC98E72B0B4FA60013FAD9 /* DetailPageCoordinator.swift */; };
-		60BC98EA2B0B501E0013FAD9 /* ExerciseDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BC98E92B0B501E0013FAD9 /* ExerciseDetailVC.swift */; };
+		60BC98EA2B0B501E0013FAD9 /* exerciseDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BC98E92B0B501E0013FAD9 /* exerciseDetailVC.swift */; };
 		60BC98ED2B0B68650013FAD9 /* LoginVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BC98EC2B0B68650013FAD9 /* LoginVM.swift */; };
 		60BC98EF2B0CB0560013FAD9 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 60BC98EE2B0CB0560013FAD9 /* FirebaseStorage */; };
 		60BC98F12B1604730013FAD9 /* HomeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BC98F02B1604730013FAD9 /* HomeVM.swift */; };
@@ -164,7 +164,7 @@
 		60BC98E22B02A0590013FAD9 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		60BC98E42B0361950013FAD9 /* IngredientsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsCoordinator.swift; sourceTree = "<group>"; };
 		60BC98E72B0B4FA60013FAD9 /* DetailPageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPageCoordinator.swift; sourceTree = "<group>"; };
-		60BC98E92B0B501E0013FAD9 /* ExerciseDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseDetailVC.swift; sourceTree = "<group>"; };
+		60BC98E92B0B501E0013FAD9 /* exerciseDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = exerciseDetailVC.swift; sourceTree = "<group>"; };
 		60BC98EC2B0B68650013FAD9 /* LoginVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVM.swift; sourceTree = "<group>"; };
 		60BC98F02B1604730013FAD9 /* HomeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVM.swift; sourceTree = "<group>"; };
 		60BC98F22B1867BB0013FAD9 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
@@ -209,7 +209,7 @@
 				6067B99E2B502A5E00D536FF /* CalendarVC.swift */,
 				600DE9302B557EC400D5D797 /* SignUpVC.swift */,
 				6094C54C2ACEBDF300D62B0A /* IngredientsVC.swift */,
-				60BC98E92B0B501E0013FAD9 /* ExerciseDetailVC.swift */,
+				60BC98E92B0B501E0013FAD9 /* exerciseDetailVC.swift */,
 				600DE9732B6269BD00D5D797 /* ExerciseVC.swift */,
 				60A380062B6A5F6B00C9A2E6 /* EditExerciseVC.swift */,
 			);
@@ -606,7 +606,7 @@
 				60D987922AEA781D0049CE05 /* TabBarCoordinator.swift in Sources */,
 				60D987902AEA731C0049CE05 /* LoginVC.swift in Sources */,
 				600DE9722B624CDF00D5D797 /* ExerciseModel.swift in Sources */,
-				60BC98EA2B0B501E0013FAD9 /* ExerciseDetailVC.swift in Sources */,
+				60BC98EA2B0B501E0013FAD9 /* exerciseDetailVC.swift in Sources */,
 				608DF96B2AD4352F00DD27DB /* IngredientsModel.swift in Sources */,
 				600DE9762B62A00A00D5D797 /* ExerciseVM.swift in Sources */,
 				6067B99D2B502A2900D536FF /* CalendarCoordinator.swift in Sources */,

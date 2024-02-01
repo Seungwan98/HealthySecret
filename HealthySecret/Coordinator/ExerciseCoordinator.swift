@@ -41,12 +41,12 @@ class ExerciseCoordinator: Coordinator {
     func pushDetailVC(model : Data){
         
         let firebaseService = FirebaseService()
-        let viewModel = DetailPageVM(coordinator: self, firebaseService: firebaseService)
+        let viewModel = ExerciseDetailVM(coordinator: self, firebaseService: firebaseService)
         viewModel.model = model
-        let detailPageViewController = DetailPageViewController(viewModel: viewModel)
+        let viewController = ExerciseDetailVC(viewModel: viewModel)
         
 
-        self.navigationController.pushViewController(detailPageViewController, animated: true)
+        self.navigationController.pushViewController(viewController, animated: true)
 
     }
     

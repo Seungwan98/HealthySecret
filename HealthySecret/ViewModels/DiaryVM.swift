@@ -24,9 +24,8 @@ class DiaryVM : ViewModel {
     let firebaseService : FirebaseService
     
     var user : UserModel?
-
-
-
+    
+    
     
     init( coordinator : DiaryCoordinator , firebaseService : FirebaseService ){
         self.coordinator =  coordinator
@@ -38,10 +37,12 @@ class DiaryVM : ViewModel {
     struct Input {
         let viewWillApearEvent : Observable<Void>
         let mealButtonsTapped : Observable<Void>
-        let leftBarButtonTapped : ControlEvent<UITapGestureRecognizer>
-        let rightBarButtonTapped : Observable<Void>
-                                                
-
+        
+        
+        let calendarLabelTapped : ControlEvent<UITapGestureRecognizer>
+        let execiseButtonTapped : Observable<Void>
+        
+        
     }
     
     struct Output {
@@ -56,6 +57,10 @@ class DiaryVM : ViewModel {
         
         let minuteLabel = BehaviorRelay<String>(value: "0")
         let calorieLabel = BehaviorRelay<String>(value: "0")
+        
+        let goalLabel = BehaviorRelay<String>(value:  "0")
+        let leftCalorieLabel = BehaviorRelay<String>(value: "0")
+      
     }
     
     
@@ -65,12 +70,23 @@ class DiaryVM : ViewModel {
     }
     
     func transform(input: Input, disposeBag: DisposeBag) -> Output {
-        
-        let output = Output()
+        var getExercises = BehaviorSubject<[Exercise]>(value: [])
 
-        input.rightBarButtonTapped.subscribe(onNext: { [weak self] _ in
-            
-            self?.coordinator?.pushExerciseVC()
+        let output = Output()
+        
+        input.execiseButtonTapped.subscribe(onNext: { [weak self] _ in
+            print("exerciseButtonTapped")
+            getExercises.subscribe(onNext: { exercises in
+                if exercises.isEmpty{
+                    self?.coordinator?.pushExerciseVC()
+                    
+                }else{
+                    
+                    self?.coordinator?.pushEditExerciseVC(exercises: exercises)
+                    
+                }
+                
+            }).disposed(by: DisposeBag())
             
             
             
@@ -84,10 +100,8 @@ class DiaryVM : ViewModel {
                 output.checkBreakFast.subscribe(onNext: { [weak self]
                     valid in
                     if valid{
-                        print("gotoInform")
                     }
                     else{
-                        print("push")
                         self?.pushIngredients()
                     }
                     
@@ -97,11 +111,9 @@ class DiaryVM : ViewModel {
                 output.checkLunch.subscribe(onNext: { [weak self]
                     valid in
                     if valid{
-                        print("gotoInform")
                     }
                     else{
-                        print("push")
-
+                        
                         self?.pushIngredients()
                     }
                     
@@ -111,17 +123,16 @@ class DiaryVM : ViewModel {
                 output.checkDinner.subscribe(onNext: { [weak self]
                     valid in
                     if valid{
-                        print("gotoInform")
                     }
                     else{
-                        print("push")
-
+                        
                         self?.pushIngredients()
                     }
-                
-                                             
-                                             
+                    
+                    
+                    
                 }).disposed(by: disposeBag2)
+                
             case "간식":
                 output.checkSnack.subscribe(onNext: { [weak self]
                     valid in
@@ -130,12 +141,12 @@ class DiaryVM : ViewModel {
                     }
                     else{
                         print("push")
-
+                        
                         self?.pushIngredients()
                     }
-                
-                                             
-                                             
+                    
+                    
+                    
                 }).disposed(by: disposeBag2)
                 
                 
@@ -144,9 +155,9 @@ class DiaryVM : ViewModel {
             }
         }).disposed(by: disposeBag)
         
-        input.leftBarButtonTapped.when(.recognized).subscribe(onNext: {
+        input.calendarLabelTapped.when(.recognized).subscribe(onNext: {
             [weak self] _ in
-            print("leftBarButton")
+            print("calndartLabel Gestured")
             self?.coordinator?.pushCalendarVC()
             
         }).disposed(by: disposeBag)
@@ -156,29 +167,13 @@ class DiaryVM : ViewModel {
         
         
         
-
         
         
         
         
-        if let userEmail = UserDefaults.standard.string(forKey: "email") {
-            self.firebaseService.getDocument(key: userEmail).subscribe( { event in
-                
-                switch event{
-                case .success(let user):
-                    self.recentAdd = user.recentAdd ?? []
-                    
-                    
-                case .failure(_):
-                    print("fail")
-                    
-                }
-                
-                
-            }).disposed(by: disposeBag)
-            
-        }
-
+        
+       
+        
         
         
         
@@ -190,6 +185,7 @@ class DiaryVM : ViewModel {
             var morning : [String] = []
             var lunch : [String] = []
             var dinner : [String] = []
+            var snack : [String] = []
             var total : [String] = []
             
             
@@ -202,46 +198,45 @@ class DiaryVM : ViewModel {
             imageAttach.image = UIImage(systemName: "calendar")
             imageAttach.bounds = CGRect(x: 0, y: 0, width: 14, height: 14)
             textAttach.append(NSAttributedString(attachment: imageAttach))
-    
+            
             
             
             
             if let date = UserDefaults.standard.string(forKey: "date"){
-
+                
                 pickedDate = date
                 outputDate = self.formatToOutput(date: date)
-
-
-
+                
+                
+                
             } else {
-
+                
                 pickedDate = self.getToday()
                 outputDate = self.formatToOutput(date: pickedDate)
-
-
+                
+                
             }
             textAttach.append(NSAttributedString(string: outputDate))
             output.date.accept(textAttach)
-
-
-
             
-
+            
+            
+            
+            
             UserDefaults.standard.set(pickedDate, forKey: "date")
-           
+            
             
             
             
             
             if let userEmail = UserDefaults.standard.string(forKey: "email") {
                 print("\(userEmail)   userEmail")
-
-                               
                 
-
+                
+                var totalCal : Double = 0.0
+                var leftCalorie : Double = 0.0
                 self.firebaseService.getDocument(key: userEmail).subscribe( { event in
                     
-                    print("업뎃")
                     
                     
                     var dic : [String : Double] = ["kcal" : 0.0 , "carbohydrates" : 0.0 , "protein" : 0.0 , "province" : 0.0 , "cholesterol" : 0.0 , "fattyAcid" : 0.0 , "sugars" : 0.0 , "transFat" : 0.0 ,
@@ -252,54 +247,60 @@ class DiaryVM : ViewModel {
                     case .success(let user):
                         
                         UserDefaults.standard.set(user.weight , forKey: "weight")
+                        output.goalLabel.accept(String(user.weight))
                         
-                        print(user.exercise)
+                        
+                        
                         
                         let exercises = user.exercise.filter({
-
+                            
                             $0.date == pickedDate
                             
                         })
-                        print(exercises)
-            
-                       let totalTime = exercises.map({ $0.time }).reduce(0) { Int($0) + (Int($1) ?? 0) }
-                       let totalCal = exercises.map({ $0.finalCalorie }).reduce(0) { Double($0) + (Double($1) ?? 0.0) }
-         
-                        output.calorieLabel.accept(String(totalCal))
-                        output.minuteLabel.accept(String(totalTime))
-                     
+                        
+                        getExercises.onNext(exercises)
+                        
+                        
+                        //운동
+                        let totalTime = exercises.map({ $0.time }).reduce(0) { Int($0) + (Int($1) ?? 0) }
+                        totalCal = exercises.map({ $0.finalCalorie }).reduce(0) { Double($0) + (Double($1) ?? 0.0) }
+                        var outputTime = ""
+                        if totalTime/60 > 1 {
+                            outputTime = "\(totalTime/60)시간 \(totalTime%60)"
+                        }else{
+                            outputTime = String(totalTime)
+                        }
+                        output.calorieLabel.accept(String(CustomMath().getDecimalSecond(data: totalCal)))
+                        output.minuteLabel.accept(String(outputTime))
+                        
                         
                         let ingredients = user.ingredients.filter {(
                             $0.date == pickedDate
                             
                         )}
                         
-
+                        
                         if let ingredients = ingredients.first{
                             morning  = ingredients.morning ?? []
                             lunch = ingredients.lunch ?? []
                             dinner = ingredients.dinner ?? []
+                            snack = ingredients.snack ?? []
                             
-                            //
-                           
+                            total = morning + lunch + dinner + snack
                             
                             
-                            total = morning + lunch + dinner
                             
-                            print("\(morning)")
-           
-                 
                             
-
+                            
                             self.firebaseService.getUsersIngredients(key: total).subscribe({
                                 
                                 event in
                                 
                                 switch event {
-
+                                    
                                 case .success(let ingredients):
                                     
-
+                                    
                                     for ingredient in ingredients {
                                         dic["kcal"]! += Double(ingredient.kcal) ?? 0
                                         dic["carbohydrates"]! += Double(ingredient.carbohydrates) ?? 0
@@ -314,75 +315,87 @@ class DiaryVM : ViewModel {
                                     }
                                     
                                     dic = dic.mapValues{ values in
-                                        return self.setDigit(data: values)
+                                        return CustomMath().getDecimalSecond(data: values)
                                     }
                                     
-                                    
+
                                     output.totalIngredients.onNext(dic)
-
-                                    print("if")
-
                                     
+                                    
+                                    
+                                    leftCalorie = CustomMath().getDecimalSecond(data: (totalCal + (user.weight) - (dic["kcal"] ?? 0)))
+                                    
+                                    if leftCalorie > 0 {
+                                        output.leftCalorieLabel.accept("\(leftCalorie)kcal 더 먹을 수 있어요.")
+                                        
+                                    }else {
+                                        output.leftCalorieLabel.accept("\(-leftCalorie)kcal 초과됐어요.")
+
+                                    }
+
                                     
                                     
                                 case .failure(_):
                                     print("fail to load")
-                               
-
+                                    
+                                    
                                 }
                                 
+                            
                                 
                                 
                                 
-
+                                
                             }).disposed(by: disposeBag)
-
-
+                            
+                            
                             
                         }else{
-                            
-                            
-                            output.totalIngredients.onNext(dic)
+                            print("else")
 
+                            output.totalIngredients.onNext(dic)
+                           
+                            
                         }
+                        
+                       
+                        
                         output.checkBreakFast.accept(!(morning.isEmpty))
                         output.checkLunch.accept(!(lunch.isEmpty))
                         output.checkDinner.accept(!(dinner.isEmpty))
+                        output.checkSnack.accept(!(snack.isEmpty))
                         
                         
-
-
+                      
+                        
                     case .failure(_):
                         print("fail")
                         
                     }
                     
-
-
-
+                  
+                    
+                    
                 }).disposed(by: disposeBag)
                 
             }
             
             print(morning)
-           
+            
             
         }).disposed(by: disposeBag)
         
-       
         
         
-
-
+        
+        
+        
         
         
         return output
     }
     
-    func setDigit(data : Double) -> Double{
-        let digit: Double = pow(10, 3)
-        return round(data * digit) / digit
-    }
+    
     
     
     func formatToOutput(date : String) -> String{
@@ -392,8 +405,8 @@ class DiaryVM : ViewModel {
         formatter.dateFormat = "yyyy-MM-dd"
         let todayDate = formatter.string(from: Date())
         let splitedTodayDate = todayDate.split(separator: "-")
-                  
-
+        
+        
         
         if ( date == todayDate ){
             outputDate = "오늘"
@@ -415,8 +428,8 @@ class DiaryVM : ViewModel {
         let formatter = DateFormatter()
         formatter.dateFormat = "yy-MM-dd"
         return formatter.string(from: Date())
-
-      
+        
+        
         
     }
     

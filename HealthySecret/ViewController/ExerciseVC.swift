@@ -122,7 +122,8 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
         
         
         output.exerciseArr.bind(to: tableView.rx.items(cellIdentifier: "ExerciseCell" ,cellType: ExerciseCell.self )){index,item,cell in
-            cell.exerciseGram = item.exerciseGram
+            cell.layoutToAdd()
+            cell.exerciseGram.text = item.exerciseGram
             cell.name.text = item.name
             
             
@@ -244,36 +245,6 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
 //}
 
 
-class ExerciseCell : UITableViewCell {
-    let name = UILabel()
-    var exerciseGram = ""
-    
-    required override init( style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier )
-        
-        layout()
-        
-    }
-    
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    
-    func layout() {
-        self.contentView.addSubview(self.name)
-        self.name.translatesAutoresizingMaskIntoConstraints = false
-        self.name.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
-        self.name.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        
-        
-        
-    }
-    
-    
-    
-    
-}
+
 
 

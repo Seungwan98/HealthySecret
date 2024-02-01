@@ -74,8 +74,7 @@ class IngredientsVM : ViewModel {
                         
                     }
                 })
-                print(self.filteredArr)
-                print(self.filteredNumbersArr)
+
             self.firebaseService.addIngredients(meal: meal ?? "" , date: date ?? "" , key: key ?? "" , mealArr : self.filteredNumbersArr ).subscribe({
                 event in
                 switch event{

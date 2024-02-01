@@ -28,15 +28,15 @@ struct ingredients : Codable {
     var lunch : [String]?
     var dinner : [String]?
     var snack : [String]?
-    
+
     enum Codingkeys : String , CodingKey {
-        case date , morning , lunch , dinner , snack
+        case date , morning , lunch , dinner , snack , exercise
         
         
         
     }
     
-    init(date: String?, morning: [String]? , lunch : [String]? , dinner : [String]? , snack : [String]?) {
+    init(date: String?, morning: [String]? , lunch : [String]? , dinner : [String]? , snack : [String]? ) {
         self.date = date
         self.morning = morning
         self.dinner = dinner
@@ -47,44 +47,36 @@ struct ingredients : Codable {
     
     
 }
+
+
+
 struct Exercise : Codable {
+    var key : String
     var date : String
     var name : String
     var time : String
     var finalCalorie : String
     var memo : String
+    var exerciseGram : String
+
 
     
     enum Codingkeys : String , CodingKey {
-        case date , name , time , finalCalorie , memo
+        case date , name , time , finalCalorie , memo , key , exerciseGram
         
         
         
     }
     
-    init(date : String , name : String , time : String , finalCalorie : String , memo : String){
+    init(date : String , name : String , time : String , finalCalorie : String , memo : String , key : String , exerciseGram : String){
         self.date = date
         self.name = name
         self.time = time
         self.finalCalorie = finalCalorie
         self.memo = memo
+        self.key = key
+        self.exerciseGram = exerciseGram
     }
     
 }
-extension Encodable {
-    func asDictionary() throws -> [String: Any] {
-        let data = try JSONEncoder().encode(self)
-        guard let dictionary = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {
-            throw NSError()
-        }
-        return dictionary
-    }
-    
-    var dictionary: [String: Any]? {
-        guard let data = try? JSONEncoder().encode(self) else { return nil }
-        return (try? JSONSerialization.jsonObject(with: data, options: .allowFragments)).flatMap { $0 as? [String: Any] }
-      }
-    
-}
-
 

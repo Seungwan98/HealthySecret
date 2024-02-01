@@ -100,6 +100,9 @@ class TabBarCoordinator : Coordinator {
             childCoordinator.append(diaryCoordinator)
             diaryCoordinator.finishDelegate = self
             diaryCoordinator.pushDiaryVC()
+       // case 2:
+            //let viewModel = EditExerciseVM(coordinator: ExerciseCoordinator(navigationTabController), firebaseService: firebaseService)
+            //navigationTabController.pushViewController(EditExerciseVC(viewModel:viewModel), animated: false)
 
        
 
@@ -295,6 +298,22 @@ class DiaryCoordinator : Coordinator  {
      
         self.navigationController.pushViewController( viewController , animated: true )
     
+    }
+    
+    func pushEditExerciseVC(exercises : [Exercise]) {
+        print("pushEdit")
+        let firebaseService = self.firebaseService
+        let viewController = EditExerciseVC(viewModel: EditExerciseVM(coordinator: self, firebaseService: firebaseService , exercises : exercises))
+        viewController.hidesBottomBarWhenPushed = true
+        self.navigationController.pushViewController( viewController , animated: false )
+
+        
+    }
+    
+    func finishChild(){
+        print("popnavigation")
+        self.navigationController.popViewController(animated: false)
+        
     }
     
     

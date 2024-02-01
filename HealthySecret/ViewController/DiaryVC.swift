@@ -453,13 +453,16 @@ class DiaryViewController : UIViewController {
     var sangsaeButton : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor.brown.withAlphaComponent(0.15)
+        button.backgroundColor = UIColor.brown.withAlphaComponent(0.2)
         button.setTitle("상세 정보", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.layer.cornerRadius = 25
+        button.titleLabel?.font = .boldSystemFont(ofSize: 20)
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 20
         return button
         
     }()
+    
+    
     
     var majorView : UIView = {
         let view = UIView()
@@ -514,6 +517,71 @@ class DiaryViewController : UIViewController {
     }()
     
     
+    var exerciseButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 20)
+        button.layer.cornerRadius = 20
+        return button
+        
+    }()
+    
+    var leftCalorieLabel = UILabel()
+    var goalLabel = UILabel()
+    var eatLabel = UILabel()
+    var consumeLabel = UILabel()
+    let informLabel1 = UILabel()
+    let informLabel2 = UILabel()
+    let informLabel3 = UILabel()
+    lazy var informLabelArr = [informLabel1 , informLabel2 , informLabel3]
+    lazy var informDataArr = [goalLabel , eatLabel , consumeLabel]
+    lazy var informationView : UIView = {
+       let view = UIView()
+   
+        let stackView = UIStackView(arrangedSubviews: informLabelArr )
+     
+        view.addSubview(stackView)
+        view.addSubview(self.leftCalorieLabel)
+     
+        
+        leftCalorieLabel.translatesAutoresizingMaskIntoConstraints = false
+        leftCalorieLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        leftCalorieLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor ,constant: -40).isActive = true
+        leftCalorieLabel.font = .boldSystemFont(ofSize: 14)
+        leftCalorieLabel.textColor = .white
+        leftCalorieLabel.text = "120kcal 초과됐습니다"
+        
+        
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor ,constant: 50).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor ,constant: -50).isActive = true
+        stackView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+      
+        stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor , constant:  40).isActive = true
+        
+        
+        stackView.alignment = .center
+        stackView.spacing = 10
+        stackView.distribution = .equalCentering
+        
+        
+        
+        
+        view.layer.cornerRadius = 20
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .brown.withAlphaComponent(0.2)
+        
+        
+        
+        return view
+        
+    }()
+    
+    
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -527,9 +595,7 @@ class DiaryViewController : UIViewController {
         
         self.navigationItem.rightBarButtonItem = rightBarButton
         self.navigationItem.leftBarButtonItem = leftBarButton
-    
-        //UIColor(red: 0.09, green: 0.176, blue: 0.031, alpha: 1)
-        
+            
         
         
         
@@ -549,15 +615,6 @@ class DiaryViewController : UIViewController {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
     }
-    
-    var exerciseAddButton : UIButton = {
-        let button = UIButton()
-        
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        return button
-        
-    }()
     
     let buttonView : UIView = {
         let view = UIView()
@@ -599,7 +656,7 @@ class DiaryViewController : UIViewController {
         let leftLabel = UILabel()
         
         centerLabel.font = .boldSystemFont(ofSize: 18)
-        centerLabel.text = "오늘 운동 시간은?"
+        centerLabel.text = "오늘 활동 시간은?"
         centerLabel.textColor = .white
         
         
@@ -613,6 +670,8 @@ class DiaryViewController : UIViewController {
         self.calorieLabel.textColor = .white
         
         
+        
+        
         leftLabel.font = .boldSystemFont(ofSize: 22)
         leftLabel.text = "나의 활동"
         leftLabel.textColor = .white
@@ -620,27 +679,31 @@ class DiaryViewController : UIViewController {
         
         
         
-      //  view.layer.cornerRadius = 20
         view.backgroundColor = .systemBlue.withAlphaComponent(0.5)
-        //UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
 
         leftLabel.translatesAutoresizingMaskIntoConstraints = false
         centerLabel.translatesAutoresizingMaskIntoConstraints = false
         view.translatesAutoresizingMaskIntoConstraints = false
         image.translatesAutoresizingMaskIntoConstraints = false
-        minuteLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.minuteLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.exerciseButton.translatesAutoresizingMaskIntoConstraints = false
+        self.calorieLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.exerciseButton.backgroundColor = view.backgroundColor?.withAlphaComponent(0.2)
+        
         
         view.addSubview(image)
         view.addSubview(leftLabel)
         view.addSubview(centerLabel)
         view.addSubview(self.minuteLabel)
-        view.addSubview(self.exerciseAddButton)
+        view.addSubview(self.exerciseButton)
+        view.addSubview(self.calorieLabel)
         
         centerLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         centerLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor , constant: -140).isActive = true
         
-        minuteLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        minuteLabel.centerYAnchor.constraint(equalTo: centerLabel.centerYAnchor , constant: 40).isActive = true
+        self.minuteLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        self.minuteLabel.centerYAnchor.constraint(equalTo: centerLabel.centerYAnchor , constant: 40).isActive = true
         
         image.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         image.centerYAnchor.constraint(equalTo: view.centerYAnchor , constant: 0 ).isActive = true
@@ -648,7 +711,14 @@ class DiaryViewController : UIViewController {
         leftLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 12).isActive = true
         leftLabel.topAnchor.constraint(equalTo: view.topAnchor , constant: 12).isActive = true
         
+        self.calorieLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        self.calorieLabel.topAnchor.constraint(equalTo: image.bottomAnchor , constant: 25).isActive = true
         
+        self.exerciseButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        self.exerciseButton.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 60).isActive = true
+        self.exerciseButton.trailingAnchor.constraint(equalTo: view.trailingAnchor , constant: -60).isActive = true
+        self.exerciseButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20).isActive = true
+
         
         return view
     }()
@@ -687,191 +757,15 @@ class DiaryViewController : UIViewController {
     
     
     
-    func staggerAnimations() {
-        let duration1 = 0.4
-        let duration2 = 0.2
-        
-        // initially hide...
-        
-        
-        self.ingredientsStackView.alpha = 0
-        
-        _ = self.ingredientsLabels.map { $0.alpha = 0 }
-        
-        
-        let firstAnimation = UIViewPropertyAnimator(duration: duration1, curve: .easeInOut ) { [self] in
-            
-            ingredientsStackView.isHidden = !showAll
-            
-            _ = ingredientsLabels.map { $0.isHidden = !showAll }
-            
-            
-            
-        }
-        
-        firstAnimation.addCompletion { position in
-            if position == .end {
-                // followed by alpha
-                
-                
-                let secondAnimation = UIViewPropertyAnimator(duration: duration2, curve: .easeInOut) {
-                    
-                    self.ingredientsStackView.alpha = 1
-                    
-                    
-                    _ = self.ingredientsLabels.map { $0.alpha = 1 }
-                    if(self.showAll) {
-                        
-                        self.contentScrollView.contentSize.height = self.contentScrollView.contentSize.height + 400
-                        
-                        
-                        self.buttonView.frame = CGRect(x: self.buttonView.frame.minX, y: self.ingredientsStackView.frame.maxY, width: self.buttonView.frame.width, height: self.buttonView.frame.height)
-                        
-                        
-                        
-                        
-                        self.exerciseView.frame = CGRect(x: self.exerciseView.frame.minX, y: self.buttonView.frame.maxY, width: self.exerciseView.frame.width, height: self.exerciseView.frame.height)
-                        
-                    }
-                    else {
-                        
-                        self.contentScrollView.contentSize.height = self.contentScrollView.contentSize.height - 400
-                        
-                        
-                        self.sangsaeButton.setImage(UIImage(named: "sangsaeButton.png"), for: .normal)
-                        
-                        self.buttonView.frame = CGRect(x: self.buttonView.frame.minX, y: self.chartView.frame.maxY, width: self.buttonView.frame.width, height: self.buttonView.frame.height)
-                        
-                        
-                        self.exerciseView.frame = CGRect(x: self.exerciseView.frame.minX, y: self.buttonView.frame.maxY, width: self.exerciseView.frame.width, height: self.exerciseView.frame.height)
-                        
-                        
-                        
-                        
-                    }
-                    
-                    
-                    
-                    
-                }
-                
-                secondAnimation.startAnimation()
-                
-            }
-        }
-        firstAnimation.startAnimation()
-        
-        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.8) {
-            self.preventButtonTouch = false
-        }
-        
-    }
-    var showAll = false
-    var preventButtonTouch = false
-    
-    
-    
-    
-    @objc
-    func pressed(){
-
-        if preventButtonTouch == true {
-            return
-            
-        }
-        preventButtonTouch = true
-        
-        if(showAll == false){
-            self.sangsaeButton.setImage(UIImage(named: "sangsaeButton2.png"), for: .normal)
-            
-        }
-        else{
-            self.sangsaeButton.setImage(UIImage(named: "sangsaeButton.png"), for: .normal)
-            
-            
-        }
-        
-        
-        
-        //let showAll = true
-        //        let animation = UIViewPropertyAnimator(duration: duration, curve: .easeInOut) { [self] in
-        //            _ = self.ingredientsLabels.map { $0.isHidden = !showAll }
-        //        }
-        //        animation.startAnimation()
-        //
-        
-        showAll = !showAll
-        staggerAnimations()
-        
-        
-        
-        
-        //
-        //        self.testView.frame  = CGRect(x: self.sangsaeButton.frame.minX , y: self.sangsaeButton.frame.maxY , width: self.sangsaeButton.frame.width, height: 0)
-        
-        
-        
-        
-        
-        //        UIView.animate(withDuration: 0.2, delay: 0.001 , options: .transitionCurlDown ) {
-        //
-        //            self.testView.frame  = CGRect(x: self.sangsaeButton.frame.minX , y: self.sangsaeButton.frame.maxY , width: self.sangsaeButton.frame.width, height: 320)
-        
-        
-        
-        
-        
-        
-        //            let labels = self.ingredientsLabels.map({ (label : UILabel ) -> UILabel in
-        //                self.ingredientsStackView.addArrangedSubview(label)
-        //
-        //                label.font = UIFont.boldSystemFont(ofSize: 12)
-        //                return label
-        //            })
-        
-        //            self.ingredientsStackView.frame.size = CGSize(width: self.ingredientsStackView.frame.width , height: 100)
-        
-        //            stackv.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        
-        //        } completion: { _ in
-        
-        //            self.view.addSubview(self.ingredientsStackView)
-        //
-        //
-        //            _ = self.ingredientsLabels.map({ (label : UILabel ) -> UILabel in
-        //                self.ingredientsStackView.addArrangedSubview(label)
-        //                label.font = UIFont.boldSystemFont(ofSize: 12)
-        //                return label
-        //            })
-        //
-        
-        
-        
-        //
-        //
-        
-        //
-        //            self.buttonStackView.frame = CGRect(x: self.sangsaeButton.frame.minX , y: self.testView.frame.maxY , width: UIScreen.main.bounds.width , height: UIScreen.main.bounds.height)
-        
-        
-        
-        
-        
-    }
-    
-    
+   
     
     
     func setButtons(){
-        //let tapesture = UITapGestureRecognizer (target: self, action: nil)
-        
         
         for i in 0..<4{
             let view = mealButtonViews[i]
             let image = mealBottomImages[i]
             
-            //view.addGestureRecognizer(tapesture)
             
             view.addSubview(image)
             view.isUserInteractionEnabled = false
@@ -914,6 +808,8 @@ class DiaryViewController : UIViewController {
         
         
         self.contentView.addSubview(chartView)
+        self.chartView.addSubview(informationView)
+        
         self.contentView.addSubview(chartStackview)
         self.contentView.addSubview(buttonView)
         self.contentView.addSubview(exerciseView)
@@ -925,10 +821,6 @@ class DiaryViewController : UIViewController {
         self.buttonView.addSubview(buttonStackView)
         self.buttonView.addSubview(buttonStackView2)
         
-//        chartView.layer.shadowOpacity = 1
-//        chartView.layer.shadowRadius = 1
-//        chartView.layer.shadowOffset = CGSize(width: 0, height: 4)
-//        chartView.layer.shadowPath = nil
         
         
         self.majorView.addSubview(majorLabelsStackView)
@@ -939,16 +831,36 @@ class DiaryViewController : UIViewController {
         setButtons()
         
         
-        sangsaeButton.addTarget(self, action: #selector(pressed), for: .touchDown )
+      
         
         let imgArr = [UIImage(named: "firstDout") , UIImage(named: "secondDout") , UIImage(named: "thirdDout")]
         let attributedString =  [NSMutableAttributedString(string: ""),NSMutableAttributedString(string: ""),NSMutableAttributedString(string: "")]
         let imageAttachment = [ NSTextAttachment(),NSTextAttachment(),NSTextAttachment()]
       
        
-        
- 
-        
+        let text = ["내 목표" , "섭취량" , "소모량"]
+        for i in 0..<3{
+            informLabelArr[i].text = text[i]
+            informLabelArr[i].textColor = .white
+            informLabelArr[i].font = .boldSystemFont(ofSize: 16)
+            
+            
+            view.addSubview(informDataArr[i])
+            informDataArr[i].translatesAutoresizingMaskIntoConstraints = false
+            informDataArr[i].font = .boldSystemFont(ofSize: 26)
+            informDataArr[i].textColor = .white
+            informDataArr[i].text = "1200"
+            
+            
+            informDataArr[i].centerXAnchor.constraint(equalTo: informLabelArr[i].centerXAnchor).isActive = true
+       
+            
+            informDataArr[i].centerYAnchor.constraint(equalTo: informationView.centerYAnchor , constant: 0).isActive = true
+           
+            
+        }
+         
+           
        
         
         
@@ -976,10 +888,8 @@ class DiaryViewController : UIViewController {
             nutrientsLabelsArr2[i].textColor = .white
             
             
+            
         }
-        
-       
-        // self.chartView.addSubview(self.pieChart)
         
         
         
@@ -1009,11 +919,6 @@ class DiaryViewController : UIViewController {
             
            
             
-//
-//            self.line.topAnchor.constraint(equalTo: self.chartView.topAnchor , constant: 45  ),
-//            self.line.leadingAnchor.constraint(equalTo: self.chartStackview.leadingAnchor , constant: 20),
-//            self.line.trailingAnchor.constraint(equalTo: self.chartStackview.trailingAnchor , constant: -20),
-            
             
             
             
@@ -1035,14 +940,14 @@ class DiaryViewController : UIViewController {
             self.chartView.topAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.topAnchor ),
             self.chartView.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor, constant: 0),
             self.chartView.trailingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.trailingAnchor, constant : 0),
-            self.chartView.heightAnchor.constraint(equalToConstant: 400),
+            self.chartView.heightAnchor.constraint(equalToConstant: 500),
             
             
             
             self.sangsaeButton.heightAnchor.constraint(equalToConstant: 40),
-            self.sangsaeButton.topAnchor.constraint(equalTo: self.chartStackview.safeAreaLayoutGuide.bottomAnchor, constant: 5),
-            self.sangsaeButton.leadingAnchor.constraint(equalTo: self.chartStackview.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            self.sangsaeButton.trailingAnchor.constraint(equalTo: self.chartStackview.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            self.sangsaeButton.bottomAnchor.constraint(equalTo: self.chartView.bottomAnchor, constant: -20),
+            self.sangsaeButton.leadingAnchor.constraint(equalTo: self.chartStackview.safeAreaLayoutGuide.leadingAnchor, constant: 60),
+            self.sangsaeButton.trailingAnchor.constraint(equalTo: self.chartStackview.safeAreaLayoutGuide.trailingAnchor, constant: -60),
             
             
             self.ingredientsStackView.topAnchor.constraint(equalTo: self.chartView.bottomAnchor ),
@@ -1054,13 +959,13 @@ class DiaryViewController : UIViewController {
             
             
             self.chartStackview.centerXAnchor.constraint(equalTo: self.chartView.centerXAnchor ),
-            self.chartStackview.centerYAnchor.constraint(equalTo : self.chartView.centerYAnchor , constant: -70),
+            self.chartStackview.centerYAnchor.constraint(equalTo : self.chartView.centerYAnchor , constant: -100),
             self.chartStackview.widthAnchor.constraint(equalToConstant: 400  ),
             self.chartStackview.heightAnchor.constraint(equalToConstant:  200 ),
             
             
             
-            self.buttonStackView.topAnchor.constraint(equalTo: self.buttonView.topAnchor , constant: 40),
+            self.buttonStackView.topAnchor.constraint(equalTo: self.buttonView.topAnchor , constant: 80),
             self.buttonStackView.leadingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.leadingAnchor  ,constant: 20 ),
             self.buttonStackView.trailingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.trailingAnchor , constant: -20 ),
             self.buttonStackView.heightAnchor.constraint(equalToConstant: 150),
@@ -1074,21 +979,23 @@ class DiaryViewController : UIViewController {
             
             
             self.buttonView.topAnchor.constraint(equalTo: self.chartView.bottomAnchor ),
-            self.buttonView.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor ),
+            self.buttonView.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor  ),
             self.buttonView.trailingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.trailingAnchor ),
-            self.buttonView.heightAnchor.constraint(equalToConstant: 400),
+            self.buttonView.heightAnchor.constraint(equalToConstant: 500),
             
             
             self.exerciseView.topAnchor.constraint(equalTo: buttonView.bottomAnchor , constant: 0),
             self.exerciseView.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor ,constant: 0 ),
             self.exerciseView.trailingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.trailingAnchor ,constant: 0),
-            self.exerciseView.heightAnchor.constraint(equalToConstant: 400),
+            self.exerciseView.heightAnchor.constraint(equalToConstant: 500),
             self.exerciseView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             
             
-            
-            
-            
+            self.informationView.leadingAnchor.constraint(equalTo: chartView.leadingAnchor , constant: 30),
+            self.informationView.trailingAnchor.constraint(equalTo: chartView.trailingAnchor , constant:  -30),
+            self.informationView.topAnchor.constraint(equalTo: chartStackview.bottomAnchor , constant: 0),
+            self.informationView.bottomAnchor.constraint(equalTo: sangsaeButton.topAnchor , constant: -30),
+  
             
             
             
@@ -1114,13 +1021,10 @@ class DiaryViewController : UIViewController {
         
         let input = DiaryVM.Input( viewWillApearEvent :  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable(),
                                    mealButtonsTapped :
-                                    tags.asObservable()  , leftBarButtonTapped: calendarLabel.rx.tapGesture() , rightBarButtonTapped: rightBarButton.rx.tap.asObservable() )
+                                    tags.asObservable()  , calendarLabelTapped: calendarLabel.rx.tapGesture() , execiseButtonTapped: self.exerciseButton.rx.tap.asObservable() )
         
         guard let output = viewModel?.transform(input: input, disposeBag: disposeBag) else {return}
-        //        output.searchedIngredients.subscribe(onNext: { ingredient in
-        //            _ = ingredient.map { row in
-        //            }
-        //        }).disposed(by: disposeBag)
+
         
         
         
@@ -1241,7 +1145,7 @@ class DiaryViewController : UIViewController {
             let attrString = NSAttributedString(string: String(total["kcal"]!) + "\n" ,   attributes: [ NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15) , .foregroundColor: UIColor.white as Any ])
             
             
-            
+            self.eatLabel.text = String(total["kcal"]!)
             self.pieChart.centerAttributedText = attrString
             
             self.kcalLabel.text = " 칼로리: " + String(total["kcal"]!) + "kcal"
@@ -1262,8 +1166,29 @@ class DiaryViewController : UIViewController {
         
         output.minuteLabel.subscribe(onNext: { text in
             self.minuteLabel.text = "\(text)분"
+            if(text == "0"){
+                self.exerciseButton.setTitle("기록하기", for: .normal)
+            }else{
+                self.exerciseButton.setTitle("수정하기", for: .normal)
+                
+
+            }
+        }).disposed(by: disposeBag)
+        
+        output.calorieLabel.subscribe(onNext:  { text in
+            self.calorieLabel.text = "소모량  \(text)kcal"
+            self.consumeLabel.text = text
             
             
+        }).disposed(by: disposeBag)
+        
+        output.goalLabel.subscribe(onNext: { text in
+            self.goalLabel.text = text
+            
+        }).disposed(by: disposeBag)
+        
+        output.leftCalorieLabel.subscribe(onNext: { text in
+            self.leftCalorieLabel.text = text
         }).disposed(by: disposeBag)
         
     }
