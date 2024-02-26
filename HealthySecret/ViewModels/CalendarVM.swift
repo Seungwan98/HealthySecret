@@ -15,17 +15,17 @@ class CalendarVM : ViewModel {
     
     var disposeBag = DisposeBag()
     
-    var user : UserModel?
     
-    var selectingDate = PublishSubject<String>()
+    var selectingDate = PublishSubject<Date>()
     
     struct Input {
-        let rightBarButtonTapped : Observable<Void>
-        let selectingDate : Observable<String>
+        let moveButtonTapped : Observable<Void>
+        let selectingDate : Observable<Date>
     }
     
     struct Output {
-
+        var outputDate = BehaviorSubject<String>(value : "")
+        var outputTodayMemo = BehaviorSubject<String>(value : "")
         
     }
     
@@ -43,17 +43,23 @@ class CalendarVM : ViewModel {
     
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         let output = Output()
-        
-        input.selectingDate.bind(to: self.selectingDate).disposed(by: disposeBag)
-        self.selectingDate.subscribe(onNext : {
-     
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let dayFormatter = DateFormatter()
+        input.selectingDate.subscribe(onNext : {
             date in
+            
+          
+            dayFormatter.dateFormat = "M.dd EEEE "
+            print("\(date)   date")
         
+            output.outputDate.onNext(dayFormatter.string(from: date))
+            print(dateFormatter.string(from: date))
         
-        input.rightBarButtonTapped.subscribe(onNext: { [weak self] _ in
-            print(date)
-            UserDefaults.standard.set( date , forKey: "date")
+        input.moveButtonTapped.subscribe(onNext: { [weak self] _ in
+            UserDefaults.standard.set( dateFormatter.string(from: date) , forKey: "date")
             self?.coordinator?.BacktoDiaryVC()
+          
             
         }).disposed(by: disposeBag)
         

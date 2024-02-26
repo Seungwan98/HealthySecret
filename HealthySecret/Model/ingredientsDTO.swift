@@ -6,7 +6,7 @@
 import Foundation
 
 // MARK: - ResponseFile
-struct IngredientsModel: Codable {
+struct IngredientsDTO: Codable {
     let row: [Row]
 
     enum CodingKeys: String, CodingKey {
@@ -16,20 +16,41 @@ struct IngredientsModel: Codable {
 
 // MARK: - Row
 struct Row: Codable {
-    let descKor: String
-    let foodCd: String
-    let groupName: String
-    let makerName: MakerName
-    let num: String
-    let kcal: String
-    let carbohydrates: String
-    let protein: String
-    let province: String
-    let sugars: String
-    let sodium: String
-    let cholesterol: String
-    let fattyAcid: String
-    let transFat: String
+    
+    mutating func update(){
+        self.addServingSize = self.servingSize
+    }
+    
+    
+    
+    var descKor: String
+    var foodCd: String
+    var groupName: String
+    var makerName: MakerName
+    var num: String
+    
+    var calorie : String
+    
+    var kcal: String {
+        get {
+            return String(lround(Double(calorie) ?? 0.0))
+            
+        }
+        set(value) {
+            calorie = value
+        }
+
+
+    }
+    
+    var carbohydrates: String
+    var protein: String
+    var province: String
+    var sugars: String
+    var sodium: String
+    var cholesterol: String
+    var fattyAcid: String
+    var transFat: String
     let researchYear: String
     let samplingMonthCd: SamplingMonthCd
     let samplingMonthName: SamplingMonthName
@@ -37,14 +58,24 @@ struct Row: Codable {
     let samplingRegionName: String
     let servingSize: String
     let subRefName: SubRefName
-
+    
+    var addServingSize : String?
+    
+    
+    
+     
+    
+   
+   
     enum CodingKeys: String, CodingKey {
+        
+        case addServingSize = "ADD_SERVING_SIZE"
         case descKor = "DESC_KOR"
         case foodCd = "FOOD_CD"
         case groupName = "GROUP_NAME"
         case makerName = "MAKER_NAME"
         case num = "NUM"
-        case kcal = "NUTR_CONT1"
+        case calorie = "NUTR_CONT1"
         case carbohydrates = "NUTR_CONT2" //탄수화물
         case protein = "NUTR_CONT3" //단백질
         case province = "NUTR_CONT4" //지방

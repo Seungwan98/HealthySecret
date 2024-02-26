@@ -56,9 +56,10 @@ class HomeVM : ViewModel {
         }).disposed(by: disposeBag)
         
         input.rightBarButtonTapped.subscribe(onNext: { [weak self] _ in
-            print("rightBarButton")
-            self?.coordinator?.user = self?.user
-            self?.coordinator?.pushIngredientsVC()
+//            print("rightBarButton")
+//            self?.coordinator?.user = self?.user
+//            self?.coordinator?.pushIngredientsVC()
+      
             
         }).disposed(by: disposeBag)
         

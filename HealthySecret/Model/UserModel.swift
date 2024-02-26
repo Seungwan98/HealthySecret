@@ -24,19 +24,19 @@ struct UserModel : Codable {
 
 struct ingredients : Codable {
     var date : String?
-    var morning : [String]?
-    var lunch : [String]?
-    var dinner : [String]?
-    var snack : [String]?
+    var morning : [Row]?
+    var lunch : [Row]?
+    var dinner : [Row]?
+    var snack : [Row]?
 
     enum Codingkeys : String , CodingKey {
-        case date , morning , lunch , dinner , snack , exercise
+        case date , morning , lunch , dinner , snack 
         
         
         
     }
     
-    init(date: String?, morning: [String]? , lunch : [String]? , dinner : [String]? , snack : [String]? ) {
+    init(date: String?, morning: [Row]? , lunch : [Row]? , dinner : [Row]? , snack : [Row]? ) {
         self.date = date
         self.morning = morning
         self.dinner = dinner

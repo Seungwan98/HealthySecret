@@ -84,6 +84,7 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
     }
     
     func showMainViewController(){
+        
         print("mainView")
         let coordinator = TabBarCoordinator(self.navigationController)
         coordinator.logoutDelegate = self

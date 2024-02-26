@@ -35,9 +35,7 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
     lazy private var tableView : UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
-//        tableView.dataSource = self
-//        tableView.delegate = self
+        tableView.backgroundColor = .clear
         tableView.allowsMultipleSelection = true
         return tableView
     }()
@@ -51,9 +49,9 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
     }()
  
     
-    private var titleLabel2 : UILabel = {
+    private var titleLabel : UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 10)
+        label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textColor = .white
         label.text = ""
         return label
@@ -62,13 +60,15 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
     
     
     private lazy var titleLabelStackView : UIStackView = {
-        let stackview = UIStackView(arrangedSubviews: [titleLabel2])
+        let stackview = UIStackView(arrangedSubviews: [titleLabel])
         stackview.axis = .vertical
         stackview.distribution = .fill
         stackview.alignment = .center
         return stackview
         
     }()
+    
+    private let mainView = UIView()
     
     
     
@@ -79,17 +79,21 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
     
     override func viewDidLoad(){
         super.viewDidLoad()
-     
     
         self.makeView()
         self.setupSearchController()
         self.setBinds()
         
+
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationController?.navigationBar.backgroundColor = UIColor(red: 0.09, green: 0.176, blue: 0.031, alpha: 1)
+       // self.navigationController?.hidesBarsOnSwipe = false
+
+        self.navigationController?.navigationBar.backgroundColor = .systemBlue.withAlphaComponent(0.5)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        
         
         
         if #available(iOS 13.0, *) {
@@ -97,6 +101,7 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
         }
     }
     override func viewWillDisappear(_ animated: Bool) {
+
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
     }
@@ -104,14 +109,16 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
     
     
     func setBinds(){
-        let input = ExerciseVM.Input(viewWillApearEvent :  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable(), cellTapped: tableView.rx.modelSelected(Data.self).asObservable() )
+        let input = ExerciseVM.Input(viewWillApearEvent :  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable(), cellTapped: tableView.rx.modelSelected(ExerciseDtoData.self).asObservable() , searchText: searchController.searchBar.rx.text.orEmpty.asObservable())
         
         
         
         guard let output = viewModel?.transform(input: input, disposeBag: disposeBag) else {return}
         
-        tableView.rx.setDelegate(self).disposed(by: disposeBag)
         
+        
+        
+        tableView.rx.setDelegate(self).disposed(by: disposeBag)
         tableView.rx.rowHeight.onNext(60)
         tableView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
                         self?.tableView.deselectRow(at: indexPath, animated: true)
@@ -122,14 +129,21 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
         
         
         output.exerciseArr.bind(to: tableView.rx.items(cellIdentifier: "ExerciseCell" ,cellType: ExerciseCell.self )){index,item,cell in
+            
+            print(item)
             cell.layoutToAdd()
             cell.exerciseGram.text = item.exerciseGram
             cell.name.text = item.name
-            
-            
 
-            
         }.disposed(by: disposeBag)
+        
+        output.titleLabelText.subscribe(onNext: { text in
+            
+            self.titleLabel.text = text
+        
+            
+            
+        }).disposed(by: disposeBag)
     }
     
     
@@ -144,26 +158,25 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
             .attributedPlaceholder = NSAttributedString(string: "운동 검색",
                                                         attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
         
-        
+        searchController.searchBar.searchTextField.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.2)
+
         searchController.searchBar.searchTextField.leftView?.tintColor = .white
-        searchController.searchBar.searchTextField.layer.cornerRadius = 20
+        searchController.searchBar.searchTextField.layer.cornerRadius = 18
+        searchController.searchBar.searchTextField.layer.masksToBounds = true
         
         searchController.searchBar.searchTextField.layer.borderWidth = 1
         searchController.searchBar.searchTextField.layer.borderColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1).cgColor
-        searchController.searchBar.searchTextField.layer.backgroundColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 0.45).cgColor
         
         
-        
-        searchController.searchBar.backgroundColor = UIColor(red: 0.09, green: 0.176, blue: 0.031, alpha: 1)
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.obscuresBackgroundDuringPresentation = false
-        definesPresentationContext = true
         
         
-        
-        
+        definesPresentationContext = false
+
         self.navigationItem.hidesSearchBarWhenScrolling = false
         self.navigationItem.searchController = searchController
+
         
         
     }
@@ -171,23 +184,35 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
     
     func makeView(){
         
-        
-        
         self.navigationItem.titleView = titleLabelStackView
         self.navigationItem.rightBarButtonItem = self.rightButton
         
+        mainView.translatesAutoresizingMaskIntoConstraints = false
+
+        
         tableView.register(ExerciseCell.self, forCellReuseIdentifier: "ExerciseCell")
         
+        
+        self.view.addSubview(mainView)
         self.view.addSubview(tableView)
         
  
         
         NSLayoutConstraint.activate([
             
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+    
+
+
+            mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor ),
+            mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            mainView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            mainView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+           
+            tableView.topAnchor.constraint(equalTo: mainView.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
+            
             
          
             

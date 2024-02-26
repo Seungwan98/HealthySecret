@@ -43,6 +43,9 @@ class TabBarCoordinator : Coordinator {
         
     }
     
+    
+    
+    
     func start(){
         tabBarItems = getTabBarItems()
         let controllers : [UINavigationController] = tabBarItems.map {
@@ -52,62 +55,78 @@ class TabBarCoordinator : Coordinator {
         let _ = controllers.map{ self.startCoordinator( _ : $0) }
         
         startTabBarController(controllers)
+       
+        //네비게이션 겹침 상황을 없애기 위해 추가.
         navigationController.setNavigationBarHidden(true, animated: false)
         
-        //self.navigationController.setNavigationBarHidden(true, animated: false)
+      
+        
         
         navigationController.viewControllers = [tabBarController]
-        
-        
+
+       
 
     }
-    
+  
     
     func startTabBarController( _ controllers : [UINavigationController] ){
         // home의 index로 TabBar Index 세팅
         // TabBar 스타일 지정
+        
+    
+    
         self.tabBarController.setViewControllers( controllers , animated: true)
         self.tabBarController.view.backgroundColor = .systemBackground
         self.tabBarController.tabBar.backgroundColor = .systemBackground
         self.tabBarController.tabBar.tintColor = UIColor.black
+        
         
     }
     
     
     func getTabBarItems() -> [UITabBarItem] {
         let firstItem = UITabBarItem(title: "홈" , image: UIImage.init(systemName: "house") , tag:0)
-        let secondItem = UITabBarItem(title: "다이어리" , image: UIImage.init(systemName: "fork.knife") , tag:1)
-        let thridItem = UITabBarItem(title: "test" , image: UIImage.init(systemName: "fork.knife") , tag:2)
+        let secondItem = UITabBarItem(title: "test" , image: UIImage.init(systemName: "fork.knife") , tag:1)
+        let thirdItem = UITabBarItem(title: "마이" , image: UIImage.init(systemName: "person") , tag:2)
+      
         
-        return [firstItem , secondItem , thridItem]
+        return [firstItem , secondItem , thirdItem]
     }
     
     func startCoordinator(_ navigationTabController : UINavigationController ) {
         let navigationTabController = navigationTabController
+
         let tabBarItemTag : Int = navigationTabController.tabBarItem.tag
         
+        
+      
+      
+
         switch tabBarItemTag{
         case 0:
+
+            let diaryCoordinator =  DiaryCoordinator( navigationTabController )
+            diaryCoordinator.parentCoordinator = self
+            childCoordinator.append(diaryCoordinator)
+            diaryCoordinator.finishDelegate = self
+            diaryCoordinator.pushDiaryVC()
+        case 1:
+            let homeCoordinator =  HomeCoordinator( navigationTabController )
+            homeCoordinator.parentCoordinator = self
+            childCoordinator.append(homeCoordinator)
+            homeCoordinator.finishDelegate = self
+            homeCoordinator.startPush()
+        case 2: break
             let homeCoordinator =  HomeCoordinator( navigationTabController )
             homeCoordinator.parentCoordinator = self
             childCoordinator.append(homeCoordinator)
             homeCoordinator.finishDelegate = self
             homeCoordinator.startPush()
 
-        case 1:
-            let diaryCoordinator =  DiaryCoordinator( navigationTabController )
-            diaryCoordinator.parentCoordinator = self
-            childCoordinator.append(diaryCoordinator)
-            diaryCoordinator.finishDelegate = self
-            diaryCoordinator.pushDiaryVC()
-       // case 2:
-            //let viewModel = EditExerciseVM(coordinator: ExerciseCoordinator(navigationTabController), firebaseService: firebaseService)
-            //navigationTabController.pushViewController(EditExerciseVC(viewModel:viewModel), animated: false)
 
-       
 
-            
-    
+
+
         default:
             break
         }
@@ -121,8 +140,11 @@ class TabBarCoordinator : Coordinator {
     
     func getControllers(_ tabBarItem : UITabBarItem , _ nav : UINavigationController ) -> UINavigationController {
         let navigationController = nav
+        
+
 
         navigationController.tabBarItem = tabBarItem
+        
         return navigationController
         
     }
@@ -219,6 +241,7 @@ class HomeCoordinator : Coordinator  {
     
 }
 
+
 extension HomeCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         print("HomeCoordinatorDidFinish")
@@ -229,6 +252,59 @@ extension HomeCoordinator: CoordinatorFinishDelegate {
     }
 }
 
+class MyProfileCoordinator : Coordinator {
+    
+    var parentCoordinator: TabBarCoordinator?
+        
+    var finishDelegate: CoordinatorFinishDelegate?
+            
+    let firebaseService = FirebaseService()
+        
+    var type: CoordinatorType = .myprofile
+            
+    var navigationController : UINavigationController
+        
+    var childCoordinator: [Coordinator] = []
+    
+    
+    required init(_ navigationController: UINavigationController ) {
+        self.navigationController = navigationController
+        
+        
+    }
+    
+    func start() {}
+ 
+   
+
+        
+    
+    
+    
+    
+    func startPush() {
+        
+      
+    
+    }
+ 
+    
+    
+    
+    
+    
+}
+extension MyProfileCoordinator : CoordinatorFinishDelegate {
+    func coordinatorDidFinish(childCoordinator: Coordinator) {
+        
+        print("DiaryCoordinatorFinish")
+        // 자식 뷰를 삭제하는 델리게이트 (자식 -> 부모 접근 -> 부모에서 자식 삭제)
+        self.childCoordinator = self.childCoordinator
+            .filter({ $0.type != childCoordinator.type })
+        childCoordinator.navigationController.popToRootViewController(animated: true)
+    }
+    
+}
 
 
 
@@ -249,7 +325,6 @@ class DiaryCoordinator : Coordinator  {
         
     var childCoordinator: [Coordinator] = []
     
-    var user : UserModel?
     
     required init(_ navigationController: UINavigationController ) {
         self.navigationController = navigationController
@@ -261,13 +336,24 @@ class DiaryCoordinator : Coordinator  {
    
   
 
-        
+//
+//    
+//    func pushIngredientsVC() {
+//        let ingredientsCoordinator =  IngredientsCoordinator( self.navigationController )
+//        ingredientsCoordinator.finishDelegate = self
+//        childCoordinator.append(ingredientsCoordinator)
+//        ingredientsCoordinator.start()
+//
+//    }
     
-    func pushIngredientsVC() {
+    
+    
+    
+    func pushEditIngredientsVC(arr : [Row]) {
         let ingredientsCoordinator =  IngredientsCoordinator( self.navigationController )
         ingredientsCoordinator.finishDelegate = self
         childCoordinator.append(ingredientsCoordinator)
-        ingredientsCoordinator.start()
+        ingredientsCoordinator.pushIngredientsVC(arr : arr)
         
     }
      
@@ -295,7 +381,8 @@ class DiaryCoordinator : Coordinator  {
         let firebaseService = self.firebaseService
         let viewController = DiaryViewController(viewModel : DiaryVM ( coordinator : self , firebaseService: firebaseService ))
         
-     
+        self.navigationController.hidesBottomBarWhenPushed = false
+        
         self.navigationController.pushViewController( viewController , animated: true )
     
     }
@@ -304,9 +391,32 @@ class DiaryCoordinator : Coordinator  {
         print("pushEdit")
         let firebaseService = self.firebaseService
         let viewController = EditExerciseVC(viewModel: EditExerciseVM(coordinator: self, firebaseService: firebaseService , exercises : exercises))
+        
         viewController.hidesBottomBarWhenPushed = true
+        
+//        self.navigationController.navigationBar.backIndicatorImage = UIImage(systemName: "xmark")
+//        self.navigationController.navigationBar.backIndicatorTransitionMaskImage = UIImage(systemName: "xmark")
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .white
         self.navigationController.pushViewController( viewController , animated: false )
 
+        
+    }
+    
+    func presentDetailView(arr : [String:Any] ){
+        print("pushDetailView")
+        let viewModel = DetailModalVM(coordinator: self , arr : arr)
+        let viewController = DetailModalVC(dic:arr)
+        
+
+
+        
+            
+        viewController.view.backgroundColor = .white
+        self.navigationController.present(viewController, animated: true)
+        
+        
+        
         
     }
     
@@ -327,7 +437,7 @@ class DiaryCoordinator : Coordinator  {
 extension DiaryCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         
-        print("HomeCoordinatorDidFinish")
+        print("DiaryCoordinatorFinish")
         // 자식 뷰를 삭제하는 델리게이트 (자식 -> 부모 접근 -> 부모에서 자식 삭제)
         self.childCoordinator = self.childCoordinator
             .filter({ $0.type != childCoordinator.type })
@@ -343,6 +453,4 @@ extension DiaryCoordinator: CoordinatorFinishDelegate {
 
     
 
-
-    
 

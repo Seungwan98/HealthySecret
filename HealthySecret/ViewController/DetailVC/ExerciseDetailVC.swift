@@ -1,5 +1,5 @@
 //
-//  DetailPageViewController.swift
+//  ExerciseDetailVC.swift
 //  HealthySecret
 //
 //  Created by 양승완 on 2023/11/20.
@@ -30,14 +30,14 @@ class ExerciseDetailVC: UIViewController {
         
         button.setTitle("추가하기", for: .normal)
         button.tintColor = .white
-        button.layer.cornerRadius = 25
+        button.layer.cornerRadius = 30
         return button
     }()
     
     private let contentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.backgroundColor = UIColor(red: 1, green: 0.98, blue: 0.94, alpha: 1)
+        scrollView.backgroundColor = .clear
         scrollView.showsVerticalScrollIndicator = false
         
         return scrollView
@@ -45,7 +45,7 @@ class ExerciseDetailVC: UIViewController {
     
     private let contentView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(red: 1, green: 0.98, blue: 0.94, alpha: 1)
+        view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -70,7 +70,7 @@ class ExerciseDetailVC: UIViewController {
         let view =  UIView()
         
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red: 0.96, green: 0.77, blue: 0.73, alpha: 1).withAlphaComponent(0.2)
+        view.backgroundColor = .systemBlue.withAlphaComponent(0.5)
         
         return view
         
@@ -79,9 +79,9 @@ class ExerciseDetailVC: UIViewController {
     private let nameLabel : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        
+        label.textAlignment = .center
         label.font = .boldSystemFont(ofSize: 30)
-        label.textColor = UIColor(red: 0.94, green: 0.67, blue: 0.67, alpha: 1)
+        label.textColor = .white
         return label
         
         
@@ -107,6 +107,14 @@ class ExerciseDetailVC: UIViewController {
     var rightLabelArr = [ UILabel(frame: CGRect(x:0 , y: 0, width: 100 , height: 50)) , UILabel(frame: CGRect(x:0 , y: 0, width: 100 , height: 50)) ]
     var leftLabelArr = [ UILabel(frame: CGRect(x: 30, y: 0, width: 80, height: 18)) ,  UILabel(frame: CGRect(x: 30, y: 0, width: 80, height: 18)) ]
     
+    let bottomView : UIView = {
+       let view = UIView()
+       
+       
+       view.translatesAutoresizingMaskIntoConstraints = false
+     
+       return view
+   }()
     
     
     override func viewDidLoad() {
@@ -162,18 +170,20 @@ class ExerciseDetailVC: UIViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
-        
-        self.navigationController?.view.backgroundColor = UIColor(red: 1, green: 0.98, blue: 0.94, alpha: 1)
-        
-        self.navigationController?.tabBarController?.tabBar.isHidden = true
-        self.navigationController?.tabBarController?.tabBar.layer.zPosition = -1
-        self.navigationController?.navigationBar.backgroundColor = .clear
+
         self.navigationController?.setNavigationBarHidden(false, animated: true)
+
+        self.navigationController?.view.backgroundColor = .white
+        
+    
+        self.navigationController?.navigationBar.backgroundColor = .systemBlue.withAlphaComponent(0.5)
         
         
         
     }
     override func viewWillDisappear(_ animated: Bool) {
+//        self.navigationController?.hidesBottomBarWhenPushed = false
+
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
     }
@@ -210,7 +220,7 @@ class ExerciseDetailVC: UIViewController {
             
             textField.translatesAutoresizingMaskIntoConstraints = false
             textField.backgroundColor = .lightGray.withAlphaComponent(0.6)
-            textField.layer.cornerRadius = 10
+            textField.layer.cornerRadius = 20
             textField.rightViewMode = .always
             textField.leftViewMode = .always
             textField.rightView = rightView
@@ -226,11 +236,12 @@ class ExerciseDetailVC: UIViewController {
     
     func addSubView(){
         
-        self.view.addSubview(addButton)
         
         self.view.addSubview(contentScrollView)
+        self.view.addSubview(bottomView)
         contentScrollView.addSubview(contentView)
         
+
         
         self.contentView.addSubview(topView)
         self.contentView.addSubview(nameLabel)
@@ -239,40 +250,35 @@ class ExerciseDetailVC: UIViewController {
         self.contentView.addSubview(calorieLabel)
         
         
+        bottomView.addSubview(addButton)
+
         NSLayoutConstraint.activate([
             
+            bottomView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            bottomView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            bottomView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            bottomView.heightAnchor.constraint(equalToConstant: 100),
             
-            addButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            addButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-            addButton.heightAnchor.constraint(equalToConstant: 50),
-            addButton.widthAnchor.constraint(equalToConstant: 360),
+
             
+            addButton.leadingAnchor.constraint(equalTo:bottomView.leadingAnchor , constant: 20),
+            addButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -20 ),
+            addButton.heightAnchor.constraint(equalToConstant: 60),
+            addButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
+
             
-            nameLabel.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
-            nameLabel.centerYAnchor.constraint(equalTo: topView.centerYAnchor , constant: 0),
-            
-            
-            textFieldStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 16),
-            textFieldStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor , constant: -16) ,
-            textFieldStackView.topAnchor.constraint(equalTo: topView.bottomAnchor , constant: 40),
-            textFieldStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            textFieldStackView.heightAnchor.constraint(equalToConstant: 150),
+
             
             
-            calorieLabel.centerYAnchor.constraint(equalTo: textFieldStackView.centerYAnchor  , constant: 120),
-            calorieLabel.centerXAnchor.constraint(equalTo: textFieldStackView.centerXAnchor),
             
             
-            imageView.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
-            imageView.bottomAnchor.constraint(equalTo: topView.bottomAnchor ,constant: 5),
-            imageView.widthAnchor.constraint(equalToConstant: 120),
-            imageView.heightAnchor.constraint(equalToConstant: 120),
+           
             
             
-            contentScrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            contentScrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             contentScrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             contentScrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            contentScrollView.bottomAnchor.constraint(equalTo: self.addButton.topAnchor),
+            contentScrollView.bottomAnchor.constraint(equalTo: self.bottomView.topAnchor),
             
             
             contentView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
@@ -287,7 +293,25 @@ class ExerciseDetailVC: UIViewController {
             topView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             topView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
+            calorieLabel.centerYAnchor.constraint(equalTo: textFieldStackView.centerYAnchor  , constant: 120),
+            calorieLabel.centerXAnchor.constraint(equalTo: textFieldStackView.centerXAnchor),
             
+            
+            imageView.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
+            imageView.bottomAnchor.constraint(equalTo: topView.bottomAnchor ,constant: 5),
+            imageView.widthAnchor.constraint(equalToConstant: 120),
+            imageView.heightAnchor.constraint(equalToConstant: 120),
+            
+            nameLabel.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
+            nameLabel.centerYAnchor.constraint(equalTo: topView.centerYAnchor , constant: -35),
+            nameLabel.widthAnchor.constraint(equalTo: topView.widthAnchor , constant: -40),
+            
+            
+            textFieldStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 16),
+            textFieldStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor , constant: -16) ,
+            textFieldStackView.topAnchor.constraint(equalTo: topView.bottomAnchor , constant: 40),
+            textFieldStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            textFieldStackView.heightAnchor.constraint(equalToConstant: 150),
             
         ])
     }

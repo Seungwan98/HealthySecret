@@ -127,7 +127,6 @@ final class FirebaseService {
                     }
                 }
                 if let data = datas.first{
-                    print("\(data)  exee") 
                     single(.success(data))
                     
                 }
@@ -189,6 +188,7 @@ final class FirebaseService {
                         // Perhaps this is an error for you?
                     } else {
                         let document = querySnapshot?.documents.first!
+                        document?.get("Ingredients")
                         document?.reference.updateData([
                             "ingredients" : arr
                         ])
@@ -210,7 +210,9 @@ final class FirebaseService {
     
     
     
-    func addIngredients( meal : String , date : String , key : String  , mealArr : [String] ) -> Completable {
+    
+    
+    func addIngredients( meal : String , date : String , key : String  , mealArr : [Row] ) -> Completable {
         return Completable.create { completable in
             self.getDocument(key: key).subscribe( { event in
                 
@@ -221,15 +223,15 @@ final class FirebaseService {
                 case .success(let user):
                     
                     var userIngredients  = user.ingredients
-                    var userIngredient : ingredients?
-                    
+                    var userIngredient = ingredients(date: date, morning: [], lunch: [], dinner: [] , snack: [])
                     
                     var count = 0
                     userIngredients.forEach({
                         if($0.date == date){
+                            
+                            
                             userIngredient = $0
                             userIngredients.remove(at: count)
-                            
                             
                         }
                         count += 1
@@ -238,64 +240,36 @@ final class FirebaseService {
                         
                     })
                     
-                    if let _ = userIngredient {
-                        switch meal{
-                        case "아침식사":
-                            
-                            userIngredient?.morning! += mealArr
-                        case "점심식사":
-                            userIngredient?.lunch! += mealArr
-                            
-                        case "저녁식사":
-                            userIngredient?.dinner! += mealArr
-                        case "간식":
-                            userIngredient?.snack! += mealArr
-                            
-                        default:
-                            return
-                        }
-                        userIngredients.append(userIngredient!)
-                        self.updateIngredients(ingredients: userIngredients ?? [], key: key).subscribe(
-                            onCompleted: {
-                                print("업데이트성공")
-                                completable(.completed)
-                            }
-                        ).disposed(by: self.disposeBag)
+                    
+                    
+                    switch meal{
+                    case "아침식사":
                         
+                        userIngredient.morning! = mealArr
+                    case "점심식사":
+                        userIngredient.lunch! = mealArr
                         
+                    case "저녁식사":
+                        userIngredient.dinner! = mealArr
+                    case "간식":
+                        userIngredient.snack! = mealArr
+                        
+                    default:
+                        return
                     }
-                    else {
-                        
-                        var ingredient =  ingredients(date: date, morning: [], lunch: [], dinner: [] , snack: [])
-                        
-                        
-                        
-                        switch meal{
-                        case "아침식사":
-                            ingredient.morning! += mealArr
-                            
-                        case "점심식사":
-                            ingredient.lunch! += mealArr
-                        case "저녁식사":
-                            ingredient.dinner! += mealArr
-                        case "간식식사":
-                            ingredient.dinner! += mealArr
-                            
-                        default:
-                            return
+                    userIngredients.append(userIngredient)
+                    
+                    print("userIngredients")
+                    self.updateIngredients(ingredients: userIngredients , key: key).subscribe(
+                        onCompleted: {
+                            completable(.completed)
                         }
-                        userIngredients.append(ingredient)
-                        print(userIngredients)
-                        self.updateIngredients(ingredients: userIngredients ?? [], key: key).subscribe(
-                            onCompleted: {
-                                print("생성성공")
-                                completable(.completed)
-                            }
-                        ).disposed(by: self.disposeBag)
-                        
-                        
-                    }
-    
+                    ).disposed(by: self.disposeBag)
+                    
+                    
+                    
+                    
+                    
                 case .failure(_):
                     print("fail")
                     
@@ -318,19 +292,6 @@ final class FirebaseService {
         
     }
     
-//    func setExercise( key : String , exercise : Exercise ) -> Completable {
-//        return Completable.create{ completable in
-//
-//
-//
-//
-//
-//
-//        }
-//    }
-//
-//
-//
     
     
     
@@ -338,9 +299,9 @@ final class FirebaseService {
     
     func getUsersIngredients( key : [String] ) -> Single<[Row]> {
         return Single.create { [weak self] single in
-            guard let self = self else { return Disposables.create() }
+            // guard let self = self else { return Disposables.create() }
             
-            self.db.collection("HealthySecret").getDocuments{ snapshot , error in
+            self?.db.collection("HealthySecret").getDocuments{ snapshot , error in
                 
                 if let error = error { single(.failure(error))}
                 
@@ -349,10 +310,10 @@ final class FirebaseService {
                     return
                 }
                 
-                let datas = snapshot.documents.compactMap { doc -> IngredientsModel? in
+                let datas = snapshot.documents.compactMap { doc -> IngredientsDTO? in
                     do {
                         let jsonData = try JSONSerialization.data(withJSONObject: doc.data(), options: [])
-                        let creditCard = try JSONDecoder().decode(IngredientsModel.self, from: jsonData)
+                        let creditCard = try JSONDecoder().decode(IngredientsDTO.self, from: jsonData)
                         return creditCard
                     } catch let error {
                         print("Error json parsing \(error)")
@@ -376,6 +337,7 @@ final class FirebaseService {
                         
                     }
                 }
+                _ = resultData.map({ String(lroundl(Double($0.kcal) ?? 0.0))})
                 
                 single(.success(resultData))
                 
@@ -419,7 +381,7 @@ extension FirebaseService {
                         
                         
                         
-                        let responseFile  = try JSONDecoder().decode(IngredientsModel.self, from: jsonData)
+                        let responseFile  = try JSONDecoder().decode(IngredientsDTO.self, from: jsonData)
                         
                         parsed = responseFile.row
                         
@@ -443,6 +405,18 @@ extension FirebaseService {
 
 extension FirebaseService {
     
+    func addExercise(exercise : Exercise , key : String) -> Completable {
+        return Completable.create{ completable in
+            
+            completable(.completed)
+            let path = self.db.collection("HealthySecretUsers").document(String(key))
+            
+            path.updateData(["exercise" :FieldValue.arrayUnion([exercise.dictionary!])])
+            return Disposables.create()
+        }
+        
+    }
+    
     
     
     func updateExercise(exercise : [Exercise] , key : String) -> Completable {
@@ -452,19 +426,19 @@ extension FirebaseService {
                 $0.dictionary
                 
             })
-      
+            
             
             self.db.collection("HealthySecretUsers").whereField("id", isEqualTo: key)
                 .getDocuments() { (querySnapshot, err) in
                     if let err = err {
-
+                        
                         print("error1")
-
+                        
                         completable(.error(err))
                         // Some error occured
                     } else if querySnapshot!.documents.count != 1 {
                         print("error2")
-
+                        
                         completable(.error(err!))
                         // Perhaps this is an error for you?
                     } else {
@@ -472,8 +446,8 @@ extension FirebaseService {
                         document?.reference.updateData([
                             "exercise" : exercise
                         ])
-
-
+                        
+                        
                         completable(.completed)
                     }
                 }
@@ -488,7 +462,7 @@ extension FirebaseService {
         
     }
     
-    func getExercise() -> Single<ExerciseModel>{
+    func getExercise() -> Single<ExerciseDTO>{
         return Single.create { [weak self] single in
             guard let self = self else { return Disposables.create() }
             
@@ -501,11 +475,10 @@ extension FirebaseService {
                     return
                 }
                 
-                let datas = snapshot.documents.compactMap { doc -> ExerciseModel? in
+                let datas = snapshot.documents.compactMap { doc -> ExerciseDTO? in
                     do {
                         let jsonData = try JSONSerialization.data(withJSONObject: doc.data(), options: [])
-                        let creditCard = try JSONDecoder().decode(ExerciseModel.self, from: jsonData)
-                        print("\(creditCard)  crediet")
+                        let creditCard = try JSONDecoder().decode(ExerciseDTO.self, from: jsonData)
                         single(.success(creditCard))
                         
                         return creditCard

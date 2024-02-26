@@ -8,7 +8,7 @@ import UIKit
 import RxSwift
 
 
-class IngredientsViewController : UIViewController   {
+class IngredientsViewController : UIViewController, UIScrollViewDelegate, IngredientsCellDelegate, UISearchBarDelegate   {
     
     
     
@@ -33,9 +33,7 @@ class IngredientsViewController : UIViewController   {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
-        tableView.backgroundView = backgroundView
-        tableView.dataSource = self
-        tableView.delegate = self
+        
         tableView.allowsMultipleSelection = true
         return tableView
     }()
@@ -109,16 +107,20 @@ class IngredientsViewController : UIViewController   {
     override func viewDidLoad(){
         super.viewDidLoad()
         
-        
-        self.setBind()
         self.makeView()
         self.setupSearchController()
+        self.setBind()
+
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
+   
+
+        self.navigationController?.navigationBar.backgroundColor = UIColor(red: 0.09, green: 0.18, blue: 0.03, alpha: 1)
+        
+       
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationController?.navigationBar.backgroundColor = UIColor(red: 0.09, green: 0.176, blue: 0.031, alpha: 1)
         
         
         if #available(iOS 13.0, *) {
@@ -126,11 +128,13 @@ class IngredientsViewController : UIViewController   {
         }
     }
     override func viewWillDisappear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
         
     }
     
     
+    
+  
     
     
     
@@ -145,9 +149,11 @@ class IngredientsViewController : UIViewController   {
             .attributedPlaceholder = NSAttributedString(string: "식품 검색",
                                                         attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
         
+      
         
         searchController.searchBar.searchTextField.leftView?.tintColor = .white
-        searchController.searchBar.searchTextField.layer.cornerRadius = 20
+        searchController.searchBar.searchTextField.layer.cornerRadius = 18
+        searchController.searchBar.searchTextField.layer.masksToBounds = true
         
         searchController.searchBar.searchTextField.layer.borderWidth = 1
         searchController.searchBar.searchTextField.layer.borderColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1).cgColor
@@ -170,9 +176,18 @@ class IngredientsViewController : UIViewController   {
     }
     
     
+    let mainView = UIView()
     func makeView(){
-        backgroundTableView.translatesAutoresizingMaskIntoConstraints = false
         
+        self.tableView.backgroundView = backgroundView
+        
+        
+        tableView.rx.setDelegate(self).disposed(by: disposeBag)
+        tableView.dataSource = nil
+        tableView.register(IngredientsCell.self, forCellReuseIdentifier: "IngredientsCell")
+
+        backgroundTableView.translatesAutoresizingMaskIntoConstraints = false
+        mainView.translatesAutoresizingMaskIntoConstraints = false
         
         
         self.navigationItem.titleView = titleLabelStackView
@@ -180,8 +195,11 @@ class IngredientsViewController : UIViewController   {
         
         
         
-        self.backgroundView.addSubview(backgroundTableView)
+        self.view.addSubview(mainView)
+        
         self.view.addSubview(tableView)
+        self.backgroundView.addSubview(backgroundTableView)
+        
         
         
         
@@ -191,13 +209,27 @@ class IngredientsViewController : UIViewController   {
         
         NSLayoutConstraint.activate([
             
+            
+            
+            mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor ),
+            mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            mainView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            mainView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            
+            
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             
-            backgroundTableView.centerXAnchor.constraint(equalTo: backgroundView.safeAreaLayoutGuide.centerXAnchor),
-            backgroundTableView.centerYAnchor.constraint(equalTo: backgroundView.safeAreaLayoutGuide.centerYAnchor)
+            backgroundView.topAnchor.constraint(equalTo: tableView.topAnchor),
+            backgroundView.leadingAnchor.constraint(equalTo: tableView.leadingAnchor),
+            backgroundView.bottomAnchor.constraint(equalTo: tableView.bottomAnchor),
+            backgroundView.trailingAnchor.constraint(equalTo: tableView.trailingAnchor),
+            
+            
+            backgroundTableView.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
+            backgroundTableView.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor)
             
             
         ])
@@ -211,6 +243,7 @@ class IngredientsViewController : UIViewController   {
     
     var likesInputArr = PublishSubject<[String:Int]>()
     var getBool = PublishSubject<Bool>()
+    var cellTouchToDetail = PublishSubject<Row>()
     
     
     
@@ -218,13 +251,14 @@ class IngredientsViewController : UIViewController   {
         
         
         
+        
+        
         let input = IngredientsVM.Input( viewWillAppear : self.rx.methodInvoked(#selector(viewWillAppear(_:)))
             .map( { _ in }).asObservable(),
                                          rightButtonTapped: rightButton.rx.tap.asObservable(),
-                                         searchText: Observable.merge( searchController.searchBar.rx.text.orEmpty.asObservable(),
-                                                                       self.cellTouchToSearch),
-                                         likesInputArr: self.likesInputArr.asObservable()
-                                      
+                                         searchText: Observable.merge( searchController.searchBar.rx.text.orEmpty.distinctUntilChanged().asObservable()),
+                                         likesInputArr: self.likesInputArr.asObservable() , cellTouchToDetail:  tableView.rx.modelSelected(Row.self).asObservable()
+                                         
         )
         
         
@@ -232,36 +266,46 @@ class IngredientsViewController : UIViewController   {
         
         guard let output = viewModel?.transform(input: input, disposeBag: self.disposeBag ) else {return}
         
-        
-        output.recentsearchArr.subscribe(onNext: {
-            arr in self.recentsearchArr = arr
-            self.tableView.register(RecentSearchCell.self, forCellReuseIdentifier: "RecentSearchCell")
-            
-            self.tableView.reloadData()
+        tableView.rx.rowHeight.onNext(50)
+        tableView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
+            self?.tableView.deselectRow(at: indexPath, animated: true)
         }).disposed(by: disposeBag)
         
+        //
+        //        output.recentsearchArr.subscribe(onNext: {
+        //            arr in self.recentsearchArr = arr
+        //            self.tableView.register(RecentSearchCell.self, forCellReuseIdentifier: "RecentSearchCell")
+        //
+        //            self.tableView.reloadData()
+        //        }).disposed(by: disposeBag)
         
-        output.ingredientsArr.subscribe(onNext : {
-            arr in self.ingredientsArr = arr
-            print("ingredients")
-            self.tableView.register(IngredientsCell.self, forCellReuseIdentifier: "IngredientsCell")
-            
-            self.tableView.reloadData()
-            
-            
-        }).disposed(by: disposeBag)
         
-        output.checkController.subscribe(onNext: {
-            cont in self.cellController = cont
-            
-            
-            self.tableView.register(IngredientsCell.self, forCellReuseIdentifier: "IngredientsCell")
-            self.tableView.reloadData()
-            
-        }).disposed(by: disposeBag)
+        //        output.ingredientsArr.subscribe(onNext : {
+        //            arr in
+        //
+        //            print("ingredients")
+        //            self.ingredientsArr = arr
+        //
+        //
+        ////            self.tableView.register(IngredientsCell.self, forCellReuseIdentifier: "IngredientsCell")
+        //
+        //            self.tableView.reloadData()
+        //
+        //
+        //        }).disposed(by: disposeBag)
         
+        //        output.checkController.subscribe(onNext: {
+        //            cont in self.cellController = cont
+        //
+        //
+        //            self.tableView.reloadData()
+        //
+        //        }).disposed(by: disposeBag)
+        //
         
         output.rightButtonEnable.bind(to: rightButton.rx.isEnabled).disposed(by: disposeBag)
+        
+        
         
         output.titleLabelTexts.subscribe(onNext: { arr in
             
@@ -272,7 +316,59 @@ class IngredientsViewController : UIViewController   {
         }).disposed(by: disposeBag)
         
         
+        output.ingredientsArr.bind(to: tableView.rx.items(cellIdentifier: "IngredientsCell" , cellType: IngredientsCell.self )){
+            index,item,cell in
+
+            let index = item.num
+            cell.backgroundColor = .clear
+
+            cell.title.text = item.descKor
+            cell.index = item.num
+            cell.kcal.text = "( " + item.servingSize + "g )" + " " + item.kcal + " kcal"
+            cell.delegate = self
+            
+            if self.likes[index] == 1 {
+                cell.checkBoxButton.isSelected = true
+                cell.isTouched = true
+
+
+            }else{
+                cell.checkBoxButton.isSelected = false
+                cell.isTouched = false
+            }
+            
+            print(item.descKor)
+
+            
+        }.disposed(by: disposeBag)
         
+        
+        
+        //        output.ingredientsArr.bind(to: tableView.rx.items(cellIdentifier: "IngredientsCell" ,cellType: IngredientsCell.self )){ index,item,cell in
+        //            cell.backgroundColor = .clear
+        //            let index = String(item.num)
+        //
+        //                          cell.delegate = self
+        //
+        //                          cell.title.text = String(item.descKor)
+        //                          cell.kcal.text = String( "( " + item.servingSize + "g )" + " " +   item.kcal + " kcal")
+        //                          cell.index = index
+        //
+        //                          print(likes)
+        //
+        //                          if likes[index] == 1 {
+        //                              cell.checkBoxButton.isSelected = true
+        //                              cell.isTouched = true
+        //
+        //                          }else{
+        //                              cell.checkBoxButton.isSelected = false
+        //                              cell.isTouched = false
+        //                          }
+        //
+        //
+        //
+        //
+        //        }.disposed(by: disposeBag)
         
         
         
@@ -290,7 +386,7 @@ class IngredientsViewController : UIViewController   {
 
 var checkBoxButtonTapped = PublishSubject<Void>()
 
-extension IngredientsViewController: UITableViewDelegate , UITableViewDataSource , IngredientsCellDelegate {
+extension IngredientsViewController{
     func rightButtonEnabled() {
         if likes.isEmpty == true {
             self.rightButton.isEnabled = false
@@ -316,91 +412,94 @@ extension IngredientsViewController: UITableViewDelegate , UITableViewDataSource
     }
     
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        
-        
-        
-        var resultCell = UITableViewCell()
-        if(self.cellController){
-            
-            if let cell = tableView.dequeueReusableCell(withIdentifier: "IngredientsCell" , for: indexPath) as? IngredientsCell {
-                
-                cell.backgroundColor = .clear
-                let index = String(ingredientsArr[indexPath.row].num)
-                
-                cell.delegate = self
-                
-                cell.title.text = String(ingredientsArr[indexPath.row].descKor)
-                cell.kcal.text = String( "( " + ingredientsArr[indexPath.row].servingSize + "g )" + " " +  ingredientsArr[indexPath.row].kcal + " kcal")
-                cell.index = index
-                
-                print(likes)
-                
-                if likes[index] == 1 {
-                    cell.checkBoxButton.isSelected = true
-                    cell.isTouched = true
-                    
-                }else{
-                    cell.checkBoxButton.isSelected = false
-                    cell.isTouched = false
-                }
-
-                resultCell = cell
-                
-            }
-        }
-        else{
-            print("recentSearchCell")
-            let cell = tableView.dequeueReusableCell(withIdentifier: "RecentSearchCell" , for: indexPath) as! RecentSearchCell
-            cell.backgroundColor =  .clear
-            
-            cell.title.text = String(recentsearchArr[indexPath.row])
-            resultCell = cell
-        }
-        
-        
-        
-        
-        
-        return resultCell
-        
-        
-    }
+    //    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    //
+    //
+    //
+    //
+    //        var resultCell = UITableViewCell()
+    ////        if(self.cellController){
+    //
+    ////            if let cell = tableView.dequeueReusableCell(withIdentifier: "IngredientsCell" , for: indexPath) as? IngredientsCell {
+    //       let cell = tableView.dequeueReusableCell(withIdentifier: "IngredientsCell" , for: indexPath) as? IngredientsCell
+    //                cell?.backgroundColor = .clear
+    //                let index = String(ingredientsArr[indexPath.row].num)
+    //
+    //                cell?.delegate = self
+    //
+    //                cell?.title.text = String(ingredientsArr[indexPath.row].descKor)
+    //                cell?.kcal.text = String( "( " + ingredientsArr[indexPath.row].servingSize + "g )" + " " +   ingredientsArr[indexPath.row].kcal + " kcal")
+    //                cell?.index = index
+    //
+    //                print(likes)
+    //
+    //                if likes[index] == 1 {
+    //                    cell?.checkBoxButton.isSelected = true
+    //                    cell?.isTouched = true
+    //
+    //                }else{
+    //                    cell?.checkBoxButton.isSelected = false
+    //                    cell?.isTouched = false
+    //                }
+    //
+    //                resultCell = cell!
+    //
+    //         //   }
+    ////        }
+    ////        else{
+    ////            print("recentSearchCell")
+    ////            let cell = tableView.dequeueReusableCell(withIdentifier: "RecentSearchCell" , for: indexPath) as! RecentSearchCell
+    ////            cell.backgroundColor =  .clear
+    ////
+    ////            cell.title.text = String(recentsearchArr[indexPath.row])
+    ////            resultCell = cell
+    ////        }
+    //
+    //
+    //
+    //
+    //
+    //        return resultCell
+    //
+    //
+    //    }
     
     
     
     
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let result : Int
-        if(cellController){ result = self.ingredientsArr.count } else { result = self.recentsearchArr.count}
-        
-        return result
-    }
+    //    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    //        let result : Int
+    ////        if(cellController){ result = self.ingredientsArr.count } else { result = self.recentsearchArr.count}
+    //        result = self.ingredientsArr.count
+    //        return result
+    //    }
+    ////
+    //
+    //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    //        let result : Int
+    //        //최근 검색어와 기본 ingredients 정보에 따라 height 구분.
+    //        if(cellController){ result = 50 } else { result = 40}
+    //
+    //        return CGFloat(result)
+    //    }
     
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let result : Int
-        if(cellController){ result = 50 } else { result = 40}
-        
-        return CGFloat(result)
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        if(cellController){
-            
-            
-        } else {
-            let text = recentsearchArr[indexPath.row]
-            self.searchController.searchBar.text = text
-            self.cellTouchToSearch.onNext(text)
-            
-            
-        }
-    }
-    
+    //    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    //        tableView.deselectRow(at: indexPath, animated: true)
+    ////        if(cellController){
+    ////            self.cellTouchToDetail.onNext(ingredientsArr[indexPath.row])
+    ////
+    ////
+    ////        } else {
+    ////            let text = recentsearchArr[indexPath.row]
+    ////            self.searchController.searchBar.text = text
+    ////            self.cellTouchToSearch.onNext(text)
+    ////
+    ////
+    ////        }
+    //        testTap()
+    //    }
+    //
     
     
     
@@ -446,8 +545,9 @@ class RecentSearchCell : UITableViewCell {
     
     
     func layout() {
-        self.contentView.addSubview(self.title)
         self.title.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(self.title)
+        
         self.title.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
         self.title.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         
@@ -479,7 +579,7 @@ class IngredientsCell : UITableViewCell {
     
     
     @IBAction func didPressedHeart(_ sender: UIButton) {
-
+        
         guard let idx = index else {return}
         
         sender.isSelected = !sender.isSelected
@@ -531,7 +631,12 @@ class IngredientsCell : UITableViewCell {
     
     
     func layout() {
+        self.checkBoxButton.translatesAutoresizingMaskIntoConstraints = false
+        self.title.translatesAutoresizingMaskIntoConstraints = false
+        self.kcal.translatesAutoresizingMaskIntoConstraints = false
         
+        
+        self.addSubview(contentView)
         self.contentView.addSubview(checkBoxButton)
         self.contentView.addSubview(title)
         self.contentView.addSubview(kcal)
@@ -539,17 +644,14 @@ class IngredientsCell : UITableViewCell {
         
         
         
-        self.checkBoxButton.translatesAutoresizingMaskIntoConstraints = false
         self.checkBoxButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -5).isActive = true
         self.checkBoxButton.centerYAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.centerYAnchor).isActive = true
         self.checkBoxButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
         self.checkBoxButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-        self.title.translatesAutoresizingMaskIntoConstraints = false
         self.title.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
         self.title.centerYAnchor.constraint(equalTo: self.centerYAnchor , constant:  -6).isActive = true
         
-        self.kcal.translatesAutoresizingMaskIntoConstraints = false
         self.kcal.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
         self.kcal.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor , constant: -4 ).isActive = true
         self.kcal.font = UIFont.systemFont(ofSize: 13)
@@ -562,5 +664,4 @@ class IngredientsCell : UITableViewCell {
     
     
 }
-
 

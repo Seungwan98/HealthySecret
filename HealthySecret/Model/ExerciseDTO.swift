@@ -6,8 +6,8 @@
 import Foundation
 
 // MARK: - Welcome
-struct ExerciseModel : Codable {
-    let data: [Data]
+struct ExerciseDTO : Codable {
+    let data: [ExerciseDtoData]
     
     enum CodingKeys: String, CodingKey {
         case data = "data"
@@ -15,7 +15,7 @@ struct ExerciseModel : Codable {
 }
 
 // MARK: - Datum
-struct Data: Codable {
+struct ExerciseDtoData: Codable {
     let exerciseGram : String
     let name: String
     

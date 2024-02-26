@@ -11,9 +11,7 @@ import RxSwift
 
 
 class EditExerciseVM : ViewModel {
-    
-    var model : Data?
-    
+        
     var disposeBag = DisposeBag()
     
     var exercises : [Exercise]
@@ -79,6 +77,8 @@ class EditExerciseVM : ViewModel {
             
         }).disposed(by: disposeBag)
        
+        
+        
         
         return output
     }

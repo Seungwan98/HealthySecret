@@ -22,6 +22,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
+    let mainView = UIView()
     
     private let addButton : UIButton = {
         let button = UIButton()
@@ -132,7 +133,6 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
                 print("\(indexPath.row) row")
                 print(value)
                 value.remove(at: indexPath.row)
-                arr.count
                 
             }).disposed(by: DisposeBag())
             
@@ -188,7 +188,11 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     
     
     override func viewWillAppear(_ animated: Bool) {
+
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.navigationController?.navigationBar.backgroundColor = .systemBlue.withAlphaComponent(0.5)
         
+
         self.navigationController?.view.backgroundColor = .white
         
         
@@ -197,8 +201,9 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     }
     override func viewWillDisappear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-        
+
     }
+     
     
     
     func addSubView(){
@@ -206,28 +211,41 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
         self.addButton.translatesAutoresizingMaskIntoConstraints = false
         self.edmitButton.translatesAutoresizingMaskIntoConstraints = false
         
+        mainView.backgroundColor = .white
+        mainView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.view.addSubview(topView)
-        self.view.addSubview(tableView)
-        self.view.addSubview(todayExerciseLabel)
-        self.view.addSubview(totalTodayExerciseLabel)
-        self.view.addSubview(bottomView)
+        self.view.addSubview(mainView)
+        
+        self.mainView.addSubview(topView)
+        self.mainView.addSubview(tableView)
+        self.mainView.addSubview(todayExerciseLabel)
+        self.mainView.addSubview(totalTodayExerciseLabel)
+        self.mainView.addSubview(bottomView)
         
         topView.addSubview(imageView)
-        
         
         bottomView.addSubview(addButton)
         bottomView.addSubview(edmitButton)
         
         NSLayoutConstraint.activate([
             
+            mainView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            mainView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            mainView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            mainView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
             addButton.heightAnchor.constraint(equalToConstant: 60),
             addButton.widthAnchor.constraint(equalToConstant: 100),
             addButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor , constant: 15),
+            addButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
+
+            
             
             edmitButton.heightAnchor.constraint(equalToConstant: 60),
             edmitButton.leadingAnchor.constraint(equalTo: addButton.trailingAnchor, constant: 15),
             edmitButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -15),
+            edmitButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
+
             
             
             
@@ -245,7 +263,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
             
             
             imageView.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: topView.centerYAnchor ,constant: 0),
+            imageView.centerYAnchor.constraint(equalTo: topView.centerYAnchor , constant:  -(self.navigationController?.navigationBar.frame.height ?? 0)/2 ),
             imageView.widthAnchor.constraint(equalToConstant: 120),
             imageView.heightAnchor.constraint(equalToConstant: 120),
             
@@ -254,7 +272,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
             tableView.topAnchor.constraint(equalTo: topView.bottomAnchor ,constant: 60),
             tableView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            tableView.bottomAnchor.constraint(equalTo: bottomView.topAnchor),
             
             todayExerciseLabel.topAnchor.constraint(equalTo: topView.bottomAnchor),
             todayExerciseLabel.bottomAnchor.constraint(equalTo: tableView.topAnchor),
@@ -263,6 +281,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
             totalTodayExerciseLabel.topAnchor.constraint(equalTo: topView.bottomAnchor),
             totalTodayExerciseLabel.bottomAnchor.constraint(equalTo: tableView.topAnchor),
             totalTodayExerciseLabel.leadingAnchor.constraint(equalTo: todayExerciseLabel.trailingAnchor , constant: 0),
+            
         ])
     }
     

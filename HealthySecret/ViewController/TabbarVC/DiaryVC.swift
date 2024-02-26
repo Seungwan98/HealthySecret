@@ -1,5 +1,5 @@
 //
-//  DetailPageViewController.swift
+//  DiaryVC.swift
 //  HealthySecret
 //
 //  Created by 양승완 on 2023/11/20.
@@ -200,14 +200,7 @@ class DiaryViewController : UIViewController {
     var transFatLabel = UILabel()
     
     lazy var ingredientsLabels : [UILabel] = [ kcalLabel , carbohydratesLabel , proteinLabel , provinceLabel , sugarsLabel , sodiumLabel , cholesterolLabel , fattyAcidLabel , transFatLabel ]
-    
-    
-//    var line : UIImageView = {
-//        let line = UIImageView(image: UIImage(named: "line.png"))
-//        line.translatesAutoresizingMaskIntoConstraints = false
-//        return line
-//    }()
-//    
+
     
     lazy var ingredientsStackView : UIStackView = {
         _ = self.ingredientsLabels.map { $0.isHidden = true }
@@ -450,7 +443,7 @@ class DiaryViewController : UIViewController {
     
     
     
-    var sangsaeButton : UIButton = {
+    var detailButton : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = UIColor.brown.withAlphaComponent(0.2)
@@ -506,6 +499,7 @@ class DiaryViewController : UIViewController {
         
     }()
     
+
     
     var leftBarButton : UIBarButtonItem = {
         let barButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"),
@@ -593,6 +587,7 @@ class DiaryViewController : UIViewController {
         setBinds()
         
         
+        
         self.navigationItem.rightBarButtonItem = rightBarButton
         self.navigationItem.leftBarButtonItem = leftBarButton
             
@@ -604,7 +599,13 @@ class DiaryViewController : UIViewController {
         
     }
     
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
+        
         self.navigationController?.navigationBar.backgroundColor = .clear
         self.navigationController?.setNavigationBarHidden(false, animated: true)
         
@@ -613,7 +614,7 @@ class DiaryViewController : UIViewController {
     }
     override func viewWillDisappear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-        
+
     }
     
     let buttonView : UIView = {
@@ -646,7 +647,7 @@ class DiaryViewController : UIViewController {
     }()
     
     var minuteLabel = UILabel()
-    var calorieLabel = UILabel()
+    var exCalorieLabel = UILabel()
     lazy var exerciseView : UIView = {
         let image = UIImageView(image: UIImage(named: "운동하는유미.png"))
         let view = UIView()
@@ -665,9 +666,9 @@ class DiaryViewController : UIViewController {
         self.minuteLabel.text = "분"
         self.minuteLabel.textColor = .white
         
-        self.calorieLabel.font = .boldSystemFont(ofSize: 20)
-        self.calorieLabel.text = ""
-        self.calorieLabel.textColor = .white
+        self.exCalorieLabel.font = .boldSystemFont(ofSize: 20)
+        self.exCalorieLabel.text = ""
+        self.exCalorieLabel.textColor = .white
         
         
         
@@ -687,7 +688,7 @@ class DiaryViewController : UIViewController {
         image.translatesAutoresizingMaskIntoConstraints = false
         self.minuteLabel.translatesAutoresizingMaskIntoConstraints = false
         self.exerciseButton.translatesAutoresizingMaskIntoConstraints = false
-        self.calorieLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.exCalorieLabel.translatesAutoresizingMaskIntoConstraints = false
         
         self.exerciseButton.backgroundColor = view.backgroundColor?.withAlphaComponent(0.2)
         
@@ -697,7 +698,7 @@ class DiaryViewController : UIViewController {
         view.addSubview(centerLabel)
         view.addSubview(self.minuteLabel)
         view.addSubview(self.exerciseButton)
-        view.addSubview(self.calorieLabel)
+        view.addSubview(self.exCalorieLabel)
         
         centerLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         centerLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor , constant: -140).isActive = true
@@ -711,8 +712,8 @@ class DiaryViewController : UIViewController {
         leftLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 12).isActive = true
         leftLabel.topAnchor.constraint(equalTo: view.topAnchor , constant: 12).isActive = true
         
-        self.calorieLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        self.calorieLabel.topAnchor.constraint(equalTo: image.bottomAnchor , constant: 25).isActive = true
+        self.exCalorieLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        self.exCalorieLabel.topAnchor.constraint(equalTo: image.bottomAnchor , constant: 25).isActive = true
         
         self.exerciseButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         self.exerciseButton.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 60).isActive = true
@@ -813,7 +814,7 @@ class DiaryViewController : UIViewController {
         self.contentView.addSubview(chartStackview)
         self.contentView.addSubview(buttonView)
         self.contentView.addSubview(exerciseView)
-        self.contentView.addSubview(sangsaeButton)
+        self.contentView.addSubview(detailButton)
      //   self.contentView.addSubview(line)
         self.contentView.addSubview(testView)
         self.contentView.addSubview(ingredientsStackView)
@@ -944,10 +945,10 @@ class DiaryViewController : UIViewController {
             
             
             
-            self.sangsaeButton.heightAnchor.constraint(equalToConstant: 40),
-            self.sangsaeButton.bottomAnchor.constraint(equalTo: self.chartView.bottomAnchor, constant: -20),
-            self.sangsaeButton.leadingAnchor.constraint(equalTo: self.chartStackview.safeAreaLayoutGuide.leadingAnchor, constant: 60),
-            self.sangsaeButton.trailingAnchor.constraint(equalTo: self.chartStackview.safeAreaLayoutGuide.trailingAnchor, constant: -60),
+            self.detailButton.heightAnchor.constraint(equalToConstant: 40),
+            self.detailButton.bottomAnchor.constraint(equalTo: self.chartView.bottomAnchor, constant: -20),
+            self.detailButton.leadingAnchor.constraint(equalTo: self.chartStackview.safeAreaLayoutGuide.leadingAnchor, constant: 60),
+            self.detailButton.trailingAnchor.constraint(equalTo: self.chartStackview.safeAreaLayoutGuide.trailingAnchor, constant: -60),
             
             
             self.ingredientsStackView.topAnchor.constraint(equalTo: self.chartView.bottomAnchor ),
@@ -994,7 +995,7 @@ class DiaryViewController : UIViewController {
             self.informationView.leadingAnchor.constraint(equalTo: chartView.leadingAnchor , constant: 30),
             self.informationView.trailingAnchor.constraint(equalTo: chartView.trailingAnchor , constant:  -30),
             self.informationView.topAnchor.constraint(equalTo: chartStackview.bottomAnchor , constant: 0),
-            self.informationView.bottomAnchor.constraint(equalTo: sangsaeButton.topAnchor , constant: -30),
+            self.informationView.bottomAnchor.constraint(equalTo: detailButton.topAnchor , constant: -30),
   
             
             
@@ -1015,13 +1016,42 @@ class DiaryViewController : UIViewController {
         let lunch = lunchButton.rx.tap.map {  _ in return UserDefaults.standard.set("점심식사", forKey: "meal")}
         let dinner = dinnerButton.rx.tap.map {  _ in return UserDefaults.standard.set("저녁식사", forKey: "meal")}
         let snack = snackButton.rx.tap.map {  _ in return UserDefaults.standard.set("간식", forKey: "meal")}
+        let leftEvent = self.leftBarButton.rx.tap.map {_ in return UserDefaults.standard.set({
+            let calendar = Calendar.current
+
+            let formattedDate = CustomFormatter().StringToDate(date : UserDefaults.standard.string(forKey: "date") ?? "")
+            
+            var yesterday = CustomFormatter().DateToString(date: calendar.date(byAdding: .day, value: -1, to: formattedDate)!)
+            return yesterday
+        }() , forKey: "date"
+        
+                                                                                                
+        )}
+        
+        let rightEvent = self.rightBarButton.rx.tap.map {_ in return UserDefaults.standard.set({
+            let calendar = Calendar.current
+
+            let formattedDate = CustomFormatter().StringToDate(date : UserDefaults.standard.string(forKey: "date") ?? "")
+            
+            var tomorrow = CustomFormatter().DateToString(date: calendar.date(byAdding: .day, value: +1, to: formattedDate)!)
+            return tomorrow
+        }() , forKey: "date"
+        
+                                                                                                
+        )}
+        
+        
+        let willAppear = self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in })
+        
+        
         
         let tags = Observable.of(breakfast, lunch , dinner , snack).merge()
+        let willAppearTags = Observable.of(leftEvent , willAppear , rightEvent ).merge()
         
         
-        let input = DiaryVM.Input( viewWillApearEvent :  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable(),
+        let input = DiaryVM.Input( viewWillApearEvent :  willAppearTags  ,
                                    mealButtonsTapped :
-                                    tags.asObservable()  , calendarLabelTapped: calendarLabel.rx.tapGesture() , execiseButtonTapped: self.exerciseButton.rx.tap.asObservable() )
+                                    tags.asObservable()  , calendarLabelTapped: calendarLabel.rx.tapGesture() , execiseButtonTapped: self.exerciseButton.rx.tap.asObservable() , rightBarButtonTapped :self.rightBarButton.rx.tap.asObservable() , leftBarButtonTapped: self.leftBarButton.rx.tap.asObservable() , detailButtonTapped : self.detailButton.rx.tap.asObservable() )
         
         guard let output = viewModel?.transform(input: input, disposeBag: disposeBag) else {return}
 
@@ -1091,8 +1121,7 @@ class DiaryViewController : UIViewController {
         output.totalIngredients.subscribe(onNext: {
             total in
             
-            print("\(total)  output")
-            
+            print("come IN")
             let totalValues = (total["carbohydrates"]! * 4) + (total["protein"]! * 4) + (total["province"]! * 9)
             
             
@@ -1114,7 +1143,9 @@ class DiaryViewController : UIViewController {
             }
             else {
                 
-                _ = self.ingredientsPercent.map({ $0 * 0 })
+                
+                self.ingredientsPercent = self.ingredientsPercent.map({ $0 * 0 })
+                
                 
                 self.ingredientsColor = [.lightGray]
                 self.setPieData(pieChartView: self.pieChart, pieChartDataEntries: self.entryData(values: [1] , dataPoints: []))
@@ -1142,13 +1173,7 @@ class DiaryViewController : UIViewController {
             
             
             
-            let attrString = NSAttributedString(string: String(total["kcal"]!) + "\n" ,   attributes: [ NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15) , .foregroundColor: UIColor.white as Any ])
             
-            
-            self.eatLabel.text = String(total["kcal"]!)
-            self.pieChart.centerAttributedText = attrString
-            
-            self.kcalLabel.text = " 칼로리: " + String(total["kcal"]!) + "kcal"
             self.carbohydratesLabel.text = " 탄수화물: " + String(total["carbohydrates"]!) + "g"
             self.proteinLabel.text = " 단백질: " + String(total["protein"]!) + "g"
             self.provinceLabel.text = " 지방: " + String(total["province"]!) + "g"
@@ -1175,21 +1200,54 @@ class DiaryViewController : UIViewController {
             }
         }).disposed(by: disposeBag)
         
-        output.calorieLabel.subscribe(onNext:  { text in
-            self.calorieLabel.text = "소모량  \(text)kcal"
-            self.consumeLabel.text = text
-            
-            
-        }).disposed(by: disposeBag)
+  
         
-        output.goalLabel.subscribe(onNext: { text in
-            self.goalLabel.text = text
-            
-        }).disposed(by: disposeBag)
         
-        output.leftCalorieLabel.subscribe(onNext: { text in
-            self.leftCalorieLabel.text = text
-        }).disposed(by: disposeBag)
+       
+     
+       
+        let a = output.goalLabel
+        let b = output.IngTotalCalorie
+        let c = output.exCalorieLabel
+        
+        
+        Observable.zip( a, b , c ).subscribe( onNext : {
+            
+            
+            
+            self.goalLabel.text = $0
+            
+            self.exCalorieLabel.text = "소모량  \($2)kcal"
+            self.consumeLabel.text = $2
+
+            
+            
+            let leftCalorie = (Int( $0 ) ?? 0) - (Int($1) ?? 0) + (Int($2) ?? 0)
+            
+            
+            
+            if leftCalorie > 0 {
+                self.leftCalorieLabel.text = ("\(leftCalorie)kcal 더 먹을 수 있어요.")
+                
+            }else {
+                self.leftCalorieLabel.text = ("\(-leftCalorie)kcal 초과됐어요.")
+
+            }
+            
+            
+            
+            let attrString = NSAttributedString(string: $1 + "\n" ,   attributes: [ NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15) , .foregroundColor: UIColor.white as Any ])
+            
+            
+            self.eatLabel.text = $1
+            self.pieChart.centerAttributedText = attrString
+            
+            self.kcalLabel.text = " 칼로리: " + $1 + "kcal"
+            
+            
+            
+        }    ).disposed(by: disposeBag)
+        
         
     }
     
