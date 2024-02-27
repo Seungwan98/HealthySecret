@@ -41,6 +41,8 @@
 		606343B72B84976D0084E2CC /* edmitBreakfast.png in Resources */ = {isa = PBXBuildFile; fileRef = 606343B42B84976D0084E2CC /* edmitBreakfast.png */; };
 		606343BF2B8CCAFD0084E2CC /* MyProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606343BE2B8CCAFD0084E2CC /* MyProfileVC.swift */; };
 		606343C12B8CCB290084E2CC /* MyProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606343C02B8CCB290084E2CC /* MyProfileVM.swift */; };
+		606343C32B8DF0170084E2CC /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 606343C22B8DF0170084E2CC /* arrow.png */; };
+		606343C52B8E19830084E2CC /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 606343C42B8E19830084E2CC /* camera.png */; };
 		6067B99B2B4D578B00D536FF /* calendarIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6067B99A2B4D578B00D536FF /* calendarIcon.png */; };
 		6067B99D2B502A2900D536FF /* CalendarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6067B99C2B502A2900D536FF /* CalendarCoordinator.swift */; };
 		6067B99F2B502A5E00D536FF /* CalendarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6067B99E2B502A5E00D536FF /* CalendarVC.swift */; };
@@ -146,6 +148,8 @@
 		606343B42B84976D0084E2CC /* edmitBreakfast.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edmitBreakfast.png; sourceTree = "<group>"; };
 		606343BE2B8CCAFD0084E2CC /* MyProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileVC.swift; sourceTree = "<group>"; };
 		606343C02B8CCB290084E2CC /* MyProfileVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileVM.swift; sourceTree = "<group>"; };
+		606343C22B8DF0170084E2CC /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
+		606343C42B8E19830084E2CC /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
 		6067B99A2B4D578B00D536FF /* calendarIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendarIcon.png; sourceTree = "<group>"; };
 		6067B99C2B502A2900D536FF /* CalendarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCoordinator.swift; sourceTree = "<group>"; };
 		6067B99E2B502A5E00D536FF /* CalendarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarVC.swift; sourceTree = "<group>"; };
@@ -259,8 +263,8 @@
 				6094C5392ACD915300D62B0A /* HomeVC.swift */,
 				60BC98F82B2728C40013FAD9 /* DiaryVC.swift */,
 				6067B99E2B502A5E00D536FF /* CalendarVC.swift */,
-				60A3801B2B7F22E400C9A2E6 /* DetailModalVC.swift */,
 				606343BE2B8CCAFD0084E2CC /* MyProfileVC.swift */,
+				60A3801B2B7F22E400C9A2E6 /* DetailModalVC.swift */,
 			);
 			path = TabbarVC;
 			sourceTree = "<group>";
@@ -433,6 +437,7 @@
 		60D987942AEA82CD0049CE05 /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				606343C22B8DF0170084E2CC /* arrow.png */,
 				606343B02B84961A0084E2CC /* edmitSnack.png */,
 				600DE9792B63950400D5D797 /* 운동하는유미.png */,
 				600DE96F2B610C7100D5D797 /* add.png */,
@@ -455,6 +460,7 @@
 				60BB26B72B494BD400191CB1 /* sangsaeButton2.png */,
 				60BB26AD2B45CD2F00191CB1 /* firstDout.png */,
 				60BB26AF2B45CD3100191CB1 /* secondDout.png */,
+				606343C42B8E19830084E2CC /* camera.png */,
 				600DE97F2B69424F00D5D797 /* snack.png */,
 				60A3800C2B6A7E9F00C9A2E6 /* dumbbell.png */,
 				60BB26B52B46766700191CB1 /* union.png */,
@@ -595,6 +601,7 @@
 				606343B72B84976D0084E2CC /* edmitBreakfast.png in Resources */,
 				6094C5452ACD915300D62B0A /* LaunchScreen.storyboard in Resources */,
 				60BB26B02B45CD3100191CB1 /* secondDout.png in Resources */,
+				606343C52B8E19830084E2CC /* camera.png in Resources */,
 				600DE94D2B57CC1C00D5D797 /* menButton.png in Resources */,
 				600DE9802B69424F00D5D797 /* snack.png in Resources */,
 				6094C5422ACD915300D62B0A /* Assets.xcassets in Resources */,
@@ -614,6 +621,7 @@
 				600DE96D2B61081900D5D797 /* dinner.png in Resources */,
 				606343B52B84976D0084E2CC /* edmitDinner.png in Resources */,
 				600DE94C2B57CC1C00D5D797 /* womenButton.png in Resources */,
+				606343C32B8DF0170084E2CC /* arrow.png in Resources */,
 				600DE93F2B56FDE500D5D797 /* 활동많음.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

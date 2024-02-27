@@ -20,6 +20,7 @@ final class KakaoService {
         
         var outputId : String!
         var outputPassword : String!
+        var outputName : String!
         
         return Single.create { single in
             
@@ -51,11 +52,14 @@ final class KakaoService {
                                             single(.failure(error))
                                         } else {
                                             
-                                            guard let email = ((kuser?.kakaoAccount?.email)) else { return }
+                                            guard let email = (kuser?.kakaoAccount?.email) else { return }
                                             guard let pw =  kuser?.id else {return}
+                                            guard let name = (kuser?.kakaoAccount?.profile?.nickname) else {return}
                                             
                                             outputId = "kakao_" + email
                                             outputPassword = "kakao_" + String(describing: pw )
+                                            outputName = name
+                                            
                                             
                                         }
                                     }
@@ -65,7 +69,7 @@ final class KakaoService {
                                 }
                             }
                             
-                            single(.success(["email": outputId , "pw" : outputPassword  ] ))
+                            single(.success(["email": outputId , "pw" : outputPassword , "name" : outputName ] ))
                         }
                         else{
                             UserApi.shared.loginWithKakaoAccount { oauthToken, error in
@@ -90,15 +94,19 @@ final class KakaoService {
                                             
                                             guard let email = ((kuser?.kakaoAccount?.email)) else { return }
                                             guard let pw =  kuser?.id else {return}
+                                            guard let name = ((kuser?.kakaoAccount?.profile?.nickname)) else { return }
+
                                             
                                             outputId = "kakao_" + email
                                             outputPassword = "kakao_" + String(describing: pw )
+                                            outputName = name
+
                                         }
                                     }
                                 }
                                 
                                 
-                                single(.success(["email": outputId , "pw" : outputPassword  ] ))
+                                single(.success(["email": outputId , "pw" : outputPassword , "name" : outputName  ] ))
 
                            
                             }
@@ -110,10 +118,12 @@ final class KakaoService {
                         UserApi.shared.me { kuser, error in
                             guard let email = ((kuser?.kakaoAccount?.email)) else { return }
                             guard let pw =  kuser?.id else {return}
+                            guard let name  = kuser?.kakaoAccount?.profile?.nickname else {return}
                             
                             outputId = "kakao_" + email
                             outputPassword = "kakao_" + String(describing: pw )
-                            single(.success(["email" : outputId  , "pw" : outputPassword ]))
+                            outputName = name
+                            single(.success(["email" : outputId  , "pw" : outputPassword , "name" : outputName ]))
 
                         }
 
@@ -145,15 +155,18 @@ final class KakaoService {
                                 } else {
                                     guard let email = ((kuser?.kakaoAccount?.email)) else { return }
                                     guard let pw =  kuser?.id else {return}
+                                    guard let name = kuser?.kakaoAccount?.profile?.nickname else {return}
                                     
                                     outputId = "kakao_" + email
                                     outputPassword = "kakao_" + String(describing: pw )
+                                    outputName = name
+
                                 }
                             }
                             
                             print("갱신")
                         }
-                        single(.success(["email": outputId , "pw" : outputPassword  ] ))
+                        single(.success(["email": outputId , "pw" : outputPassword , "name" : outputName ] ))
 
                     }
                 }
@@ -177,16 +190,20 @@ final class KakaoService {
                                 } else {
                                     guard let email = ((kuser?.kakaoAccount?.email)) else { return }
                                     guard let pw =  kuser?.id else {return}
+                                    guard let name = kuser?.kakaoAccount?.profile?.nickname else {return}
                                     
                                     outputId = "kakao_" + email
                                     outputPassword = "kakao_" + String(describing: pw )
+                                    outputName = name
+
+                                    
                                 }
                             }
                             
                             print("갱신")
                             
                         }
-                        single(.success(["email": outputId , "pw" : outputPassword  ] ))
+                        single(.success(["email": outputId , "pw" : outputPassword , "name" : outputName] ))
 
                     }
                     

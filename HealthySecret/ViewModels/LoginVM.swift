@@ -95,6 +95,8 @@ class LoginVM : ViewModel {
                             case .error(_):
                                 UserDefaults.standard.set(inform["email"], forKey: "email")
                                 UserDefaults.standard.set(inform["pw"], forKey: "password")
+                                UserDefaults.standard.set(inform["name"], forKey: "name")
+                                
                                 self.loginCoordinator?.pushSignUpVC()
                             }
                             

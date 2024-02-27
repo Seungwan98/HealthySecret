@@ -91,8 +91,10 @@ class SignUpViewController : UIViewController {
         
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("다음", for: .normal)
-        button.layer.cornerRadius = 20
-        button.backgroundColor =  .lightGray.withAlphaComponent(0.6)
+        button.tintColor = .white
+        button.titleLabel?.font = .boldSystemFont(ofSize: 20)
+        button.layer.cornerRadius = 30
+        button.backgroundColor =  .black
         
         return button
     }()
@@ -144,7 +146,7 @@ class SignUpViewController : UIViewController {
         let label = UILabel()
         label.text = "성별"
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.font = UIFont.boldSystemFont(ofSize: 18)
         return label
     }()
   
@@ -158,6 +160,16 @@ class SignUpViewController : UIViewController {
     
     
     
+    
+    
+     let bottomView : UIView = {
+        let view = UIView()
+        
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+      
+        return view
+    }()
 
     
     override func viewWillAppear(_ animated: Bool) {
@@ -281,7 +293,7 @@ class SignUpViewController : UIViewController {
      
         subLabels.forEach { label in
             
-            subStackViews[index].spacing = 60
+            subStackViews[index].spacing = 10
             
             
             label.text = texts[index]
@@ -311,6 +323,8 @@ class SignUpViewController : UIViewController {
             stackView.translatesAutoresizingMaskIntoConstraints = false
             
             
+            
+            
             return stackView
         }()
    
@@ -338,6 +352,8 @@ class SignUpViewController : UIViewController {
             
             return stackview
         }()
+        
+      
         
         
         
@@ -434,13 +450,17 @@ class SignUpViewController : UIViewController {
             informationStackView.trailingAnchor.constraint(equalTo: secondView.trailingAnchor),
             
             
-            thirdLabel.topAnchor.constraint(equalTo: thirdView.topAnchor , constant: 15),
+            thirdLabel.topAnchor.constraint(equalTo: thirdView.topAnchor , constant: 50),
             thirdLabel.leadingAnchor.constraint(equalTo: thirdView.leadingAnchor ),
             
             thirdStackView.leadingAnchor.constraint(equalTo: thirdView.leadingAnchor , constant: 50),
             thirdStackView.trailingAnchor.constraint(equalTo: thirdView.trailingAnchor , constant: -50 ),
-            thirdStackView.topAnchor.constraint(equalTo: thirdView.topAnchor , constant: 40 ),
-            thirdStackView.bottomAnchor.constraint(equalTo: thirdView.bottomAnchor , constant: -30 ),
+            thirdStackView.centerYAnchor.constraint(equalTo: thirdView.centerYAnchor , constant: 20 ),
+            
+            
+            
+            //thirdStackView.topAnchor.constraint(equalTo: thirdView.topAnchor , constant: 40 ),
+          //  thirdStackView.bottomAnchor.constraint(equalTo: thirdView.bottomAnchor , constant: -30 ),
             
             
         ])
@@ -493,20 +513,27 @@ class SignUpViewController : UIViewController {
     func addSubView(){
         
         self.view.addSubview(contentScrollView)
+        self.view.addSubview(bottomView)
+        bottomView.addSubview(nextButton)
         self.contentScrollView.addSubview(contentView)
         
         self.contentView.addSubview(questionStackView)
-        self.contentView.addSubview(nextButton)
         
         
         
         NSLayoutConstraint.activate([
             
+            
+            bottomView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            bottomView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            bottomView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            bottomView.heightAnchor.constraint(equalToConstant: 100),
+            
            
             contentScrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             contentScrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             contentScrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            contentScrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            contentScrollView.bottomAnchor.constraint(equalTo: self.bottomView.topAnchor),
             
             
             contentView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
@@ -518,22 +545,22 @@ class SignUpViewController : UIViewController {
             contentView.widthAnchor.constraint(equalTo: contentScrollView.widthAnchor),
             
             
-          
+            nextButton.heightAnchor.constraint(equalToConstant: 60),
+            nextButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor , constant: -15),
+            nextButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor , constant: 15),
+            nextButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
             
             
             
             
-            questionStackView.topAnchor.constraint(equalTo: contentView.topAnchor , constant: 5),
+            questionStackView.topAnchor.constraint(equalTo: contentView.topAnchor , constant: 20),
             questionStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 15),
             questionStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor , constant: -15 ),
             
             questionStackView.heightAnchor.constraint(equalToConstant: 680),
+            questionStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            nextButton.topAnchor.constraint(equalTo: questionStackView.bottomAnchor),
-            nextButton.heightAnchor.constraint(equalToConstant: 40),
-            nextButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 20),
-            nextButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor , constant: -20 ),
-            nextButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+           
             
             
             

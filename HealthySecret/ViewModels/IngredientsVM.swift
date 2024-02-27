@@ -142,9 +142,9 @@ class IngredientsVM : ViewModel {
         input.rightButtonTapped.subscribe(onNext: {
             
          
-            let meal = UserDefaults.standard.string(forKey: "meal")
-            let date = UserDefaults.standard.string(forKey: "date")
-            let key = UserDefaults.standard.string(forKey: "email")
+//            let meal = UserDefaults.standard.string(forKey: "meal")
+//            let date = UserDefaults.standard.string(forKey: "date")
+//            let key = UserDefaults.standard.string(forKey: "email")
 
 
                     

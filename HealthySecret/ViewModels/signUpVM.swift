@@ -58,8 +58,9 @@ class SignUpVM : ViewModel {
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         let id : String = UserDefaults.standard.value(forKey: "email") as! String
         let password : String = UserDefaults.standard.value(forKey: "password") as! String
+        let name : String = UserDefaults.standard.value(forKey: "name") as! String
         
-        var userModel = UserModel(id: id , tall: "", age: "", sex: "", calorie: 0 , weight: 0.0 , ingredients: []  , exercise: [] )
+        var userModel = UserModel(id: id, name: name ,  tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, ingredients: [], exercise: [])
         
         
         input.nextButtonTapped.subscribe(onNext: {
@@ -75,6 +76,7 @@ class SignUpVM : ViewModel {
                     
                     input.goalWeight.subscribe(onNext: {
                         goal in
+                        userModel.goalWeight = Int(goal) ?? 0
                         userModel.calorie = Int(goal)! * self.defaultCalorie[sex][exercise]
                         
                     }).disposed(by: disposeBag)
@@ -98,7 +100,7 @@ class SignUpVM : ViewModel {
             
             input.startWeight.subscribe(onNext: {
                 start in print("\(start) startWeight " )
-                userModel.weight = Double(start) ?? 0.0
+                userModel.nowWeight = Int(start) ?? 0
             }).disposed(by: disposeBag)
             
             

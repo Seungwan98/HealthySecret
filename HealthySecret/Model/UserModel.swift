@@ -11,13 +11,15 @@ import Foundation
     
 struct UserModel : Codable {
     var id : String
+    var name : String
     var recentAdd : [String]?
     var recentSearch : [String]?
     var tall : String
     var age : String
     var sex : String
     var calorie : Int
-    var weight : Double
+    var nowWeight : Int
+    var goalWeight : Int
     var ingredients : [ingredients]
     var exercise : [Exercise]
     }
@@ -28,6 +30,8 @@ struct ingredients : Codable {
     var lunch : [Row]?
     var dinner : [Row]?
     var snack : [Row]?
+    
+
 
     enum Codingkeys : String , CodingKey {
         case date , morning , lunch , dinner , snack 

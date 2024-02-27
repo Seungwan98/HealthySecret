@@ -116,12 +116,12 @@ class TabBarCoordinator : Coordinator {
             childCoordinator.append(homeCoordinator)
             homeCoordinator.finishDelegate = self
             homeCoordinator.startPush()
-        case 2: break
-            let homeCoordinator =  HomeCoordinator( navigationTabController )
-            homeCoordinator.parentCoordinator = self
-            childCoordinator.append(homeCoordinator)
-            homeCoordinator.finishDelegate = self
-            homeCoordinator.startPush()
+        case 2:
+            let myprofileCoordinator =  MyProfileCoordinator( navigationTabController )
+            myprofileCoordinator.parentCoordinator = self
+            childCoordinator.append(myprofileCoordinator)
+            myprofileCoordinator.finishDelegate = self
+            myprofileCoordinator.startPush()
 
 
 
@@ -284,7 +284,10 @@ class MyProfileCoordinator : Coordinator {
     
     func startPush() {
         
-      
+        let firebaseService = self.firebaseService
+        let viewController = MyProfileVC(viewModel : MyProfileVM ( coordinator : self , firebaseService: firebaseService ))
+        
+        self.navigationController.pushViewController( viewController , animated: true )
     
     }
  
