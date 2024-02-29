@@ -242,6 +242,7 @@ class DiaryVM : ViewModel {
                     
                     switch event{
                     case .success(let user):
+                        UserDefaults.standard.set(user.dictionary, forKey: "user")
                         UserDefaults.standard.set(user.goalWeight , forKey: "weight")
                         output.goalLabel.accept(String(user.calorie))
                         

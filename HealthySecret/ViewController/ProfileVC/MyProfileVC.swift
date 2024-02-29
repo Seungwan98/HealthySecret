@@ -8,6 +8,7 @@
 import UIKit
 import RxCocoa
 import RxSwift
+import RxGesture
 
 class MyProfileVC : UIViewController {
     
@@ -41,7 +42,7 @@ class MyProfileVC : UIViewController {
         UIGraphicsBeginImageContext(bottomSize)
 
         let areaSize = CGRect(x: 0, y: 0, width: bottomSize.width, height: bottomSize.height)
-        let areaSize2 = CGRect(x: 212, y: 216, width: topSize.width, height: topSize.height)
+        let areaSize2 = CGRect(x: 212, y: 220, width: topSize.width, height: topSize.height)
         bottomImage!.draw(in: areaSize)
 
         topImage!.draw(in: areaSize2 , blendMode: .normal , alpha: 1)
@@ -56,8 +57,10 @@ class MyProfileVC : UIViewController {
     
     private let introduceLabel : UILabel = {
        let label = UILabel()
-        label.text = "소개말을 입력해 주세요."
+        label.text = "아직 소개글이 없어요."
         label.textAlignment = .center
+        label.numberOfLines = 0
+        label.sizeToFit()
         label.font =  .boldSystemFont(ofSize: 18 )
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -66,13 +69,50 @@ class MyProfileVC : UIViewController {
         
     }()
     
-    private let leftButton : UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("나의 목표 ▸", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 16)
-        return button
+    lazy var goalLabel : UILabel = {
+        let label = UILabel()
+        let imageAttachment = NSTextAttachment(image: UIImage(named: "arrow.png")!)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .boldSystemFont(ofSize: 16)
+        let attributedString = NSMutableAttributedString(string: "")
+        attributedString.append(NSAttributedString(string: "나의 목표 "))
+        imageAttachment.bounds = CGRect(x: 0, y: 0.8, width: 10, height: 10)
+        
+        attributedString.append(NSAttributedString(attachment: imageAttachment))
+        
+        label.attributedText = attributedString
+        
+        
+        
+//        var buttonConfiguration = UIButton.Configuration.plain()
+//        let button = UIButton()
+//        let image = UIImage(named: "arrow.png")
+//        var container = AttributeContainer()
+//        container.foregroundColor = UIColor.black
+//        container.font = .boldSystemFont(ofSize: 16)
+//
+//
+//
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//
+//
+//        let size = CGSize(width: 10, height: 10)
+//        let render = UIGraphicsImageRenderer(size: size)
+//        let renderImage = render.image { context in
+//            image!.draw(in: CGRect(origin: .zero, size: size))
+//                }
+//
+//        buttonConfiguration.imagePlacement = .trailing
+//        buttonConfiguration.attributedTitle = AttributedString("나의 목표" , attributes: container)
+//        buttonConfiguration.image = renderImage
+//
+//        button.configuration = buttonConfiguration
+//
+//        button.backgroundColor = .red
+        
+//        button.setImage(renderImage, for: .normal)
+//        button.setTitleColor(.black, for: .normal)
+        return label
         
         
     }()
@@ -200,7 +240,7 @@ class MyProfileVC : UIViewController {
         self.contentView.addSubview(informationView)
         self.contentView.addSubview(profileImage)
         self.contentView.addSubview(introduceLabel)
-        self.contentView.addSubview(leftButton)
+        self.contentView.addSubview(goalLabel)
         self.contentView.addSubview(rightLabel)
         self.contentView.addSubview(gramLabel)
         self.contentView.addSubview(bottomView)
@@ -234,20 +274,20 @@ class MyProfileVC : UIViewController {
             introduceLabel.heightAnchor.constraint(equalToConstant: 60 ),
        
             
-            leftButton.leadingAnchor.constraint(equalTo: informationView.leadingAnchor),
-            leftButton.topAnchor.constraint(equalTo: introduceLabel.bottomAnchor , constant: 10),
+            goalLabel.leadingAnchor.constraint(equalTo: informationView.leadingAnchor),
+            goalLabel.topAnchor.constraint(equalTo: introduceLabel.bottomAnchor , constant: 10),
             
             gramLabel.trailingAnchor.constraint(equalTo: informationView.trailingAnchor ),
-            gramLabel.centerYAnchor.constraint(equalTo: leftButton.centerYAnchor ),
+            gramLabel.centerYAnchor.constraint(equalTo: goalLabel.centerYAnchor ),
             
             rightLabel.trailingAnchor.constraint(equalTo: gramLabel.leadingAnchor , constant: -5),
-            rightLabel.centerYAnchor.constraint(equalTo: leftButton.centerYAnchor ),
+            rightLabel.centerYAnchor.constraint(equalTo: goalLabel.centerYAnchor ),
 
             
             
             informationView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 20),
             informationView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor , constant: -20),
-            informationView.topAnchor.constraint(equalTo: leftButton.bottomAnchor , constant: 5),
+            informationView.topAnchor.constraint(equalTo: goalLabel.bottomAnchor , constant: 5),
             informationView.heightAnchor.constraint(equalToConstant: 120),
             
             bottomView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -294,8 +334,19 @@ class MyProfileVC : UIViewController {
         return label
         
     }()
-   
     
+    
+    let rightBarImage : UIImageView = {
+        let view = UIImageView(image: UIImage(systemName: "gearshape"))
+        
+        view.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        view.tintColor = .black
+        
+        return view
+        
+    }()
+   
+    lazy var rightBarButton = UIBarButtonItem(customView: rightBarImage)
     lazy var leftBarButton = UIBarButtonItem(customView: leftBarLabel)
     
     let imageAttachment = NSTextAttachment(image: UIImage(named: "arrow.png")!)
@@ -309,20 +360,23 @@ class MyProfileVC : UIViewController {
 
         
         
-        
+        self.navigationController?.navigationBar.topItem?.rightBarButtonItem = self.rightBarButton
         self.navigationController?.navigationBar.topItem?.leftBarButtonItem = self.leftBarButton
 
         
         
-        let input = MyProfileVM.Input(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable())
+        let input = MyProfileVM.Input(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , rightBarButton: leftBarButton.rx.tap.asObservable()  ,  changeProfile: Observable.merge(profileImage.rx.tapGesture().when(.recognized).asObservable() , leftBarLabel.rx.tapGesture().when(.recognized).asObservable() ), goalLabelTapped: goalLabel.rx.tapGesture().asObservable())
         
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else {return}
         
-        Observable.zip( output.calorie , output.goalWeight , output.nowWeight , output.name ).subscribe(onNext: { [self] in
+        Observable.zip( output.calorie , output.goalWeight , output.nowWeight , output.name , output.introduce).subscribe(onNext: { [self] in
+            
+
             
             self.calorieLabel.text = $0 + " kcal"
             self.goalWeight.text = $1 + " kg"
             self.nowWeight.text = $2 + " kg"
+            self.introduceLabel.text = $4
             let a = $3
             let attributedString = NSMutableAttributedString(string: "")
             attributedString.append(NSAttributedString(string: " "+a+" "))
@@ -334,7 +388,13 @@ class MyProfileVC : UIViewController {
 
             let weight = (Double($1) ?? 0.0) - (Double($2) ?? 0.0)
             
-            self.gramLabel.text = String(weight) + " kg"
+            if weight > 0 {
+                self.gramLabel.text = "+" + String(weight) + " kg"
+            }else{
+                self.gramLabel.text = String(weight) + " kg"
+            }
+            
+            
             
         }).disposed(by: disposeBag)
         

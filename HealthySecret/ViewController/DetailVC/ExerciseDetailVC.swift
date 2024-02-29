@@ -23,16 +23,7 @@ class ExerciseDetailVC: UIViewController {
     }
     
     
-    private let addButton : UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        
-        button.setTitle("추가하기", for: .normal)
-        button.tintColor = .white
-        button.layer.cornerRadius = 30
-        return button
-    }()
+ 
     
     private let contentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -115,6 +106,17 @@ class ExerciseDetailVC: UIViewController {
      
        return view
    }()
+    
+    private let addButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        button.setTitle("추가하기", for: .normal)
+        button.tintColor = .white
+        button.layer.cornerRadius = 30
+        return button
+    }()
     
     
     override func viewDidLoad() {

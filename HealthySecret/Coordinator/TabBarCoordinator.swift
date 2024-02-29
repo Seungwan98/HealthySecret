@@ -283,12 +283,33 @@ class MyProfileCoordinator : Coordinator {
     
     
     func startPush() {
+     
         
         let firebaseService = self.firebaseService
         let viewController = MyProfileVC(viewModel : MyProfileVM ( coordinator : self , firebaseService: firebaseService ))
         
+
+        
+       
         self.navigationController.pushViewController( viewController , animated: true )
     
+    }
+    
+    func pushChangeProfileVC(name : String , introduce : String){
+        let firebaseService = self.firebaseService
+        let viewModel = MyProfileVM(coordinator: self, firebaseService: firebaseService)
+        viewModel.introduce = introduce
+        viewModel.name = name
+        let viewController = ChangeProfileVC(viewModel: viewModel )
+        viewController.hidesBottomBarWhenPushed = true
+        
+        
+        
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+
+        self.navigationController.pushViewController(viewController, animated: false)
+        
     }
  
     
@@ -401,6 +422,7 @@ class DiaryCoordinator : Coordinator  {
 //        self.navigationController.navigationBar.backIndicatorTransitionMaskImage = UIImage(systemName: "xmark")
         self.navigationController.navigationBar.topItem?.title = ""
         self.navigationController.navigationBar.tintColor = .white
+
         self.navigationController.pushViewController( viewController , animated: false )
 
         
@@ -408,12 +430,7 @@ class DiaryCoordinator : Coordinator  {
     
     func presentDetailView(arr : [String:Any] ){
         print("pushDetailView")
-        let viewModel = DetailModalVM(coordinator: self , arr : arr)
         let viewController = DetailModalVC(dic:arr)
-        
-
-
-        
             
         viewController.view.backgroundColor = .white
         self.navigationController.present(viewController, animated: true)

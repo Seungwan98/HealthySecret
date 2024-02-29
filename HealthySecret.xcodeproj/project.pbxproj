@@ -43,6 +43,8 @@
 		606343C12B8CCB290084E2CC /* MyProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606343C02B8CCB290084E2CC /* MyProfileVM.swift */; };
 		606343C32B8DF0170084E2CC /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 606343C22B8DF0170084E2CC /* arrow.png */; };
 		606343C52B8E19830084E2CC /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 606343C42B8E19830084E2CC /* camera.png */; };
+		606343C72B8E34CD0084E2CC /* ChangeProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606343C62B8E34CD0084E2CC /* ChangeProfileVC.swift */; };
+		606343C92B8F34430084E2CC /* AddDiaryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606343C82B8F34430084E2CC /* AddDiaryVC.swift */; };
 		6067B99B2B4D578B00D536FF /* calendarIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6067B99A2B4D578B00D536FF /* calendarIcon.png */; };
 		6067B99D2B502A2900D536FF /* CalendarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6067B99C2B502A2900D536FF /* CalendarCoordinator.swift */; };
 		6067B99F2B502A5E00D536FF /* CalendarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6067B99E2B502A5E00D536FF /* CalendarVC.swift */; };
@@ -66,7 +68,6 @@
 		60A380182B6D2DA600C9A2E6 /* EditIngredientsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A380172B6D2DA600C9A2E6 /* EditIngredientsCell.swift */; };
 		60A3801A2B72143800C9A2E6 /* IngredientsDetailVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A380192B72143800C9A2E6 /* IngredientsDetailVM.swift */; };
 		60A3801C2B7F22E400C9A2E6 /* DetailModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A3801B2B7F22E400C9A2E6 /* DetailModalVC.swift */; };
-		60A3801E2B7F244800C9A2E6 /* DetailModalVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A3801D2B7F244800C9A2E6 /* DetailModalVM.swift */; };
 		60BB26942B45335700191CB1 /* breakfastButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BB26932B45335700191CB1 /* breakfastButton.png */; };
 		60BB26962B45336100191CB1 /* lunchButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BB26952B45336100191CB1 /* lunchButton.png */; };
 		60BB26982B4533A200191CB1 /* dinnerButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BB26972B4533A200191CB1 /* dinnerButton.png */; };
@@ -150,6 +151,8 @@
 		606343C02B8CCB290084E2CC /* MyProfileVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileVM.swift; sourceTree = "<group>"; };
 		606343C22B8DF0170084E2CC /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
 		606343C42B8E19830084E2CC /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
+		606343C62B8E34CD0084E2CC /* ChangeProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeProfileVC.swift; sourceTree = "<group>"; };
+		606343C82B8F34430084E2CC /* AddDiaryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDiaryVC.swift; sourceTree = "<group>"; };
 		6067B99A2B4D578B00D536FF /* calendarIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendarIcon.png; sourceTree = "<group>"; };
 		6067B99C2B502A2900D536FF /* CalendarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCoordinator.swift; sourceTree = "<group>"; };
 		6067B99E2B502A5E00D536FF /* CalendarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarVC.swift; sourceTree = "<group>"; };
@@ -178,7 +181,6 @@
 		60A380172B6D2DA600C9A2E6 /* EditIngredientsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditIngredientsCell.swift; sourceTree = "<group>"; };
 		60A380192B72143800C9A2E6 /* IngredientsDetailVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsDetailVM.swift; sourceTree = "<group>"; };
 		60A3801B2B7F22E400C9A2E6 /* DetailModalVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailModalVC.swift; sourceTree = "<group>"; };
-		60A3801D2B7F244800C9A2E6 /* DetailModalVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailModalVM.swift; sourceTree = "<group>"; };
 		60BB26932B45335700191CB1 /* breakfastButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = breakfastButton.png; path = ../../../../../../Downloads/breakfastButton.png; sourceTree = "<group>"; };
 		60BB26952B45336100191CB1 /* lunchButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lunchButton.png; path = ../../../../../../Downloads/lunchButton.png; sourceTree = "<group>"; };
 		60BB26972B4533A200191CB1 /* dinnerButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dinnerButton.png; path = ../../../../../../Downloads/dinnerButton.png; sourceTree = "<group>"; };
@@ -263,7 +265,6 @@
 				6094C5392ACD915300D62B0A /* HomeVC.swift */,
 				60BC98F82B2728C40013FAD9 /* DiaryVC.swift */,
 				6067B99E2B502A5E00D536FF /* CalendarVC.swift */,
-				606343BE2B8CCAFD0084E2CC /* MyProfileVC.swift */,
 				60A3801B2B7F22E400C9A2E6 /* DetailModalVC.swift */,
 			);
 			path = TabbarVC;
@@ -278,14 +279,25 @@
 			path = SignVC;
 			sourceTree = "<group>";
 		};
+		606343CA2B8F344E0084E2CC /* ProfileVC */ = {
+			isa = PBXGroup;
+			children = (
+				606343BE2B8CCAFD0084E2CC /* MyProfileVC.swift */,
+				606343C62B8E34CD0084E2CC /* ChangeProfileVC.swift */,
+			);
+			path = ProfileVC;
+			sourceTree = "<group>";
+		};
 		608DF9702AD567C500DD27DB /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				606343CA2B8F344E0084E2CC /* ProfileVC */,
 				606343BC2B84E7DD0084E2CC /* SignVC */,
 				606343BB2B84E78F0084E2CC /* TabbarVC */,
 				606343BA2B84E77C0084E2CC /* DetailVC */,
 				606343B92B84E7600084E2CC /* tableVC */,
 				606343B82B84E74E0084E2CC /* EditVC */,
+				606343C82B8F34430084E2CC /* AddDiaryVC.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -399,7 +411,6 @@
 				60A380082B6A663E00C9A2E6 /* EditExerciseVM.swift */,
 				60A380152B6D27D400C9A2E6 /* EditIngredientsVM.swift */,
 				60A380192B72143800C9A2E6 /* IngredientsDetailVM.swift */,
-				60A3801D2B7F244800C9A2E6 /* DetailModalVM.swift */,
 				606343C02B8CCB290084E2CC /* MyProfileVM.swift */,
 			);
 			path = ViewModels;
@@ -706,10 +717,10 @@
 				60BC98EA2B0B501E0013FAD9 /* ExerciseDetailVC.swift in Sources */,
 				608DF96B2AD4352F00DD27DB /* ingredientsDTO.swift in Sources */,
 				600DE9762B62A00A00D5D797 /* ExerciseVM.swift in Sources */,
+				606343C92B8F34430084E2CC /* AddDiaryVC.swift in Sources */,
 				6067B99D2B502A2900D536FF /* CalendarCoordinator.swift in Sources */,
 				6094C5402ACD915300D62B0A /* HealthySecrets.xcdatamodeld in Sources */,
 				60D9878E2AE8BBA20049CE05 /* Coordinator.swift in Sources */,
-				60A3801E2B7F244800C9A2E6 /* DetailModalVM.swift in Sources */,
 				600DE95C2B5935F400D5D797 /* KakaoService.swift in Sources */,
 				600DE92F2B511E9D00D5D797 /* CalendarVM.swift in Sources */,
 				60A380102B6A81A400C9A2E6 /* ExerciseCell.swift in Sources */,
@@ -717,6 +728,7 @@
 				600DE9742B6269BD00D5D797 /* ExerciseVC.swift in Sources */,
 				60BC98F92B2728C40013FAD9 /* DiaryVC.swift in Sources */,
 				60A380052B6A37D800C9A2E6 /* Custom.swift in Sources */,
+				606343C72B8E34CD0084E2CC /* ChangeProfileVC.swift in Sources */,
 				6094C53A2ACD915300D62B0A /* HomeVC.swift in Sources */,
 				600DE9782B62A12000D5D797 /* ExerciseCoordinator.swift in Sources */,
 				60BC98E32B02A0590013FAD9 /* AppCoordinator.swift in Sources */,

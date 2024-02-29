@@ -45,7 +45,7 @@ class CustomSegment : UISegmentedControl {
 class IngredientsDetailVC: UIViewController {
     
     let viewModel : IngredientsDetailVM?
-    let disposeBag = DisposeBag()
+    var disposeBag = DisposeBag()
     init(viewModel: IngredientsDetailVM ) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)

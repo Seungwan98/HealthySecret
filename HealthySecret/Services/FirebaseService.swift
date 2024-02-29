@@ -417,7 +417,60 @@ extension FirebaseService {
         
     }
     
+    func addDiary(diary : Diary , key : String) -> Completable {
+        return Completable.create{ completable in
+            
+            completable(.completed)
+            let path = self.db.collection("HealthySecretUsers").document(String(key))
+            
+            path.updateData(["diarys" :FieldValue.arrayUnion([diary.dictionary!])])
+            return Disposables.create()
+        }
+        
+    }
     
+    func updateDiary(diary : [Diary] , key : String) -> Completable {
+        return Completable.create{ completable in
+            
+            let diary = diary.map({
+                $0.dictionary
+                
+            })
+            
+            
+            self.db.collection("HealthySecretUsers").whereField("id", isEqualTo: key)
+                .getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        
+                        print("error1")
+                        
+                        completable(.error(err))
+                        // Some error occured
+                    } else if querySnapshot!.documents.count != 1 {
+                        print("error2")
+                        
+                        completable(.error(err!))
+                        // Perhaps this is an error for you?
+                    } else {
+                        let document = querySnapshot?.documents.first!
+                        document?.reference.updateData([
+                            "diarys" : diary
+                        ])
+                        
+                        
+                        completable(.completed)
+                    }
+                }
+            
+            
+            
+            return Disposables.create()
+            
+            
+        }
+        
+        
+    }
     
     func updateExercise(exercise : [Exercise] , key : String) -> Completable {
         return Completable.create{ completable in
@@ -505,4 +558,46 @@ extension FirebaseService {
         
     }
     
+}
+extension FirebaseService {
+    
+    func updateValues( name : String , introduce : String , key : String)-> Completable {
+        return Completable.create{ completable in
+            
+            
+            
+            self.db.collection("HealthySecretUsers").whereField("id", isEqualTo: key)
+                .getDocuments() { (querySnapshot, err) in
+                    
+                    if let err = err {
+                        
+                        print("error1")
+                        
+                        completable(.error(err))
+                        // Some error occured
+                    } else if querySnapshot!.documents.count != 1 {
+                        print("error2")
+                        
+                        completable(.error(err!))
+                        // Perhaps this is an error for you?
+                    } else {
+                        let document = querySnapshot?.documents.first!
+                        document?.reference.updateData([
+                            "introduce" : introduce ,
+                            "name" : name
+                        ])
+                        
+                        
+                        completable(.completed)
+                    }
+                }
+            
+            
+            
+            return Disposables.create()
+            
+            
+        }
+        
+    }
 }

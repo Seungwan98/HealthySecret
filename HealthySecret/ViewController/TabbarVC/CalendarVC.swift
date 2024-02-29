@@ -31,7 +31,7 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
     var calendar = FSCalendar()
     
     var dateFormatter = DateFormatter()
-  
+    
     private let contentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -67,8 +67,8 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
     
     var selectedDate: Date = Date()
     
-    var selectingDate = PublishSubject<Date>()
-
+    var selectingDate = BehaviorSubject<Date>(value : Date())
+    
     let bottomView = UIView()
     
     
@@ -77,7 +77,7 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         button.translatesAutoresizingMaskIntoConstraints = false
         
         
-        button.setTitle("메모 작성", for: .normal)
+        button.setTitle("일기 쓰기", for: .normal)
         button.tintColor = .white
         button.titleLabel?.font = .boldSystemFont(ofSize: 20)
         button.layer.cornerRadius = 30
@@ -91,19 +91,30 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         
         button.setTitle("날짜로 이동", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 20)
-
+        
         button.backgroundColor = .black
         button.layer.cornerRadius = 30
         return button
     }()
     
-    private let dynamicView = UIView()
-
+    private let backgroundLabel : UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .lightGray.withAlphaComponent(1)
+        label.text = "작성된 일기가 없어요"
+        label.font = .systemFont(ofSize: 12)
+        return label
+    }()
+    
+    
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.backgroundColor = .white
         self.navigationController?.navigationBar.tintColor = .black
+        self.navigationController?.navigationBar.barTintColor = .white
         self.navigationController?.hidesBottomBarWhenPushed = true
+        navigationController?.navigationBar.shadowImage = UIImage()
+        
         self.navigationController?.setNavigationBarHidden(false, animated: true)
         
         
@@ -120,19 +131,20 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         setCalendarUI()
         setBindings()
         
-       
+        
         
         
     }
     func addView(){
-//        calendarView.backgroundColor = UIColor(red: 0.09, green: 0.176, blue: 0.031, alpha: 1)
+        //        calendarView.backgroundColor = UIColor(red: 0.09, green: 0.176, blue: 0.031, alpha: 1)
         self.dateLabel.font = .boldSystemFont(ofSize: 14)
         self.informLabel.font = .boldSystemFont(ofSize: 14)
-        self.informLabel.sizeToFit()
         self.informLabel.numberOfLines = 0
-       
+        self.informLabel.sizeToFit()
+        
+        
         self.informationView.sizeToFit()
-
+        
         
         
         
@@ -141,7 +153,7 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         
         self.bottomView.addSubview(writeButton)
         self.bottomView.addSubview(moveButton)
-
+        
         self.contentScrollView.addSubview(contentView)
         
         self.contentView.addSubview(calendarView)
@@ -149,9 +161,10 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         self.calendarView.addSubview(informationView)
         self.informationView.addSubview(dateLabel)
         self.informationView.addSubview(informLabel)
+        self.informationView.addSubview(backgroundLabel)
         
         
-
+        
         
         self.bottomView.translatesAutoresizingMaskIntoConstraints = false
         self.informationView.translatesAutoresizingMaskIntoConstraints = false
@@ -178,57 +191,61 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
             self.contentView.topAnchor.constraint(equalTo: self.contentScrollView.topAnchor ),
             self.contentView.leadingAnchor.constraint(equalTo: self.contentScrollView.leadingAnchor),
             self.contentView.trailingAnchor.constraint(equalTo: self.contentScrollView.trailingAnchor),
-            self.contentView.bottomAnchor.constraint(equalTo: self.contentScrollView.bottomAnchor),
+            self.contentView.bottomAnchor.constraint(equalTo: self.contentScrollView.bottomAnchor ),
             
             self.contentView.widthAnchor.constraint(equalTo: self.contentScrollView.widthAnchor , multiplier: 1.0),
             
             
-
-
-
-
+            
+            
+            
+            
             writeButton.heightAnchor.constraint(equalToConstant: 60),
             writeButton.widthAnchor.constraint(equalToConstant: 100),
             writeButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor , constant: 15),
             writeButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
-
-
-
+            
+            
+            
             moveButton.heightAnchor.constraint(equalToConstant: 60),
             moveButton.leadingAnchor.constraint(equalTo: writeButton.trailingAnchor, constant: 15),
             moveButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -15),
             moveButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
-
+            
             
             calendarView.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor , constant: 0),
             calendarView.trailingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.trailingAnchor , constant: -0),
             calendarView.topAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.topAnchor),
             calendarView.bottomAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.bottomAnchor),
             
-//
+            //
             calendar.topAnchor.constraint(equalTo: calendarView.safeAreaLayoutGuide.topAnchor),
-            calendar.heightAnchor.constraint(equalToConstant:  600),
+            calendar.heightAnchor.constraint(equalToConstant:  500),
             calendar.leadingAnchor.constraint(equalTo: calendarView.safeAreaLayoutGuide.leadingAnchor  , constant: 10),
             calendar.trailingAnchor.constraint(equalTo: calendarView.safeAreaLayoutGuide.trailingAnchor , constant: -10 ),
             
             informationView.topAnchor.constraint(equalTo: calendar.bottomAnchor),
             informationView.leadingAnchor.constraint(equalTo: calendar.leadingAnchor , constant: 0),
             informationView.trailingAnchor.constraint(equalTo: calendar.trailingAnchor , constant: 0 ),
-            informationView.heightAnchor.constraint(equalTo: informLabel.heightAnchor , constant: 50 ),
+            //            /informationView.heightAnchor.constraint(equalToConstant: 80),
             
-            informationView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-
-//
-//
+            backgroundLabel.centerXAnchor.constraint(equalTo: informationView.centerXAnchor),
+            backgroundLabel.centerYAnchor.constraint(equalTo: informationView.centerYAnchor),
+            //
+            //
             dateLabel.topAnchor.constraint(equalTo: informationView.topAnchor , constant: 15),
             dateLabel.leadingAnchor.constraint(equalTo: informationView.leadingAnchor , constant: 15),
             dateLabel.widthAnchor.constraint(equalToConstant: 100),
             dateLabel.heightAnchor.constraint(equalToConstant: 20),
-
+            
             informLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor , constant: 10 ),
             informLabel.leadingAnchor.constraint(equalTo: informationView.leadingAnchor , constant: 15),
             informLabel.trailingAnchor.constraint(equalTo: informationView.trailingAnchor , constant: -15),
-
+            informLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor , constant: -10 ),
+            
+            informationView.bottomAnchor.constraint(equalTo: informLabel.bottomAnchor),
+            
+            
             
         ])
         
@@ -238,15 +255,14 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
     func setBindings(){
         
         
-        let input = CalendarVM.Input(moveButtonTapped: moveButton.rx.tap.asObservable() ,
+        let input = CalendarVM.Input( viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), moveButtonTapped: moveButton.rx.tap.asObservable() , writeButtonTapped: writeButton.rx.tap.asObservable() ,
                                      selectingDate : self.selectingDate.asObservable())
         
         
         guard let output = viewModel?.transform(input: input, disposeBag: disposeBag) else {return}
         
-   
         
-        self.selectingDate.onNext(self.selectedDate)
+        
         
         
         output.outputDate.subscribe(onNext: {
@@ -258,19 +274,27 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         }).disposed(by: disposeBag)
         
         
-        output.outputTodayMemo.subscribe(onNext: { text in
+        output.outputTodayDiary.subscribe(onNext: { text in
             var memo = ""
+            
             if text.isEmpty{
-              memo = "\n\n\n\n"
-
-
+                self.backgroundLabel.isHidden = false
+                self.writeButton.setTitle("일기 쓰기", for: .normal)
+                memo = "\n\n\n"
+                
+                
+                
             }else{
-              
+                self.writeButton.setTitle("일기 수정", for: .normal)
+
+                self.backgroundLabel.isHidden = true
+                
                 memo = text
-
+                
             }
-            self.informLabel.text = memo
-
+            //            self.informLabel.text = memo
+            
+            self.informLabel.text = "\n" + memo + "\n\n"
             
             
             
@@ -330,7 +354,7 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         // 캘린더 높이 지정
         self.calendar.headerHeight = 68
         
-       
+        
         
         
         // 양옆 년도, 월 지우기
@@ -352,7 +376,7 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         
         self.calendar.select(selectedDate)
         
-    
+        
     }
     
     
@@ -360,7 +384,7 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
         selectingDate.onNext(date)
     }
-
+    
     
     
     
@@ -380,12 +404,12 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
     func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, titleDefaultColorFor date: Date) -> UIColor? {
         return UIColor.black
     }
-
+    
     func calendar(_ calendar: FSCalendar, titleFor date: Date) -> String? {
-       
+        
         if dateFormatter.string(from: date) == dateFormatter.string(from: Date()) {
-     
-           
+            
+            
             return "오늘" }
         else{
             return nil
@@ -400,8 +424,4 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
 }
 
 
-extension UIScrollView {
-   func updateContentView() {
-      contentSize.height = subviews.sorted(by: { $0.frame.maxY < $1.frame.maxY }).last?.frame.maxY ?? contentSize.height
-   }
-}
+

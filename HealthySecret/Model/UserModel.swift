@@ -22,6 +22,9 @@ struct UserModel : Codable {
     var goalWeight : Int
     var ingredients : [ingredients]
     var exercise : [Exercise]
+    var diarys : [Diary]
+    var introduce : String?
+
     }
 
 struct ingredients : Codable {
@@ -53,6 +56,20 @@ struct ingredients : Codable {
 }
 
 
+struct Diary : Codable {
+    var date : String
+    var diary : String
+    
+    enum CodingKeys : String , CodingKey {
+        case date , diary
+    }
+    
+    init(date : String , diary : String){
+        self.date = date
+        self.diary = diary
+    }
+    
+}
 
 struct Exercise : Codable {
     var key : String

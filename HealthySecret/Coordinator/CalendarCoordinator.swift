@@ -45,6 +45,19 @@ class CalendarCoordinator: Coordinator {
         
     }
     
+    func pushAddDiaryVC(pickDate : String , diarys : [Diary]){
+        let firebaseService = FirebaseService()
+        let viewModel = CalendarVM(coordinator: self, firebaseService: firebaseService)
+        viewModel.pickDate = pickDate
+        viewModel.diarys = diarys
+        let viewController = AddDiaryVC(viewModel: viewModel)
+        viewController.view.backgroundColor =  .white
+        
+     
+        self.navigationController.pushViewController(viewController, animated: true)
+
+    }
+    
     func BacktoDiaryVC(){
         finishDelegate?.coordinatorDidFinish(childCoordinator: self)
 
