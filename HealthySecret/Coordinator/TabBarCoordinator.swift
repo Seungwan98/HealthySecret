@@ -16,6 +16,7 @@ class TabBarCoordinator : Coordinator {
   
     let firebaseService = FirebaseService()
     
+    
     var navigationController: UINavigationController
     
     var finishDelegate: CoordinatorFinishDelegate?
@@ -52,9 +53,12 @@ class TabBarCoordinator : Coordinator {
             getControllers($0 , UINavigationController())
         }
         
+        
+        
         let _ = controllers.map{ self.startCoordinator( _ : $0) }
         
         startTabBarController(controllers)
+        
        
         //네비게이션 겹침 상황을 없애기 위해 추가.
         navigationController.setNavigationBarHidden(true, animated: false)
@@ -62,7 +66,9 @@ class TabBarCoordinator : Coordinator {
       
         
         
+
         navigationController.viewControllers = [tabBarController]
+
 
        
 
@@ -80,18 +86,23 @@ class TabBarCoordinator : Coordinator {
         self.tabBarController.tabBar.backgroundColor = .systemBackground
         self.tabBarController.tabBar.tintColor = UIColor.black
         
-        
     }
     
     
     func getTabBarItems() -> [UITabBarItem] {
-        let firstItem = UITabBarItem(title: "홈" , image: UIImage.init(systemName: "house") , tag:0)
+        
+        let firstItem = UITabBarItem(title: "홈" , image: UIImage.init(systemName: "house")  , tag:0)
         let secondItem = UITabBarItem(title: "test" , image: UIImage.init(systemName: "fork.knife") , tag:1)
         let thirdItem = UITabBarItem(title: "마이" , image: UIImage.init(systemName: "person") , tag:2)
       
+     
+
+        
         
         return [firstItem , secondItem , thirdItem]
     }
+   
+    
     
     func startCoordinator(_ navigationTabController : UINavigationController ) {
         let navigationTabController = navigationTabController
@@ -155,6 +166,7 @@ class TabBarCoordinator : Coordinator {
         self.logoutDelegate?.didLoggedOut(self)
         
     }
+ 
     
     
     
@@ -254,6 +266,9 @@ extension HomeCoordinator: CoordinatorFinishDelegate {
 
 class MyProfileCoordinator : Coordinator {
     
+    let kakaoService = KakaoService()
+
+    
     var parentCoordinator: TabBarCoordinator?
         
     var finishDelegate: CoordinatorFinishDelegate?
@@ -286,7 +301,8 @@ class MyProfileCoordinator : Coordinator {
      
         
         let firebaseService = self.firebaseService
-        let viewController = MyProfileVC(viewModel : MyProfileVM ( coordinator : self , firebaseService: firebaseService ))
+        let kakaoService = self.kakaoService
+        let viewController = MyProfileVC(viewModel : MyProfileVM ( coordinator : self , firebaseService: firebaseService, kakaoService: kakaoService ))
         
 
         
@@ -295,11 +311,14 @@ class MyProfileCoordinator : Coordinator {
     
     }
     
-    func pushChangeProfileVC(name : String , introduce : String){
+    func pushChangeProfileVC(name : String , introduce : String , profileImage : Data? , beforeImageUrl : String){
         let firebaseService = self.firebaseService
-        let viewModel = MyProfileVM(coordinator: self, firebaseService: firebaseService)
+        let kakaoService = self.kakaoService
+        let viewModel = MyProfileVM(coordinator: self, firebaseService: firebaseService , kakaoService: kakaoService)
         viewModel.introduce = introduce
         viewModel.name = name
+        viewModel.beforeImage = beforeImageUrl
+        viewModel.profileImage = profileImage
         let viewController = ChangeProfileVC(viewModel: viewModel )
         viewController.hidesBottomBarWhenPushed = true
         
@@ -311,7 +330,57 @@ class MyProfileCoordinator : Coordinator {
         self.navigationController.pushViewController(viewController, animated: false)
         
     }
+    
+    func pushSettingVC(){
+        print("setting")
+        let firebaseService = self.firebaseService
+        let kakaoService = self.kakaoService
+
+        let viewModel = MyProfileVM(coordinator: self , firebaseService : firebaseService , kakaoService: kakaoService)
+        let viewController = SettingVC(viewModel: viewModel)
+        
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+
+        self.navigationController.pushViewController(viewController, animated: false)
+        
+    }
  
+    
+    func logout() {
+        
+        
+        
+        self.coordinatorDidFinish(childCoordinator: self)
+        self.parentCoordinator?.logout()
+        
+    }
+    
+
+    
+    func pushChangeSignUpVC(user : UserModel){
+        let firebaseService = self.firebaseService
+        let viewModel = ChangeSignUpVM(coordinator: self, firebaseService: firebaseService)
+        viewModel.userModel = user
+        let viewController = ChangeSignUpVC(viewModel: viewModel)
+        viewController.hidesBottomBarWhenPushed = true
+        
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+        self.navigationController.navigationBar.backgroundColor = .clear
+        
+        
+        self.navigationController.pushViewController(viewController, animated: false)
+
+        
+    }
+    
+    
+        
+        
+        
+        
+    
     
     
     
@@ -321,7 +390,6 @@ class MyProfileCoordinator : Coordinator {
 extension MyProfileCoordinator : CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         
-        print("DiaryCoordinatorFinish")
         // 자식 뷰를 삭제하는 델리게이트 (자식 -> 부모 접근 -> 부모에서 자식 삭제)
         self.childCoordinator = self.childCoordinator
             .filter({ $0.type != childCoordinator.type })
@@ -406,7 +474,6 @@ class DiaryCoordinator : Coordinator  {
         let viewController = DiaryViewController(viewModel : DiaryVM ( coordinator : self , firebaseService: firebaseService ))
         
         self.navigationController.hidesBottomBarWhenPushed = false
-        
         self.navigationController.pushViewController( viewController , animated: true )
     
     }
@@ -466,9 +533,6 @@ extension DiaryCoordinator: CoordinatorFinishDelegate {
     
    
 }
-
-
-
 
 
     

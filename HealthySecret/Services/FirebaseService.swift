@@ -28,6 +28,52 @@ final class FirebaseService {
     let db =  Firestore.firestore()
     
     
+    func deleteAccount() -> Completable {
+        return Completable.create{ completable in
+            
+            if  let user = Auth.auth().currentUser {
+                
+                self.signOut().subscribe{ event in
+                    switch(event){
+                    case.completed:
+                        
+                        user.delete { [weak self] error in
+                            if let error = error {
+                                print("Firebase Error : ",error)
+                               
+                            } else {
+                                
+                                self?.db.collection("HealthySecrets").document(String(describing: user.email)).delete() { err in
+                                  if let err = err {
+                                    print("Error removing document: \(err)")
+                                      completable(.error(err))
+                                  } else {
+                                    print("Document successfully removed!")
+                                      completable(.completed)
+                                  }
+                                }
+                                
+                                
+                            }
+                        }
+                        
+                        
+                    case.error(let err):completable(.error(err))
+                    }
+                    
+                    
+                    
+                }.disposed(by: self.disposeBag)
+               
+            } else {
+                print("로그인 정보가 존재하지 않습니다")
+            }
+            
+            return Disposables.create()
+            
+        }
+            
+        }
     
     
     public func signOut() -> Completable {
@@ -47,6 +93,8 @@ final class FirebaseService {
         
         
     }
+    
+    
     
     public func signUp(email : String , pw : String) -> Completable {
         return Completable.create { completable in
@@ -72,11 +120,14 @@ final class FirebaseService {
     public func getCurrentUser() -> Single<User> {
         return Single.create { single in
             guard let currentUser = Auth.auth().currentUser else{
+                
                 single(.failure(FireStoreError.unknown))
                 return Disposables.create()
             }
+            print(currentUser.email)
             single(.success(currentUser))
             return Disposables.create()
+            
         }
     }
     
@@ -90,6 +141,7 @@ final class FirebaseService {
                         completable(.error(error))
                         return
                     } else {
+                        print("로그인 성공")
                         // 로그인에 성공했다면 여기서 처리
                         completable(.completed)
                     }
@@ -152,9 +204,10 @@ final class FirebaseService {
             
             self.db.collection("HealthySecretUsers").document( model.id ).setData(model.dictionary!) {  err in
                 if let err = err {
-                    print(err)
+                    completable(.error(err))
+                    
                 } else {
-                    print("Success")
+                    completable(.completed)
                     
                 }
             }
@@ -561,10 +614,8 @@ extension FirebaseService {
 }
 extension FirebaseService {
     
-    func updateValues( name : String , introduce : String , key : String)-> Completable {
+    func updateSignUpData( model : UserModel , key : String ) -> Completable {
         return Completable.create{ completable in
-            
-            
             
             self.db.collection("HealthySecretUsers").whereField("id", isEqualTo: key)
                 .getDocuments() { (querySnapshot, err) in
@@ -583,21 +634,193 @@ extension FirebaseService {
                     } else {
                         let document = querySnapshot?.documents.first!
                         document?.reference.updateData([
-                            "introduce" : introduce ,
-                            "name" : name
+                            "age" : model.age ,
+                            "tall" : model.tall ,
+                            "sex" : model.sex,
+                            "goalWeight" : model.goalWeight,
+                            "nowWeight" : model.nowWeight,
+                            "calorie" : model.calorie,
+                            "activity" : model.activity
+                            
                         ])
-                        
-                        
                         completable(.completed)
+                        
                     }
+                    
+                    
+                    
                 }
             
             
             
             return Disposables.create()
             
+        }
+        
+        
+    }
+    
+    func updateValues( name : String , introduce : String , key : String , image : UIImage? , beforeImage : String?) -> Completable {
+        return Completable.create{ completable in
             
+            
+      
+            
+            
+            self.db.collection("HealthySecretUsers").whereField("id", isEqualTo: key)
+                .getDocuments() { (querySnapshot, err) in
+                    
+                    if let err = err {
+                        
+                        print("error1")
+                        
+                        completable(.error(err))
+                        // Some error occured
+                    } else if querySnapshot!.documents.count != 1 {
+                        print("error2")
+                        
+                        completable(.error(err!))
+                        // Perhaps this is an error for you?
+                    } else {
+                        let document = querySnapshot?.documents.first!
+                        
+                        var profileImage = ""
+//                        switch event{
+//                        case.success(let url):
+//                            document?.reference.updateData([
+//                                "name" : name ,
+//                                "introduce" : introduce ,
+//                                "profileImage" : url
+//                            ])
+//                        case .failure(): break
+//                        }
+                        self.uploadImage(image: image, pathRoot: UserDefaults.standard.string(forKey: "uid") ?? "" ).subscribe({ event in
+                            switch event{
+                                
+                                
+                            case .success(let url):
+                                document?.reference.updateData([
+                                                                "name" : name ,
+                                                                "introduce" : introduce ,
+                                                                "profileImage" : url
+                                                            ])
+                                completable(.completed)
+                            case .failure(let err):
+                                completable(.error(err))
+                            }
+
+                            
+                        }).disposed(by: self.disposeBag)
+
+                    }
+                    
+
+                    
+                }
+            
+            self.deleteImage(urlString: beforeImage ?? "").subscribe{ [weak self] event in
+                switch(event){
+                    
+                case .error(let err):
+                    completable(.error(err))
+                case .completed:
+                    print("success")
+                }
+                
+            }.disposed(by: self.disposeBag)
+
+            return Disposables.create()
+
         }
         
     }
+    
+}
+
+
+extension FirebaseService {
+    func uploadImage(image: UIImage?, pathRoot: String ) -> Single<String> {
+        return Single.create { single in
+            guard let image = image else {
+                single(.success(""))
+                return Disposables.create()  }
+            guard let imageData = image.jpegData(compressionQuality: 0.4) else {
+                single(.success(""))
+                return Disposables.create()}
+            let metaData = StorageMetadata()
+            metaData.contentType = "image/jpeg"
+            
+            let imageName = UUID().uuidString + String(Date().timeIntervalSince1970)
+            
+            let firebaseReference = Storage.storage().reference().child("\(imageName)")
+            firebaseReference.putData(imageData, metadata: metaData) { metaData, error in
+                firebaseReference.downloadURL { url, _ in
+                    single(.success(url?.absoluteString ?? ""))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
+    
+    
+    
+    func downloadImage(urlString: String) -> Single<Data?> {
+        return Single.create { single in
+            if urlString.isEmpty {
+                single(.success(nil))
+                return Disposables.create()
+                
+            }
+            let storageReference = Storage.storage().reference(forURL: urlString)
+            
+            let megaByte = Int64(1 * 1024 * 1024)
+            
+            storageReference.getData(maxSize: megaByte) { data, error in
+                guard let imageData = data else {
+                    single(.success(nil))
+                    
+                    return
+                }
+                
+                single(.success(imageData))
+                
+            }
+            
+            return Disposables.create()
+            
+        }
+    }
+    
+    func deleteImage(urlString: String) -> Completable {
+        return Completable.create { completable in
+            if urlString.isEmpty {
+                return Disposables.create()
+                
+            }
+            let storageReference = Storage.storage().reference(forURL: urlString)
+            
+       
+            storageReference.delete{ error in
+                if let error = error{
+                    
+                    completable(.error(error))
+
+                }else{
+                    completable(.completed)
+
+                }
+                
+            }
+            
+            
+            return Disposables.create()
+            
+        }
+    }
+    
+    
+    
+    
+    
 }

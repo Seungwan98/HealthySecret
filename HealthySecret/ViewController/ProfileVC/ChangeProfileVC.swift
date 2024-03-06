@@ -12,10 +12,14 @@ import RxGesture
 
 class ChangeProfileVC : UIViewController {
     
+    var cnt = 0
+    
     let disposeBag = DisposeBag()
 
     private var viewModel : MyProfileVM?
     
+    let imagePicker = UIImagePickerController()
+
     
     private let contentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -30,12 +34,24 @@ class ChangeProfileVC : UIViewController {
         return view
     }()
     
-    private let profileImage : UIImageView = {
+    
+    private let profileImageView : UIImageView = {
        let view = UIImageView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 60
+        view.layer.masksToBounds = true
+
+        view.tintColor = .white
+
+      
+        return view
+        
+    }()
+    
+    private let profileImage : UIImage = {
         let bottomImage = UIImage(named: "일반적.png")
         let topImage = UIImage(named: "camera.png")
         
-        view.translatesAutoresizingMaskIntoConstraints = false
         
         var bottomSize = CGSize(width: 300, height: 300)
         var topSize = CGSize(width: 80, height: 80)
@@ -49,9 +65,7 @@ class ChangeProfileVC : UIViewController {
 
         var newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        view.image = newImage
-        view.tintColor = .white
-        return view
+        return newImage
         
     }()
     
@@ -155,6 +169,7 @@ class ChangeProfileVC : UIViewController {
 
     }
     
+    var imageOutput = BehaviorSubject<UIImage?>(value: nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -179,7 +194,7 @@ class ChangeProfileVC : UIViewController {
         
         self.contentScrollView.addSubview(contentView)
         
-        self.contentView.addSubview(profileImage)
+        self.contentView.addSubview(profileImageView)
         self.contentView.addSubview(firstView)
         
         firstView.addSubview(nameTextField)
@@ -235,12 +250,12 @@ class ChangeProfileVC : UIViewController {
             self.contentView.widthAnchor.constraint(equalTo: self.contentScrollView.widthAnchor , multiplier: 1.0),
 
             
-            profileImage.widthAnchor.constraint(equalToConstant: 120),
-            profileImage.heightAnchor.constraint(equalToConstant: 120),
-            profileImage.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor ),
-            profileImage.topAnchor.constraint(equalTo: self.contentView.topAnchor , constant: 40 ),
+            profileImageView.widthAnchor.constraint(equalToConstant: 120),
+            profileImageView.heightAnchor.constraint(equalToConstant: 120),
+            profileImageView.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor ),
+            profileImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor , constant: 40 ),
             
-            firstView.topAnchor.constraint(equalTo: profileImage.bottomAnchor , constant: 70),
+            firstView.topAnchor.constraint(equalTo: profileImageView.bottomAnchor , constant: 70),
             firstView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 20),
             firstView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor , constant: -20),
             firstView.heightAnchor.constraint(equalToConstant: 450),
@@ -288,7 +303,8 @@ class ChangeProfileVC : UIViewController {
 
         
         
-        let input = MyProfileVM.ChangeInput(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , addButtonTapped : self.addButton.rx.tap.asObservable()  , nameTextField: nameTextField.rx.text.orEmpty.asObservable() , introduceTextField: introduceTextField.rx.text.orEmpty.asObservable() )
+        let input = MyProfileVM.ChangeInput(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , addButtonTapped : self.addButton.rx.tap.asObservable()  , nameTextField: nameTextField.rx.text.orEmpty.asObservable() , introduceTextField: introduceTextField.rx.text.orEmpty.asObservable() ,
+                                            profileImageTapped : profileImageView.rx.tapGesture().when(.recognized).asObservable() , profileImageValue : self.imageOutput)
         
         
         
@@ -299,25 +315,149 @@ class ChangeProfileVC : UIViewController {
         
         
         
-        Observable.zip(output.name , output.introduce).subscribe(onNext: {
+        Observable.zip(output.name , output.introduce , output.profileImage ).subscribe(onNext: {
             self.nameTextField.text = $0
             self.introduceTextField.text = $1
+            
+            if let data = $2 {
+                self.profileImageView.layer.cornerRadius = 60
+                self.profileImageView.image = UIImage(data: data)
+                self.imageOutput.onNext(UIImage(data:data))
 
+
+                
+            }else{
+                self.profileImageView.layer.cornerRadius = 0
+
+                self.profileImageView.image = self.profileImage
+                
+
+            }
+            
+            
+            
         }).disposed(by: disposeBag)
         
+        
+        
+
+        
+
+       
+        
     
+        
+        self.profileImageView.rx.tapGesture().when(.recognized).subscribe(onNext:{ _ in
+            self.actionSheetAlert()
+
+            
+            
+        }).disposed(by: disposeBag)
+        
+        
+        
+        
+        
     }
     
+    
+    
+ 
  
   
-    
    
-    
-
-
-
 
 }
 
+
+extension ChangeProfileVC : UIImagePickerControllerDelegate , UINavigationControllerDelegate{
+    
+    func actionSheetAlert(){
+        
+        let alert = UIAlertController(title: "선택", message: "", preferredStyle: .actionSheet)
+        
+        let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        let replaceImage = UIAlertAction(title: "삭제" , style: .default ){
+            [weak self] _ in
+            self?.profileImageView.image = self?.profileImage
+            self?.imageOutput.onNext(nil)
+
+        }
+        let camera = UIAlertAction(title: "카메라", style: .default) { [weak self] (_) in
+            self?.presentCamera()
+        }
+        let album = UIAlertAction(title: "앨범", style: .default) { [weak self] (_) in
+            self?.presentAlbum()
+        }
+        
+        alert.addAction(cancel)
+        alert.addAction(camera)
+        alert.addAction(album)
+        alert.addAction(replaceImage)
+        
+        present(alert, animated: true, completion: nil)
+        
+    }
+    
+    func presentCamera(){
+        
+        let vc = UIImagePickerController()
+        vc.sourceType = .camera
+        vc.delegate = self
+        vc.allowsEditing = true
+        vc.cameraFlashMode = .on
+        
+        present(vc, animated: true, completion: nil)
+    }
+    
+    func presentAlbum(){
+        
+        
+        let vc = UIImagePickerController()
+        vc.sourceType = .photoLibrary
+        vc.delegate = self
+        vc.allowsEditing = true
+        
+        present(vc, animated: true, completion: nil)
+    }
+    
+    
+   
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        print("picker -> \(String(describing: info[UIImagePickerController.InfoKey.imageURL]))")
+        
+        if cnt % 2 == 0 {
+            
+            if let image = info[.editedImage] as? UIImage {
+                
+                self.profileImageView.image = image
+                imageOutput.onNext(image)
+                
+            }
+            
+        }
+        else{
+            
+            if let image = info[.originalImage] as? UIImage {
+                self.profileImageView.image = image
+                
+                imageOutput.onNext(image)
+            }
+            
+        }
+        self.profileImageView.layer.cornerRadius = 60
+
+        
+        cnt += 1
+        
+        print(cnt)
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+}
 
 

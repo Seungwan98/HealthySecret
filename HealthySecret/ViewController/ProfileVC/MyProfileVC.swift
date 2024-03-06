@@ -32,25 +32,13 @@ class MyProfileVC : UIViewController {
     
     private let profileImage : UIImageView = {
        let view = UIImageView()
-        let bottomImage = UIImage(named: "일반적.png")
-        let topImage = UIImage(named: "camera.png")
-        
         view.translatesAutoresizingMaskIntoConstraints = false
-        
-        var bottomSize = CGSize(width: 300, height: 300)
-        var topSize = CGSize(width: 80, height: 80)
-        UIGraphicsBeginImageContext(bottomSize)
+        view.layer.cornerRadius = 60
+        view.layer.masksToBounds = true
 
-        let areaSize = CGRect(x: 0, y: 0, width: bottomSize.width, height: bottomSize.height)
-        let areaSize2 = CGRect(x: 212, y: 220, width: topSize.width, height: topSize.height)
-        bottomImage!.draw(in: areaSize)
-
-        topImage!.draw(in: areaSize2 , blendMode: .normal , alpha: 1)
-
-        var newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        view.image = newImage
         view.tintColor = .white
+
+      
         return view
         
     }()
@@ -330,7 +318,7 @@ class MyProfileVC : UIViewController {
     let leftBarLabel : UILabel = {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 22)
-        label.bounds = CGRect(x: 0, y: 0, width: 80, height: 40)
+        label.bounds = CGRect(x: 0, y: 0, width: 150, height: 40)
         return label
         
     }()
@@ -338,6 +326,7 @@ class MyProfileVC : UIViewController {
     
     let rightBarImage : UIImageView = {
         let view = UIImageView(image: UIImage(systemName: "gearshape"))
+        
         
         view.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         view.tintColor = .black
@@ -350,6 +339,7 @@ class MyProfileVC : UIViewController {
     lazy var leftBarButton = UIBarButtonItem(customView: leftBarLabel)
     
     let imageAttachment = NSTextAttachment(image: UIImage(named: "arrow.png")!)
+    
     
     
     func setBindings(){
@@ -365,11 +355,11 @@ class MyProfileVC : UIViewController {
 
         
         
-        let input = MyProfileVM.Input(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , rightBarButton: leftBarButton.rx.tap.asObservable()  ,  changeProfile: Observable.merge(profileImage.rx.tapGesture().when(.recognized).asObservable() , leftBarLabel.rx.tapGesture().when(.recognized).asObservable() ), goalLabelTapped: goalLabel.rx.tapGesture().asObservable())
+        let input = MyProfileVM.Input(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , rightBarButton: leftBarButton.rx.tap.asObservable()  ,  changeProfile: Observable.merge(profileImage.rx.tapGesture().when(.recognized).asObservable() , leftBarLabel.rx.tapGesture().when(.recognized).asObservable() ), goalLabelTapped: goalLabel.rx.tapGesture().when(.recognized).asObservable() , settingTapped: rightBarImage.rx.tapGesture().when(.recognized).asObservable())
         
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else {return}
         
-        Observable.zip( output.calorie , output.goalWeight , output.nowWeight , output.name , output.introduce).subscribe(onNext: { [self] in
+        Observable.zip( output.calorie , output.goalWeight , output.nowWeight , output.name , output.introduce , output.profileImage ).subscribe(onNext: { [self] in
             
 
             
@@ -377,6 +367,7 @@ class MyProfileVC : UIViewController {
             self.goalWeight.text = $1 + " kg"
             self.nowWeight.text = $2 + " kg"
             self.introduceLabel.text = $4
+            
             let a = $3
             let attributedString = NSMutableAttributedString(string: "")
             attributedString.append(NSAttributedString(string: " "+a+" "))
@@ -394,9 +385,40 @@ class MyProfileVC : UIViewController {
                 self.gramLabel.text = String(weight) + " kg"
             }
             
+            if let data = $5 {
+                self.profileImage.image = UIImage(data: data)
+                self.profileImage.layer.cornerRadius = 60
+                
+                
+            } else {
+                self.profileImage.layer.cornerRadius = 0
+
+                let bottomImage = UIImage(named: "일반적.png")
+                let topImage = UIImage(named: "camera.png")
+                
+                
+                let bottomSize = CGSize(width: 300, height: 300)
+                let topSize = CGSize(width: 80, height: 80)
+                UIGraphicsBeginImageContext(bottomSize)
+
+                let areaSize = CGRect(x: 0, y: 0, width: bottomSize.width, height: bottomSize.height)
+                let areaSize2 = CGRect(x: 212, y: 220, width: topSize.width, height: topSize.height)
+                bottomImage!.draw(in: areaSize)
+
+                topImage!.draw(in: areaSize2 , blendMode: .normal , alpha: 1)
+
+                let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+                UIGraphicsEndImageContext()
+                
+                self.profileImage.image = newImage
+        
+
+            }
             
             
         }).disposed(by: disposeBag)
+        
+        
         
     }
     
@@ -404,8 +426,7 @@ class MyProfileVC : UIViewController {
   
     
    
-    
-
+  
 
 
 

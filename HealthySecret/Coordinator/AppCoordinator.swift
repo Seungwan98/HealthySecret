@@ -45,6 +45,7 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
     
     func didLoggedIn(_ coordinator: Coordinator ) {
         self.childCoordinator = self.childCoordinator.filter { $0 !== coordinator }
+        print("\(self.childCoordinator)  childCoordinator")
         self.showMainViewController()
     }
   
@@ -68,8 +69,14 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
                 
             case .success(let user):
                 let uid = user.uid
+               
+                
                 guard let email = user.email else {return}
 
+                
+                
+                
+                
                 UserDefaults.standard.set("\(uid)", forKey: "uid")
                 UserDefaults.standard.set("\(email)", forKey: "email")
                 print("loginSuccess")
@@ -97,7 +104,7 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
     
     
     func showLoginViewController() {
-        print("들옴")
+        print("showLoginVC")
         
         let coordinator = LoginCoordinator(self.navigationController)
         coordinator.delegate = self
@@ -182,8 +189,8 @@ class LoginCoordinator : Coordinator  {
     
     
     func start() {
-        let loginVm = LoginVM(firebaseService: self.firebaseService, loginCoordinator: self , kakaoService: self.kakaoService)
-        let loginViewController = LoginViewController(viewModel: loginVm)
+        let viewModel = LoginVM(firebaseService: self.firebaseService, loginCoordinator: self , kakaoService: self.kakaoService)
+        let loginViewController = LoginViewController(viewModel: viewModel)
         loginViewController.view.backgroundColor = .white
         
        
@@ -194,7 +201,7 @@ class LoginCoordinator : Coordinator  {
     
     func pushSignUpVC() {
         let viewModel = SignUpVM(coordinator: self, firebaseService: self.firebaseService)
-        let viewController = SignUpViewController(viewModel: viewModel)
+        let viewController = SignUpVC(viewModel: viewModel)
         self.navigationController.viewControllers = [viewController]
     }
     

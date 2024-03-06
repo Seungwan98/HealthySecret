@@ -1,5 +1,5 @@
 //
-//  HomeVM.swift
+//  ChangeSignUpVM.swift
 //  HealthySecret
 //
 //  Created by 양승완 on 2023/11/28.
@@ -10,7 +10,7 @@ import RxCocoa
 import RxSwift
 
 
-class SignUpVM : ViewModel {
+class ChangeSignUpVM : ViewModel {
     
     
     var disposeBag = DisposeBag()
@@ -39,17 +39,26 @@ class SignUpVM : ViewModel {
     }
     
     struct Output {
-
+        var sexOutput = BehaviorSubject<Int>(value: 3)
+        var exerciseOutput = BehaviorSubject<Int>(value: 4)
+        var ageOutput = BehaviorSubject<String>(value: "")
+        var tallOutput = BehaviorSubject<String>(value: "")
+        var startWeight = BehaviorSubject<String>(value: "")
+        var goalWeight = BehaviorSubject<String>(value: "")
+        
         var nextButtonEnable = BehaviorSubject<Bool>(value: false)
+
         
     }
     
+    var userModel = UserModel(id: "", name: "" ,  tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, ingredients: [], exercise: [] , diarys: [])
+
     
-    weak var coordinator : LoginCoordinator?
+    weak var coordinator : MyProfileCoordinator?
     
     private var firebaseService : FirebaseService
     
-    init( coordinator : LoginCoordinator , firebaseService : FirebaseService ){
+    init( coordinator : MyProfileCoordinator , firebaseService : FirebaseService ){
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
         
@@ -58,14 +67,27 @@ class SignUpVM : ViewModel {
     
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         let id : String = UserDefaults.standard.value(forKey: "email") as! String
-        let password : String = UserDefaults.standard.value(forKey: "password") as! String
         let name : String = UserDefaults.standard.value(forKey: "name") as! String
         
-        var userModel = UserModel(id: id, name: name ,  tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, ingredients: [], exercise: [] , diarys: [])
-        
+        userModel.id = id
+        userModel.name = name
         
         let output = Output()
-
+        print(userModel.tall)
+        output.ageOutput.onNext(userModel.age)
+        output.exerciseOutput.onNext(userModel.activity ?? 4)
+        output.goalWeight.onNext(String(userModel.goalWeight))
+        switch(userModel.sex){
+        case "남성":
+            output.sexOutput.onNext(0)
+        case "여성":
+            output.sexOutput.onNext(1)
+            
+        default:
+            break
+        }
+        output.startWeight.onNext(String(userModel.nowWeight))
+        output.tallOutput.onNext(userModel.tall)
         
         var isValid: Observable<Bool> {
                return Observable
@@ -76,28 +98,45 @@ class SignUpVM : ViewModel {
                    }
            }
         
-        
-        
         isValid.subscribe(onNext: { event in
             output.nextButtonEnable.onNext(event)
             
         }).disposed(by: disposeBag)
         
+        
         input.nextButtonTapped.subscribe(onNext: {
+
+        input.ageInput.subscribe(onNext: {
+            age in
+            print("age")
+            self.userModel.age = age
+        }).disposed(by: disposeBag)
+        
+        input.tallInput.subscribe(onNext: {
+            tall in print("\(tall) tall " )
+            self.userModel.tall = tall
+        }).disposed(by: disposeBag)
+        
+        input.startWeight.subscribe(onNext: {
+            start in print("\(start) startWeight " )
+            self.userModel.nowWeight = Int(start) ?? 0
+        }).disposed(by: disposeBag)
             
         
             
             input.sexInput.subscribe(onNext: {
                 sex
                 in
-                userModel.sex = self.defaultSex[sex]
+                print("sex")
+                self.userModel.sex = self.defaultSex[sex]
                 input.exerciseInput.subscribe(onNext: {
                     exercise in
-                    userModel.activity = exercise
+                    
                     input.goalWeight.subscribe(onNext: {
                         goal in
-                        userModel.goalWeight = Int(goal) ?? 0
-                        userModel.calorie = Int(goal)! * self.defaultCalorie[sex][exercise]
+                        self.userModel.activity = Int(exercise)
+                        self.userModel.goalWeight = Int(goal) ?? 0
+                        self.userModel.calorie = Int(goal)! * self.defaultCalorie[sex][exercise]
                         
                     }).disposed(by: disposeBag)
                     
@@ -108,60 +147,35 @@ class SignUpVM : ViewModel {
                 
             }).disposed(by: disposeBag)
             
-            input.ageInput.subscribe(onNext: {
-                age in
-                userModel.age = age
-            }).disposed(by: disposeBag)
-            
-            input.tallInput.subscribe(onNext: {
-                tall in print("\(tall) tall " )
-                userModel.tall = tall
-            }).disposed(by: disposeBag)
-            
-            input.startWeight.subscribe(onNext: {
-                start in print("\(start) startWeight " )
-                userModel.nowWeight = Int(start) ?? 0
-            }).disposed(by: disposeBag)
             
             
             
-            self.firebaseService.signUp(email: id  , pw: password ).subscribe({event in
-                switch event{
-                case .completed:
+            
+              
+
                     
                     
-                    
-                    self.firebaseService.createUsers(model: userModel).subscribe({
-                        event in
-                        switch event{
-                        case .completed:
-                            self.firebaseService.signIn(email: id, pw: password).subscribe(
-                                onCompleted: {
-                                print("login")
-                                self.coordinator?.login()
-
-
-                               },
-                                onError: { error in
-                                    print(error)
-
-                                }).disposed(by: disposeBag)
-                            
+            self.firebaseService.updateSignUpData(model: self.userModel, key: UserDefaults.standard.string(forKey: "email") ?? "").subscribe({event in
+                        switch(event){
+                        
                         case .error(_):
                             print("error")
+                        case .completed:
+                            self.coordinator?.navigationController.popViewController(animated: false)
                         }
                         
-                        
-                    }).disposed(by: disposeBag)
+                    }
+                    
+                    
+                    ).disposed(by: disposeBag)
                     
                  
-                case .error(_): break
+         
                     
-                }
+           
                 
                 
                 
-            }).disposed(by: disposeBag)
                 
 
             

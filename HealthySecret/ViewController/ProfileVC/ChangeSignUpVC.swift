@@ -7,13 +7,13 @@
 
 import UIKit
 import RxSwift
-class SignUpVC : UIViewController {
+class ChangeSignUpVC : UIViewController {
     
   
-    let viewModel : SignUpVM?
+    let viewModel : ChangeSignUpVM?
     let disposeBag = DisposeBag()
     
-    init(viewModel: SignUpVM) {
+    init(viewModel: ChangeSignUpVM) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         
@@ -109,15 +109,60 @@ class SignUpVC : UIViewController {
     var subTextFields : [UITextField] = []
     
   
+    var ageText = BehaviorSubject<String>(value: "")
+    var tallText = BehaviorSubject<String>(value: "")
+    var startWeightText = BehaviorSubject<String>(value: "")
+    var goalWeightText = BehaviorSubject<String>(value: "")
     
     func setBindings(){
-        let input = SignUpVM.Input( sexInput: sexInput , exerciseInput: exerciseInput , ageInput : ageTextField.rx.text.orEmpty.asObservable() , tallInput: tallTextField.rx.text.orEmpty.asObservable() , startWeight: startWeightTextField.rx.text.orEmpty.asObservable(), goalWeight: goalWeightTextField.rx.text.orEmpty.asObservable() , nextButtonTapped: self.nextButton.rx.tap.asObservable() )
+        
+        ageTextField.rx.text.orEmpty.bind(to: ageText).disposed(by: disposeBag)
+        tallTextField.rx.text.orEmpty.bind(to: tallText).disposed(by: disposeBag)
+        startWeightTextField.rx.text.orEmpty.bind(to: startWeightText).disposed(by: disposeBag)
+        goalWeightTextField.rx.text.orEmpty.bind(to: goalWeightText).disposed(by: disposeBag)
+        
+        
+        
+        let input = ChangeSignUpVM.Input( sexInput: sexInput , exerciseInput: exerciseInput , ageInput : ageText.asObservable() , tallInput: tallText.asObservable() , startWeight: startWeightText.asObservable(), goalWeight: goalWeightText.asObservable() , nextButtonTapped: self.nextButton.rx.tap.asObservable() )
         
         guard let output = viewModel?.transform(input: input, disposeBag: disposeBag) else {return}
+      
+        
+        
+        
         
         output.nextButtonEnable.subscribe(onNext: { event in
             self.nextButton.isEnabled = event
             
+            if event {
+                self.nextButton.backgroundColor = .black
+            }else{
+                self.nextButton.backgroundColor = .lightGray
+
+            }
+            
+        }).disposed(by: disposeBag)
+        
+        Observable.zip(output.ageOutput , output.exerciseOutput , output.goalWeight, output.startWeight , output.sexOutput , output.tallOutput ).subscribe( onNext: { [self] in
+            let age = $0
+            let exercise = $1
+            let goalWeight = $2
+            let startWeight = $3
+            let sex = $4
+            let tall = $5
+            
+            self.ageTextField.text = age
+      
+            self.exerciseButtonAction(thirdViewButtons[exercise])
+            self.goalWeightTextField.text = goalWeight
+            self.startWeightTextField.text = startWeight
+            self.sexButtonAction(sexButtons[sex])
+            self.tallTextField.text = tall
+            
+            self.goalWeightText.onNext(goalWeight)
+            self.startWeightText.onNext(startWeight)
+            self.tallText.onNext(tall)
+            self.ageText.onNext(age)
             
         }).disposed(by: disposeBag)
         
@@ -158,8 +203,8 @@ class SignUpVC : UIViewController {
     let subStackViews = [UIStackView() , UIStackView() ,UIStackView() ,UIStackView() ]
     
     
-    var sexInput = BehaviorSubject<Int>(value: 2)
-    var exerciseInput = BehaviorSubject<Int>(value: 4)
+    var sexInput = PublishSubject<Int>()
+    var exerciseInput = PublishSubject<Int>()
     
     
     
@@ -177,7 +222,7 @@ class SignUpVC : UIViewController {
 
     
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
 
         
         
@@ -218,7 +263,9 @@ class SignUpVC : UIViewController {
             btn.tag = index
             btn.addTarget(self, action: #selector(sexButtonAction(_ :)), for: .touchUpInside )
              
+            
             index += 1
+            
 
              
              NSLayoutConstraint.activate([
@@ -230,6 +277,7 @@ class SignUpVC : UIViewController {
          ])
              
          })
+     
         index = 0
         
 
@@ -486,7 +534,6 @@ class SignUpVC : UIViewController {
                 $0.setImage(thirdViewButtonImages[$0.tag], for: .normal)
             }
         }
-        print(sender.tag)
         self.exerciseInput.onNext(sender.tag)
 
     }
@@ -505,7 +552,6 @@ class SignUpVC : UIViewController {
                     $0.backgroundColor = .lightGray.withAlphaComponent(0.6)
                 }
             }
-            print(sender.tag)
             self.sexInput.onNext(sender.tag)
 
 

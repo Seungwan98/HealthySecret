@@ -15,6 +15,42 @@ final class KakaoService {
     let disposeBag = DisposeBag()
     let firebaseService = FirebaseService()
     
+    func kakaoSessionOut() -> Completable {
+        return Completable.create{ com in
+            UserApi.shared.unlink {(error) in
+                        if let error = error {
+                            print(error)
+                            com(.error(error))
+                        }
+                        else {
+                            print("unlink() success.")
+                            com(.completed)
+                        }
+                    }
+            
+            return Disposables.create()
+            
+        }
+        
+    }
+    func kakaoLogout() -> Completable {
+        return Completable.create{ com in
+            UserApi.shared.logout {(error) in
+                        if let error = error {
+                            print(error)
+                            com(.error(error))
+                        }
+                        else {
+                            print("logout() success.")
+                            com(.completed)
+                        }
+                    }
+            
+            return Disposables.create()
+            
+        }
+        
+    }
     
     func kakaoLogin() -> Single<[String:String]> {
         
@@ -187,23 +223,25 @@ final class KakaoService {
                                 if let error = error {
                                     print("------KAKAO : user loading failed------")
                                     print(error)
+                                    single(.failure(error))
                                 } else {
                                     guard let email = ((kuser?.kakaoAccount?.email)) else { return }
                                     guard let pw =  kuser?.id else {return}
                                     guard let name = kuser?.kakaoAccount?.profile?.nickname else {return}
                                     
+                                    print("\(email)")
+                                    
                                     outputId = "kakao_" + email
                                     outputPassword = "kakao_" + String(describing: pw )
                                     outputName = name
 
-                                    
+                                    single(.success(["email": outputId , "pw" : outputPassword , "name" : outputName] ))
+
                                 }
                             }
                             
-                            print("갱신")
-                            
+                        
                         }
-                        single(.success(["email": outputId , "pw" : outputPassword , "name" : outputName] ))
 
                     }
                     
