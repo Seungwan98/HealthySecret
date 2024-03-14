@@ -27,6 +27,29 @@ final class FirebaseService {
     
     let db =  Firestore.firestore()
     
+    func updateAccountImg(imageURL : String) -> Single<Data>{
+        return Single.create(){ single in
+            
+            let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+            changeRequest?.photoURL = URL(string: imageURL)
+            changeRequest?.commitChanges { [self] error in
+                guard let error = error else {
+                    let url = URL(string: imageURL)
+                    if let data = try? Data(contentsOf: url!){
+                        single(.success(data))
+                        
+                    }
+                    return
+                }
+                single(.failure(error))
+            }
+            
+            return Disposables.create()
+        }
+        
+    
+    }
+    
     
     func deleteAccount() -> Completable {
         return Completable.create{ completable in
@@ -661,10 +684,28 @@ extension FirebaseService {
     }
     
     func updateValues( name : String , introduce : String , key : String , image : UIImage? , beforeImage : String?) -> Completable {
+       
         return Completable.create{ completable in
+            var getUrl = PublishSubject<String>()
+
+            self.uploadImage(image: image, pathRoot: UserDefaults.standard.string(forKey: "uid") ?? "" ).subscribe({ event in
+                switch event{
+                    
+                    
+                case .success(let url):
+                    print("upload")
+                    
+                    
+                    getUrl.onNext(url)
+
+                    
+                case .failure(let err):
+                    completable(.error(err))
+                }
+                
+                
+            }).disposed(by: self.disposeBag)
             
-            
-      
             
             
             self.db.collection("HealthySecretUsers").whereField("id", isEqualTo: key)
@@ -685,66 +726,58 @@ extension FirebaseService {
                         let document = querySnapshot?.documents.first!
                         
                         var profileImage = ""
-//                        switch event{
-//                        case.success(let url):
-//                            document?.reference.updateData([
-//                                "name" : name ,
-//                                "introduce" : introduce ,
-//                                "profileImage" : url
-//                            ])
-//                        case .failure(): break
-//                        }
-                        self.uploadImage(image: image, pathRoot: UserDefaults.standard.string(forKey: "uid") ?? "" ).subscribe({ event in
-                            switch event{
+                        getUrl.subscribe(onNext: { url in
+                            
+                            document?.reference.updateData([
+                                "name" : name ,
+                                "introduce" : introduce ,
+                                "profileImage" : url
                                 
-                                
-                            case .success(let url):
-                                document?.reference.updateData([
-                                                                "name" : name ,
-                                                                "introduce" : introduce ,
-                                                                "profileImage" : url
-                                                            ])
-                                completable(.completed)
-                            case .failure(let err):
-                                completable(.error(err))
-                            }
-
+                            ])
                             
                         }).disposed(by: self.disposeBag)
+                       
+                        print("fireStore upload")
+                        completable(.completed)
 
+                        
                     }
                     
-
+                    
                     
                 }
             
-            self.deleteImage(urlString: beforeImage ?? "").subscribe{ [weak self] event in
+            if !((beforeImage ?? "").isEmpty){ self.deleteImage(urlString: beforeImage ?? "").subscribe{ [weak self] event in
                 switch(event){
                     
                 case .error(let err):
-                    completable(.error(err))
+                    print("이미지없음")
                 case .completed:
                     print("success")
                 }
                 
             }.disposed(by: self.disposeBag)
-
+                
+                
+            }
             return Disposables.create()
 
+        }
         }
         
     }
     
-}
+
 
 
 extension FirebaseService {
     func uploadImage(image: UIImage?, pathRoot: String ) -> Single<String> {
         return Single.create { single in
+            let email = UserDefaults.standard.string(forKey: "email") ?? ""
             guard let image = image else {
                 single(.success(""))
                 return Disposables.create()  }
-            guard let imageData = image.jpegData(compressionQuality: 0.4) else {
+            guard let imageData = image.jpegData(compressionQuality: 0.1) else {
                 single(.success(""))
                 return Disposables.create()}
             let metaData = StorageMetadata()
@@ -752,7 +785,8 @@ extension FirebaseService {
             
             let imageName = UUID().uuidString + String(Date().timeIntervalSince1970)
             
-            let firebaseReference = Storage.storage().reference().child("\(imageName)")
+            let firebaseReference = Storage.storage().reference().child("\(email)/\(imageName)")
+            print(String(imageName))
             firebaseReference.putData(imageData, metadata: metaData) { metaData, error in
                 firebaseReference.downloadURL { url, _ in
                     single(.success(url?.absoluteString ?? ""))
@@ -767,6 +801,8 @@ extension FirebaseService {
     
     func downloadImage(urlString: String) -> Single<Data?> {
         return Single.create { single in
+            let email = UserDefaults.standard.string(forKey: "email") ?? ""
+
             if urlString.isEmpty {
                 single(.success(nil))
                 return Disposables.create()
@@ -782,7 +818,7 @@ extension FirebaseService {
                     
                     return
                 }
-                
+                print("success to getImage")
                 single(.success(imageData))
                 
             }
@@ -819,6 +855,63 @@ extension FirebaseService {
         }
     }
     
+    
+    func downloadAll(urlString: String) -> BehaviorSubject<Data?> {
+        
+        
+        //            if urlString.isEmpty {
+        //                single(.success(nil))
+        //
+        //            }
+        
+            
+            let megaByte = Int64(1 * 1024 * 1024)
+            let storageReference = Storage.storage().reference()
+        let ob = BehaviorSubject<Data?>(value: nil)
+
+            
+            var resultArr:[Data] = []
+            storageReference.child("\(urlString)/").listAll(completion: { result,_ in
+
+                for  item in result!.items {
+                    
+                    item.getData(maxSize: megaByte) { data, error in
+                        
+                        guard data != nil else {
+                            
+                            return
+                        }
+                        print("success to getImage")
+                        resultArr.append(data!)
+                        
+                        ob.onNext(data!)
+
+                    }
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                }
+                
+                
+            })
+        return ob
+
+    
+    
+
+        
+        
+        
+    }
+
+
     
     
     

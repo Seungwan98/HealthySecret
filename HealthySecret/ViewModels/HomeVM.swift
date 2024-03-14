@@ -12,6 +12,7 @@ import RxSwift
 
 class HomeVM : ViewModel {
     
+   // var coreMotionService = CoreMotionService.shared
     
     var disposeBag = DisposeBag()
     
@@ -24,7 +25,8 @@ class HomeVM : ViewModel {
     }
     
     struct Output {
-        let testLabel = PublishSubject<[String]>()
+        let testLabel = BehaviorSubject<String>(value: "")
+        var outputImage = BehaviorSubject<Data?>(value: nil)
         
     }
     
@@ -44,7 +46,10 @@ class HomeVM : ViewModel {
         
         
         
-        let output = Output()
+        var output = Output()
+        
+        output.outputImage = self.firebaseService.downloadAll(urlString: "test")
+        
         
         input.logoutButtonTapped.subscribe(onNext: { [weak self] _ in
             self?.firebaseService.signOut().subscribe(onCompleted: {
@@ -56,29 +61,19 @@ class HomeVM : ViewModel {
         }).disposed(by: disposeBag)
         
         input.rightBarButtonTapped.subscribe(onNext: { [weak self] _ in
-//            print("rightBarButton")
-//            self?.coordinator?.user = self?.user
-//            self?.coordinator?.pushIngredientsVC()
-      
+                CoreMotionService.getSteps.subscribe(onNext: { step in
+                    let core = CoreMotionService.shared
+
+                    output.testLabel.onNext(step ?? "0")
+                    
+                }).disposed(by: self!.disposeBag)
+                
+            
             
         }).disposed(by: disposeBag)
         
         
-        if let userEmail = UserDefaults.standard.string(forKey: "email") {
-            self.firebaseService.getDocument( key: userEmail ).subscribe({
-                event in
-                switch event {
-                case.success(let user):
-                    output.testLabel.onNext(user.recentSearch ?? [])
-                    
-                    
-                case .failure(_):
-                    print("fail")
-                }
-                
-            }).disposed(by: disposeBag)
-            
-        }
+   
         
        
         

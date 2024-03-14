@@ -104,29 +104,15 @@ class ChangeSignUpVM : ViewModel {
         }).disposed(by: disposeBag)
         
         
-        input.nextButtonTapped.subscribe(onNext: {
+        input.nextButtonTapped.subscribe(onNext: { _ in
 
-        input.ageInput.subscribe(onNext: {
-            age in
-            print("age")
-            self.userModel.age = age
-        }).disposed(by: disposeBag)
-        
-        input.tallInput.subscribe(onNext: {
-            tall in print("\(tall) tall " )
-            self.userModel.tall = tall
-        }).disposed(by: disposeBag)
-        
-        input.startWeight.subscribe(onNext: {
-            start in print("\(start) startWeight " )
-            self.userModel.nowWeight = Int(start) ?? 0
-        }).disposed(by: disposeBag)
+            
+       print("tap")
             
         
             
             input.sexInput.subscribe(onNext: {
-                sex
-                in
+                sex in
                 print("sex")
                 self.userModel.sex = self.defaultSex[sex]
                 input.exerciseInput.subscribe(onNext: {
@@ -134,9 +120,49 @@ class ChangeSignUpVM : ViewModel {
                     
                     input.goalWeight.subscribe(onNext: {
                         goal in
+                        
+                        
                         self.userModel.activity = Int(exercise)
                         self.userModel.goalWeight = Int(goal) ?? 0
                         self.userModel.calorie = Int(goal)! * self.defaultCalorie[sex][exercise]
+                        
+                        input.ageInput.subscribe(onNext: {
+                            age in
+                            print("age")
+                            self.userModel.age = age
+                            input.tallInput.subscribe(onNext: {
+                                tall in print("\(tall) tall " )
+                                self.userModel.tall = tall
+                                input.startWeight.subscribe(onNext: {
+                                    start in print("\(start) startWeight " )
+                                    self.userModel.nowWeight = Int(start) ?? 0
+                                    
+                                    self.firebaseService.updateSignUpData(model: self.userModel, key: UserDefaults.standard.string(forKey: "email") ?? "").subscribe({event in
+                                        print(event)
+                                                switch(event){
+                                                
+                                                case .error(_):
+                                                    print("error")
+                                                case .completed:
+                                                    
+                                                    self.coordinator?.navigationController.popViewController(animated: false)
+                                                }
+                                                
+                                            }
+                                            
+                                            
+                                            ).disposed(by: disposeBag)
+                                    
+                                    
+                                    
+                                    
+                                }).disposed(by: disposeBag)
+                            }).disposed(by: disposeBag)
+                        }).disposed(by: disposeBag)
+                        
+                        
+                        
+                     
                         
                     }).disposed(by: disposeBag)
                     
@@ -151,24 +177,12 @@ class ChangeSignUpVM : ViewModel {
             
             
             
-              
+           
+                    
 
                     
                     
-            self.firebaseService.updateSignUpData(model: self.userModel, key: UserDefaults.standard.string(forKey: "email") ?? "").subscribe({event in
-                        switch(event){
-                        
-                        case .error(_):
-                            print("error")
-                        case .completed:
-                            self.coordinator?.navigationController.popViewController(animated: false)
-                        }
-                        
-                    }
-                    
-                    
-                    ).disposed(by: disposeBag)
-                    
+          
                  
          
                     

@@ -132,6 +132,7 @@ class ChangeSignUpVC : UIViewController {
         
         
         output.nextButtonEnable.subscribe(onNext: { event in
+            print(event)
             self.nextButton.isEnabled = event
             
             if event {
@@ -140,6 +141,8 @@ class ChangeSignUpVC : UIViewController {
                 self.nextButton.backgroundColor = .lightGray
 
             }
+            
+            
             
         }).disposed(by: disposeBag)
         
@@ -150,6 +153,8 @@ class ChangeSignUpVC : UIViewController {
             let startWeight = $3
             let sex = $4
             let tall = $5
+            
+            print("zip")
             
             self.ageTextField.text = age
       
@@ -163,6 +168,8 @@ class ChangeSignUpVC : UIViewController {
             self.startWeightText.onNext(startWeight)
             self.tallText.onNext(tall)
             self.ageText.onNext(age)
+            
+            
             
         }).disposed(by: disposeBag)
         
@@ -203,8 +210,8 @@ class ChangeSignUpVC : UIViewController {
     let subStackViews = [UIStackView() , UIStackView() ,UIStackView() ,UIStackView() ]
     
     
-    var sexInput = PublishSubject<Int>()
-    var exerciseInput = PublishSubject<Int>()
+    var sexInput = BehaviorSubject<Int>(value: 2)
+    var exerciseInput = BehaviorSubject<Int>(value: 3)
     
     
     
@@ -235,8 +242,10 @@ class ChangeSignUpVC : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
+
         addSubView()
         setInformationStack()
+
         setBindings()
         
     }

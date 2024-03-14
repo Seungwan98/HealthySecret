@@ -90,6 +90,26 @@ class AddDiaryVC : UIViewController {
         return button
     }()
     
+    private let firstLabel : UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        label.font = .boldSystemFont(ofSize: 26)
+        label.text = "오늘의 일기를\n기록하여 주세요."
+        label.numberOfLines = 2
+        return label
+    }()
+    
+    private let secondLabel : UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        label.font = .boldSystemFont(ofSize: 16)
+        label.textColor = .gray.withAlphaComponent(0.8)
+        label.text = "오늘의 일기"
+     
+        return label
+    }()
     
     
     init(viewModel : CalendarVM){
@@ -118,7 +138,7 @@ class AddDiaryVC : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.hideKeyboardWhenTappedAround()
         setUI()
         setBindings()
         
@@ -142,7 +162,8 @@ class AddDiaryVC : UIViewController {
 
         
         contentView.addSubview(addDiaryTextView)
-        
+        contentView.addSubview(firstLabel)
+        contentView.addSubview(secondLabel)
       
         
         
@@ -160,6 +181,7 @@ class AddDiaryVC : UIViewController {
             bottomView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             bottomView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             bottomView.heightAnchor.constraint(equalToConstant: 100),
+            
             
 
             
@@ -179,14 +201,23 @@ class AddDiaryVC : UIViewController {
             contentView.leadingAnchor.constraint(equalTo: self.contentScrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: self.contentScrollView.trailingAnchor),
             contentView.heightAnchor.constraint(equalToConstant: 1000),
+            
+            
+            
             self.contentView.widthAnchor.constraint(equalTo: self.contentScrollView.widthAnchor , multiplier: 1.0),
 
        
+            firstLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
+            firstLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 20),
+            
+            secondLabel.topAnchor.constraint(equalTo: firstLabel.bottomAnchor , constant: 60),
+            secondLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 20),
+           
      
             
-            addDiaryTextView.topAnchor.constraint(equalTo: contentView.topAnchor , constant: 100),
-            addDiaryTextView.leadingAnchor.constraint(equalTo:contentView.leadingAnchor),
-            addDiaryTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor ),
+            addDiaryTextView.topAnchor.constraint(equalTo: secondLabel.bottomAnchor , constant: 5),
+            addDiaryTextView.leadingAnchor.constraint(equalTo:contentView.leadingAnchor , constant: 20),
+            addDiaryTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor , constant: -20 ),
             addDiaryTextView.heightAnchor.constraint(equalToConstant: 260 ),
             
             

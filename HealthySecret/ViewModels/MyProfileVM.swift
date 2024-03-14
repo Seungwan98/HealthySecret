@@ -44,7 +44,8 @@ class MyProfileVM : ViewModel {
     }
     
     
-    
+    let backgroundSerialQueue = SerialDispatchQueueScheduler(qos: .background)
+
     
     weak var coordinator : MyProfileCoordinator?
     
@@ -65,7 +66,6 @@ class MyProfileVM : ViewModel {
         let id = UserDefaults.standard.string(forKey: "email") ?? ""
         
         let output = Output()
-        
         
         
         
@@ -97,16 +97,17 @@ class MyProfileVM : ViewModel {
                     
                     
                     
-                    self?.firebaseService.downloadImage(urlString: user.profileImage ?? "" ).subscribe{ data in
-                        if let data = data{
+//                    self?.firebaseService.downloadImage(urlString: user.profileImage ?? "" ).subscribe{ data in
+                    if let data =  UserDefaults.standard.data(forKey: "profileImage"){
                             output.profileImage.onNext(data)
                             self?.profileImage = data
                         }else{
+                            print("없음")
                             output.profileImage.onNext(nil)
                             self?.profileImage = nil
                         }
                         
-                    }.disposed(by: disposeBag)
+//                    }.disposed(by: disposeBag)
                     
                     
                     
@@ -131,6 +132,7 @@ class MyProfileVM : ViewModel {
         input.changeProfile.when(.recognized).subscribe(onNext: { [weak self] _ in
             
             self?.coordinator?.pushChangeProfileVC(name: nowUser?.name ?? "" , introduce: nowUser?.introduce ?? "" , profileImage: self?.profileImage ?? nil , beforeImageUrl : nowUser?.profileImage ?? "" )
+           
             
         }).disposed(by: disposeBag)
         
@@ -199,14 +201,21 @@ class MyProfileVM : ViewModel {
                 input.introduceTextField.subscribe(onNext: { introduce in
                     
                     input.profileImageValue.subscribe(onNext: { image in
-                        self.firebaseService.updateValues(name: name , introduce: introduce  , key: UserDefaults.standard.string(forKey: "email") ?? "" , image : image , beforeImage: self.beforeImage ?? "" ).subscribe{ event in
+                        self.firebaseService.updateValues(name: name , introduce: introduce  , key: UserDefaults.standard.string(forKey: "email") ?? "" , image : image , beforeImage: self.beforeImage ?? "" ).subscribe(on: self.backgroundSerialQueue).subscribe{ event in
                             switch(event){
                             case.completed:
-                                self.coordinator?.navigationController.popViewController(animated: false)
+                                print("업데이트완료")
+                                
                             case.error(_):
                                 print("error")
                             }
                             
+                            
+                            let imageData = image?.jpegData(compressionQuality: 0.1)
+                            UserDefaults.standard.set(imageData, forKey: "profileImage")
+                            
+                            self.coordinator?.navigationController.popViewController(animated: false)
+
                             
                             
                             

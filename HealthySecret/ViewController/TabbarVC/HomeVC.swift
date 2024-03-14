@@ -38,7 +38,7 @@ class HomeViewController : UIViewController {
     
     
     lazy var mainStackView : UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [testLabel1, stackView2, testLabel3])
+        let stackView = UIStackView(arrangedSubviews: [testLabel1, stackView2, testImage])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .fill
@@ -108,11 +108,10 @@ class HomeViewController : UIViewController {
         return label
         
     }()
-    var testLabel3 : UILabel = {
-        let label = UILabel()
-        label.text = "test3"
-        label.backgroundColor = .gray
-        return label
+    var testImage : UIImageView = {
+        let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
         
     }()
     
@@ -130,6 +129,8 @@ class HomeViewController : UIViewController {
         setNavigationBar()
         setUI()
         setBindings()
+        
+        
         
     }
 
@@ -161,8 +162,25 @@ class HomeViewController : UIViewController {
         let input = HomeVM.Input(logoutButtonTapped: logOutButton.rx.tap.asObservable(),
                                  rightBarButtonTapped: rightBarButton.rx.tap.asObservable())
         
+        
+       
+        
+     
+        
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else {return}
-//        output.testLabel.bind(to: testLabel1.rx.text).disposed(by: disposeBag)
+        output.testLabel.bind(to: testLabel1.rx.text).disposed(by: disposeBag)
+        output.outputImage.subscribe(onNext: { data in
+           print(data)
+            if let data = data {  var image = UIImageView(image : UIImage(data: data))
+                image.backgroundColor = .blue
+                self.stackView2.addArrangedSubview(image)
+                
+            }
+            
+         
+            
+            
+        }).disposed(by: disposeBag)
         
     }
     

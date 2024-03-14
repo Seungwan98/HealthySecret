@@ -147,7 +147,7 @@ class CalendarVM : ViewModel {
         input.addButtonTapped.subscribe(onNext: { _ in
             
             input.diaryText.subscribe(onNext: { text in
-                var text = text ?? ""
+                let text = text ?? ""
                 self.selectingDate.subscribe(onNext: { date in
                    
                     print(self.diarys)

@@ -10,13 +10,13 @@ import RxCocoa
 import RxSwift
 import RxGesture
 
-class ChangeProfileVC : UIViewController {
+class ChangeIntroduceVC : UIViewController {
     
     var cnt = 0
     
     let disposeBag = DisposeBag()
 
-    private var viewModel : MyProfileVM?
+    private var viewModel : ChangeIntroduceVM?
     
     let imagePicker = UIImagePickerController()
 
@@ -146,7 +146,7 @@ class ChangeProfileVC : UIViewController {
     
     
     
-    init(viewModel : MyProfileVM){
+    init(viewModel : ChangeIntroduceVM  ){
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
 
@@ -303,12 +303,12 @@ class ChangeProfileVC : UIViewController {
 
         
         
-        let input = MyProfileVM.ChangeInput(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , addButtonTapped : self.addButton.rx.tap.asObservable()  , nameTextField: nameTextField.rx.text.orEmpty.asObservable() , introduceTextField: introduceTextField.rx.text.orEmpty.asObservable() ,
+        let input = ChangeIntroduceVM.Input(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , addButtonTapped : self.addButton.rx.tap.asObservable()  , nameTextField: nameTextField.rx.text.orEmpty.asObservable() , introduceTextField: introduceTextField.rx.text.orEmpty.asObservable() ,
                                             profileImageTapped : profileImageView.rx.tapGesture().when(.recognized).asObservable() , profileImageValue : self.imageOutput)
         
         
         
-        guard let output = self.viewModel?.ChangeTransform(input: input, disposeBag: self.disposeBag ) else {return}
+        guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag ) else {return}
         
        
         
@@ -380,6 +380,7 @@ extension ChangeProfileVC : UIImagePickerControllerDelegate , UINavigationContro
         let replaceImage = UIAlertAction(title: "삭제" , style: .default ){
             [weak self] _ in
             self?.profileImageView.image = self?.profileImage
+            self?.profileImageView.layer.cornerRadius = 0
             self?.imageOutput.onNext(nil)
 
         }

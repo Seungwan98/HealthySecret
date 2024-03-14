@@ -84,6 +84,7 @@ class LoginVM : ViewModel {
                 event in
                 switch event{
                 case .success( let inform ):
+                    
                     print("\(inform) 인폼")
                 
                         self.firebaseService?.signIn(email:inform["email"] ?? "" ,

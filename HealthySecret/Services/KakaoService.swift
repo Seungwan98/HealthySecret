@@ -96,7 +96,8 @@ final class KakaoService {
                                             outputPassword = "kakao_" + String(describing: pw )
                                             outputName = name
                                             
-                                            
+                                            single(.success(["email": outputId , "pw" : outputPassword , "name" : outputName ] ))
+
                                         }
                                     }
                                     
@@ -105,7 +106,6 @@ final class KakaoService {
                                 }
                             }
                             
-                            single(.success(["email": outputId , "pw" : outputPassword , "name" : outputName ] ))
                         }
                         else{
                             UserApi.shared.loginWithKakaoAccount { oauthToken, error in
@@ -136,13 +136,14 @@ final class KakaoService {
                                             outputId = "kakao_" + email
                                             outputPassword = "kakao_" + String(describing: pw )
                                             outputName = name
+                                            single(.success(["email": outputId , "pw" : outputPassword , "name" : outputName  ] ))
+
 
                                         }
                                     }
                                 }
                                 
                                 
-                                single(.success(["email": outputId , "pw" : outputPassword , "name" : outputName  ] ))
 
                            
                             }
@@ -196,13 +197,13 @@ final class KakaoService {
                                     outputId = "kakao_" + email
                                     outputPassword = "kakao_" + String(describing: pw )
                                     outputName = name
+                                    single(.success(["email": outputId , "pw" : outputPassword , "name" : outputName ] ))
 
                                 }
                             }
                             
                             print("갱신")
                         }
-                        single(.success(["email": outputId , "pw" : outputPassword , "name" : outputName ] ))
 
                     }
                 }
