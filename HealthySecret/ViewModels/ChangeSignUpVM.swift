@@ -67,10 +67,9 @@ class ChangeSignUpVM : ViewModel {
     
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         let id : String = UserDefaults.standard.value(forKey: "email") as! String
-        let name : String = UserDefaults.standard.value(forKey: "name") as! String
+        //let name : String = UserDefaults.standard.value(forKey: "name") as! String
         
         userModel.id = id
-        userModel.name = name
         
         let output = Output()
         print(userModel.tall)

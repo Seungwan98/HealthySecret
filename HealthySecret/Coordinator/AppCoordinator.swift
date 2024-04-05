@@ -70,47 +70,32 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
             case .success(let user):
                 let uid = user.uid
               
-                
                 guard let email = user.email else {return}
 
-           
-                
-               // UserDefaults.standard.set("\(photoUrl)" , forKey: "profileImage")
-                UserDefaults.standard.set("\(uid)", forKey: "uid")
-                UserDefaults.standard.set("\(email)", forKey: "email")
-                
+                print(user)
                 
                 let backgroundScheduler = ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global())
                 self.firebaseService.getDocument(key: email).subscribe(on: backgroundScheduler).subscribe{ event in
                     switch event{
      
                         
-                    case .success(let user):
-                        if let image = user.profileImage {   self.firebaseService.downloadImage(urlString: image).subscribe(on: backgroundScheduler).subscribe( { imageData in
-                            switch imageData{
-                            case(.success(let data)):
-                                if let imageData = data {UserDefaults.standard.set(imageData, forKey: "profileImage")
-                                    print ("이미지 있음")}else{
-                                        UserDefaults.standard.set(nil, forKey: "profileImage")
+                    case .success(let firUser):
+                    
+                        
 
-                                    }
-                                self.showMainViewController()
+                   
+                        UserDefaults.standard.set("\(email)", forKey: "email")
 
-
-
-                            case(.failure(_)):
-                                print("이미지 없음")
-                                return
-                                
-                            }
-                        }).disposed(by: self.disposeBag)
-                        } else {
-                            print("이미지 없음")
-                            UserDefaults.standard.set(nil, forKey: "profileImage")
-
-                        }
-                    case .failure(let error):
-                        print(error)
+                       // UserDefaults.standard.set("\(photoUrl)" , forKey: "profileImage")
+                        UserDefaults.standard.set("\(uid)", forKey: "uid")
+                        UserDefaults.standard.set("\(firUser.name)" , forKey: "name")
+                        UserDefaults.standard.set( firUser.profileImage , forKey: "profileImage")
+                        self.showMainViewController()
+                       
+                    case .failure(_):
+                        self.firebaseService.signOut()
+                        self.showLoginViewController()
+                        
                     }
                     
                         

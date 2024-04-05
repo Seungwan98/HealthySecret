@@ -197,7 +197,7 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
         
         self.view.addSubview(mainView)
         
-        self.view.addSubview(tableView)
+        self.mainView.addSubview(tableView)
         self.backgroundView.addSubview(backgroundTableView)
         
         
@@ -217,19 +217,17 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
             mainView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             
             
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: mainView.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
             
-            backgroundView.topAnchor.constraint(equalTo: tableView.topAnchor),
-            backgroundView.leadingAnchor.constraint(equalTo: tableView.leadingAnchor),
-            backgroundView.bottomAnchor.constraint(equalTo: tableView.bottomAnchor),
-            backgroundView.trailingAnchor.constraint(equalTo: tableView.trailingAnchor),
+
             
             
             backgroundTableView.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
-            backgroundTableView.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor)
+            backgroundTableView.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor),
+//          
             
             
         ])

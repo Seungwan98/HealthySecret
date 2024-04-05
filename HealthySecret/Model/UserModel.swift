@@ -26,6 +26,7 @@ struct UserModel : Codable {
     var introduce : String?
     var profileImage : String?
     var activity : Int?
+    var feeds : [String]?
 
     }
 

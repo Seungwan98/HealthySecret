@@ -57,9 +57,13 @@ class SignUpVM : ViewModel {
     
     
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
-        let id : String = UserDefaults.standard.value(forKey: "email") as! String
-        let password : String = UserDefaults.standard.value(forKey: "password") as! String
-        let name : String = UserDefaults.standard.value(forKey: "name") as! String
+        let loginMethod = UserDefaults.standard.string(forKey: "loginMethod") ?? ""
+        let id : String = UserDefaults.standard.string(forKey: "email") ?? ""
+        let password : String = UserDefaults.standard.string(forKey: "password") ?? ""
+        let name : String = UserDefaults.standard.string(forKey: "name") ?? ""
+        
+        
+        
         
         var userModel = UserModel(id: id, name: name ,  tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, ingredients: [], exercise: [] , diarys: [])
         
@@ -85,7 +89,7 @@ class SignUpVM : ViewModel {
         
         input.nextButtonTapped.subscribe(onNext: {
             
-        
+            
             
             input.sexInput.subscribe(onNext: {
                 sex
@@ -124,44 +128,66 @@ class SignUpVM : ViewModel {
             }).disposed(by: disposeBag)
             
             
-            
-            self.firebaseService.signUp(email: id  , pw: password ).subscribe({event in
-                switch event{
-                case .completed:
-                    
-                    
-                    
-                    self.firebaseService.createUsers(model: userModel).subscribe({
-                        event in
-                        switch event{
-                        case .completed:
-                            self.firebaseService.signIn(email: id, pw: password).subscribe(
-                                onCompleted: {
-                                print("login")
-                                self.coordinator?.login()
-
-
-                               },
-                                onError: { error in
-                                    print(error)
-
-                                }).disposed(by: disposeBag)
+            if loginMethod == "kakao" && loginMethod == "normal" {
+                self.firebaseService.signUp(email: id  , pw: password ).subscribe({event in
+                    switch event{
+                    case .completed:
+                        
+                        
+                        
+                        self.firebaseService.createUsers(model: userModel).subscribe({
+                            event in
+                            switch event{
+                            case .completed:
+                                self.firebaseService.signIn(email: id, pw: password).subscribe(
+                                    onCompleted: {
+                                        print("login")
+                                        self.coordinator?.login()
+                                        
+                                        
+                                    },
+                                    onError: { error in
+                                        print(error)
+                                        
+                                    }).disposed(by: disposeBag)
+                                
+                            case .error(_):
+                                print("error")
+                            }
                             
-                        case .error(_):
-                            print("error")
-                        }
+                            
+                        }).disposed(by: disposeBag)
                         
                         
-                    }).disposed(by: disposeBag)
+                    case .error(_): break
+                        
+                    }
                     
-                 
-                case .error(_): break
                     
-                }
+                    
+                }).disposed(by: disposeBag)
+            }
+            else if(loginMethod == "apple"){
+                print("apple")
+                self.firebaseService.createUsers(model: userModel).subscribe({
+                    event in
+                    switch event{
+                    case .completed:
+                     
+                        self.coordinator?.login()
+                                
+                      
+                        
+                    case .error(_):
+                        print("error")
+                    }
+                    
+                    
+                }).disposed(by: disposeBag)
                 
                 
-                
-            }).disposed(by: disposeBag)
+            }
+            
                 
 
             

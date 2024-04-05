@@ -9,6 +9,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 import RxGesture
+import Kingfisher
 
 class ChangeIntroduceVC : UIViewController {
     
@@ -170,6 +171,7 @@ class ChangeIntroduceVC : UIViewController {
     }
     
     var imageOutput = BehaviorSubject<UIImage?>(value: nil)
+    var imageChanging = BehaviorSubject<Bool>(value: false)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -303,8 +305,8 @@ class ChangeIntroduceVC : UIViewController {
 
         
         
-        let input = ChangeIntroduceVM.Input(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , addButtonTapped : self.addButton.rx.tap.asObservable()  , nameTextField: nameTextField.rx.text.orEmpty.asObservable() , introduceTextField: introduceTextField.rx.text.orEmpty.asObservable() ,
-                                            profileImageTapped : profileImageView.rx.tapGesture().when(.recognized).asObservable() , profileImageValue : self.imageOutput)
+        let input = ChangeIntroduceVM.Input(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , addButtonTapped : self.addButton.rx.tap.asObservable()  , nameTextField: nameTextField.rx.text.orEmpty.distinctUntilChanged().asObservable() , introduceTextField: introduceTextField.rx.text.orEmpty.distinctUntilChanged().asObservable() ,
+                                            profileImageTapped : profileImageView.rx.tapGesture().when(.recognized).asObservable() , profileImageValue : self.imageOutput, profileChange: imageChanging.asObservable())
         
         
         
@@ -316,13 +318,49 @@ class ChangeIntroduceVC : UIViewController {
         
         
         Observable.zip(output.name , output.introduce , output.profileImage ).subscribe(onNext: {
+            
             self.nameTextField.text = $0
             self.introduceTextField.text = $1
             
             if let data = $2 {
-                self.profileImageView.layer.cornerRadius = 60
-                self.profileImageView.image = UIImage(data: data)
-                self.imageOutput.onNext(UIImage(data:data))
+                
+                if let url = URL(string: data){
+                    
+                    
+                    
+                    DispatchQueue.main.async {
+                        
+                      
+                        
+                        
+                        let processor = DownsamplingImageProcessor(size: self.profileImageView.bounds.size) // 크기 지정 다운 샘플링
+                        // 모서리 둥글게
+                        self.profileImageView.kf.indicatorType = .activity  // indicator 활성화
+                        self.profileImageView.kf.setImage(
+                            with: url,  // 이미지 불러올 url
+                            placeholder: UIImage(named: "일반적.png"),  // 이미지 없을 때의 이미지 설정
+                            options: [
+                                .processor(processor),
+                                .scaleFactor(UIScreen.main.scale),
+                                .transition(.fade(0.5)),  // 애니메이션 효과
+                                .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
+                            ])
+                        
+                        
+                        
+                        
+                     
+                        
+                        
+                        
+                    }
+                    
+                    self.profileImageView.layer.cornerRadius = 60
+
+                }
+                
+//                self.profileImageView.image = UIImage(data: data)
+                //self.imageOutput.onNext(UIImage(data:data))
 
 
                 
@@ -370,7 +408,7 @@ class ChangeIntroduceVC : UIViewController {
 }
 
 
-extension ChangeProfileVC : UIImagePickerControllerDelegate , UINavigationControllerDelegate{
+extension ChangeIntroduceVC : UIImagePickerControllerDelegate , UINavigationControllerDelegate{
     
     func actionSheetAlert(){
         
@@ -382,6 +420,7 @@ extension ChangeProfileVC : UIImagePickerControllerDelegate , UINavigationContro
             self?.profileImageView.image = self?.profileImage
             self?.profileImageView.layer.cornerRadius = 0
             self?.imageOutput.onNext(nil)
+            self?.imageChanging.onNext(true)
 
         }
         let camera = UIAlertAction(title: "카메라", style: .default) { [weak self] (_) in
@@ -433,6 +472,7 @@ extension ChangeProfileVC : UIImagePickerControllerDelegate , UINavigationContro
                 
                 self.profileImageView.image = image
                 imageOutput.onNext(image)
+                imageChanging.onNext(true)
                 
             }
             
@@ -443,6 +483,7 @@ extension ChangeProfileVC : UIImagePickerControllerDelegate , UINavigationContro
                 self.profileImageView.image = image
                 
                 imageOutput.onNext(image)
+                imageChanging.onNext(true)
             }
             
         }

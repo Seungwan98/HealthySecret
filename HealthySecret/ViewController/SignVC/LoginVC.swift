@@ -10,11 +10,13 @@ class LoginViewController : UIViewController {
     
   
 
-    
+    fileprivate var currentNonce: String?
+
     lazy var emailInfoLabelY = emailInfoLabel.centerYAnchor.constraint(equalTo: emailField.centerYAnchor)
     lazy var passwordInfoLabelY = passwordInfoLabel.centerYAnchor.constraint(equalTo: passwordField.centerYAnchor)
     
 
+    var appleLogin = PublishSubject<OAuthCredential>()
     
     
     /// 버튼
@@ -254,96 +256,17 @@ class LoginViewController : UIViewController {
         passwordField.delegate = self
         self.setUI()
         self.setBindings()
+        appleButton.addTarget(self, action: #selector(AppleLoginTapped), for: .touchUpInside)
         
         
         
     }
  
-    
-//    @objc
-//    func kakaoLoginButtonTapped(_ sender: UIButton) {
-//
-//        // 카카오 토큰이 존재한다면
-//        if AuthApi.hasToken() {
-//            UserApi.shared.accessTokenInfo { accessTokenInfo, error in
-//                if let error = error {
-//                    print("DEBUG: 카카오톡 토큰 가져오기 에러 \(error.localizedDescription)")
-//                    self.kakaoLogin()
-//                } else {
-//                    self.kakaoLogin()
-//                    // 토큰 유효성 체크 성공 (필요 시 토큰 갱신됨)
-//                }
-//            }
-//        } else {
-//            // 토큰이 없는 상태 로그인 필요
-//            kakaoLogin()
-//        }
-//    }
-//
-//    private func kakaoLogin() {
-//
-//        if UserApi.isKakaoTalkLoginAvailable() {
-//            kakaoLoginInApp() // 카카오톡 앱이 있다면 앱으로 로그인
-//        } else {
-//            print("as")
-//            kakaoLoginInWeb() // 앱이 없다면 웹으로 로그인 (시뮬레이터)
-//        }
-//    }
-//
-//    private func kakaoLoginInApp() {
-//
-//        UserApi.shared.loginWithKakaoTalk { oauthToken, error in
-//            if let error = error {
-//                print("DEBUG: 카카오톡 로그인 에러 \(error.localizedDescription)")
-//            } else {
-//                print("DEBUG: 카카오톡 로그인 Success")
-//                if let token = oauthToken {
-//                    print("DEBUG: 카카오톡 토큰 \(token)")
-//                    self.loginInFirebase()
-//                }
-//            }
-//        }
-//    }
-//
-//    private func kakaoLoginInWeb() {
-//
-//        UserApi.shared.loginWithKakaoAccount { oauthToken, error in
-//            if let error = error {
-//                print("DEBUG: 카카오톡 로그인 에러 \(error.localizedDescription)")
-//            } else {
-//                print("DEBUG: 카카오톡 로그인 Success")
-//                if let token = oauthToken {
-//                    print("DEBUG: 카카오톡 토큰 \(token)")
-//                    self.loginInFirebase()
-//                }
-//            }
-//        }
-//    }
-//
-//    private func loginInFirebase() {
-//
-//        UserApi.shared.me() { user, error in
-//            if let error = error {
-//                print("DEBUG: 카카오톡 사용자 정보가져오기 에러 \(error.localizedDescription)")
-//            } else {
-//                print("DEBUG: 카카오톡 사용자 정보가져오기 success.")
-//
-//                // 파이어베이스 유저 생성 (이메일로 회원가입)
-//                Auth.auth().createUser(withEmail: (user?.kakaoAccount?.email)!,
-//                                                        password: "\(String(describing: user?.id))") { result, error in
-//                    if let error = error {
-//                        print("DEBUG: 파이어베이스 사용자 생성 실패 \(error.localizedDescription)")
-//                        Auth.auth().signIn(withEmail: (user?.kakaoAccount?.email)!,
-//                                           password: "\(String(describing: user?.id))")
-//
-//                    } else {
-//                        print("DEBUG: 파이어베이스 사용자 생성")
-//                        self.dismiss(animated: true) // 창닫기
-//                    }
-//                }
-//            }
-//        }
-//    }
+    @objc
+    func AppleLoginTapped(){
+        
+        self.startSignInWithAppleFlow()
+    }
     
     
     func setUI(){
@@ -426,7 +349,7 @@ class LoginViewController : UIViewController {
         let input = LoginVM.Input(emailText: emailField.rx.text.orEmpty.asObservable(),
                                   passwordText: passwordField.rx.text.orEmpty.asObservable(),
                                   loginButtonTapped: loginButton.rx.tap.asObservable(),
-                                  signUpButtonTapped: signUpButton.rx.tap.asObservable(), kakaoLoginButtonTapped: kakaoButton.rx.tap.asObservable())
+                                  signUpButtonTapped: signUpButton.rx.tap.asObservable(), kakaoLoginButtonTapped: kakaoButton.rx.tap.asObservable() , appleLogin : appleLogin.asObservable())
         
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else {return}
     }
@@ -485,5 +408,103 @@ extension LoginViewController : UITextFieldDelegate {
     
     
 }
+
+
+
+import CryptoKit
+import AuthenticationServices
+
+
+extension LoginViewController {
+
+    func startSignInWithAppleFlow() {
+        let nonce = randomNonceString()
+        currentNonce = nonce
+        
+        
+        let request = ASAuthorizationAppleIDProvider().createRequest()
+        request.requestedScopes = [.fullName, .email]
+
+        let controller = ASAuthorizationController(authorizationRequests: [request])
+        controller.delegate = self as? ASAuthorizationControllerDelegate
+        controller.presentationContextProvider = self as? ASAuthorizationControllerPresentationContextProviding
+        controller.performRequests()
+        
+        
+        
+        request.nonce = sha256(nonce)
+     
+    }
+    
+    func randomNonceString(length: Int = 32) -> String {
+        precondition(length > 0)
+        var randomBytes = [UInt8](repeating: 0, count: length)
+        let errorCode = SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes)
+        if errorCode != errSecSuccess {
+            fatalError(
+                "Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)"
+            )
+        }
+        let charset: [Character] =
+        Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        let nonce = randomBytes.map { byte in
+            // Pick a random character from the set, wrapping around if needed.
+            charset[Int(byte) % charset.count]
+        }
+        return String(nonce)
+    }
+    
+    func sha256(_ input: String) -> String {
+        let inputData = Data(input.utf8)
+        let hashedData = SHA256.hash(data: inputData)
+        let hashString = hashedData.compactMap {
+            String(format: "%02x", $0)
+        }.joined()
+        
+        return hashString
+    }
+}
+
+extension LoginViewController : ASAuthorizationControllerDelegate {
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            guard let nonce = currentNonce else {
+                fatalError("Invalid state: A login callback was received, but no login request was sent.")
+            }
+            guard let appleIDToken = appleIDCredential.identityToken else {
+                print("Unable to fetch identity token")
+                return
+            }
+            guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
+                print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+                return
+            }
+            
+           
+            
+            
+            
+         
+            let credential = OAuthProvider.appleCredential(withIDToken: idTokenString, rawNonce: nonce, fullName: appleIDCredential.fullName)
+            self.appleLogin.onNext(credential)
+            
+ 
+//            }
+        }
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        // Handle error.
+        print("Sign in with Apple errored: \(error)")
+    }
+}
+
+extension LoginViewController: ASAuthorizationControllerPresentationContextProviding {
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        // Apple 로그인 인증 창 띄우기
+        return self.view.window ?? UIWindow()
+    }
+}
+
 
 

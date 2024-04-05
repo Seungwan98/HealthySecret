@@ -64,6 +64,7 @@ class CalendarVM : ViewModel {
                         date in
                         
                         dayFormatter.dateFormat = "M.dd EEEE "
+                        dayFormatter.locale = Locale(identifier:"ko_KR")
                     
                         output.outputDate.onNext(dayFormatter.string(from: date))
                         print("check")

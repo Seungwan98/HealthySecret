@@ -42,13 +42,15 @@ class HomeVM : ViewModel {
     }
     
     
+    
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         
         
+ 
+
         
         var output = Output()
         
-        output.outputImage = self.firebaseService.downloadAll(urlString: "test")
         
         
         input.logoutButtonTapped.subscribe(onNext: { [weak self] _ in

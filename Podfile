@@ -15,6 +15,8 @@ target 'HealthySecret' do
 	pod 'RxGesture'
 	pod 'Charts'
 
+   pod 'Kingfisher', '~> 7.0'
+
     pod 'FSCalendar'
 end
 
