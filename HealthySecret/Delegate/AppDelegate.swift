@@ -11,6 +11,8 @@ import FirebaseCore
 import FirebaseFirestore
 import KakaoSDKCommon
 import KakaoSDKAuth
+import AuthenticationServices
+import RxSwift
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -24,7 +26,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         let db = Firestore.firestore()
         
+        
+            
       
+       
+        
+            
+      
+        
+            
+        
+        
+        
         return true
         
     }

@@ -6,16 +6,17 @@ import RxCocoa
 import KakaoSDKAuth
 import KakaoSDKUser
 import FirebaseAuth
+
 class LoginViewController : UIViewController {
     
-  
-
+    
+    
     fileprivate var currentNonce: String?
-
+    
     lazy var emailInfoLabelY = emailInfoLabel.centerYAnchor.constraint(equalTo: emailField.centerYAnchor)
     lazy var passwordInfoLabelY = passwordInfoLabel.centerYAnchor.constraint(equalTo: passwordField.centerYAnchor)
     
-
+    
     var appleLogin = PublishSubject<OAuthCredential>()
     
     
@@ -43,7 +44,7 @@ class LoginViewController : UIViewController {
         let button = UIButton()
         
         button.backgroundColor = UIColor(red: 0.686, green: 0.776, blue: 0.627, alpha: 1)
-      
+        
         button.setTitle("로그인", for: .normal)
         button.tintColor = .black
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -236,7 +237,7 @@ class LoginViewController : UIViewController {
     private var viewModel: LoginVM?
     let disposeBag = DisposeBag()
     weak var loginCoordinator : LoginCoordinator?
-
+    
     
     init(viewModel : LoginVM){
         self.viewModel = viewModel
@@ -251,7 +252,7 @@ class LoginViewController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("loginViewCOntroller")
-
+        
         emailField.delegate = self
         passwordField.delegate = self
         self.setUI()
@@ -261,7 +262,7 @@ class LoginViewController : UIViewController {
         
         
     }
- 
+    
     @objc
     func AppleLoginTapped(){
         
@@ -342,10 +343,10 @@ class LoginViewController : UIViewController {
     }
     
     func setBindings(){
-
-       
         
-
+        
+        
+        
         let input = LoginVM.Input(emailText: emailField.rx.text.orEmpty.asObservable(),
                                   passwordText: passwordField.rx.text.orEmpty.asObservable(),
                                   loginButtonTapped: loginButton.rx.tap.asObservable(),
@@ -355,14 +356,14 @@ class LoginViewController : UIViewController {
     }
     
     
-
     
     
-        
     
-        
-        
-   
+    
+    
+    
+    
+    
     
     
     
@@ -372,7 +373,7 @@ class LoginViewController : UIViewController {
 
 extension LoginViewController : UITextFieldDelegate {
     
-
+    
     
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
@@ -380,27 +381,27 @@ extension LoginViewController : UITextFieldDelegate {
         
         
         let textField = textField
-
+        
         print("textField controller incoming")
-
+        
         if textField == emailField {
             emailInfoLabel.font = UIFont.systemFont(ofSize: 11)
-
-        // 오토레이아웃 업데이트
+            
+            // 오토레이아웃 업데이트
             emailInfoLabelY.constant = -12
-
+            
         }
         else {
             passwordInfoLabel.font = UIFont.systemFont(ofSize: 11)
-
-        // 오토레이아웃 업데이트
+            
+            // 오토레이아웃 업데이트
             passwordInfoLabelY.constant = -12
-
+            
         }
         UIView.animate(withDuration: 0.3) {
-                textField.superview?.layoutIfNeeded()      // Textfield의 슈퍼뷰를 업데이트
-        //      self.view.layoutIfNeeded()                           // viewcontroller의 뷰를 업데이트 (상황에 맞게 사용)
-            }
+            textField.superview?.layoutIfNeeded()      // Textfield의 슈퍼뷰를 업데이트
+            //      self.view.layoutIfNeeded()                           // viewcontroller의 뷰를 업데이트 (상황에 맞게 사용)
+        }
         
         return true
     }
@@ -416,15 +417,15 @@ import AuthenticationServices
 
 
 extension LoginViewController {
-
+    
     func startSignInWithAppleFlow() {
         let nonce = randomNonceString()
         currentNonce = nonce
         
         
         let request = ASAuthorizationAppleIDProvider().createRequest()
-        request.requestedScopes = [.fullName, .email]
-
+        request.requestedScopes = [.fullName, .email ]
+        
         let controller = ASAuthorizationController(authorizationRequests: [request])
         controller.delegate = self as? ASAuthorizationControllerDelegate
         controller.presentationContextProvider = self as? ASAuthorizationControllerPresentationContextProviding
@@ -433,7 +434,7 @@ extension LoginViewController {
         
         
         request.nonce = sha256(nonce)
-     
+        
     }
     
     func randomNonceString(length: Int = 32) -> String {
@@ -466,6 +467,9 @@ extension LoginViewController {
 }
 
 extension LoginViewController : ASAuthorizationControllerDelegate {
+    
+    
+    
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             guard let nonce = currentNonce else {
@@ -480,16 +484,22 @@ extension LoginViewController : ASAuthorizationControllerDelegate {
                 return
             }
             
-           
             
             
             
-         
-            let credential = OAuthProvider.appleCredential(withIDToken: idTokenString, rawNonce: nonce, fullName: appleIDCredential.fullName)
+            let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString , rawNonce: nonce)
             self.appleLogin.onNext(credential)
             
- 
-//            }
+            
+          
+            
+            
+            
+            
+            
+            
+            
+                        }
         }
     }
     
@@ -497,7 +507,7 @@ extension LoginViewController : ASAuthorizationControllerDelegate {
         // Handle error.
         print("Sign in with Apple errored: \(error)")
     }
-}
+   
 
 extension LoginViewController: ASAuthorizationControllerPresentationContextProviding {
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {

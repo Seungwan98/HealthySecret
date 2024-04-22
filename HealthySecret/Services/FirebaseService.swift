@@ -26,6 +26,10 @@ public enum FireStoreError: Error, LocalizedError {
 
 final class FirebaseService {
     
+    var requestQuery: Query?
+    var query: Query? = nil
+
+
     
     let disposeBag = DisposeBag()
     
@@ -53,44 +57,145 @@ final class FirebaseService {
         
     
     }
-    
-    
-    func deleteAccount() -> Completable {
-        return Completable.create{ completable in
+    func deleteDatas(user : User) -> Completable {
+        
+        Completable.create(){ completable in
             
-            if  let user = Auth.auth().currentUser {
-                
-                self.signOut().subscribe{ event in
-                    switch(event){
-                    case.completed:
+            self.db.collection("HealthySecretUsers").document(String(describing: user.uid )).delete() { err in
+                if let err = err {
+                    print("Error removing document: \(err)")
+                    completable(.error(err))
+                } else {
+                    print("Document successfully removed!")
+                    self.db.collection("HealthySecretFeed").getDocuments{ snapshot , error in
+                        if let error = error { return }
                         
-                        user.delete { [weak self] error in
-                            if let error = error {
-                                print("Firebase Error : ",error)
-                               
-                            } else {
+                        guard let snapshot = snapshot else {
+                            
+                            return
+                        }
+                        
+                        for doc in snapshot.documents{
+                            var comentArr : [Coment] = []
+                            
+                            
+                            do {
                                 
-                                self?.db.collection("HealthySecrets").document(String(describing: user.email)).delete() { err in
-                                  if let err = err {
-                                    print("Error removing document: \(err)")
-                                      completable(.error(err))
-                                  } else {
-                                    print("Document successfully removed!")
-                                      completable(.completed)
-                                  }
+                                let jsonData = try JSONSerialization.data(withJSONObject: doc.data(), options: [])
+                                let creditCard = try JSONDecoder().decode(FeedModel.self, from: jsonData)
+                                
+                                print("deleteFeed \(creditCard.uuid) user  \(user.uid)")
+                                
+                                
+                                if creditCard.uuid.elementsEqual( user.uid ) {
+                                    doc.reference.delete()
+                                }
+                                else{
+                                    if let coments = creditCard.coments{
+                                        for coment in coments {
+                                            if(coment.uid == user.uid){
+                                                comentArr.append(coment)
+                                            }
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                    doc.reference.updateData([
+                                        
+                                        "likes" : FieldValue.arrayRemove([user.uid]),
+                                        "coments" : FieldValue.arrayRemove(comentArr)
+                                        
+                                    ])
+                                    
                                 }
                                 
                                 
+                            } catch let error {
+                                print("Error json parsing \(error)")
                             }
+                            
+                            
                         }
+                        let storageReference = Storage.storage().reference().child("\(user.uid)")
                         
-                        
-                    case.error(let err):completable(.error(err))
+                        let lock = NSLock()
+                        lock.lock()
+
+                        storageReference.listAll()  { refs ,err in
+                            guard let refs = refs else {return}
+                            for item in refs.items{
+                                print("\(item.name) refsItems")
+                                let ref = Storage.storage().reference().child("\(user.uid)/\(item.name)")
+                                ref.delete{ _ in
+                                    
+                                }
+                                
+                            }
+                            
+                            
+                        }
+                        print("completed")
+                        completable(.completed)
+
+                        lock.unlock()
+
                     }
                     
                     
+                    //completable(.completed)
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
+    func deleteAccount( auth : AuthCredential ) -> Completable {
+        return Completable.create{ completable in
+            print("in")
+            if  let user = Auth.auth().currentUser {
+                print("in1")
+                
+
+                user.reauthenticate(with: auth){ result ,err in
+                    self.signOut().subscribe{ event in
+                        switch(event){
+                        case.completed:
+                            print("complete \(result?.user )")
+                            result?.user.delete { [weak self] error in
+                                if let error = error {
+                                    print("Firebase Error : ",error)
+                                    
+                                   
+                                } else {
+                                    self?.deleteDatas(user: user).subscribe({ event in
+                                        switch(event){
+                                        case.completed:
+                                            print("complted")
+
+                                            completable(.completed)
+                                        case .error(_):
+                                            break
+                                        }
+                                        
+                                    }).disposed(by: self!.disposeBag)
+                                    
+                                }
+                            }
+                            
+                            
+                        case.error(let err):
+                            print(err)
+                            completable(.error(err))
+                        }
+                        
+                        
+                        
+                    }.disposed(by: self.disposeBag)
                     
-                }.disposed(by: self.disposeBag)
+                }
+                
+               
                
             } else {
                 print("로그인 정보가 존재하지 않습니다")
@@ -169,7 +274,7 @@ final class FirebaseService {
                         return
                     } else {
                         print("로그인 성공")
-                        // 로그인에 성공했다면 여기서 처리
+                        UserDefaults.standard.setValue( res?.user.uid, forKey: "uid") 
                         completable(.completed)
                     }
                 }
@@ -186,36 +291,26 @@ final class FirebaseService {
         return Single.create { [weak self] single in
             guard let self = self else { return Disposables.create() }
             
-          
-            
-            self.db.collection("HealthySecretUsers").whereField( "id" , isEqualTo: key  ).getDocuments{ snapshot , error in
-                if let error = error { single(.failure(error))}
-                
-                guard let snapshot = snapshot else {
-                    
-                    single(.failure(error!))
-                    return
-                }
+              
+
+            self.db.collection("HealthySecretUsers").document(key).getDocument{ doc , err in
+                if let err = err { single(.failure(err))}
+               
                 
                 
-                let datas = snapshot.documents.compactMap { doc -> UserModel? in
+               
                     do {
-                        
-                        let jsonData = try JSONSerialization.data(withJSONObject: doc.data(), options: [])
+                        let jsonData = try JSONSerialization.data(withJSONObject: doc?.data(), options: [])
                         let creditCard = try JSONDecoder().decode(UserModel.self, from: jsonData)
-                        return creditCard
+                        single(.success(creditCard))
+
                     } catch let error {
                         print("Error json parsing \(error)")
-                        return nil
+                        single(.failure(CustomError.isNil))
+
                     }
-                }
-                if let data = datas.first{
-                    single(.success(data))
-                    
-                }else{
-                    single(.failure(CustomError.isNil))
-                }
                 
+             
                 
             }
             
@@ -235,7 +330,7 @@ final class FirebaseService {
     func createUsers(model : UserModel) -> Completable {
         return Completable.create{ completable in
             
-            self.db.collection("HealthySecretUsers").document( model.id ).setData(model.dictionary!) {  err in
+            self.db.collection("HealthySecretUsers").document( model.uuid ).setData(model.dictionary!) {  err in
                 if let err = err {
                     completable(.error(err))
                     
@@ -862,7 +957,7 @@ extension FirebaseService {
         }
     }
     
-    func deleteImage(urlString: String) -> Completable {
+    func deleteImage( urlString: String) -> Completable {
         return Completable.create { completable in
             if urlString.isEmpty {
                 return Disposables.create()
@@ -890,6 +985,8 @@ extension FirebaseService {
     }
     
     
+    
+    
     func downloadAll(urlString: String) -> BehaviorSubject<[String:Data]?> {
         
         
@@ -899,32 +996,30 @@ extension FirebaseService {
         //            }
         
             
-            let megaByte = Int64(1 * 1024 * 1024)
-            let storageReference = Storage.storage().reference()
+        let megaByte = Int64(1 * 1024 * 1024)
+        let storageReference = Storage.storage().reference()
         let ob = BehaviorSubject<[String:Data]?>(value: nil)
         
 
         storageReference.child("\(urlString)/").listAll{ ( result, error ) in
             
-            print("listAll")
+            print("listAll \(result)")
             var index = 0
 
             var items : [StorageReference] = []
             
                 if let error = error{
                     
-                }
-            else{
+                }else{
                 
                 print("아이템 들어간당")
-
+                
                 items  = result!.items
                 var resultArr:[String:Data] = [:]
                 
-
+                
                 
                 for i in 0..<items.count {
-                    
                     
                     items[i].getData(maxSize: megaByte) { data, error in
                         
@@ -975,7 +1070,7 @@ extension FirebaseService {
     
     func addFeed(feed : FeedModel) -> Completable {
         return Completable.create{ completable in
-            
+            print(feed.mainImgUrl)
             self.db.collection("HealthySecretFeed").document( feed.feedUid ).setData(feed.dictionary!) {  err in
                 if let err = err {
                     completable(.error(err))
@@ -990,6 +1085,84 @@ extension FirebaseService {
         }
         
         
+        
+    }
+    
+    func deleteComents(  coment : Coment , feedUid : String ) -> Completable {
+        return Completable.create{ completable in
+            self.db.collection("HealthySecretFeed").document(feedUid).getDocument{ doc , err in
+                if let err = err {
+                    completable(.error(err))
+                }else{
+          
+                    if let coment = coment.dictionary {
+                        doc?.reference.updateData([
+                            
+                            "coments" : FieldValue.arrayRemove([coment])
+                            
+                        ])
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        completable(.completed)
+
+                    }
+                    completable(.error(CustomError.isNil))
+                
+   
+                    
+                }
+                
+                
+            }
+            
+          
+            
+            return Disposables.create()
+        }
+        
+        
+    }
+    
+    
+    
+    func updateComents( feedUid : String , coment : Coment  ) -> Completable {
+        return Completable.create{ completable in
+            self.db.collection("HealthySecretFeed").document(feedUid).getDocument{ doc , err in
+                if let err = err {
+                    completable(.error(err))
+                }else{
+                    print(coment)
+                    if let coment = coment.dictionary {
+                        
+                        print(coment)
+                        doc?.reference.updateData([
+                            
+                            
+                            
+                            "coments" : FieldValue.arrayUnion([coment])
+                            
+                        ])
+                        completable(.completed)
+
+                    }
+                    completable(.error(CustomError.isNil))
+                
+   
+                    
+                }
+                
+                
+            }
+            
+          
+            
+            return Disposables.create()
+        }
         
     }
     
@@ -1071,6 +1244,94 @@ extension FirebaseService {
     }
     
     
+    
+    
+    func getFeedPagination(feeds:[FeedModel]) -> Single<[FeedModel]> {
+        var outputFeeds = feeds
+        return Single<[FeedModel]>.create { single in
+            if let query = self.query {
+              //There is last query
+                self.requestQuery = query
+            } else {
+                print("query exist")
+
+              //It's First query request
+                self.requestQuery = self.db.collection("HealthySecretFeed")
+                    .order(by: "date" , descending: true )
+                .limit(to: 2)
+            }
+            
+            self.requestQuery?.addSnapshotListener({ [weak self] (snapshot, error) in
+              guard let self = self else { return }
+              
+              guard let snapshot = snapshot,
+                    let lastDocument = snapshot.documents.last else {
+                     //return
+                      return
+                    }
+              
+              let next = self.db.collection("HealthySecretFeed")
+                .order(by: "date" , descending: true)
+                .limit(to: 2)
+                .start(afterDocument: lastDocument)
+              
+              //Set next query
+              self.query = next
+              
+                
+              _ = snapshot.documents.map({ document in
+                 
+                do {
+                    let feedModel = try document.data(as: FeedModel.self)
+
+                    outputFeeds.append(feedModel)
+                    
+                    print("sdo")
+                    
+                } catch {
+                    single(.failure(CustomError.isNil))
+                }
+              })
+
+        
+              
+                for i in 0..<outputFeeds.count{
+                   
+                    self.getDocument(key: outputFeeds[i].uuid).subscribe({ event in
+                       switch(event){
+                       case.success(let user):
+                           outputFeeds[i].profileImage = user.profileImage
+                           outputFeeds[i].nickname = user.name
+                           
+                           if( i+1 >= outputFeeds.count){
+                               single(.success(outputFeeds))
+                               
+                           }
+
+                       case .failure(let err):
+                           print(err)
+                       }
+                       
+                       
+                   }).disposed(by: self.disposeBag)
+                    
+                    
+                }
+                    
+                   
+                    
+                
+              
+
+            })
+            
+            return Disposables.create()
+        }
+    
+    }
+  
+    
+    
     func getFeedsUid( uid : String ) -> Single<[FeedModel]>{
         return Single.create{ single in
             
@@ -1088,6 +1349,7 @@ extension FirebaseService {
                     do {
                         let jsonData = try JSONSerialization.data(withJSONObject: doc.data(), options: [])
                         let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
+                        
                         
                         feedModels.append(feed)
 
@@ -1109,6 +1371,29 @@ extension FirebaseService {
         
     }
     
+    func deleteFeed(feedUid:String) -> Completable {
+        return Completable.create{ completable in
+            
+            self.db.collection("HealthySecretFeed").document(feedUid).delete() { err in
+              if let err = err {
+                print("Error removing document: \(err)")
+                  completable(.error(err))
+              } else {
+                print("Document successfully removed!")
+              
+                  completable(.completed)
+              }
+            }
+            
+            
+            
+            
+            
+            return Disposables.create()
+        }
+        
+        
+    }
     
     
     
@@ -1116,36 +1401,6 @@ extension FirebaseService {
 
 
 extension FirebaseService {
-    public func uploadImageTest(filePath: String, image: UIImage) -> Single<String> {
-            return Single.create { single in
-                guard let imageData = image.jpegData(compressionQuality: 0.4) else { return Disposables.create() }
-                let metaData = StorageMetadata()
-                metaData.contentType = "image/jpeg"
-                
-                let imageName = filePath
-                let firebaseReference = Storage.storage().reference().child("\(imageName)")
-                
-                firebaseReference.putData(imageData, metadata: metaData) { _, error in
-                    if let error = error { single(.failure(error)) }
-                    
-                    firebaseReference.downloadURL { url, _ in
-                        guard let url = url else {
-                            single(.failure(FireStoreError.unknown))
-                            return
-                        }
-                        let cachedKey = NSString(string: url.absoluteString)
-                        ImageCacheManager.shared.setObject(UIImage(data: imageData)!, forKey: cachedKey)
-                        single(.success(url.absoluteString))
-                    }
-                }
-                return Disposables.create()
-            }
-        }
-    
-    class ImageCacheManager {
-        static let shared = NSCache<NSString, UIImage>()
-        private init() {}
-    }
         
 }
 

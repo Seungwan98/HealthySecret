@@ -14,6 +14,25 @@ import RxSwift
 import Kingfisher
 
 class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDelegate {
+    func didPressedProfile(for index: String) {
+        print("tapped")
+        profileTapped.onNext(index)
+    }
+    
+    func update(for index: String) {
+        updateFeed.onNext(index)
+    }
+    
+    
+    func report(for index : String) {
+        reportFeed.onNext(index)
+    }
+    
+    func delete(for index : String) {
+        
+        deleteFeed.onNext(index)
+        
+    }
     
     var likesChange = PublishSubject<[String:Int]>()
     
@@ -25,6 +44,18 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     
     var likesButtonTapped = PublishSubject<[String:Bool]>()
     
+    var comentsTapped = PublishSubject<String>()
+    
+    var updateFeed = PublishSubject<String>()
+    
+    var reportFeed = PublishSubject<String>()
+    
+    var deleteFeed = PublishSubject<String>()
+    
+    var profileTapped = PublishSubject<String>()
+    
+    var isPaging = false
+    var isLastPage = false
     // (delegate) Cell터치 시.
     
     func didPressHeart(for index: String, like: Bool) {
@@ -38,6 +69,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             likesCount[index] = beforeArr
             
         }else{
+            
             likesCount.removeValue(forKey: index)
             
         }
@@ -45,6 +77,11 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         
     }
     
+    func didPressComents(for index: String) {
+        
+        self.comentsTapped.onNext(index)
+        
+    }
     
     
     
@@ -58,7 +95,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     let tableView : UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.estimatedRowHeight = 860
+        //tableView.estimatedRowHeight = 860
         tableView.rowHeight = UITableView.automaticDimension
         tableView.allowsMultipleSelection = true
         tableView.allowsSelection = false
@@ -68,7 +105,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     let addButton : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-
+        
         button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 25
@@ -144,7 +181,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     func setUI(){
         self.view.addSubview(tableView)
         self.view.addSubview(addButton)
-
+        
         
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
         tableView.dataSource = nil
@@ -172,28 +209,50 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     
     func setBindings() {
         
+        let paging = PublishSubject<Bool>()
         
-        let input = CommuVM.Input( viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), likesButtonTapped: likesButtonTapped, addButtonTapped: self.addButton.rx.tap.asObservable()  )
+        
+        let uid = UserDefaults.standard.string(forKey: "uid")
+        
+        
+        let input = CommuVM.Input( viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), likesButtonTapped: likesButtonTapped, comentsTapped: self.comentsTapped.asObservable() , addButtonTapped: self.addButton.rx.tap.asObservable() , deleteFeed: deleteFeed , reportFeed : reportFeed , updateFeed: updateFeed , paging : paging.asObservable() , profileTapped : profileTapped.asObservable())
         
         
         guard let output = viewModel?.transform(input: input, disposeBag: disposeBag) else {return}
+        
+        
+        
+        
+        output.likesCount.subscribe(onNext: { likesCount in
+            _ = likesCount.map({ value in
+                self.likesCount[value.key] = value.value
+                
+            })
+            print("\(likesCount)")
+            
+        }).disposed(by: disposeBag)
         
         
         tableView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
             self?.tableView.deselectRow(at: indexPath, animated: true)
         }).disposed(by: disposeBag)
         
-        
-        output.likesCount.subscribe(onNext: { likesCount in
-            
-            self.likesCount = likesCount
-            print("\(likesCount)")
+        input.viewWillApearEvent.subscribe(onNext: {
+            //self.tableView.reloadData()
             
         }).disposed(by: disposeBag)
         
-        
         output.feedModel.bind(to: self.tableView.rx.items(cellIdentifier: "FeedCollectionCell" , cellType: FeedCollectionCell.self )){
             index,item,cell in
+            
+            cell.commuVC = self
+            
+            if(uid!.contains(item.uuid)){
+                
+                cell.own = true
+            }else{
+                cell.own = false
+            }
             
             cell.mainImage.image = nil
             
@@ -218,36 +277,36 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             cell.comentsLabel.text = "댓글 \(String(describing: item.coments?.count ?? 0))개 보기"
             
             
-            if let url = URL(string: item.profileImage ?? ""){
+            let url = URL(string: item.profileImage ?? "")
+            
+            
+            
+            
+            DispatchQueue.main.async {
                 
+                let processor = DownsamplingImageProcessor(size: cell.profileImage.bounds.size ) // 크기 지정 다운 샘플링
+                // 모서리 둥글게
+                cell.profileImage.kf.indicatorType = .activity  // indicator 활성화
+                cell.profileImage.kf.setImage(
+                    with: url,  // 이미지 불러올 url
+                    placeholder: UIImage(named: "일반적.png"),  // 이미지 없을 때의 이미지 설정
+                    options: [
+                        .processor(processor),
+                        .scaleFactor(UIScreen.main.scale),
+                        .transition(.fade(0.5)),  // 애니메이션 효과
+                        .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
+                    ])
                 
-                
-                
-                DispatchQueue.main.async {
-                    
-                    let processor = DownsamplingImageProcessor(size: cell.profileImage.bounds.size ) // 크기 지정 다운 샘플링
-        // 모서리 둥글게
-                    cell.profileImage.kf.indicatorType = .activity  // indicator 활성화
-                    cell.profileImage.kf.setImage(
-                        with: url,  // 이미지 불러올 url
-                        placeholder: UIImage(named: "일반적.png"),  // 이미지 없을 때의 이미지 설정
-                        options: [
-                            .processor(processor),
-                            .scaleFactor(UIScreen.main.scale),
-                            .transition(.fade(0.5)),  // 애니메이션 효과
-                            .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
-                        ])
-                    
-                    
-                }
-                
-                
-                
-                cell.profileImage.layer.cornerRadius = 20
-
                 
             }
-
+            
+            
+            
+            cell.profileImage.layer.cornerRadius = 20
+            
+            
+            
+            
             
             
             
@@ -257,7 +316,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             _ = item.mainImgUrl.map{
                 if let url = URL(string: $0 ) {
                     let image = UIImageView()
-                    let processor = DownsamplingImageProcessor(size: cell.mainImage.bounds.size) // 크기 지정 다운 샘플링
+                    let processor = DownsamplingImageProcessor(size: CGSize(width: cell.contentView.bounds.width , height: cell.scrollView.bounds.height) ) // 크기 지정 다운 샘플링
                     |> RoundCornerImageProcessor(cornerRadius: 0) // 모서리 둥글게
                     image.kf.indicatorType = .activity  // indicator 활성화
                     image.kf.setImage(
@@ -270,34 +329,77 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
                             .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
                         ])
                     
+                    
                     images.append(image)
-
-
+                    
+                    
                 }
                 
-                cell.dateLabel.text = CustomFormatter.shared.getDifferDate(date: item.date) 
+                cell.dateLabel.text = CustomFormatter.shared.getDifferDate(date: item.date)
                 
-
+                
                 
             }
             cell.imageViews = images
             cell.addContentScrollView()
             cell.setContentLabel()
-
+            
             
             if(images.count > 1){
-                cell.setPageControl()
+                
+                cell.setPageControl(count: images.count)
+                
+            }else{
+                
+                cell.setPageControl(count: 0)
             }
             
             
             
         }.disposed(by: disposeBag)
         
+        output.isLastPage.subscribe(onNext: { isLastPage in
+            self.isLastPage = isLastPage
+            
+            
+        }).disposed(by: disposeBag) 
+        
+        output.isPaging.subscribe(onNext: { isPaging in
+            self.isPaging = isPaging
+            
+            
+        }).disposed(by: disposeBag)
         
         
         
         
-        
+        self.tableView.rx.contentOffset.distinctUntilChanged({$0 == $1}).subscribe(onNext: {  a in
+            print("\(a) scroll")
+            
+            let yOffset = self.tableView.contentOffset.y
+            
+            let contentHeight = self.tableView.contentSize.height
+            let height = self.tableView.frame.height
+            print(self.isPaging )
+
+            if yOffset > 0  && yOffset > (contentHeight - height) {
+                print("  last")
+
+                if !(self.isPaging ) && !self.isLastPage {
+
+                    print("last Page")
+
+                        paging.onNext(true)
+                        self.isPaging = true
+                        
+                    }
+                    
+                
+                
+            }
+            
+            
+        }).disposed(by: self.disposeBag)
     }
     
     

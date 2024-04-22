@@ -9,12 +9,21 @@ import UIKit
 import RxCocoa
 import RxSwift
 import RxGesture
+import AuthenticationServices
+import FirebaseAuth
 
 class SettingVC : UIViewController {
     
     let disposeBag = DisposeBag()
+    
+    fileprivate var currentNonce: String?
 
     private var viewModel : MyProfileVM?
+    
+    var codeString = PublishSubject<String>()
+    var userId = PublishSubject<String>()
+    var OAuthCredential = PublishSubject<OAuthCredential>()
+
     
     
     private let contentScrollView: UIScrollView = {
@@ -201,14 +210,26 @@ class SettingVC : UIViewController {
     
     
     
-    
     func setBindings(){
-        let input = MyProfileVM.SettingInput(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , logoutTapped: logoutButton.rx.tapGesture().when(.recognized).asObservable(), secessionTapped: secessionButton.rx.tapGesture().when(.recognized).asObservable())
+        
+        let values = Observable.zip(self.codeString.asObservable() , self.userId.asObservable() )
+
+        
+        let input = MyProfileVM.SettingInput(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , logoutTapped: logoutButton.rx.tapGesture().when(.recognized).asObservable(), secessionTapped: secessionButton.rx.tapGesture().when(.recognized).asObservable() , values : values ,
+                                             OAuthCredential: self.OAuthCredential.asObservable())
 
         
         
         
         guard let output = viewModel?.settingTransform(input: input, disposeBag: self.disposeBag) else { return }
+        
+        output.appleSecession.subscribe(onNext: { event in
+            if(event){
+                self.startSignInWithAppleFlow()
+            }
+            
+            
+        }).disposed(by: disposeBag)
     }
     
  
@@ -221,6 +242,97 @@ class SettingVC : UIViewController {
 
 
 }
+import CryptoKit
+import AuthenticationServices
+extension SettingVC : ASAuthorizationControllerDelegate {
+    
+    
+    func startSignInWithAppleFlow() {
+        
+        let nonce = randomNonceString()
+        currentNonce = nonce
+        
+        let request = ASAuthorizationAppleIDProvider().createRequest()
+        request.requestedScopes = []
+        
+        
+        let controller = ASAuthorizationController(authorizationRequests: [request])
+        
+        
+        controller.delegate = self as? ASAuthorizationControllerDelegate
+        controller.presentationContextProvider = self as? ASAuthorizationControllerPresentationContextProviding
+        controller.performRequests()
+        
+        request.nonce = sha256(nonce)
 
-
+        
+        
+    }
+    
+    func randomNonceString(length: Int = 32) -> String {
+        precondition(length > 0)
+        var randomBytes = [UInt8](repeating: 0, count: length)
+        let errorCode = SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes)
+        if errorCode != errSecSuccess {
+            fatalError(
+                "Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)"
+            )
+        }
+        let charset: [Character] =
+        Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        let nonce = randomBytes.map { byte in
+            // Pick a random character from the set, wrapping around if needed.
+            charset[Int(byte) % charset.count]
+        }
+        return String(nonce)
+    }
+    
+    func sha256(_ input: String) -> String {
+        let inputData = Data(input.utf8)
+        let hashedData = SHA256.hash(data: inputData)
+        let hashString = hashedData.compactMap {
+            String(format: "%02x", $0)
+        }.joined()
+        
+        return hashString
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            
+            guard let nonce = currentNonce else {
+                fatalError("Invalid state: A login callback was received, but no login request was sent.")
+            }
+            guard let appleIDToken = appleIDCredential.identityToken else {
+                print("Unable to fetch identity token")
+                return
+            }
+            guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
+                print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+                return
+            }
+            
+            
+            
+            let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString , rawNonce: nonce)
+            
+            if let authorizationCode = appleIDCredential.authorizationCode, let codeString = String(data: authorizationCode, encoding: .utf8) {
+                
+                self.codeString.onNext(codeString)
+                self.userId.onNext(appleIDCredential.user)
+                self.OAuthCredential.onNext(credential)
+                
+                
+            }else{
+                    print("else")
+                }
+            
+            
+            
+        }
+        
+        
+    }
+    
+}
 

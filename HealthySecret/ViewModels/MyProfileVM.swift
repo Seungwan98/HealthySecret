@@ -8,6 +8,8 @@
 import Foundation
 import RxCocoa
 import RxSwift
+import FirebaseStorage
+import FirebaseAuth
 
 
 class MyProfileVM : ViewModel {
@@ -79,7 +81,7 @@ class MyProfileVM : ViewModel {
     }
     
     func HeaderTransform(input : HeaderInput , disposeBag: DisposeBag) -> HeaderOutput {
-        let id = UserDefaults.standard.string(forKey: "email") ?? ""
+        let uid = UserDefaults.standard.string(forKey: "uid") ?? ""
         
         
         let output = HeaderOutput()
@@ -112,8 +114,11 @@ class MyProfileVM : ViewModel {
         
         input.viewWillApearEvent.subscribe(onNext: { event in
             
+           
+            
+            
             print("viewWillAppeear")
-            self.firebaseService.getDocument(key: id ).subscribe{ [weak self]
+            self.firebaseService.getDocument(key: uid ).subscribe{ [weak self]
                 event in
                 switch(event){
                 case.success(let user):
@@ -187,25 +192,9 @@ class MyProfileVM : ViewModel {
         
         input.viewWillApearEvent.subscribe(onNext: { event in
             
-//            
-//            let ob = self.firebaseService.downloadAll(urlString: "test")
-//            ob.subscribe(onNext:{ dic in
-//                guard let dic = dic else { return }
-//                
-//                let sortedDictionary = dic.sorted { $0.0 > $1.0 }
-//                
-//                var arr : [UIImage] = []
-//                
-//                for data in sortedDictionary {
-//                    
-//                    arr.append(UIImage(data: data.value ) ?? UIImage())
-//                    
-//                }
-//                print("\(dic)      dictionary")
-//                output.feedImage.onNext(arr)
-//                
-//            }).disposed(by: disposeBag)
+           
             
+
                 if let uid = UserDefaults.standard.string(forKey: "uid"){
                 print(uid)
                     self.firebaseService.getFeedsUid(uid: uid).subscribe({ event in
@@ -348,11 +337,13 @@ class MyProfileVM : ViewModel {
         let viewWillApearEvent : Observable<Void>
         let logoutTapped : Observable<UITapGestureRecognizer>
         let secessionTapped : Observable<UITapGestureRecognizer>
+        let values : Observable<(String, String)>
+        let OAuthCredential : Observable<OAuthCredential>
         
     }
     
     struct SettingOutput {
-        
+        var appleSecession = PublishSubject<Bool>()
         
         
     }
@@ -362,10 +353,13 @@ class MyProfileVM : ViewModel {
         let output = SettingOutput()
         
         input.logoutTapped.subscribe(onNext: { _ in
-            self.kakaoService.kakaoLogout().subscribe{ event in
+            
+            if( UserDefaults.standard.string(forKey: "loginMethod") == "kakao" ){
+                
+                self.kakaoService.kakaoLogout().subscribe{ event in
                 switch(event){
-                case.completed:
-                    self.coordinator?.logout()
+                case.completed:   self.coordinator?.logout()
+
                 case.error(let err):
                     print(err)
                     
@@ -376,38 +370,121 @@ class MyProfileVM : ViewModel {
             }.disposed(by: disposeBag)
             
             
-            
+            }else if(UserDefaults.standard.string(forKey: "loginMethod") == "apple"){
+                
+                self.coordinator?.logout()
+                
+            }
             
             
             
         }).disposed(by: disposeBag)
         
         input.secessionTapped.subscribe(onNext: { _ in
-            
-            self.firebaseService.deleteAccount().subscribe{ completable in
-                switch(completable){
-                case.completed:
+            if(UserDefaults.standard.string(forKey: "loginMethod") == "kakao"  ){
+                
+                guard let email =   UserDefaults.standard.string(forKey: "email") else {return}
+               
+
+                
+                print("\(email) email")
+                
+                
+               self.kakaoService.kakaoGetToken().subscribe({ single in
+                    switch(single){
+                    case.success(let password):
+                        
+                        let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+                        print(credential)
+                        self.firebaseService.deleteAccount(auth: credential ).subscribe{ completable in
+                            switch(completable){
+                            case.completed:
+                                print("success")
+                                self.kakaoService.kakaoSessionOut().subscribe{ event in
+                                    switch(event){
+                                    case.completed:
+                                        self.coordinator?.logout()
+                                    case.error(let error):
+                                        print(error)
+                                        return
+                                    }
+                                    
+                                    
+                                }.disposed(by: disposeBag)
+                                
+                                
+                            case.error(let err):
+                                print(err)
+                                
+                                
+                            }
+                        }.disposed(by: disposeBag)
+                    case.failure(let err):
+                        print(err)
+                    }
                     
-                    self.kakaoService.kakaoSessionOut().subscribe{ event in
+                }).disposed(by: disposeBag)
+                
+                
+                print("stark")
+                
+                
+               
+            }else{
+                output.appleSecession.onNext(true)
+            }
+            
+        }).disposed(by: disposeBag)
+        
+        
+        input.values.subscribe(onNext: { codeString , userId in
+            
+            input.OAuthCredential.subscribe(onNext: { auth in
+                
+                
+           
+            let url = URL(string: "https://us-central1-healthysecrets-f1b20.cloudfunctions.net/getRefreshToken?code=\(codeString)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "https://apple.com")!
+            let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
+                if let data = data {
+                    let refreshToken = String(data: data, encoding: .utf8) ?? ""
+                    
+                    
+                    AppleService().removeAccount(refreshToken : refreshToken, userId: userId).subscribe({ event in
                         switch(event){
                         case.completed:
-                            self.coordinator?.logout()
-                        case.error(let error):
-                            print(error)
-                            return
+                            self.firebaseService.deleteAccount(auth: auth).subscribe({ event in
+                                switch(event){
+                                case.completed:
+                                    self.coordinator?.logout()
+
+                                    
+                                case.error(_):
+                                    print("error")
+                                    
+                                }
+                                
+                                
+                                
+                            }).disposed(by: disposeBag)
+                            
+                        case.error(let err):
+                            print(err)
                         }
                         
                         
-                    }.disposed(by: disposeBag)
+                        
+                    }).disposed(by: disposeBag)
                     
                     
-                case.error(let err):
-                    print(err)
-                    
-                    
+                }else{
+                    print("\(String(describing: error)) error")
                 }
-            }.disposed(by: disposeBag)
+            }
             
+            
+            task.resume()
+            
+            }).disposed(by: disposeBag)
         }).disposed(by: disposeBag)
         
         
@@ -417,3 +494,4 @@ class MyProfileVM : ViewModel {
     
     
 }
+                                           

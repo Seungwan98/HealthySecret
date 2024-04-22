@@ -39,6 +39,7 @@ class ChangeSignUpVM : ViewModel {
     }
     
     struct Output {
+        
         var sexOutput = BehaviorSubject<Int>(value: 3)
         var exerciseOutput = BehaviorSubject<Int>(value: 4)
         var ageOutput = BehaviorSubject<String>(value: "")
@@ -50,8 +51,9 @@ class ChangeSignUpVM : ViewModel {
 
         
     }
+
     
-    var userModel = UserModel(id: "", name: "" ,  tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, ingredients: [], exercise: [] , diarys: [])
+    var userModel = UserModel(uuid: "", id: "", name: "" ,  tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, ingredients: [], exercise: [] , diarys: [] )
 
     
     weak var coordinator : MyProfileCoordinator?

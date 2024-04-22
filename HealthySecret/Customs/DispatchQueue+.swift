@@ -6,3 +6,12 @@
 //
 
 import Foundation
+extension DispatchQueue {
+    static func mainSyncSafe(execute work: () -> Void) {
+        if Thread.isMainThread {
+            work()
+        } else {
+            DispatchQueue.main.sync(execute: work)
+        }
+    }
+}

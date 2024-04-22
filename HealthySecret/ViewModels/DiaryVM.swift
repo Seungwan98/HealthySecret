@@ -220,7 +220,7 @@ class DiaryVM : ViewModel {
             
             
             
-            if let userEmail = UserDefaults.standard.string(forKey: "email") {
+            if let uid = UserDefaults.standard.string(forKey: "uid") {
                 
                 
                 var exTotalCal : Int = 0
@@ -232,7 +232,7 @@ class DiaryVM : ViewModel {
                 snack =  []
                 total = []
                 
-                self.firebaseService.getDocument(key: userEmail).subscribe( { event in
+                self.firebaseService.getDocument(key: uid).subscribe( { event in
                     
                     
                     

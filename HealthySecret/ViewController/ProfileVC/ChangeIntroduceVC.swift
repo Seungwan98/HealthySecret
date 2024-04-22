@@ -411,8 +411,7 @@ class ChangeIntroduceVC : UIViewController {
 extension ChangeIntroduceVC : UIImagePickerControllerDelegate , UINavigationControllerDelegate{
     
     func actionSheetAlert(){
-        
-        let alert = UIAlertController(title: "선택", message: "", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: nil , message: nil , preferredStyle: .alert)
         
         let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
         let replaceImage = UIAlertAction(title: "삭제" , style: .default ){
@@ -423,18 +422,21 @@ extension ChangeIntroduceVC : UIImagePickerControllerDelegate , UINavigationCont
             self?.imageChanging.onNext(true)
 
         }
-        let camera = UIAlertAction(title: "카메라", style: .default) { [weak self] (_) in
+        let camera = UIAlertAction(title: "카메라", style: .default) { [weak self] _ in
             self?.presentCamera()
         }
-        let album = UIAlertAction(title: "앨범", style: .default) { [weak self] (_) in
+        
+        let album = UIAlertAction(title: "앨범", style: .default) { [weak self] _ in
             self?.presentAlbum()
         }
-        
+       
         alert.addAction(cancel)
         alert.addAction(camera)
         alert.addAction(album)
         alert.addAction(replaceImage)
-        
+       
+        alert.view.tintColor = .black
+                
         present(alert, animated: true, completion: nil)
         
     }

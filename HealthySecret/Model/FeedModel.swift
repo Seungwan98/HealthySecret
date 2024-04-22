@@ -15,11 +15,13 @@ struct FeedModel : Codable {
     var coments : [Coment]?
     var profileImage : String?
     
+    var realImages : [UIImage]?
+    
  
     
     
     
-    init(uuid:String , feedUid : String , date:String , nickname : String , contents : String , mainImgUrl : [String]  , likes : [String]){
+    init(uuid:String , feedUid : String , date:String , nickname : String , contents : String , mainImgUrl : [String]  , likes : [String] ){
         self.uuid = uuid
         self.feedUid = feedUid
         self.date = date
@@ -47,10 +49,29 @@ struct FeedModel : Codable {
         
     }
     
-    struct Coment : Codable {
-        var coment : String
-        var date : String
+  
+    
+}
+
+struct Coment : Codable {
+    var coment : String
+    var date : String
+    var nickname : String
+    var profileImage : String
+    var uid : String
+    var comentUid : String
+    var feedUid : String
+    
+    enum CodingKeys: String, CodingKey {
+        case coment = "coment"
+        case date = "date"
+        case nickname = "nickname"
+        case profileImage = "profileImage"
+        case uid = "uid"
+        case comentUid = "comentUid"
+        case feedUid = "feedUid"
         
+
     }
 }
 

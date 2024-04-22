@@ -56,7 +56,5 @@ class CustomCollectionViewCell: UICollectionViewCell {
         ])
     }
     
-    func configure(with model: String) {
-        
-    }
+    
 }

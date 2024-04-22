@@ -211,6 +211,38 @@ class CommuCoordinator : Coordinator  {
     }
     
     func start() {}
+    
+    
+    func pushProfileVC(feed:FeedModel){
+        let viewModel = OtherProfileVM(coordinator: self , firebaseService: firebaseService)
+        viewModel.feed = feed
+        print(feed)
+        let viewController = OtherProfileVC(viewModel:viewModel)
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+        
+        viewController.hidesBottomBarWhenPushed = true
+
+        self.navigationController.pushViewController(viewController , animated: false)
+        
+        
+    }
+    
+    func pushUpdateFeed(feed:FeedModel){
+        let viewModel = UpdateFeedVM(coordinator: self, firebaseService: self.firebaseService)
+        viewModel.feed = feed
+        print(feed)
+        let viewController = UpdateFeedVC(viewModel:viewModel)
+        
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+        
+        viewController.hidesBottomBarWhenPushed = true
+
+        self.navigationController.pushViewController(viewController , animated: false)
+        
+        
+    }
    
     
     
@@ -219,7 +251,21 @@ class CommuCoordinator : Coordinator  {
   
     
    
-   
+    func pushComents(coments : [Coment] , feedUid : String){
+        let viewModel = ComentsVM(coordinator: self, firebaseService: self.firebaseService)
+        viewModel.coments = coments
+        viewModel.feedUid = feedUid
+        let viewController = ComentsVC(viewModel:viewModel)
+        
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+        
+        viewController.hidesBottomBarWhenPushed = true
+
+        self.navigationController.pushViewController(viewController , animated: false)
+        
+        
+    }
 
         
     

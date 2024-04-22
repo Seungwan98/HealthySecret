@@ -62,9 +62,12 @@ class LoginVM : ViewModel {
         
         input.appleLogin.subscribe(onNext: { credential in
             
+            
             UserDefaults.standard.set("apple",forKey: "loginMethod")
             
-        
+            
+            print("\(credential)  credential")
+
             Auth.auth().signIn(with: credential) { authResult, error in
                 if let error = error {
                     print("Error Apple sign in: \(error.localizedDescription)")
@@ -72,13 +75,14 @@ class LoginVM : ViewModel {
                     return
                 }
                 
+                
                 guard let authUser = authResult?.user else { return }
        
                 UserDefaults.standard.set(authUser.email, forKey: "email")
                 UserDefaults.standard.set( authUser.uid  , forKey: "uid")
                 
                 
-                self.firebaseService?.getDocument(key: authUser.email ?? "").subscribe({ event in
+                self.firebaseService?.getDocument(key: authUser.uid).subscribe({ event in
                     switch(event){
                     case.success(let user):
                         
@@ -88,6 +92,8 @@ class LoginVM : ViewModel {
                         self.loginCoordinator?.login()
                         
                     case.failure(_):
+                        UserDefaults.standard.set(authUser.providerID, forKey: "name")
+                        
                         self.loginCoordinator?.pushSignUpVC()
                         
                     }
@@ -113,6 +119,7 @@ class LoginVM : ViewModel {
 
                 },
                  onError: { error in
+                     print("error")
 
 
                  }).disposed(by: disposeBag)
@@ -123,6 +130,8 @@ class LoginVM : ViewModel {
         
         input.kakaoLoginButtonTapped.subscribe(onNext : {
             _ in
+            UserDefaults.standard.set("kakao",forKey: "loginMethod")
+
             print("touch")
             
             self.kakaoService?.kakaoLogin().subscribe({
@@ -131,7 +140,7 @@ class LoginVM : ViewModel {
                 case .success( let inform ):
                     
           
-                   
+                    print(inform)
                 
                         self.firebaseService?.signIn(email:inform["email"] ?? "" ,
                                                      pw:inform["pw"] ?? "" ).subscribe({ event in

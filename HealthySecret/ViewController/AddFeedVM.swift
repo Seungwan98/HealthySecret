@@ -76,7 +76,7 @@ class AddFeedVM : ViewModel {
                     LoadingIndicator.showLoading()
                         for image in arr {
                             
-                            self.firebaseService.uploadImageTest(filePath: "test" , image: image ).subscribe({ event in
+                            self.firebaseService.uploadImage( image: image, pathRoot: uuid ).subscribe({ event in
                                 switch(event){
                                 case.success(let url): urlArr.append(url)
                                 case.failure(let err):
@@ -85,7 +85,7 @@ class AddFeedVM : ViewModel {
                                 }
                                 
                                 if(urlArr.count == arr.count){
-                                    var feed = FeedModel(uuid: uuid , feedUid: UUID().uuidString, date: date, nickname: name , contents: text, mainImgUrl: urlArr , likes: [] )
+                                    var feed = FeedModel(uuid: uuid , feedUid: UUID().uuidString+CustomFormatter.shared.getToday(), date: date, nickname: name , contents: text, mainImgUrl: urlArr , likes: [] )
                                     if let profileImage = UserDefaults.standard.string(forKey: "profileImage"){
                                         
                                         feed.profileImage = profileImage

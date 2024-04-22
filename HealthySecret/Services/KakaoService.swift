@@ -52,6 +52,26 @@ final class KakaoService {
         
     }
     
+    func kakaoGetToken() -> Single<String> {
+        Single.create{ single in
+        var password : String = ""
+        if AuthApi.hasToken()  {
+         
+                UserApi.shared.accessTokenInfo{ token,err  in
+                    password =  "kakao_" + String(token?.id ?? 0)
+                    
+                    single(.success(password))
+                    
+                }
+                
+            }
+            return Disposables.create()
+        }
+
+        
+    }
+    
+    
     func kakaoLogin() -> Single<[String:String]> {
         
         var outputId : String!
@@ -109,6 +129,7 @@ final class KakaoService {
                         }
                         else{
                             UserApi.shared.loginWithKakaoAccount { oauthToken, error in
+                                
                                 print("2")
 
                                 if let error = error {
@@ -183,6 +204,8 @@ final class KakaoService {
                             
                             //do something
                             _ = oauthToken
+                            
+                            
                             
                             // 로그인 성공 시
                             UserApi.shared.me { kuser, error in

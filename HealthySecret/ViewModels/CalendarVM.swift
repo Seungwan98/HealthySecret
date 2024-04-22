@@ -55,7 +55,7 @@ class CalendarVM : ViewModel {
         let dayFormatter = DateFormatter()
         
         input.viewWillApearEvent.subscribe(onNext: { 
-            self.firebaseService.getDocument(key: UserDefaults.standard.string(forKey: "email") ?? "").subscribe( { event in
+            self.firebaseService.getDocument(key: UserDefaults.standard.string(forKey: "uid") ?? "").subscribe( { event in
                 switch event{
                 case.success(let user):
                     self.diarys = user.diarys

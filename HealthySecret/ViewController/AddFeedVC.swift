@@ -128,8 +128,8 @@ class AddFeedVC : UIViewController {
 
         image.backgroundColor = .lightGray.withAlphaComponent(0.2)
         image.tintColor = .lightGray.withAlphaComponent(0.6)
-        image.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        image.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        image.heightAnchor.constraint(equalToConstant: 120).isActive = true
         
        return image
     }()
@@ -224,10 +224,10 @@ class AddFeedVC : UIViewController {
         inputView.heightAnchor.constraint(equalToConstant: 120).isActive = true
         
         
-        inputImage.trailingAnchor.constraint(equalTo: inputView.trailingAnchor , constant: -10 ).isActive = true
-        inputImage.leadingAnchor.constraint(equalTo: inputView.leadingAnchor , constant: 10).isActive = true
-        inputImage.topAnchor.constraint(equalTo: inputView.topAnchor , constant: 10).isActive = true
-        inputImage.bottomAnchor.constraint(equalTo: inputView.bottomAnchor , constant: -10).isActive = true
+        inputImage.trailingAnchor.constraint(equalTo: inputView.trailingAnchor , constant: 0 ).isActive = true
+        inputImage.leadingAnchor.constraint(equalTo: inputView.leadingAnchor , constant: 0).isActive = true
+        inputImage.topAnchor.constraint(equalTo: inputView.topAnchor , constant: 0).isActive = true
+        inputImage.bottomAnchor.constraint(equalTo: inputView.bottomAnchor , constant: 0).isActive = true
         
         return inputView
     }
@@ -261,12 +261,12 @@ class AddFeedVC : UIViewController {
                 minusImage.tintColor = .lightGray
                 minusImage.translatesAutoresizingMaskIntoConstraints = false
                 minusImage.setImage(UIImage(systemName: "x.circle.fill"), for: .normal )
-                minusImage.heightAnchor.constraint(equalToConstant: 26).isActive = true
-                minusImage.widthAnchor.constraint(equalToConstant: 26).isActive = true
+                minusImage.heightAnchor.constraint(equalToConstant: 24).isActive = true
+                minusImage.widthAnchor.constraint(equalToConstant: 24).isActive = true
                 minusImage.contentVerticalAlignment = .fill
                 minusImage.contentHorizontalAlignment = .fill
-                minusImage.trailingAnchor.constraint(equalTo: inputView.trailingAnchor , constant: -4 ).isActive = true
-                minusImage.topAnchor.constraint(equalTo: inputView.topAnchor , constant: 4 ).isActive = true
+                minusImage.trailingAnchor.constraint(equalTo: inputView.trailingAnchor  ).isActive = true
+                minusImage.topAnchor.constraint(equalTo: inputView.topAnchor ).isActive = true
                 minusImage.backgroundColor = .white
                 minusImage.layer.cornerRadius = 13
                 minusImage.tag = i

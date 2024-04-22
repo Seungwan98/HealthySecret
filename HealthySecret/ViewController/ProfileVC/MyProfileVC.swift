@@ -318,6 +318,8 @@ class MyProfileVC : UIViewController {
         output.feedImage.subscribe( onNext: { [self] imagesArr in
             guard let imagesArr = imagesArr else { return }
             
+            print("\(imagesArr) imagesArr")
+            
             loadControll = true
 
             

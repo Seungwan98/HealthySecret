@@ -75,6 +75,8 @@ class ExerciseVM : ViewModel {
                                     
                                 }
                                 
+                                
+                                
                                 return check
                             }).bind(to: output.checkController).disposed(by: disposeBag)
                             

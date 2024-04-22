@@ -16,12 +16,18 @@ class CommuVM : ViewModel {
     var disposeBag = DisposeBag()
     
     
-    
+    var reload = PublishSubject<Bool>()
     
     struct Input {
         let viewWillApearEvent : Observable<Void>
         let likesButtonTapped : Observable<[String : Bool]>
+        let comentsTapped : Observable<String>
         let addButtonTapped : Observable<Void>
+        let deleteFeed : Observable<String>
+        let reportFeed : Observable<String>
+        let updateFeed : Observable<String>
+        let paging : Observable<Bool>
+        let profileTapped : Observable<String>
         
         
     }
@@ -30,19 +36,17 @@ class CommuVM : ViewModel {
         
         var feedModel = BehaviorSubject<[FeedModel]>(value: [])
         var likesCount = BehaviorSubject<[ String : [ String ] ]>(value: [:] )
+        var isLastPage = BehaviorSubject<Bool>(value:false)
+        var isPaging = BehaviorSubject<Bool>(value: false)
         
         
     }
     
     
     
-    
-    
-    
-    
+    var feedModels = [FeedModel]()
     
     weak var coordinator : CommuCoordinator?
-    
     
     private var firebaseService : FirebaseService
     
@@ -52,12 +56,62 @@ class CommuVM : ViewModel {
         
     }
     
+    
     func transform(input : Input , disposeBag: DisposeBag) -> Output {
         let id = UserDefaults.standard.string(forKey: "email") ?? ""
         let authUid = UserDefaults.standard.string(forKey: "uid") ?? ""
         
         
+        
         let output = Output()
+        
+        input.profileTapped.subscribe(onNext : { feedUid in
+            
+            var feed : FeedModel?
+            _ = self.feedModels.map({  if($0.feedUid == feedUid){ feed = $0}  })
+            self.coordinator?.pushProfileVC(feed: feed!)
+
+            
+        }).disposed(by: disposeBag)
+        
+        input.updateFeed.subscribe(onNext :{ feedUid in
+            
+            var feed : FeedModel?
+            _ = self.feedModels.map({  if($0.feedUid == feedUid){ feed = $0}  })
+            
+            
+            self.coordinator?.pushUpdateFeed(feed: feed!)
+            
+        }).disposed(by: disposeBag)
+        
+        input.deleteFeed.subscribe(onNext: { feedUid in
+            self.firebaseService.deleteFeed(feedUid: feedUid).subscribe({ event in
+                switch(event){
+                case.completed:
+                    self.reload.onNext(true)
+                    
+                case.error(let err):
+                    print(err)
+                    
+                    
+                }
+                
+                
+                
+            }).disposed(by: disposeBag)
+            
+            
+        }).disposed(by: disposeBag)
+        
+        input.comentsTapped.subscribe(onNext: { feedUid in
+            
+            var feed : FeedModel?
+            _ = self.feedModels.map({  if($0.feedUid == feedUid){ feed = $0}  })
+            
+            self.coordinator?.pushComents(coments: feed?.coments ?? [] , feedUid : feedUid)
+            
+            
+        }).disposed(by: disposeBag)
         
         input.likesButtonTapped.throttle(.seconds(2),  scheduler: MainScheduler.instance).subscribe(onNext: { dic in
             guard let feedUid = dic.keys.first else {return}
@@ -81,29 +135,52 @@ class CommuVM : ViewModel {
         input.addButtonTapped.subscribe(onNext: { _ in
             
             self.coordinator?.pushAddFeedVC()
+           
             
         }).disposed(by: disposeBag)
         
         
         input.viewWillApearEvent.subscribe(onNext: { event in
             
-            
+            self.feedModels = []
+            self.firebaseService.query = nil
             print("viewWillAppeear")
+            self.reload.onNext(true)
+           
             
             
-            self.firebaseService.getAllFeeds().subscribe({ event in
+        }).disposed(by: disposeBag)
+        
+        
+        self.reload.subscribe(onNext: { _ in
+            
+            print("reload")
+            self.firebaseService.getFeedPagination(feeds: self.feedModels).subscribe({ event in
                 switch(event){
-                case.success(let feeds):
+                    
+                case(.success(let feeds)):
                     var likesCount : [ String : [ String ] ] = [:]
                     
                     for i in 0..<feeds.count {
-                        likesCount[feeds[i].feedUid ] = feeds[i].likes
+                        
+                        if likesCount[ feeds[i].feedUid ] == nil{
+                            likesCount[ feeds[i].feedUid ] = feeds[i].likes
+                        }
                     }
-                    output.feedModel.onNext(feeds)
-                    output.likesCount.onNext(likesCount)
+                    self.feedModels = feeds
                     
-                case.failure(let err):
-                    print(err)
+                    if(feeds.count < 2){
+                        output.isLastPage.onNext(true)
+                    }else{
+                        output.isLastPage.onNext(false)
+
+                    }
+                    print(self.feedModels)
+                    output.feedModel.onNext(self.feedModels)
+                    output.likesCount.onNext(likesCount)
+                    output.isPaging.onNext(false)
+                    
+                case .failure(_):
                     break
                 }
                 
@@ -113,24 +190,31 @@ class CommuVM : ViewModel {
             
             
             
+        }).disposed(by: disposeBag)
+        
+        input.paging.subscribe(onNext:{ event in
             
-            
-            
-            
-            
-            
-            
-            //    output.FeedModel.onNext(testFeeds)
-            
-            
-            
+            if(event){
+                print("paging subscribe")
+
+                self.reload.onNext(true)
+            }
             
             
         }).disposed(by: disposeBag)
         
+        
+        
+        
         return output
         
     }
+    
+    func getAllFeeds(){
+        
+        
+    }
+    
     
     struct AddInput {
         let addButtonTapped : Observable<Void>
@@ -155,53 +239,55 @@ class CommuVM : ViewModel {
         let uuid = UserDefaults.standard.string(forKey: "uid") ?? ""
         let name = UserDefaults.standard.string(forKey: "name") ?? ""
         
+    
+        
         input.addButtonTapped.subscribe(onNext: { _ in
             
             input.imagesDatas.subscribe(onNext: { arr in
                 
                 input.feedText.subscribe(onNext: { text in
-                        var urlArr : [String] = []
+                    var urlArr : [String] = []
                     
                     LoadingIndicator.showLoading()
                     
-                        for image in arr {
+                    for image in arr {
+                        
+                        self.firebaseService.uploadImage(image: image, pathRoot: uuid).subscribe({ event in
+                            switch(event){
+                            case.success(let url): urlArr.append(url)
+                            case.failure(let err):
+                                print(err)
+                                break
+                            }
                             
-                            self.firebaseService.uploadImageTest(filePath: "test" , image: image ).subscribe({ event in
-                                switch(event){
-                                case.success(let url): urlArr.append(url)
-                                case.failure(let err):
-                                    print(err)
-                                    break
-                                }
-                                
-                                if(urlArr.count == arr.count){
-                                    let feed = FeedModel(uuid: uuid , feedUid: UUID().uuidString, date: date, nickname: name , contents: text, mainImgUrl: urlArr , likes: [] )
-                                    self.firebaseService.addFeed(feed: feed).subscribe({ event in
-                                        switch(event){
-                                        case.completed:
-                                            DispatchQueue.main.async {
-                                                       LoadingIndicator.hideLoading()
-                                                   }
-                                            self.coordinator?.navigationController.popViewController(animated: false)
-                                            
-                                        case .error(_):
-                                            break
+                            if(urlArr.count == arr.count){
+                                let feed = FeedModel(uuid: uuid , feedUid: UUID().uuidString, date: date, nickname: name , contents: text, mainImgUrl: urlArr , likes: [] )
+                                self.firebaseService.addFeed(feed: feed).subscribe({ event in
+                                    switch(event){
+                                    case.completed:
+                                        DispatchQueue.main.async {
+                                            LoadingIndicator.hideLoading()
                                         }
+                                        self.coordinator?.navigationController.popViewController(animated: false)
                                         
-                                    }).disposed(by: disposeBag1)
-                                }
-                                
-                                
-                            }).disposed(by: disposeBag1)
+                                    case .error(_):
+                                        break
+                                    }
+                                    
+                                }).disposed(by: disposeBag1)
+                            }
                             
-                        }
+                            
+                        }).disposed(by: disposeBag1)
+                        
+                    }
                     
-                        
-                        
-                        
-                        
                     
-
+                    
+                    
+                    
+                    
+                    
                 }).disposed(by: disposeBag1)
                 
                 

@@ -68,33 +68,57 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
             switch event {
                 
             case .success(let user):
-                let uid = user.uid
-              
-                guard let email = user.email else {return}
+                print("success")
+                var email : String?
+                var uid : String?
+                print(email , uid)
+                
+                if user.email == nil || user.uid.isEmpty {
+                    self.didLoggedOut(self)
 
-                print(user)
+                }else{
+                    email = user.email
+                    uid = user.uid
+                    
+                }
+                
+             
+
                 
                 let backgroundScheduler = ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global())
-                self.firebaseService.getDocument(key: email).subscribe(on: backgroundScheduler).subscribe{ event in
+                self.firebaseService.getDocument(key: uid ?? "").subscribe(on: backgroundScheduler).subscribe{ event in
                     switch event{
      
                         
                     case .success(let firUser):
                     
                         
-
                    
-                        UserDefaults.standard.set("\(email)", forKey: "email")
+                        print("success")
 
-                       // UserDefaults.standard.set("\(photoUrl)" , forKey: "profileImage")
-                        UserDefaults.standard.set("\(uid)", forKey: "uid")
-                        UserDefaults.standard.set("\(firUser.name)" , forKey: "name")
-                        UserDefaults.standard.set( firUser.profileImage , forKey: "profileImage")
+                        
+                        
+                        UserDefaults.standard.set( email , forKey: "email")
+
+                        UserDefaults.standard.set( uid , forKey: "uid")
+                        UserDefaults.standard.set( firUser.name  , forKey: "name")
+                       
+                        UserDefaults.standard.set( firUser.profileImage  , forKey: "profileImage")
                         self.showMainViewController()
                        
                     case .failure(_):
-                        self.firebaseService.signOut()
-                        self.showLoginViewController()
+                        print("fail lets sign Out")
+
+                        self.firebaseService.signOut().subscribe({ event in
+                            switch(event){
+                            case.completed:
+                                self.showLoginViewController()
+                            case.error(_):
+                                print("err")
+                            }
+                            
+                        }).disposed(by: self.disposeBag)
+                       
                         
                     }
                     
@@ -102,7 +126,8 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
                 }.disposed(by: self.disposeBag)
                 
                 
-            case .failure(_):
+            case .failure(let error):
+                print("fail lets Login \(error)")
                 self.showLoginViewController()
 
             
@@ -186,6 +211,7 @@ class LoginCoordinator : Coordinator  {
     var type: CoordinatorType
     
     private var firebaseService : FirebaseService!
+    
     private var kakaoService : KakaoService!
     
     var childCoordinator: [Coordinator] = []

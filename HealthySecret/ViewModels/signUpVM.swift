@@ -61,11 +61,12 @@ class SignUpVM : ViewModel {
         let id : String = UserDefaults.standard.string(forKey: "email") ?? ""
         let password : String = UserDefaults.standard.string(forKey: "password") ?? ""
         let name : String = UserDefaults.standard.string(forKey: "name") ?? ""
+        let uuid = UserDefaults.standard.string(forKey: "uid") ?? ""
+
         
         
         
-        
-        var userModel = UserModel(id: id, name: name ,  tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, ingredients: [], exercise: [] , diarys: [])
+        var userModel = UserModel( uuid: uuid , id: id, name: name ,  tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, ingredients: [], exercise: [] , diarys: [] )
         
         
         let output = Output()
@@ -87,7 +88,9 @@ class SignUpVM : ViewModel {
             
         }).disposed(by: disposeBag)
         
-        input.nextButtonTapped.subscribe(onNext: {
+        input.nextButtonTapped.subscribe(onNext: { _ in
+            LoadingIndicator.showLoading()
+            print("tappe")
             
             
             
@@ -128,35 +131,51 @@ class SignUpVM : ViewModel {
             }).disposed(by: disposeBag)
             
             
-            if loginMethod == "kakao" && loginMethod == "normal" {
+            if loginMethod == "kakao" || loginMethod == "normal" {
                 self.firebaseService.signUp(email: id  , pw: password ).subscribe({event in
                     switch event{
                     case .completed:
                         
-                        
-                        
-                        self.firebaseService.createUsers(model: userModel).subscribe({
-                            event in
-                            switch event{
-                            case .completed:
-                                self.firebaseService.signIn(email: id, pw: password).subscribe(
-                                    onCompleted: {
-                                        print("login")
-                                        self.coordinator?.login()
-                                        
-                                        
-                                    },
-                                    onError: { error in
-                                        print(error)
-                                        
-                                    }).disposed(by: disposeBag)
+                        self.firebaseService.signIn(email: id, pw: password).subscribe(
+                            
+                            
+                            
+                            onCompleted: {
+                                let uuid = UserDefaults.standard.string(forKey: "uid") ?? ""
+                                userModel.uuid = uuid
+
                                 
-                            case .error(_):
-                                print("error")
-                            }
-                            
-                            
-                        }).disposed(by: disposeBag)
+                                
+                                print("login")
+                                self.firebaseService.createUsers(model: userModel).subscribe({
+                                    event in
+                                    switch event{
+                                    case .completed:
+                                        
+                                        LoadingIndicator.hideLoading()
+                                        self.coordinator?.login()
+
+
+                                    case .error(_):
+                                        LoadingIndicator.hideLoading()
+                                        self.coordinator?.pushSignUpVC()
+
+                                        print("error")
+                                    }
+                                    
+                                    
+                                }).disposed(by: disposeBag)
+                                
+
+
+                                
+                            },
+                            onError: { error in
+                                print(error)
+                                
+                            }).disposed(by: disposeBag)
+                        
+                      
                         
                         
                     case .error(_): break
@@ -175,10 +194,14 @@ class SignUpVM : ViewModel {
                     case .completed:
                      
                         self.coordinator?.login()
-                                
+                        LoadingIndicator.hideLoading()
+
+                            
                       
                         
                     case .error(_):
+                        LoadingIndicator.hideLoading()
+
                         print("error")
                     }
                     

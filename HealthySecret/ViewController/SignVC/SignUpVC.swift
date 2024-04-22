@@ -90,7 +90,7 @@ class SignUpVC : UIViewController {
        let button = UIButton()
         
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("다음", for: .normal)
+        button.setTitle("완료", for: .normal)
         button.tintColor = .white
         button.titleLabel?.font = .boldSystemFont(ofSize: 20)
         button.layer.cornerRadius = 30

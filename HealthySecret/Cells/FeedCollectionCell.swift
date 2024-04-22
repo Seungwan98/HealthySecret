@@ -2,10 +2,25 @@ import UIKit
 
 protocol FeedCollectionCellDelegate {
     func didPressHeart(for index: String, like: Bool)
+    
+    func didPressComents(for index: String )
+    
+    func delete(for index: String)
+    
+    func report(for index: String)
+    
+    func update(for index: String)
+    
+    func didPressedProfile(for index: String)
 }
 
 class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
     static let identifier = "FeedCollectionCell"
+    
+    var own : Bool?
+    
+    var commuVC : CommuVC?
+    
     var mainImage : UIImageView = {
         let image = UIImageView()
         image.backgroundColor = .lightGray.withAlphaComponent(0.2)
@@ -25,6 +40,8 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
     
     let bottomView : UIView = {
         let view = UIView()
+        view.isUserInteractionEnabled = true
+        
         
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -36,7 +53,8 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
        let imageView = UIImageView()
         imageView.layer.masksToBounds = true
 
-  
+        imageView.isUserInteractionEnabled = true
+
         imageView.layer.cornerRadius = 20
         imageView.image = UIImage(named: "일반적.png")
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -125,6 +143,9 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         label.font = .systemFont(ofSize: 16)
         label.text = "댓글 0개 보기"
         label.textColor = .lightGray
+        label.isUserInteractionEnabled = true
+
+
         
         return label
     }()
@@ -147,24 +168,39 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         return label
     }()
     
+    let ellipsis : UIButton = {
+       let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
+        button.tintColor = .black
+        button.contentVerticalAlignment = .center
+        button.contentHorizontalAlignment = .center
+        return button
+    }()
+    
    
      
      func addContentScrollView() {
          DispatchQueue.main.async {
              
              for i in 0..<self.imageViews.count {
+                 print("iii")
                  
                  let xPos = self.scrollView.frame.width * CGFloat(i)
                  self.imageViews[i].frame = CGRect(x: xPos, y: 0, width: self.scrollView.bounds.width, height: self.scrollView.bounds.height)
                  
                  self.scrollView.addSubview(self.imageViews[i])
                  self.scrollView.contentSize.width = self.imageViews[i].frame.width * CGFloat(i + 1)
+                 
+                 
+                 
+
              }
          }
      }
      
-     func setPageControl() {
-             pageControl.numberOfPages = imageViews.count
+    func setPageControl(count : Int) {
+             pageControl.numberOfPages = count
             
          
      }
@@ -255,7 +291,22 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         
         
             
+        
         }
+    
+    @objc
+    func didpressedProfile(_ sender : UITapGestureRecognizer) {
+        delegate?.didPressedProfile(for: feedUid!)
+        print("feedUid \(feedUid)")
+    }
+    
+    @objc
+    func didPressedComents(_ sender : UITapGestureRecognizer ){
+        
+        delegate?.didPressComents(for: feedUid!)
+        print("dd")
+        
+    }
     
     
     @objc
@@ -291,6 +342,17 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
     }
    
     
+    func delete(){
+        delegate?.delete(for: self.feedUid!)
+    }
+    
+    func report(){
+        delegate?.report(for: self.feedUid!)
+    }
+    func update(){
+        delegate?.update(for: self.feedUid!)
+        
+    }
  
     
     
@@ -298,9 +360,19 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
     private func setUI() {
         
         likesButton.addTarget(self, action: #selector(didPressedHeart), for: .touchUpInside)
+        comentsButton.addTarget(self, action: #selector(didPressedComents), for: .touchUpInside)
         
-        let labelGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLabel))
-        contentLabel.addGestureRecognizer(labelGesture)
+        let contentLabelGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLabel))
+        contentLabel.addGestureRecognizer(contentLabelGesture)
+        
+        let comentsGesture = UITapGestureRecognizer(target: self, action: #selector(didPressedComents))
+        comentsLabel.addGestureRecognizer(comentsGesture)
+        
+        let profileGesture = UITapGestureRecognizer(target: self, action: #selector(didpressedProfile))
+        profileImage.addGestureRecognizer(profileGesture)
+
+        ellipsis.addTarget(self, action: #selector(actionSheetAlert), for: .touchUpInside)
+        
         
         self.scrollView.isPagingEnabled = true
         self.scrollView.isScrollEnabled = true
@@ -311,14 +383,14 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         
 
         
-
-        
         
         contentView.addSubview(self.scrollView)
         contentView.addSubview(self.pageControl)
         contentView.addSubview(self.topView)
         contentView.addSubview(self.bottomView)
+        contentView.addSubview(self.mainImage)
         
+        self.topView.addSubview(self.ellipsis)
         self.topView.addSubview(self.profileImage)
         self.topView.addSubview(self.nicknameLabel)
         self.bottomView.addSubview(self.dateLabel)
@@ -346,12 +418,21 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
             self.nicknameLabel.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor ),
             self.nicknameLabel.leadingAnchor.constraint(equalTo: self.profileImage.trailingAnchor , constant: 10 ),
             
-          
+            self.ellipsis.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor ),
+            self.ellipsis.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor ),
+            self.ellipsis.widthAnchor.constraint(equalToConstant: 40 ),
+            self.ellipsis.heightAnchor.constraint(equalToConstant: 40 ),
+ 
+            
+            
             
             self.scrollView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor ),
             self.scrollView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor ),
             self.scrollView.topAnchor.constraint(equalTo: self.topView.bottomAnchor ),
             self.scrollView.heightAnchor.constraint(equalToConstant: 360),
+            
+            
+
             
             self.pageControl.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor ),
             self.pageControl.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor ),
@@ -407,4 +488,43 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
     
     
 
+}
+
+
+extension FeedCollectionCell : UIImagePickerControllerDelegate , UINavigationControllerDelegate {
+    @objc func actionSheetAlert( ){
+        let alert = UIAlertController(title: nil , message: nil , preferredStyle: .actionSheet)
+        
+        let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        alert.addAction(cancel)
+        alert.view.tintColor = .black
+
+        if(self.own!){
+            let declaration = UIAlertAction(title: "삭제하기", style: .default) { [weak self] _ in
+                self?.delete()
+            }
+            let update = UIAlertAction(title: "수정하기", style: .default) { [weak self] _ in
+                self?.update()
+            }
+            
+
+            declaration.setValue(UIColor.red, forKey: "titleTextColor")
+            alert.addAction(update)
+            alert.addAction(declaration)
+        }else{
+            let report = UIAlertAction(title: "신고하기", style: .default) { [weak self] _ in
+                self?.report()
+            }
+            report.setValue(UIColor.red, forKey: "titleTextColor")
+
+            alert.addAction(report)
+
+        }
+                
+        commuVC?.present(alert, animated: true, completion: nil)
+        
+    }
+    
+    
+   
 }
