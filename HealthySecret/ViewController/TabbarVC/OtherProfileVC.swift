@@ -13,7 +13,13 @@ import RxCocoa
 import RxSwift
 import Kingfisher
 
-class OtherProfileVC : UIViewController{
+class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
+    
+    func imageTapped(feedUid: String) {
+        
+        self.imageTapped.onNext(feedUid)
+    }
+    
     
     
     
@@ -71,8 +77,7 @@ class OtherProfileVC : UIViewController{
     
     
     
-    
-    let imageAttachment = NSTextAttachment(image: UIImage(named: "arrow.png")!)
+    var imageTapped = PublishSubject<String>()
     
     var outputProfileImage = BehaviorSubject<Data?>(value: nil)
     
@@ -101,6 +106,7 @@ class OtherProfileVC : UIViewController{
     
     
     override func viewWillAppear(_ animated: Bool) {
+
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
         
@@ -117,7 +123,6 @@ class OtherProfileVC : UIViewController{
 
     
     func setUI(){
-       // collectionView.frame = view.bounds
         
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -148,6 +153,7 @@ class OtherProfileVC : UIViewController{
         
     }
     var imagesArr : [[String]] = []
+    var uidsArr : [String] = []
     func setHeaderBindings(header : CustomHeaderCollectionView){
 
 
@@ -168,11 +174,8 @@ class OtherProfileVC : UIViewController{
                     header.introduceLabel.text = $4
                     
                     
-                    let a = $3
-                    let attributedString = NSMutableAttributedString(string: "")
-                    attributedString.append(NSAttributedString(string: " "+a+" "))
-                    imageAttachment.bounds = CGRect(x: 0, y: 2, width: 12, height: 12)
-                    attributedString.append(NSAttributedString(attachment: imageAttachment))
+                    self.navigationController?.navigationBar.topItem?.title = $3
+                    
                     
                     
                     
@@ -258,27 +261,36 @@ class OtherProfileVC : UIViewController{
     
         
         
-        let input = OtherProfileVM.Input(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable()  , outputProfileImage : outputProfileImage.asObservable()
+        let input = OtherProfileVM.Input(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable()  , outputProfileImage : outputProfileImage.asObservable(), imageTapped: self.imageTapped.asObservable() 
                                       
         )
         
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else { return }
         
         
-        output.feedImage.subscribe( onNext: { [self] imagesArr in
+        
+    
+            
+    
+            
+        output.feedImage.subscribe( onNext: { [weak self] imagesArr in
             guard let imagesArr = imagesArr else { return }
             
-            print("\(imagesArr) imagesArr")
             
-            loadControll = true
+            self?.loadControll = true
 
             
-            self.imagesArr = imagesArr
-            self.collectionView.reloadData()
+            self?.imagesArr = imagesArr
+            self?.collectionView.reloadData()
             
         }).disposed(by: disposeBag)
         
-        
+        output.feedUid.subscribe( onNext: { [weak self] uidsArr in
+            guard let uidsArr = uidsArr else { return }
+
+            self?.uidsArr = uidsArr
+            
+        }).disposed(by: disposeBag)
        
         
         
@@ -345,8 +357,9 @@ extension OtherProfileVC :  UICollectionViewDataSource , UICollectionViewDelegat
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomCollectionViewCell.identifier, for: indexPath) as? CustomCollectionViewCell else {
             return UICollectionViewCell()
         }
-        
         if let url = URL(string: self.imagesArr[indexPath.row].first ?? "" ){
+            cell.delegate = self
+            cell.feedUid = uidsArr[indexPath.row]
             
             if self.imagesArr[indexPath.row].count > 1 {
                 cell.squareImage.isHidden = false

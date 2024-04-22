@@ -213,10 +213,8 @@ class CommuCoordinator : Coordinator  {
     func start() {}
     
     
-    func pushProfileVC(feed:FeedModel){
-        let viewModel = OtherProfileVM(coordinator: self , firebaseService: firebaseService)
-        viewModel.feed = feed
-        print(feed)
+    func pushProfileVC(uuid:String){
+        let viewModel = OtherProfileVM(coordinator: self , firebaseService: firebaseService , uuid : uuid)
         let viewController = OtherProfileVC(viewModel:viewModel)
         self.navigationController.navigationBar.topItem?.title = ""
         self.navigationController.navigationBar.tintColor = .black
@@ -251,10 +249,12 @@ class CommuCoordinator : Coordinator  {
   
     
    
-    func pushComents(coments : [Coment] , feedUid : String){
+    func pushComents(coments : [Coment] , feedUid : String , feedUuid : String){
         let viewModel = ComentsVM(coordinator: self, firebaseService: self.firebaseService)
         viewModel.coments = coments
         viewModel.feedUid = feedUid
+        viewModel.feedUuid = feedUuid
+        
         let viewController = ComentsVC(viewModel:viewModel)
         
         self.navigationController.navigationBar.topItem?.title = ""
@@ -266,6 +266,8 @@ class CommuCoordinator : Coordinator  {
         
         
     }
+    
+    
 
         
     
@@ -308,6 +310,7 @@ extension CommuCoordinator: CoordinatorFinishDelegate {
         childCoordinator.navigationController.popToRootViewController(animated: true)
     }
 }
+
 
 
 //탭바 첫번째 인자 컨트롤러

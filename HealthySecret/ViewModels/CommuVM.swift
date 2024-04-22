@@ -57,6 +57,9 @@ class CommuVM : ViewModel {
     }
     
     
+    
+    
+    
     func transform(input : Input , disposeBag: DisposeBag) -> Output {
         let id = UserDefaults.standard.string(forKey: "email") ?? ""
         let authUid = UserDefaults.standard.string(forKey: "uid") ?? ""
@@ -69,7 +72,9 @@ class CommuVM : ViewModel {
             
             var feed : FeedModel?
             _ = self.feedModels.map({  if($0.feedUid == feedUid){ feed = $0}  })
-            self.coordinator?.pushProfileVC(feed: feed!)
+            if let uuid = feed?.uuid {
+                self.coordinator?.pushProfileVC(uuid: uuid )
+            }
 
             
         }).disposed(by: disposeBag)
@@ -108,7 +113,9 @@ class CommuVM : ViewModel {
             var feed : FeedModel?
             _ = self.feedModels.map({  if($0.feedUid == feedUid){ feed = $0}  })
             
-            self.coordinator?.pushComents(coments: feed?.coments ?? [] , feedUid : feedUid)
+            guard let feed = feed else { return }
+            
+            self.coordinator?.pushComents(coments: feed.coments ?? [] , feedUid : feedUid , feedUuid: feed.uuid )
             
             
         }).disposed(by: disposeBag)

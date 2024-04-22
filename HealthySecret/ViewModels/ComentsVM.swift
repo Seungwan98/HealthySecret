@@ -18,11 +18,13 @@ class ComentsVM : ViewModel {
     
     var coments : [Coment]?
     var feedUid : String?
+    var feedUuid : String?
     
     struct Input {
         let addButtonTapped : Observable<Void>
         let coments : Observable<String>
         let comentsDelete : Observable<Coment>
+        let profileTapped : Observable<String>
    
         
     }
@@ -30,16 +32,17 @@ class ComentsVM : ViewModel {
     struct Output {
         
         var coments = BehaviorSubject<[Coment]>(value: [])
+        var feedUuid = BehaviorSubject<String>(value: "")
 
         
     }
     
     
-    weak var coordinator : Coordinator?
+    weak var coordinator : CommuCoordinator?
     
     private var firebaseService : FirebaseService
     
-    init( coordinator : Coordinator , firebaseService : FirebaseService ){
+    init( coordinator : CommuCoordinator , firebaseService : FirebaseService ){
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
         
@@ -48,7 +51,7 @@ class ComentsVM : ViewModel {
     
     
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
-        var output = Output()
+        let output = Output()
 
         
         if let coments = self.coments {
@@ -57,6 +60,19 @@ class ComentsVM : ViewModel {
             
             output.coments.onNext(coments)
         }
+        
+        if let feedUuid = self.feedUuid {
+            output.feedUuid.onNext(feedUuid)
+            
+        }
+        
+        input.profileTapped.subscribe(onNext: { uuid in
+            self.coordinator?.pushProfileVC(uuid: uuid)
+            
+            
+            
+            
+        }).disposed(by: disposeBag)
         
         input.comentsDelete.subscribe(onNext: { coment in
             guard let feedUid = self.feedUid else {return}
@@ -75,6 +91,7 @@ class ComentsVM : ViewModel {
         }).disposed(by: disposeBag)
             
             input.addButtonTapped.subscribe(onNext: { _ in
+                print("tapped")
                 input.coments.subscribe(onNext: { coment in
 
                 print("add")
@@ -84,9 +101,11 @@ class ComentsVM : ViewModel {
                 guard let feedUid = self.feedUid else {return}
                 let date = CustomFormatter.shared.DateToStringForFeed(date: Date())
                 
-                    var coments = Coment(coment: coment, date: date, nickname: nickname, profileImage: profileImage , uid: uid, comentUid:  UUID().uuidString+date, feedUid: feedUid)
+                let coment = Coment(coment: coment, date: date, nickname: nickname, profileImage: profileImage , uid: uid, comentUid:  UUID().uuidString+date, feedUid: feedUid)
+                    
                 
-                self.firebaseService.updateComents(feedUid: feedUid , coment: coments).subscribe({ event in
+                
+                self.firebaseService.updateComents(feedUid: feedUid , coment: coment).subscribe({ event in
                     switch(event){
                     case.completed:
                         print("reload")

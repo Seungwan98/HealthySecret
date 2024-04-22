@@ -1,10 +1,24 @@
 import UIKit
+
+protocol CustomCollectionCellDelegate {
+  
+    func imageTapped(feedUid:String)
+}
+
 class CustomCollectionViewCell: UICollectionViewCell {
     static let identifier = "CustomCollectionViewCell"
+    
+    
+    var delegate : CustomCollectionCellDelegate?
+    
+    var feedUid : String?
+    
     var image : UIImageView = {
         let image = UIImageView()
         image.backgroundColor = .lightGray.withAlphaComponent(0.2)
         image.translatesAutoresizingMaskIntoConstraints = false
+        image.isUserInteractionEnabled = true
+        
         return image
         
     }()
@@ -13,6 +27,7 @@ class CustomCollectionViewCell: UICollectionViewCell {
         let imageView = UIImageView(image: UIImage(systemName: "square.fill.on.square.fill"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.tintColor = .white
+        
         imageView.isHidden = true
         
         return imageView
@@ -20,6 +35,7 @@ class CustomCollectionViewCell: UICollectionViewCell {
         
         
     }()
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,6 +52,8 @@ class CustomCollectionViewCell: UICollectionViewCell {
     
     private func setUI() {
         
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
+        self.image.addGestureRecognizer(gesture)
         
         contentView.addSubview(self.image)
         contentView.addSubview(self.squareImage)
@@ -54,6 +72,12 @@ class CustomCollectionViewCell: UICollectionViewCell {
             self.squareImage.heightAnchor.constraint(equalToConstant: 20),
         
         ])
+    }
+    
+    @objc
+    func imageTapped(){
+        guard let feedUid = self.feedUid else {return}
+        self.delegate?.imageTapped(feedUid: feedUid)
     }
     
     

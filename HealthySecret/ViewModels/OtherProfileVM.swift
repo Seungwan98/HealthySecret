@@ -18,19 +18,24 @@ class OtherProfileVM : ViewModel {
     
     var feeds:[FeedModel]?
     
-    var feed:FeedModel?
+
+    
+    var uuid:String
 
     var profileImage:Data?
  
     struct Input {
         let viewWillApearEvent : Observable<Void>
         let outputProfileImage : Observable<Data?>
+        let imageTapped : Observable<String>
+        
 
     }
     
     struct Output {
         
         var feedImage = BehaviorSubject<[[String]]?>(value: nil)
+        var feedUid = BehaviorSubject<[String]?>(value: nil)
         
         
     }
@@ -39,6 +44,7 @@ class OtherProfileVM : ViewModel {
         let viewWillApearEvent : Observable<Bool>
         
         let outputProfileImage : Observable<Data?>
+        
         
         
         
@@ -66,15 +72,16 @@ class OtherProfileVM : ViewModel {
     var nowUser : UserModel?
 
     
-    init( coordinator : CommuCoordinator , firebaseService : FirebaseService ){
+    init( coordinator : CommuCoordinator , firebaseService : FirebaseService , uuid : String ){
         
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
+        self.uuid = uuid
         
     }
     
     func HeaderTransform(input : HeaderInput , disposeBag: DisposeBag) -> HeaderOutput {
-        let uid = self.feed?.uuid ?? ""
+        let uid = self.uuid
         
         
         let output = HeaderOutput()
@@ -139,27 +146,48 @@ class OtherProfileVM : ViewModel {
     
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         
-        
+        let uid = self.uuid
         
         let output = Output()
         
       
-       
+        input.imageTapped.subscribe(onNext:{ feedUid in
+          
+            self.feeds?.forEach({
+                if(feedUid == $0.feedUid){
+                    let result = $0
+                    print("\($0.feedUid)")
+//                    self.coordinator.pus
+                }
+                
+                
+            })
+            
+        }).disposed(by: disposeBag)
         
         input.viewWillApearEvent.subscribe(onNext: { event in
             
 
             
-            if let uid = self.feed?.uuid{
-                print(uid)
+        
                     self.firebaseService.getFeedsUid(uid: uid).subscribe({ event in
                     switch(event){
                     case.success(let feedArr):
                         self.feeds = feedArr
+                        
+                        
                         let imageArr = feedArr.map({
                             $0.mainImgUrl
                         })
+                        
+                        let uidArr =  feedArr.map({
+                            $0.feedUid
+                        })
+                        
+                        print("\(uidArr)  uidArr")
+                        
                         output.feedImage.onNext(imageArr)
+                        output.feedUid.onNext(uidArr)
                         
                         
                         
@@ -169,7 +197,7 @@ class OtherProfileVM : ViewModel {
                     
                     
                 }).disposed(by: disposeBag)
-            }
+            
             
         }).disposed(by: disposeBag)
         

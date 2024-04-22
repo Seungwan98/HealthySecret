@@ -4,6 +4,7 @@ protocol ComentsCellDelegate {
   
     func report(comentsUid : String)
     func delete(comentsUid : String)
+    func profileTapped(comentsUuid : String)
 }
 
 class ComentsCell : UITableViewCell  {
@@ -16,9 +17,15 @@ class ComentsCell : UITableViewCell  {
     
     var comentUid : String?
     
+    var mine : Bool?
+    
+    var comentsUuid : String?
+    
     
     var profileImage : UIImageView = {
        let imageView = UIImageView()
+        imageView.isUserInteractionEnabled = true
+
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 15
         imageView.image = UIImage(named: "일반적.png")
@@ -67,6 +74,8 @@ class ComentsCell : UITableViewCell  {
     
     let topView : UIView = {
        let view = UIView()
+        view.isUserInteractionEnabled = true
+
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
         return view
@@ -123,11 +132,19 @@ class ComentsCell : UITableViewCell  {
     
     
     func delete(){
-        delegate?.delete(comentsUid: comentUid ?? "")
+        delegate?.delete(comentsUid: self.comentUid ?? "")
     }
     
     func report(){
-        delegate?.report(comentsUid: comentUid ?? "")
+        delegate?.report(comentsUid: self.comentUid ?? "")
+        
+    }
+    
+    @objc
+    func profileTapped(tapGestureRecognizer: UITapGestureRecognizer){
+        
+        print("tapped")
+        delegate?.profileTapped(comentsUuid: self.comentsUuid ?? "" )
         
     }
 
@@ -145,7 +162,16 @@ class ComentsCell : UITableViewCell  {
     
     
     private func setUI() {
+        
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(profileTapped ))
+        
+        self.profileImage.addGestureRecognizer(gesture)
+        
+        
+        
+        self.contentView.isUserInteractionEnabled = true
         self.contentView.addSubview(self.topView)
+        
         self.topView.addSubview(self.profileImage)
         self.topView.addSubview(self.nicknameLabel)
         self.topView.addSubview(self.ownTitle)
@@ -155,6 +181,7 @@ class ComentsCell : UITableViewCell  {
     
         
         self.ellipsis.addTarget(self, action: #selector(actionSheetAlert), for: .touchUpInside )
+     
         
         
         NSLayoutConstraint.activate([
@@ -233,7 +260,9 @@ extension ComentsCell : UIImagePickerControllerDelegate , UINavigationController
         alert.addAction(cancel)
         alert.view.tintColor = .black
 
-        if(!(self.ownTitle.isHidden)){
+        guard let mine = self.mine else {return}
+        
+        if( mine ){
             let declaration = UIAlertAction(title: "삭제하기", style: .default) { [weak self] _ in
                 self?.delete()
             }

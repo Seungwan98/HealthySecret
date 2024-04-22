@@ -40,7 +40,7 @@ final class FirebaseService {
             
             let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
             changeRequest?.photoURL = URL(string: imageURL)
-            changeRequest?.commitChanges { [self] error in
+            changeRequest?.commitChanges {  error in
                 guard let error = error else {
                     let url = URL(string: imageURL)
                     if let data = try? Data(contentsOf: url!){
@@ -68,7 +68,7 @@ final class FirebaseService {
                 } else {
                     print("Document successfully removed!")
                     self.db.collection("HealthySecretFeed").getDocuments{ snapshot , error in
-                        if let error = error { return }
+                        if error != nil { return }
                         
                         guard let snapshot = snapshot else {
                             
@@ -161,7 +161,6 @@ final class FirebaseService {
                     self.signOut().subscribe{ event in
                         switch(event){
                         case.completed:
-                            print("complete \(result?.user )")
                             result?.user.delete { [weak self] error in
                                 if let error = error {
                                     print("Firebase Error : ",error)
@@ -256,7 +255,6 @@ final class FirebaseService {
                 single(.failure(FireStoreError.unknown))
                 return Disposables.create()
             }
-            print(currentUser.email)
             single(.success(currentUser))
             return Disposables.create()
             
@@ -298,18 +296,18 @@ final class FirebaseService {
                
                 
                 
-               
+                if let data = doc?.data() {
                     do {
-                        let jsonData = try JSONSerialization.data(withJSONObject: doc?.data(), options: [])
+                        let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
                         let creditCard = try JSONDecoder().decode(UserModel.self, from: jsonData)
                         single(.success(creditCard))
-
+                        
                     } catch let error {
                         print("Error json parsing \(error)")
                         single(.failure(CustomError.isNil))
-
+                        
                     }
-                
+                }
              
                 
             }
@@ -709,7 +707,7 @@ extension FirebaseService {
                     return
                 }
                 
-                let datas = snapshot.documents.compactMap { doc -> ExerciseDTO? in
+                _ = snapshot.documents.compactMap { doc -> ExerciseDTO? in
                     do {
                         let jsonData = try JSONSerialization.data(withJSONObject: doc.data(), options: [])
                         let creditCard = try JSONDecoder().decode(ExerciseDTO.self, from: jsonData)
@@ -798,10 +796,8 @@ extension FirebaseService {
             
             print("update Values")
             
-            var getUrl = PublishSubject<String>()
             
 
-            let backgroundScheduler = ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global())
             
             
             
@@ -858,7 +854,7 @@ extension FirebaseService {
                             if !((beforeImage ?? "").isEmpty){ self.deleteImage(urlString: beforeImage ?? "").subscribe{ [weak self] event in
                                 switch(event){
                                     
-                                case .error(let err):
+                                case .error(_):
                                     print("이미지없음")
                                 case .completed:
                                     print("success")
@@ -930,7 +926,6 @@ extension FirebaseService {
     
     func downloadImage(urlString: String) -> Single<Data?> {
         return Single.create { single in
-            let email = UserDefaults.standard.string(forKey: "email") ?? ""
 
             if urlString.isEmpty {
                 single(.success(nil))
@@ -1003,12 +998,12 @@ extension FirebaseService {
 
         storageReference.child("\(urlString)/").listAll{ ( result, error ) in
             
-            print("listAll \(result)")
             var index = 0
 
             var items : [StorageReference] = []
             
                 if let error = error{
+                    print("error \(error)")
                     
                 }else{
                 
