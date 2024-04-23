@@ -63,7 +63,6 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         likesButtonTapped.onNext([index:like])
         
         if like{
-            print(index)
             beforeArr = likesCount[index] ?? []
             beforeArr.append(authUid)
             likesCount[index] = beforeArr
@@ -228,7 +227,6 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
                 self.likesCount[value.key] = value.value
                 
             })
-            print("\(likesCount)")
             
         }).disposed(by: disposeBag)
         
@@ -237,10 +235,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             self?.tableView.deselectRow(at: indexPath, animated: true)
         }).disposed(by: disposeBag)
         
-        input.viewWillApearEvent.subscribe(onNext: {
-            //self.tableView.reloadData()
-            
-        }).disposed(by: disposeBag)
+       
         
         output.feedModel.bind(to: self.tableView.rx.items(cellIdentifier: "FeedCollectionCell" , cellType: FeedCollectionCell.self )){
             index,item,cell in
@@ -272,7 +267,6 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             
             cell.nicknameLabel.text = item.nickname
             
-            print(item.feedUid)
             cell.beforeContent = item.contents
             cell.comentsLabel.text = "댓글 \(String(describing: item.coments?.count ?? 0))개 보기"
             
@@ -374,20 +368,16 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         
         
         self.tableView.rx.contentOffset.distinctUntilChanged({$0 == $1}).subscribe(onNext: {  a in
-            print("\(a) scroll")
             
             let yOffset = self.tableView.contentOffset.y
             
             let contentHeight = self.tableView.contentSize.height
             let height = self.tableView.frame.height
-            print(self.isPaging )
 
             if yOffset > 0  && yOffset > (contentHeight - height) {
-                print("  last")
 
                 if !(self.isPaging ) && !self.isLastPage {
 
-                    print("last Page")
 
                         paging.onNext(true)
                         self.isPaging = true

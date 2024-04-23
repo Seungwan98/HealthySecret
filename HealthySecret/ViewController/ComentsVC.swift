@@ -52,7 +52,6 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     
     let bottomView : UIView = {
        let view = UIView()
-        view.isUserInteractionEnabled = true
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .systemBackground
         view.layer.cornerRadius = 20
@@ -106,7 +105,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     }()
     
     override func viewDidLoad() {
-        self.hideKeyboardWhenTappedAround()
+        self.hidedKeyboardWhenTappedAround()
         setUI()
         setBindings()
     }
@@ -116,7 +115,6 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
         self.navigationController?.navigationBar.topItem?.title = "댓글"
-        
         
         self.addKeyboardNotifications()
         
@@ -130,9 +128,6 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     
     
     func setUI(){
-        
-        
-        
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
         tableView.dataSource = nil
         tableView.register(ComentsCell.self, forCellReuseIdentifier: "ComentsCell")
@@ -186,7 +181,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         var feedUuid = ""
 
         
-        let input = ComentsVM.Input(addButtonTapped : addButton.rx.tap.asObservable(), coments: self.textView.rx.text.orEmpty.asObservable() , comentsDelete : comentsDelete.asObservable() , profileTapped : self.profileTapped.asObservable()  )
+        let input = ComentsVM.Input(addButtonTapped : addButton.rx.tap.asObservable(), coments: self.textView.rx.text.orEmpty.distinctUntilChanged().asObservable() , comentsDelete : comentsDelete.asObservable() , profileTapped : self.profileTapped.asObservable()  )
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else {return}
         
         output.feedUuid.subscribe(onNext: { val in
@@ -332,6 +327,7 @@ extension ComentsVC {
 
     // 키보드가 사라졌다는 알림을 받으면 실행할 메서드
     @objc func keyboardWillHide(_ noti: NSNotification){
+        print("hide")
         if let keyboardSize = (noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if self.bottomView.frame.origin.y != self.BOTTOMVIEW_ORIGIN_Y {
                 self.bottomView.frame.origin.y = self.BOTTOMVIEW_ORIGIN_Y ?? 0
@@ -340,5 +336,18 @@ extension ComentsVC {
             
             
         }
+    }
+}
+
+extension ComentsVC {
+    
+    func hidedKeyboardWhenTappedAround() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.dissmissKeyboard))
+        tap.cancelsTouchesInView = false
+        self.tableView.addGestureRecognizer(tap)
+    }
+    
+    @objc func dissmissKeyboard() {
+        view.endEditing(true)
     }
 }

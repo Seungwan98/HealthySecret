@@ -214,7 +214,7 @@ class CommuCoordinator : Coordinator  {
     
     
     func pushProfileVC(uuid:String){
-        let viewModel = OtherProfileVM(coordinator: self , firebaseService: firebaseService , uuid : uuid)
+        let viewModel = OtherProfileVM(coordinator: self , firebaseService: self.firebaseService , uuid : uuid)
         let viewController = OtherProfileVC(viewModel:viewModel)
         self.navigationController.navigationBar.topItem?.title = ""
         self.navigationController.navigationBar.tintColor = .black
@@ -250,7 +250,8 @@ class CommuCoordinator : Coordinator  {
     
    
     func pushComents(coments : [Coment] , feedUid : String , feedUuid : String){
-        let viewModel = ComentsVM(coordinator: self, firebaseService: self.firebaseService)
+        let firebaseService = FirebaseService()
+        let viewModel = ComentsVM(coordinator: self, firebaseService: firebaseService)
         viewModel.coments = coments
         viewModel.feedUid = feedUid
         viewModel.feedUuid = feedUuid

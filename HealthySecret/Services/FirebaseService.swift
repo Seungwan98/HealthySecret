@@ -28,6 +28,7 @@ final class FirebaseService {
     
     var requestQuery: Query?
     var query: Query? = nil
+    var listener : ListenerRegistration?
 
 
     
@@ -1083,83 +1084,6 @@ extension FirebaseService {
         
     }
     
-    func deleteComents(  coment : Coment , feedUid : String ) -> Completable {
-        return Completable.create{ completable in
-            self.db.collection("HealthySecretFeed").document(feedUid).getDocument{ doc , err in
-                if let err = err {
-                    completable(.error(err))
-                }else{
-          
-                    if let coment = coment.dictionary {
-                        doc?.reference.updateData([
-                            
-                            "coments" : FieldValue.arrayRemove([coment])
-                            
-                        ])
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        completable(.completed)
-
-                    }
-                    completable(.error(CustomError.isNil))
-                
-   
-                    
-                }
-                
-                
-            }
-            
-          
-            
-            return Disposables.create()
-        }
-        
-        
-    }
-    
-    
-    
-    func updateComents( feedUid : String , coment : Coment  ) -> Completable {
-        return Completable.create{ completable in
-            self.db.collection("HealthySecretFeed").document(feedUid).getDocument{ doc , err in
-                if let err = err {
-                    completable(.error(err))
-                }else{
-                    print(coment)
-                    if let coment = coment.dictionary {
-                        
-                        print(coment)
-                        doc?.reference.updateData([
-                            
-                            
-                            
-                            "coments" : FieldValue.arrayUnion([coment])
-                            
-                        ])
-                        completable(.completed)
-
-                    }
-                    completable(.error(CustomError.isNil))
-                
-   
-                    
-                }
-                
-                
-            }
-            
-          
-            
-            return Disposables.create()
-        }
-        
-    }
     
     func updateFeedLikes( feedUid : String , uuid : String  , like : Bool) -> Completable {
         return Completable.create{ completable in
@@ -1242,13 +1166,14 @@ extension FirebaseService {
     
     
     func getFeedPagination(feeds:[FeedModel]) -> Single<[FeedModel]> {
-        var outputFeeds = feeds
         return Single<[FeedModel]>.create { single in
+            var outputFeeds = feeds
+
+            print("getFeedPagination")
             if let query = self.query {
               //There is last query
                 self.requestQuery = query
             } else {
-                print("query exist")
 
               //It's First query request
                 self.requestQuery = self.db.collection("HealthySecretFeed")
@@ -1256,7 +1181,7 @@ extension FirebaseService {
                 .limit(to: 2)
             }
             
-            self.requestQuery?.addSnapshotListener({ [weak self] (snapshot, error) in
+            self.requestQuery?.getDocuments{ [weak self] (snapshot, error) in
               guard let self = self else { return }
               
               guard let snapshot = snapshot,
@@ -1264,6 +1189,7 @@ extension FirebaseService {
                      //return
                       return
                     }
+                
               
               let next = self.db.collection("HealthySecretFeed")
                 .order(by: "date" , descending: true)
@@ -1289,16 +1215,18 @@ extension FirebaseService {
               })
 
         
-              
+                print("\(outputFeeds.count) 왜ㅐㅐㅐㅐㅐ")
                 for i in 0..<outputFeeds.count{
                    
                     self.getDocument(key: outputFeeds[i].uuid).subscribe({ event in
+                        print("getDoc")
                        switch(event){
                        case.success(let user):
                            outputFeeds[i].profileImage = user.profileImage
                            outputFeeds[i].nickname = user.name
                            
                            if( i+1 >= outputFeeds.count){
+                               print("나간다")
                                single(.success(outputFeeds))
                                
                            }
@@ -1308,7 +1236,7 @@ extension FirebaseService {
                        }
                        
                        
-                   }).disposed(by: self.disposeBag)
+                   }).disposed(by: disposeBag )
                     
                     
                 }
@@ -1318,7 +1246,7 @@ extension FirebaseService {
                 
               
 
-            })
+            }
             
             return Disposables.create()
         }
@@ -1390,6 +1318,10 @@ extension FirebaseService {
         
     }
     
+   
+    
+    
+        
     
     
 }
@@ -1397,6 +1329,196 @@ extension FirebaseService {
 
 extension FirebaseService {
         
+    //댓글 수정 삭제
+
+    
+    
+    func deleteComents(  coment : Coment , feedUid : String ) -> Single<[Coment]> {
+        return Single.create{ single in
+            
+            
+            
+
+                    
+          
+            self.listener = self.db.collection("HealthySecretFeed").whereField("feedUid", isEqualTo: feedUid).addSnapshotListener{  querySnapshot, error in
+                        guard let snapshot = querySnapshot else {
+                          print("Error fetching snapshots: \(error!)")
+                          return
+                        }
+                     
+                    
+                      print("listenr")
+                        snapshot.documentChanges.forEach { diff in
+                            
+                        
+                     
+                          if (diff.type == .modified) {
+                            //document 안에있는 Arr 안의 데이터를 삭제하므로 modified 를 찾는다.
+                              
+                              do{
+                                  let jsonData = try JSONSerialization.data(withJSONObject: diff.document.data(), options: [])
+                                  let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
+                                  single(.success(feed.coments ?? []))
+                                  
+                                  
+                                  
+                              }
+                              catch{
+                                  single(.failure(CustomError.isNil))
+
+                              }
+                              
+                          } else {
+                              
+                              
+                              if let coment = coment.dictionary {
+                                  diff.document .reference.updateData([
+                                      
+                                      "coments" : FieldValue.arrayRemove([coment])
+                                      
+                                  ])
+                              }
+                              
+                          }
+                      
+                        }
+                      
+                      
+                        
+                        
+                        
+                  }
+            
+                    
+                    
+                 
+                        
+                        
+                        
+                        
+                        //sleep(10)
+                        
+                       
+                        
+                       
+                            
+                            
+                            
+//                            .getDocument{ doc , err in
+//                            if let err = err {
+//                                single(.failure(err))
+//                            }else{
+//                                
+//                                do{
+//                                    print(doc?.data())
+//                               
+//                                        
+//                                        
+//                                    
+//                                    let jsonData = try JSONSerialization.data(withJSONObject: doc?.data(), options: [])
+//                                    let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
+//                                    single(.success(feed.coments ?? []))
+//
+//                                    
+//                                    
+//                                }catch{
+//                                    single(.failure(CustomError.isNil))
+//
+//                                }
+//                                
+//                                
+//                                
+//                            }
+//                            
+//                        }
+                        
+                        
+                        
+                        
+
+                    
+                
+   
+                    
+//                }
+//                
+//                
+//            }
+//            
+          
+            
+            return Disposables.create()
+        }
+        
+        
+    }
+    
+    
+    
+    func updateComents( feedUid : String , coment : Coment  ) -> Single<[Coment]> {
+        return Single.create{ single in
+            self.listener = self.db.collection("HealthySecretFeed").whereField("feedUid", isEqualTo: feedUid).addSnapshotListener{  querySnapshot, error in
+                        guard let snapshot = querySnapshot else {
+                          print("Error fetching snapshots: \(error!)")
+                          return
+                        }
+                     
+                    
+                      print("listenr")
+                        snapshot.documentChanges.forEach { diff in
+                            
+                        
+                     
+                          if (diff.type == .modified) {
+                            //document 안에있는 Arr 안의 데이터를 추가하므로 modified 를 찾는다.
+                              
+                              do{
+                                  let jsonData = try JSONSerialization.data(withJSONObject: diff.document.data(), options: [])
+                                  let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
+                                  single(.success(feed.coments ?? []))
+                                  
+                                  
+                                  
+                              }
+                              catch{
+                                  single(.failure(CustomError.isNil))
+
+                              }
+                              
+                          } else {
+                              
+                              
+                              if let coment = coment.dictionary {
+                                  diff.document .reference.updateData([
+                                      
+                                      "coments" : FieldValue.arrayUnion([coment])
+                                      
+                                  ])
+                              }
+                              
+                          }
+                      
+                        }
+                      
+                      
+                        
+                        
+                        
+                  }
+            
+                    
+                    
+                 
+            
+          
+            
+            return Disposables.create()
+        }
+        
+    }
+    
+    
 }
 
 

@@ -109,7 +109,7 @@ class CommuVM : ViewModel {
         }).disposed(by: disposeBag)
         
         input.comentsTapped.subscribe(onNext: { feedUid in
-            
+
             var feed : FeedModel?
             _ = self.feedModels.map({  if($0.feedUid == feedUid){ feed = $0}  })
             
@@ -140,7 +140,6 @@ class CommuVM : ViewModel {
         }).disposed(by:disposeBag )
         
         input.addButtonTapped.subscribe(onNext: { _ in
-            
             self.coordinator?.pushAddFeedVC()
            
             
@@ -165,9 +164,11 @@ class CommuVM : ViewModel {
             self.firebaseService.getFeedPagination(feeds: self.feedModels).subscribe({ event in
                 switch(event){
                     
+                    
                 case(.success(let feeds)):
                     var likesCount : [ String : [ String ] ] = [:]
                     
+
                     for i in 0..<feeds.count {
                         
                         if likesCount[ feeds[i].feedUid ] == nil{
@@ -182,7 +183,6 @@ class CommuVM : ViewModel {
                         output.isLastPage.onNext(false)
 
                     }
-                    print(self.feedModels)
                     output.feedModel.onNext(self.feedModels)
                     output.likesCount.onNext(likesCount)
                     output.isPaging.onNext(false)
@@ -216,12 +216,7 @@ class CommuVM : ViewModel {
         return output
         
     }
-    
-    func getAllFeeds(){
-        
-        
-    }
-    
+
     
     struct AddInput {
         let addButtonTapped : Observable<Void>
