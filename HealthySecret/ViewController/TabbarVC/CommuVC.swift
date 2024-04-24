@@ -58,6 +58,9 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     var isLastPage = false
     // (delegate) Cell터치 시.
     
+    
+    let refreshControl = UIRefreshControl()
+    
     func didPressHeart(for index: String, like: Bool) {
         var beforeArr : [String] = []
         likesButtonTapped.onNext([index:like])
@@ -98,6 +101,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         tableView.rowHeight = UITableView.automaticDimension
         tableView.allowsMultipleSelection = true
         tableView.allowsSelection = false
+    
         return tableView
     }()
     
@@ -181,7 +185,8 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         self.view.addSubview(tableView)
         self.view.addSubview(addButton)
         
-        
+        self.refreshControl.endRefreshing()
+        tableView.refreshControl = self.refreshControl
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
         tableView.dataSource = nil
         tableView.register(FeedCollectionCell.self, forCellReuseIdentifier: "FeedCollectionCell")
@@ -214,12 +219,20 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         let uid = UserDefaults.standard.string(forKey: "uid")
         
         
-        let input = CommuVM.Input( viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), likesButtonTapped: likesButtonTapped, comentsTapped: self.comentsTapped.asObservable() , addButtonTapped: self.addButton.rx.tap.asObservable() , deleteFeed: deleteFeed , reportFeed : reportFeed , updateFeed: updateFeed , paging : paging.asObservable() , profileTapped : profileTapped.asObservable())
+        let input = CommuVM.Input( viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), likesButtonTapped: likesButtonTapped, comentsTapped: self.comentsTapped.asObservable() , addButtonTapped: self.addButton.rx.tap.asObservable() , deleteFeed: deleteFeed , reportFeed : reportFeed , updateFeed: updateFeed , paging : paging.asObservable() , profileTapped : profileTapped.asObservable(), refreshControl: self.refreshControl.rx.controlEvent(.valueChanged).asObservable() )
         
         
         guard let output = viewModel?.transform(input: input, disposeBag: disposeBag) else {return}
         
         
+        output.endRefreshing.subscribe(onNext: { event in
+            if(event){
+                
+                self.refreshControl.endRefreshing()
+            }
+            
+            
+        }).disposed(by: disposeBag)
         
         
         output.likesCount.subscribe(onNext: { likesCount in
@@ -252,23 +265,30 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             cell.mainImage.image = nil
             
             if self.likesCount[item.feedUid]?.contains(self.authUid) == true {
+                
                 cell.likesButton.isSelected = true
                 cell.isTouched = true
                 
-                
             }else{
+                
                 cell.likesButton.isSelected = false
                 cell.isTouched = false
+                
             }
             
             cell.feedUid = item.feedUid
+            
             cell.delegate = self
+            
             cell.setLikesLabel(count: self.likesCount[item.feedUid]?.count ?? 0 )
             
             cell.nicknameLabel.text = item.nickname
             
             cell.beforeContent = item.contents
+            
             cell.comentsLabel.text = "댓글 \(String(describing: item.coments?.count ?? 0))개 보기"
+            
+           
             
             
             let url = URL(string: item.profileImage ?? "")
@@ -329,11 +349,11 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
                     
                 }
                 
-                cell.dateLabel.text = CustomFormatter.shared.getDifferDate(date: item.date)
                 
                 
                 
             }
+            cell.dateLabel.text = CustomFormatter.shared.getDifferDate(date: item.date)
             cell.imageViews = images
             cell.addContentScrollView()
             cell.setContentLabel()
@@ -346,6 +366,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             }else{
                 
                 cell.setPageControl(count: 0)
+                
             }
             
             
@@ -353,14 +374,14 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         }.disposed(by: disposeBag)
         
         output.isLastPage.subscribe(onNext: { isLastPage in
-            self.isLastPage = isLastPage
             
+            self.isLastPage = isLastPage
             
         }).disposed(by: disposeBag) 
         
         output.isPaging.subscribe(onNext: { isPaging in
-            self.isPaging = isPaging
             
+            self.isPaging = isPaging
             
         }).disposed(by: disposeBag)
         

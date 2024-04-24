@@ -15,20 +15,17 @@ class OtherProfileVM : ViewModel {
     
     var disposeBag = DisposeBag()
     
-    
     var feeds:[FeedModel]?
-    
-
     
     var uuid:String
 
     var profileImage:Data?
  
     struct Input {
+        
         let viewWillApearEvent : Observable<Void>
         let outputProfileImage : Observable<Data?>
         let imageTapped : Observable<String>
-        
 
     }
     
@@ -37,21 +34,17 @@ class OtherProfileVM : ViewModel {
         var feedImage = BehaviorSubject<[[String]]?>(value: nil)
         var feedUid = BehaviorSubject<[String]?>(value: nil)
         
-        
     }
     
     struct HeaderInput {
+        
         let viewWillApearEvent : Observable<Bool>
-        
         let outputProfileImage : Observable<Data?>
-        
-        
-        
-        
         
     }
     
     struct HeaderOutput {
+        
         var calorie = BehaviorSubject(value: "")
         var goalWeight = BehaviorSubject(value: "")
         var nowWeight = BehaviorSubject(value: "")
@@ -59,13 +52,13 @@ class OtherProfileVM : ViewModel {
         var introduce = BehaviorSubject(value: "")
         var profileImage = BehaviorSubject<String?>(value: nil)
         var popView = BehaviorSubject<Bool>(value: false)
+        
     }
     
     
     
     
     weak var coordinator : CommuCoordinator?
-    
     
     private var firebaseService : FirebaseService
     
@@ -83,21 +76,12 @@ class OtherProfileVM : ViewModel {
     func HeaderTransform(input : HeaderInput , disposeBag: DisposeBag) -> HeaderOutput {
         let uid = self.uuid
         
-        
         let output = HeaderOutput()
-        
-      
-        
         
         input.outputProfileImage.subscribe(onNext:{ image in
 
-        
-            
             self.profileImage = image
-            
-            
-            
-            
+
         }).disposed(by: disposeBag)
         
        
@@ -110,7 +94,6 @@ class OtherProfileVM : ViewModel {
                 case.success(let user):
                     
                     
-                    
                     self?.nowUser = user
                     output.introduce.onNext(user.introduce ?? "아직 소개글이 없어요")
                     output.goalWeight.onNext(String(user.goalWeight))
@@ -118,14 +101,6 @@ class OtherProfileVM : ViewModel {
                     output.calorie.onNext(String(user.calorie))
                     output.name.onNext(user.name)
                     output.profileImage.onNext(user.profileImage ?? nil)
-                    
-                    
-                    
-                    
-                    
-                
-                    
-
                     
                     
                 case .failure(_):
@@ -156,8 +131,7 @@ class OtherProfileVM : ViewModel {
             self.feeds?.forEach({
                 if(feedUid == $0.feedUid){
                     let result = $0
-                    print("\($0.feedUid)")
-//                    self.coordinator.pus
+                    self.coordinator?.pushProfileFeed(feedUid: feedUid)
                 }
                 
                 

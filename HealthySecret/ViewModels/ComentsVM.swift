@@ -83,8 +83,6 @@ class ComentsVM : ViewModel {
                 switch(event){
                 case.success(let coments):
                     output.coments.onNext(coments)
-                    print(self.coments?.count)
-                    print(coments.count)
                     output.coments.onNext(coments)
                     self.firebaseService.listener?.remove()
 
@@ -133,10 +131,9 @@ class ComentsVM : ViewModel {
             self.firebaseService.updateComents(feedUid: feedUid , coment: coment).subscribe({ event in
                 switch(event){
                 case.success(let coments):
-                    print(self.coments?.count)
-                    print(coments.count)
                     output.coments.onNext(coments)
-                    
+                    self.firebaseService.listener?.remove()
+
 
                     
                     LoadingIndicator.hideLoading()

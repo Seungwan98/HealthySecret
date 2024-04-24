@@ -129,7 +129,7 @@ class UpdateFeedVM : ViewModel {
                                 feed.profileImage = profileImage
                             }
                             
-                            self.firebaseService.addFeed(feed: feed).subscribe({ event in
+                            self.firebaseService.updateFeed(feed: feed).subscribe({ event in
                                 switch(event){
                                 case.completed:
                                     DispatchQueue.main.async {

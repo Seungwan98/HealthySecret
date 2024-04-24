@@ -77,7 +77,7 @@ class EditIngredientsVM : ViewModel {
         input.edmitButtonTapped.subscribe(onNext: { _ in
             
             input.inputArr.subscribe(onNext: { arr in
-                self.firebaseService.addIngredients(meal: UserDefaults.standard.string(forKey: "meal") ?? "", date:  UserDefaults.standard.string(forKey: "date") ?? "", key:  UserDefaults.standard.string(forKey: "email") ?? "", mealArr: arr).subscribe({ event in
+                self.firebaseService.addIngredients(meal: UserDefaults.standard.string(forKey: "meal") ?? "", date:  UserDefaults.standard.string(forKey: "date") ?? "", key:  UserDefaults.standard.string(forKey: "uid") ?? "", mealArr: arr).subscribe({ event in
                     switch event{
                     case.completed:
                         print("completed")

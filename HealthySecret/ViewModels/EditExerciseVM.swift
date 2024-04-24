@@ -53,7 +53,7 @@ class EditExerciseVM : ViewModel {
 
         input.edmitButtonTapped.subscribe(onNext: { _ in
             input.inputArr.subscribe(onNext : { arr in
-                self.firebaseService.updateExercise(exercise: arr, key: UserDefaults.standard.string(forKey: "email") ?? "").subscribe({ event in
+                self.firebaseService.updateExercise(exercise: arr, key: UserDefaults.standard.string(forKey: "uid") ?? "").subscribe({ event in
                     switch event {
                     case.completed:
                         

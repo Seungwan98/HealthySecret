@@ -28,6 +28,7 @@ class CommuVM : ViewModel {
         let updateFeed : Observable<String>
         let paging : Observable<Bool>
         let profileTapped : Observable<String>
+        let refreshControl : Observable<Void>
         
         
     }
@@ -38,6 +39,7 @@ class CommuVM : ViewModel {
         var likesCount = BehaviorSubject<[ String : [ String ] ]>(value: [:] )
         var isLastPage = BehaviorSubject<Bool>(value:false)
         var isPaging = BehaviorSubject<Bool>(value: false)
+        var endRefreshing = BehaviorSubject<Bool>(value: false)
         
         
     }
@@ -67,6 +69,19 @@ class CommuVM : ViewModel {
         
         
         let output = Output()
+        
+        input.refreshControl.subscribe(onNext: { _ in
+            self.feedModels = []
+            self.firebaseService.query = nil
+            
+            DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) { [weak self] in
+                self?.reload.onNext(true)
+                
+                
+                    }
+            
+            
+        }).disposed(by: disposeBag)
         
         input.profileTapped.subscribe(onNext : { feedUid in
             
@@ -148,8 +163,7 @@ class CommuVM : ViewModel {
         
         input.viewWillApearEvent.subscribe(onNext: { event in
             
-            self.feedModels = []
-            self.firebaseService.query = nil
+           
             print("viewWillAppeear")
             self.reload.onNext(true)
            
@@ -178,15 +192,21 @@ class CommuVM : ViewModel {
                     self.feedModels = feeds
                     
                     if(feeds.count < 2){
+                        
                         output.isLastPage.onNext(true)
+                        
                     }else{
+                        
                         output.isLastPage.onNext(false)
 
                     }
+                    
                     output.feedModel.onNext(self.feedModels)
                     output.likesCount.onNext(likesCount)
                     output.isPaging.onNext(false)
+                    output.endRefreshing.onNext(true)
                     
+                        
                 case .failure(_):
                     break
                 }

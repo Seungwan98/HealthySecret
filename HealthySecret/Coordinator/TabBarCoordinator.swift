@@ -293,6 +293,20 @@ class CommuCoordinator : Coordinator  {
 
         self.navigationController.pushViewController(viewController , animated: false)
     }
+    
+    func pushProfileFeed(feedUid:String){
+        let viewModel =  ProfileFeedVM(coordinator: self , firebaseService: self.firebaseService )
+        viewModel.feedUid = feedUid
+        let viewController = ProfileFeedVC(viewModel: viewModel )
+        
+        
+        
+        
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+        
+        self.navigationController.pushViewController(viewController , animated: false)
+    }
 
     
     

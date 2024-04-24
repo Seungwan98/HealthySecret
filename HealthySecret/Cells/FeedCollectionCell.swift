@@ -297,7 +297,6 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
     @objc
     func didpressedProfile(_ sender : UITapGestureRecognizer) {
         delegate?.didPressedProfile(for: feedUid!)
-        print("feedUid \(feedUid)")
     }
     
     @objc
@@ -429,7 +428,7 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
             self.scrollView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor ),
             self.scrollView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor ),
             self.scrollView.topAnchor.constraint(equalTo: self.topView.bottomAnchor ),
-            self.scrollView.heightAnchor.constraint(equalToConstant: 360),
+            self.scrollView.heightAnchor.constraint(equalToConstant: 400),
             
             
 
