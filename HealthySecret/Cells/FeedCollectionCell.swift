@@ -235,9 +235,9 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         DispatchQueue.main.async {
             self.contentLabel.appendReadmore(after: self.beforeContent ?? "", trailingContent: .readmore)
             
-            
-            self.bottomView.invalidateIntrinsicContentSize()
-            self.invalidateIntrinsicContentSize()
+            self.contentView.invalidateIntrinsicContentSize()
+
+          //  self.bottomView.invalidateIntrinsicContentSize()
         }
 
         
@@ -272,6 +272,7 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         guard let text = contentLabel.text else { return }
         
         
+        print(text)
         
 
             let readmore = (text as NSString).range(of: TrailingContent.readmore.text)
@@ -354,9 +355,11 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
     }
  
     
-    
+    let mainView = UIView()
     
     private func setUI() {
+        
+        
         
         likesButton.addTarget(self, action: #selector(didPressedHeart), for: .touchUpInside)
         comentsButton.addTarget(self, action: #selector(didPressedComents), for: .touchUpInside)
@@ -380,14 +383,16 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         self.scrollView.translatesAutoresizingMaskIntoConstraints = false
         self.scrollView.delegate = self
         
-
+        mainView.translatesAutoresizingMaskIntoConstraints = false
+        
+        contentView.addSubview(mainView)
         
         
-        contentView.addSubview(self.scrollView)
-        contentView.addSubview(self.pageControl)
-        contentView.addSubview(self.topView)
-        contentView.addSubview(self.bottomView)
-        contentView.addSubview(self.mainImage)
+        mainView.addSubview(self.scrollView)
+        mainView.addSubview(self.pageControl)
+        mainView.addSubview(self.topView)
+        mainView.addSubview(self.bottomView)
+        mainView.addSubview(self.mainImage)
         
         self.topView.addSubview(self.ellipsis)
         self.topView.addSubview(self.profileImage)
@@ -400,6 +405,13 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
     
         
         NSLayoutConstraint.activate([
+            
+            
+            
+            self.mainView.topAnchor.constraint(equalTo: self.contentView.topAnchor ),
+            self.mainView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor ),
+            self.mainView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor ),
+            self.mainView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor ),
             
             self.topView.topAnchor.constraint(equalTo: self.contentView.topAnchor ),
             self.topView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor ),

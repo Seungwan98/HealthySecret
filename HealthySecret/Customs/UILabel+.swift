@@ -7,22 +7,37 @@ enum TrailingContent {
 
     var text: String {
         switch self {
-        case .readmore: return " ...더보기"
-        case .readless: return " 접기"
+        case .readmore: return " \n ...더보기"
+        case .readless: return " \n 접기"
         }
     }
 }
+
 
 extension UILabel {
 
     private var minimumLines: Int { return 4 }
     private var highlightColor: UIColor { return .lightGray }
+    
+    //let paragraphStyle = NSMutableParagraphStyle()
+    
+    private var paragraphStyle : NSMutableParagraphStyle {return NSMutableParagraphStyle()}
+    
 
-    private var attributes: [NSAttributedString.Key: Any] {
-        return [.font: self.font ?? .systemFont(ofSize: 16)]
+    var attributes: [NSAttributedString.Key: Any] {
+        return [.font: self.font ?? .systemFont(ofSize: 16)
+  ]
     }
     
+
+    
+
+    
     public func requiredHeight(for text: String) -> CGFloat {
+        
+       
+        
+        
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: frame.width, height: CGFloat.greatestFiniteMagnitude))
         label.numberOfLines = minimumLines
         label.lineBreakMode = NSLineBreakMode.byTruncatingTail
@@ -42,6 +57,13 @@ extension UILabel {
     }
 
     func appendReadmore(after text: String, trailingContent: TrailingContent) {
+        
+        self.lineBreakMode = .byCharWrapping
+        
+        
+        
+        
+        UIView.setAnimationsEnabled(false)
         self.numberOfLines = minimumLines
         let fourLineText = "\n\n\n"
         let fourlineHeight = requiredHeight(for: fourLineText)
@@ -56,8 +78,12 @@ extension UILabel {
             }
             endIndex -= 1
 
+           
+            
             truncatedSentence = NSString(string: sentenceText.substring(with: NSRange(location: 0, length: endIndex)))
             truncatedSentence = (String(truncatedSentence) + trailingContent.text) as NSString
+            
+            
 
         }
         self.text = truncatedSentence as String
@@ -65,6 +91,7 @@ extension UILabel {
     }
 
     func appendReadLess(after text: String, trailingContent: TrailingContent) {
+        UIView.setAnimationsEnabled(false)
         self.numberOfLines = 0
         self.text = text + trailingContent.text
         self.highlight(trailingContent.text, color: highlightColor)

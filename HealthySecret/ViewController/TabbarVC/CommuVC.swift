@@ -97,7 +97,6 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     let tableView : UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        //tableView.estimatedRowHeight = 860
         tableView.rowHeight = UITableView.automaticDimension
         tableView.allowsMultipleSelection = true
         tableView.allowsSelection = false
@@ -245,7 +244,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         
         
         tableView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
-            self?.tableView.deselectRow(at: indexPath, animated: true)
+            self?.tableView.deselectRow(at: indexPath, animated: false)
         }).disposed(by: disposeBag)
         
        
@@ -289,7 +288,6 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             cell.comentsLabel.text = "댓글 \(String(describing: item.coments?.count ?? 0))개 보기"
             
            
-            
             
             let url = URL(string: item.profileImage ?? "")
             
