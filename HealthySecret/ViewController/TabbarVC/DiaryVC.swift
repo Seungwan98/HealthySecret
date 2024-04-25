@@ -649,7 +649,7 @@ class DiaryViewController : UIViewController {
     var minuteLabel = UILabel()
     var exCalorieLabel = UILabel()
     lazy var exerciseView : UIView = {
-        let image = UIImageView(image: UIImage(named: "운동하는유미.png"))
+        let image = UIImageView(image: UIImage(named: "dumbbell.png"))
         let view = UIView()
         let centerLabel = UILabel()
         
@@ -708,6 +708,8 @@ class DiaryViewController : UIViewController {
         
         image.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         image.centerYAnchor.constraint(equalTo: view.centerYAnchor , constant: 0 ).isActive = true
+        image.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 150 ).isActive = true
         
         leftLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 12).isActive = true
         leftLabel.topAnchor.constraint(equalTo: view.topAnchor , constant: 12).isActive = true

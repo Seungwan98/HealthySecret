@@ -83,7 +83,7 @@ class ExerciseDetailVM : ViewModel {
             
             let exercise = Exercise(date: UserDefaults.standard.string(forKey: "date") ?? "", name: name , time: time  , finalCalorie : finalCalorie , memo : memo  , key: UUID().uuidString , exerciseGram: exerciseGram)
 
-            self.firebaseService.addExercise(exercise: exercise, key: UserDefaults.standard.value(forKey: "email") as! String).subscribe{ com in
+            self.firebaseService.addExercise(exercise: exercise, key: UserDefaults.standard.value(forKey: "uid") as! String).subscribe{ com in
                 switch com {
                 case .completed:
                     self.coordinator?.back()

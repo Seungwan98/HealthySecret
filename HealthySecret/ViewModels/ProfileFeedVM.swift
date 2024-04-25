@@ -22,11 +22,11 @@ class ProfileFeedVM : ViewModel {
     struct Input {
         let viewWillApearEvent : Observable<Void>
         let likesButtonTapped : Observable<Bool>
-        let comentsTapped : Observable<String>
+        let comentsTapped : Observable<UITapGestureRecognizer>
         let deleteFeed : Observable<String>
         let reportFeed : Observable<String>
         let updateFeed : Observable<String>
-        let profileTapped : Observable<String>
+        let profileTapped : Observable<UITapGestureRecognizer>
         let refreshControl : Observable<Void>
         
         
@@ -79,11 +79,10 @@ class ProfileFeedVM : ViewModel {
             
         }).disposed(by: disposeBag)
         
-        input.profileTapped.subscribe(onNext : { feedUid in
+        input.profileTapped.subscribe(onNext : { _ in
+            guard let uuid = self.feedModel?.uuid else {return}
+            self.coordinator?.pushProfileVC(uuid: uuid )
             
-            self.coordinator?.finish()
-            
-            //pop
             
         }).disposed(by: disposeBag)
         
@@ -114,16 +113,16 @@ class ProfileFeedVM : ViewModel {
             
         }).disposed(by: disposeBag)
         
-        input.comentsTapped.subscribe(onNext: { feedUid in
+        input.comentsTapped.subscribe(onNext: { _ in
 
             guard let feed = self.feedModel else {return}
             
-            self.coordinator?.pushComents(coments: feed.coments ?? [] , feedUid : feedUid , feedUuid: feed.uuid )
+            self.coordinator?.pushComents(coments: feed.coments ?? [] , feedUid : feed.feedUid , feedUuid: feed.uuid )
             
             
         }).disposed(by: disposeBag)
         
-        input.likesButtonTapped.throttle(.seconds(2),  scheduler: MainScheduler.instance).subscribe(onNext: { like in
+        input.likesButtonTapped.throttle(.seconds(2) , latest: true  ,  scheduler: MainScheduler.instance).subscribe(onNext: { like in
           
             guard let feedUid = self.feedUid else {return}
             

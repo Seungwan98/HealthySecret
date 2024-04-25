@@ -56,6 +56,8 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     
     var isPaging = false
     var isLastPage = false
+    
+    var isRefresh = false
     // (delegate) Cell터치 시.
     
     
@@ -98,6 +100,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = UITableView.automaticDimension
         tableView.allowsMultipleSelection = true
         tableView.allowsSelection = false
     
@@ -178,17 +181,21 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     }
     
     
-    
+    var cellHeights: [IndexPath : CGFloat] = [:]
     
     func setUI(){
+        
         self.view.addSubview(tableView)
         self.view.addSubview(addButton)
+        
         
         self.refreshControl.endRefreshing()
         tableView.refreshControl = self.refreshControl
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
         tableView.dataSource = nil
         tableView.register(FeedCollectionCell.self, forCellReuseIdentifier: "FeedCollectionCell")
+       
+        
         
         
         
@@ -215,6 +222,8 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         let paging = PublishSubject<Bool>()
         
         
+        
+        
         let uid = UserDefaults.standard.string(forKey: "uid")
         
         
@@ -222,6 +231,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         
         
         guard let output = viewModel?.transform(input: input, disposeBag: disposeBag) else {return}
+       
         
         
         output.endRefreshing.subscribe(onNext: { event in
@@ -247,10 +257,16 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             self?.tableView.deselectRow(at: indexPath, animated: false)
         }).disposed(by: disposeBag)
         
+        
        
         
         output.feedModel.bind(to: self.tableView.rx.items(cellIdentifier: "FeedCollectionCell" , cellType: FeedCollectionCell.self )){
             index,item,cell in
+            
+            
+            
+            
+            
             
             cell.commuVC = self
             
@@ -314,17 +330,37 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             
             
             
+            
+            
             cell.profileImage.layer.cornerRadius = 20
             
             
             
-            
+            if let url = URL(string:
+                                "https://firebasestorage.googleapis.com:443/v0/b/healthysecrets-f1b20.appspot.com/o/kLKq98RHJbRgJMbAzZa5CKFlVSa2%2F6DE25F9F-1591-4989-B9DD-6E56792403D21713975515.1394758?alt=media&token=d9565ad5-296b-420c-a7e7-bc4cb38b4cb8 ") {
+                let image = UIImageView()
+                let processor = DownsamplingImageProcessor(size: CGSize(width: cell.contentView.bounds.width , height: cell.scrollView.bounds.height) ) // 크기 지정 다운 샘플링
+                |> RoundCornerImageProcessor(cornerRadius: 0) // 모서리 둥글게
+                image.kf.indicatorType = .activity  // indicator 활성화
+                image.kf.setImage(
+                    with: url,  // 이미지 불러올 url
+                    placeholder: UIImage(),  // 이미지 없을 때의 이미지 설정
+                    options: [
+                        .processor(processor),
+                        .scaleFactor(UIScreen.main.scale),
+                        .transition(.fade(0.5)),  // 애니메이션 효과
+                        .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
+                    ])
+                
+                
+                cell.plusFeedsImage = image
+                
+            }
             
             
             
             var images : [UIImageView] = []
-            
-            
+      
             _ = item.mainImgUrl.map{
                 if let url = URL(string: $0 ) {
                     let image = UIImageView()

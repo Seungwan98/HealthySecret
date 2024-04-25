@@ -60,10 +60,9 @@ extension UILabel {
         
         self.lineBreakMode = .byCharWrapping
         
+
         
         
-        
-        UIView.setAnimationsEnabled(false)
         self.numberOfLines = minimumLines
         let fourLineText = "\n\n\n"
         let fourlineHeight = requiredHeight(for: fourLineText)
@@ -88,13 +87,20 @@ extension UILabel {
         }
         self.text = truncatedSentence as String
         self.highlight(trailingContent.text, color: highlightColor)
+        
+        
+
+
     }
 
     func appendReadLess(after text: String, trailingContent: TrailingContent) {
-        UIView.setAnimationsEnabled(false)
         self.numberOfLines = 0
         self.text = text + trailingContent.text
         self.highlight(trailingContent.text, color: highlightColor)
+        
+        
+
+
     }
 }
 

@@ -44,7 +44,7 @@ class CommuVM : ViewModel {
         
     }
     
-    
+    var likesCount : [ String : [ String ] ] = [:]
     
     var feedModels = [FeedModel]()
     
@@ -63,7 +63,6 @@ class CommuVM : ViewModel {
     
     
     func transform(input : Input , disposeBag: DisposeBag) -> Output {
-        let id = UserDefaults.standard.string(forKey: "email") ?? ""
         let authUid = UserDefaults.standard.string(forKey: "uid") ?? ""
         
         
@@ -141,7 +140,19 @@ class CommuVM : ViewModel {
             self.firebaseService.updateFeedLikes(feedUid: feedUid  , uuid: authUid, like: like ).subscribe({ event in
                 switch(event){
                 case(.completed):
-                    print("좋아요 수정완료")
+                    if(like){
+                        
+                        if(self.likesCount[feedUid] == nil){
+                            self.likesCount[feedUid] = [authUid]
+                        }else{
+                            self.likesCount[feedUid]?.append(authUid)
+                        }
+                        
+                        
+                    }else{
+                        guard let index = self.likesCount[feedUid]?.firstIndex(of: authUid) else {return}
+                        self.likesCount[feedUid]?.remove(at: index )
+                    }
                 case(.error(let err)):
                     print("likesUpdate err \(err)")
                     
@@ -155,6 +166,8 @@ class CommuVM : ViewModel {
         }).disposed(by:disposeBag )
         
         input.addButtonTapped.subscribe(onNext: { _ in
+            
+            
             self.coordinator?.pushAddFeedVC()
            
             
@@ -163,30 +176,24 @@ class CommuVM : ViewModel {
         
         input.viewWillApearEvent.subscribe(onNext: { event in
             
-           
-            print("viewWillAppeear")
             self.reload.onNext(true)
-           
-            
             
         }).disposed(by: disposeBag)
         
         
         self.reload.subscribe(onNext: { _ in
             
-            print("reload")
             self.firebaseService.getFeedPagination(feeds: self.feedModels).subscribe({ event in
                 switch(event){
                     
                     
                 case(.success(let feeds)):
-                    var likesCount : [ String : [ String ] ] = [:]
                     
 
                     for i in 0..<feeds.count {
                         
-                        if likesCount[ feeds[i].feedUid ] == nil{
-                            likesCount[ feeds[i].feedUid ] = feeds[i].likes
+                        if self.likesCount[ feeds[i].feedUid ] == nil{
+                            self.likesCount[ feeds[i].feedUid ] = feeds[i].likes
                         }
                     }
                     self.feedModels = feeds
@@ -202,7 +209,7 @@ class CommuVM : ViewModel {
                     }
                     
                     output.feedModel.onNext(self.feedModels)
-                    output.likesCount.onNext(likesCount)
+                    output.likesCount.onNext(self.likesCount)
                     output.isPaging.onNext(false)
                     output.endRefreshing.onNext(true)
                     
@@ -222,7 +229,6 @@ class CommuVM : ViewModel {
         input.paging.subscribe(onNext:{ event in
             
             if(event){
-                print("paging subscribe")
 
                 self.reload.onNext(true)
             }
@@ -347,96 +353,6 @@ class CommuVM : ViewModel {
     
     
     
-    
-    
-    
-    
-    
-    
-    //
-    //    struct ChangeInput {
-    //        let viewWillApearEvent : Observable<Void>
-    //        let addButtonTapped : Observable<Void>
-    //        let nameTextField : Observable<String>
-    //        let introduceTextField : Observable<String>
-    //        let profileImageTapped : Observable<UITapGestureRecognizer>
-    //        let profileImageValue : Observable<UIImage?>
-    //
-    //    }
-    //
-    //    struct ChageOutput {
-    //        var name = BehaviorSubject<String>(value: "")
-    //        var introduce = BehaviorSubject<String>(value: "")
-    //        var profileImage = BehaviorSubject<Data?>(value: nil)
-    //
-    //
-    //    }
-    //
-    //
-    //
-    //    func ChangeTransform(input: ChangeInput, disposeBag: DisposeBag ) -> ChageOutput {
-    //
-    //        let output = ChageOutput()
-    //
-    //        input.viewWillApearEvent.subscribe(onNext: {
-    //
-    //            output.name.onNext(self.name!)
-    //            output.introduce.onNext(self.introduce ?? "")
-    //            output.profileImage.onNext(self.profileImage ?? nil)
-    //
-    //
-    //
-    //        }).disposed(by: disposeBag)
-    //
-    //
-    //
-    //
-    //        input.addButtonTapped.subscribe(onNext: { _ in
-    //            input.nameTextField.subscribe(onNext: { name in
-    //                input.introduceTextField.subscribe(onNext: { introduce in
-    //
-    //
-    //
-    //                    input.profileImageValue.subscribe(onNext: { image in
-    //                        self.firebaseService.updateValues(name: name , introduce: introduce  , key: UserDefaults.standard.string(forKey: "email") ?? "" , image : image , beforeImage: self.beforeImage ?? "" ).subscribe{ event in
-    //                            switch(event){
-    //                            case.completed:
-    //                                print("업데이트완료")
-    //
-    //                            case.error(_):
-    //                                print("error")
-    //                            }
-    //
-    //
-    //                            let imageData = image?.jpegData(compressionQuality: 0.1)
-    //                            UserDefaults.standard.set(imageData, forKey: "profileImage")
-    //
-    //                          //  self.coordinator?.navigationController.popViewController(animated: false)
-    //
-    //
-    //
-    //
-    //                        }.disposed(by: disposeBag)
-    //
-    //
-    //                    }).disposed(by: disposeBag)
-    //
-    //                }).disposed(by: disposeBag)
-    //
-    //
-    //
-    //
-    //            }).disposed(by: disposeBag)
-    //
-    //
-    //
-    //
-    //        }).disposed(by: disposeBag)
-    //
-    //
-    //        return output
-    //    }
-    //
     
     
     

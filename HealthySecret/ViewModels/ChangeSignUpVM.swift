@@ -138,7 +138,9 @@ class ChangeSignUpVM : ViewModel {
                                     start in print("\(start) startWeight " )
                                     self.userModel.nowWeight = Int(start) ?? 0
                                     
-                                    self.firebaseService.updateSignUpData(model: self.userModel, key: UserDefaults.standard.string(forKey: "email") ?? "").subscribe({event in
+                                    guard let uuid = UserDefaults.standard.string(forKey: "uid") else {return}
+                                    
+                                    self.firebaseService.updateSignUpData(model: self.userModel, key: uuid).subscribe({event in
                                         print(event)
                                                 switch(event){
                                                 

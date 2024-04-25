@@ -297,11 +297,14 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
             let cnt = (self.likesCount ?? 0) + 1
             setLikesLabel(count: cnt)
             isTouched = true
+            self.likesButtonTapped.onNext(true)
         }else {
             let cnt = (self.likesCount ?? 1) - 1
             setLikesLabel(count: cnt)
 
             isTouched = false
+            self.likesButtonTapped.onNext(false)
+
         }
         
         
@@ -363,17 +366,13 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
     var authUid : String = ""
     
     var likesButtonTapped = PublishSubject<Bool>()
-    
-    var comentsTapped = PublishSubject<String>()
-    
+        
     var updateFeed = PublishSubject<String>()
     
     var reportFeed = PublishSubject<String>()
     
     var deleteFeed = PublishSubject<String>()
-    
-    var profileTapped = PublishSubject<String>()
-    
+        
    
     
     
@@ -384,10 +383,9 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
         
         let uid = UserDefaults.standard.string(forKey: "uid")
 
+        let comentsTapped = Observable.merge( self.comentsButton.rx.tapGesture().when(.recognized).asObservable() , self.comentsLabel.rx.tapGesture().asObservable().when(.recognized) )
         
-
-        
-        let input = ProfileFeedVM.Input( viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), likesButtonTapped: self.likesButtonTapped, comentsTapped: self.comentsTapped.asObservable()  , deleteFeed: deleteFeed , reportFeed : reportFeed , updateFeed: updateFeed , profileTapped : profileTapped.asObservable(), refreshControl: self.refreshControl.rx.controlEvent(.valueChanged).asObservable() )
+        let input = ProfileFeedVM.Input( viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), likesButtonTapped: self.likesButtonTapped, comentsTapped: comentsTapped.asObservable()  , deleteFeed: deleteFeed , reportFeed : reportFeed , updateFeed: updateFeed , profileTapped : self.profileImage.rx.tapGesture().when(.recognized).asObservable(), refreshControl: self.refreshControl.rx.controlEvent(.valueChanged).asObservable() )
         
         
         guard let output = viewModel?.transform(input: input, disposeBag: disposeBag) else {return}

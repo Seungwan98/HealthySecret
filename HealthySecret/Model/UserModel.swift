@@ -28,6 +28,8 @@ struct UserModel : Codable {
     var profileImage : String?
     var activity : Int?
     var feeds : [String]?
+    var followings : [String]?
+    var followers : [String]?
 
     }
 

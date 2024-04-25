@@ -100,12 +100,12 @@ class ChangeIntroduceVM : ViewModel {
                         input.profileChange.subscribe(onNext: { change in
                             
                             print("\(change)")
-                            
+                            guard let uuid = UserDefaults.standard.string(forKey: "email") else {return}
                             
                             LoadingIndicator.showLoading()
 
                             
-                            self.firebaseService.updateValues(name: name , introduce: introduce  , key: UserDefaults.standard.string(forKey: "email") ?? "" , image : image , beforeImage: self.beforeImage ?? "" , profileChage: change ).subscribe(on: backgroundScheduler ).subscribe{ event in
+                            self.firebaseService.updateValues(name: name , introduce: introduce  , key: uuid , image : image , beforeImage: self.beforeImage ?? "" , profileChage: change ).subscribe(on: backgroundScheduler ).subscribe{ event in
                                 switch(event){
                                 case.completed:
                                     

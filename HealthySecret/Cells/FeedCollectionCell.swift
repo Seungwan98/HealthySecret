@@ -215,6 +215,7 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
          setPageControlSelectedPage(currentPage: Int(round(value)))
      }
     
+    var plusFeedsImage = UIImageView()
     
     
     var feedUid : String?
@@ -233,14 +234,32 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
     
     func setContentLabel(){
         DispatchQueue.main.async {
+            
             self.contentLabel.appendReadmore(after: self.beforeContent ?? "", trailingContent: .readmore)
             
+
+            self.bottomView.invalidateIntrinsicContentSize()
             self.contentView.invalidateIntrinsicContentSize()
 
-          //  self.bottomView.invalidateIntrinsicContentSize()
         }
 
         
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        
+       
+        self.imageViews.forEach{
+            
+            $0.image = plusFeedsImage.image
+            
+        }
+        
+
+        
+            
     }
    
     
@@ -256,7 +275,8 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
 
     }
     
-    
+
+   
     
     
   
@@ -265,6 +285,9 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    
+  
     
     @objc
     func didTapLabel(_ sender: UITapGestureRecognizer) {
@@ -286,9 +309,11 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
             } else { return }
         
 
-        
+        UIView.setAnimationsEnabled(false)
         self.bottomView.invalidateIntrinsicContentSize()
         self.invalidateIntrinsicContentSize()
+        UIView.setAnimationsEnabled(true)
+
         
         
             

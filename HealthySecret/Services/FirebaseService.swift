@@ -29,8 +29,8 @@ final class FirebaseService {
     var requestQuery: Query?
     var query: Query? = nil
     var listener : ListenerRegistration?
-
-
+    
+    
     
     let disposeBag = DisposeBag()
     
@@ -56,7 +56,7 @@ final class FirebaseService {
             return Disposables.create()
         }
         
-    
+        
     }
     func deleteDatas(user : User) -> Completable {
         
@@ -122,7 +122,7 @@ final class FirebaseService {
                         
                         let lock = NSLock()
                         lock.lock()
-
+                        
                         storageReference.listAll()  { refs ,err in
                             guard let refs = refs else {return}
                             for item in refs.items{
@@ -138,9 +138,9 @@ final class FirebaseService {
                         }
                         print("completed")
                         completable(.completed)
-
+                        
                         lock.unlock()
-
+                        
                     }
                     
                     
@@ -157,7 +157,7 @@ final class FirebaseService {
             if  let user = Auth.auth().currentUser {
                 print("in1")
                 
-
+                
                 user.reauthenticate(with: auth){ result ,err in
                     self.signOut().subscribe{ event in
                         switch(event){
@@ -166,13 +166,13 @@ final class FirebaseService {
                                 if let error = error {
                                     print("Firebase Error : ",error)
                                     
-                                   
+                                    
                                 } else {
                                     self?.deleteDatas(user: user).subscribe({ event in
                                         switch(event){
                                         case.completed:
                                             print("complted")
-
+                                            
                                             completable(.completed)
                                         case .error(_):
                                             break
@@ -195,8 +195,8 @@ final class FirebaseService {
                     
                 }
                 
-               
-               
+                
+                
             } else {
                 print("로그인 정보가 존재하지 않습니다")
             }
@@ -204,8 +204,8 @@ final class FirebaseService {
             return Disposables.create()
             
         }
-            
-        }
+        
+    }
     
     
     public func signOut() -> Completable {
@@ -273,7 +273,7 @@ final class FirebaseService {
                         return
                     } else {
                         print("로그인 성공")
-                        UserDefaults.standard.setValue( res?.user.uid, forKey: "uid") 
+                        UserDefaults.standard.setValue( res?.user.uid, forKey: "uid")
                         completable(.completed)
                     }
                 }
@@ -290,11 +290,11 @@ final class FirebaseService {
         return Single.create { [weak self] single in
             guard let self = self else { return Disposables.create() }
             
-              
-
+            
+            
             self.db.collection("HealthySecretUsers").document(key).getDocument{ doc , err in
                 if let err = err { single(.failure(err))}
-               
+                
                 
                 
                 if let data = doc?.data() {
@@ -309,7 +309,7 @@ final class FirebaseService {
                         
                     }
                 }
-             
+                
                 
             }
             
@@ -578,7 +578,7 @@ extension FirebaseService {
         return Completable.create{ completable in
             
             completable(.completed)
-            let path = self.db.collection("HealthySecretUsers").document(String(key))
+            let path = self.db.collection("HealthySecretUsers").document(key)
             
             path.updateData(["exercise" :FieldValue.arrayUnion([exercise.dictionary!])])
             return Disposables.create()
@@ -590,7 +590,7 @@ extension FirebaseService {
         return Completable.create{ completable in
             
             completable(.completed)
-            let path = self.db.collection("HealthySecretUsers").document(String(key))
+            let path = self.db.collection("HealthySecretUsers").document(key)
             
             path.updateData(["diarys" :FieldValue.arrayUnion([diary.dictionary!])])
             return Disposables.create()
@@ -607,29 +607,25 @@ extension FirebaseService {
             })
             
             
-            self.db.collection("HealthySecretUsers").whereField("id", isEqualTo: key)
-                .getDocuments() { (querySnapshot, err) in
-                    if let err = err {
-                        
-                        print("error1")
-                        
-                        completable(.error(err))
-                        // Some error occured
-                    } else if querySnapshot!.documents.count != 1 {
-                        print("error2")
-                        
-                        completable(.error(err!))
-                        // Perhaps this is an error for you?
-                    } else {
-                        let document = querySnapshot?.documents.first!
-                        document?.reference.updateData([
-                            "diarys" : diary
-                        ])
-                        
-                        
-                        completable(.completed)
-                    }
+            self.db.collection("HealthySecretUsers").document(key).getDocument { (doc, err) in
+                if let err = err {
+                    
+                    print("error1")
+                    
+                    completable(.error(err))
+                    // Some error occured
+                    
                 }
+                else {
+                    guard let doc = doc else { return }
+                    doc.reference.updateData([
+                        "diarys" : diary
+                    ])
+                    
+                    
+                    completable(.completed)
+                }
+            }
             
             
             
@@ -651,22 +647,22 @@ extension FirebaseService {
             
             
             self.db.collection("HealthySecretUsers").document(key).getDocument { (doc, err) in
-                    if let err = err {
-                        
-                        print("error1")
-                        
-                        completable(.error(err))
-                        // Some error occured
-                    }  else {
-                        
-                        doc?.reference.updateData([
-                            "exercise" : exercise
-                        ])
-                        
-                        
-                        completable(.completed)
-                    }
+                if let err = err {
+                    
+                    print("error1")
+                    
+                    completable(.error(err))
+                    // Some error occured
+                }  else {
+                    
+                    doc?.reference.updateData([
+                        "exercise" : exercise
+                    ])
+                    
+                    
+                    completable(.completed)
                 }
+            }
             
             
             
@@ -727,8 +723,8 @@ extension FirebaseService {
     func updateSignUpData( model : UserModel , key : String ) -> Completable {
         return Completable.create{ completable in
             
-            self.db.collection("HealthySecretUsers").whereField("id", isEqualTo: key)
-                .getDocuments() { (querySnapshot, err) in
+            self.db.collection("HealthySecretUsers").document()
+                .getDocument() { (doc, err) in
                     
                     if let err = err {
                         
@@ -736,14 +732,10 @@ extension FirebaseService {
                         
                         completable(.error(err))
                         // Some error occured
-                    } else if querySnapshot!.documents.count != 1 {
-                        print("error2")
+                    }
+                    else {
                         
-                        completable(.error(err!))
-                        // Perhaps this is an error for you?
-                    } else {
-                        let document = querySnapshot?.documents.first!
-                        document?.reference.updateData([
+                        doc?.reference.updateData([
                             "age" : model.age ,
                             "tall" : model.tall ,
                             "sex" : model.sex,
@@ -768,7 +760,9 @@ extension FirebaseService {
         }
         
         
+        
     }
+    
     
     func updateValues( name : String , introduce : String , key : String , image : UIImage? , beforeImage : String? , profileChage : Bool) -> Completable {
         
@@ -780,13 +774,9 @@ extension FirebaseService {
             
             print("update Values")
             
+           
             
-
-            
-            
-            
-            self.db.collection("HealthySecretUsers").whereField("id", isEqualTo: key)
-                .getDocuments() { (querySnapshot, err) in
+            self.db.collection("HealthySecretUsers").document().getDocument() { (doc, err) in
                     
                     if let err = err {
                         
@@ -794,21 +784,16 @@ extension FirebaseService {
                         
                         completable(.error(err))
                         // Some error occured
-                    } else if querySnapshot!.documents.count != 1 {
-                        print("error2")
-                        
-                        completable(.error(err!))
-                        // Perhaps this is an error for you?
                     } else {
-                        let document = querySnapshot?.documents.first!
-                        document?.reference.updateData([
+                  
+                        doc?.reference.updateData([
                             "name" : name ,
                             "introduce" : introduce ,
-              
+                            
                             
                         ])
-
-
+                        
+                        
                         
                         if(profileChage){
                             
@@ -819,7 +804,7 @@ extension FirebaseService {
                                 case .success(let url):
                                     
                                     
-                                    document?.reference.updateData([
+                                    doc?.reference.updateData([
                                         
                                         "profileImage" : url
                                         
@@ -845,37 +830,37 @@ extension FirebaseService {
                                 }
                                 
                             }.disposed(by: self.disposeBag)
-                            
-                            
-                            
-                            print("fireStore upload")
-                            
-                        }
+                                
+                                
+                                
+                                print("fireStore upload")
+                                
+                            }
                             
                         }else{
                             completable(.completed)
-
+                            
                         }
+                        
+                        
+                        
+                    }
+                    
+                    
+                    
+                    
+                    
                     
                     
                     
                 }
-            
-            
-            
-            
-            
-           
-                
-                
-            }
             return Disposables.create()
-
+            
         }
-        }
-        
     }
     
+}
+
 
 
 
@@ -894,12 +879,12 @@ extension FirebaseService {
             
             let firebaseReference = Storage.storage().reference().child("\(pathRoot)/\(imageName)")
             
-                
-                firebaseReference.putData(imageData, metadata: metaData) { metaData, error in
-                    firebaseReference.downloadURL { url, _ in
-                        single(.success(url?.absoluteString ?? ""))
-                    }
+            
+            firebaseReference.putData(imageData, metadata: metaData) { metaData, error in
+                firebaseReference.downloadURL { url, _ in
+                    single(.success(url?.absoluteString ?? ""))
                 }
+            }
             
             return Disposables.create()
         }
@@ -910,7 +895,7 @@ extension FirebaseService {
     
     func downloadImage(urlString: String) -> Single<Data?> {
         return Single.create { single in
-
+            
             if urlString.isEmpty {
                 single(.success(nil))
                 return Disposables.create()
@@ -944,15 +929,15 @@ extension FirebaseService {
             }
             let storageReference = Storage.storage().reference(forURL: urlString)
             
-       
+            
             storageReference.delete{ error in
                 if let error = error{
                     
                     completable(.error(error))
-
+                    
                 }else{
                     completable(.completed)
-
+                    
                 }
                 
             }
@@ -974,22 +959,22 @@ extension FirebaseService {
         //
         //            }
         
-            
+        
         let megaByte = Int64(1 * 1024 * 1024)
         let storageReference = Storage.storage().reference()
         let ob = BehaviorSubject<[String:Data]?>(value: nil)
         
-
+        
         storageReference.child("\(urlString)/").listAll{ ( result, error ) in
             
             var index = 0
-
+            
             var items : [StorageReference] = []
             
-                if let error = error{
-                    print("error \(error)")
-                    
-                }else{
+            if let error = error{
+                print("error \(error)")
+                
+            }else{
                 
                 print("아이템 들어간당")
                 
@@ -1007,11 +992,11 @@ extension FirebaseService {
                             return
                         }
                         resultArr.updateValue(data!, forKey: items[i].name)
-
                         
                         
                         
-           
+                        
+                        
                         
                         
                         if(result!.items.count-1 == index){
@@ -1026,24 +1011,24 @@ extension FirebaseService {
                     }
                 }
             }
-
+            
             print("언제?")
-          
+            
             
         }
         print("first")
-         
         
         
-    
-    
-
+        
+        
+        
+        
         return ob
         
         
     }
-
-
+    
+    
     
     func updateFeed( feed : FeedModel) -> Completable {
         return Completable.create{ completable in
@@ -1052,21 +1037,21 @@ extension FirebaseService {
                     completable(.error(err))
                 }else{
                     
-                        doc?.reference.updateData([
-                            "contents" : feed.contents ,
-                            "mainImgUrl" :  feed.mainImgUrl
-                            
-                        ])}
-                  
-                    completable(.completed)
-   
-                    
+                    doc?.reference.updateData([
+                        "contents" : feed.contents ,
+                        "mainImgUrl" :  feed.mainImgUrl
+                        
+                    ])}
+                
+                completable(.completed)
+                
+                
                 
                 
                 
             }
             
-          
+            
             
             return Disposables.create()
         }
@@ -1116,14 +1101,14 @@ extension FirebaseService {
                         ])
                     }
                     completable(.completed)
-   
+                    
                     
                 }
                 
                 
             }
             
-          
+            
             
             return Disposables.create()
         }
@@ -1136,32 +1121,32 @@ extension FirebaseService {
             
             
             var feedModels : [FeedModel] = []
-
+            
             self.db.collection("HealthySecretFeed").order(by: "date" , descending: true ).getDocuments() { (querySnapshot, err) in
-              if let err = err {
-                print("Error getting documents: \(err)")
-                  single(.failure(err))
-              } else {
-                  
-                  for doc in querySnapshot!.documents {
-                      
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    single(.failure(err))
+                } else {
                     
-                    
-                    do {
-                        let jsonData = try JSONSerialization.data(withJSONObject: doc.data(), options: [])
-                        let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
+                    for doc in querySnapshot!.documents {
                         
-                        feedModels.append(feed)
                         
-                    } catch let error {
-                        print("Error json parsing \(error)")
                         
+                        do {
+                            let jsonData = try JSONSerialization.data(withJSONObject: doc.data(), options: [])
+                            let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
+                            
+                            feedModels.append(feed)
+                            
+                        } catch let error {
+                            print("Error json parsing \(error)")
+                            
+                        }
                     }
+                    
+                    single(.success(feedModels))
+                    
                 }
-                  
-                  single(.success(feedModels))
-
-              }
                 
             }
             
@@ -1177,88 +1162,88 @@ extension FirebaseService {
     func getFeedPagination(feeds:[FeedModel]) -> Single<[FeedModel]> {
         return Single<[FeedModel]>.create { single in
             var outputFeeds = feeds
-
+            
             print("getFeedPagination")
             if let query = self.query {
-              //There is last query
+                //There is last query
                 self.requestQuery = query
             } else {
-
-              //It's First query request
+                
+                //It's First query request
                 self.requestQuery = self.db.collection("HealthySecretFeed")
                     .order(by: "date" , descending: true )
-                .limit(to: 2)
+                    .limit(to: 4)
             }
             
             self.requestQuery?.getDocuments{ [weak self] (snapshot, error) in
-              guard let self = self else { return }
-              
-              guard let snapshot = snapshot,
-                    let lastDocument = snapshot.documents.last else {
-                     //return
-                      return
-                    }
+                guard let self = self else { return }
                 
-              
-              let next = self.db.collection("HealthySecretFeed")
-                .order(by: "date" , descending: true)
-                .limit(to: 2)
-                .start(afterDocument: lastDocument)
-              
-              //Set next query
-              self.query = next
-              
-                
-              _ = snapshot.documents.map({ document in
-                 
-                do {
-                    let feedModel = try document.data(as: FeedModel.self)
-
-                    outputFeeds.append(feedModel)
-                    
-                    print("sdo")
-                    
-                } catch {
-                    single(.failure(CustomError.isNil))
+                guard let snapshot = snapshot,
+                      let lastDocument = snapshot.documents.last else {
+                    //return
+                    return
                 }
-              })
-
-        
+                
+                
+                let next = self.db.collection("HealthySecretFeed")
+                    .order(by: "date" , descending: true)
+                    .limit(to: 2)
+                    .start(afterDocument: lastDocument)
+                
+                //Set next query
+                self.query = next
+                
+                
+                _ = snapshot.documents.map({ document in
+                    
+                    do {
+                        let feedModel = try document.data(as: FeedModel.self)
+                        
+                        outputFeeds.append(feedModel)
+                        
+                        print("sdo")
+                        
+                    } catch {
+                        single(.failure(CustomError.isNil))
+                    }
+                })
+                
+                
                 for i in 0..<outputFeeds.count{
-                   
+                    
                     self.getDocument(key: outputFeeds[i].uuid).subscribe({ event in
                         print("getDoc")
-                       switch(event){
-                       case.success(let user):
-                           outputFeeds[i].profileImage = user.profileImage
-                           outputFeeds[i].nickname = user.name
-                           
-                           if( i+1 >= outputFeeds.count){
-                               print("나간다")
-                               single(.success(outputFeeds))
-                               
-                           }
-
-                       case .failure(let err):
-                           print(err)
-                       }
-                       
-                       
-                   }).disposed(by: disposeBag )
+                        switch(event){
+                        case.success(let user):
+                            outputFeeds[i].profileImage = user.profileImage
+                            outputFeeds[i].nickname = user.name
+                            
+                            if( i+1 >= outputFeeds.count){
+                                print("나간다")
+                                single(.success(outputFeeds))
+                                
+                            }
+                            
+                        case .failure(let err):
+                            print(err)
+                        }
+                        
+                        
+                    }).disposed(by: disposeBag )
                     
                     
                 }
-                    
-                   
-                    
                 
-              
-
+                
+                
+                
+                
+                
             }
             
             return Disposables.create()
         }
-    
+        
     }
     
     func getFeedFeedUid(feedUid : String) -> Single<FeedModel>{
@@ -1275,21 +1260,21 @@ extension FirebaseService {
                             
                             self.getDocument(key: feed.uuid).subscribe({ event in
                                 print("getDoc")
-                               switch(event){
-                               case.success(let user):
-                                   feed.profileImage = user.profileImage
-                                   feed.nickname = user.name
-                                   
-                                
+                                switch(event){
+                                case.success(let user):
+                                    feed.profileImage = user.profileImage
+                                    feed.nickname = user.name
+                                    
+                                    
                                     single(.success(feed))
-                                       
-                                   
-
-                               case .failure(let err):
-                                   print(err)
-                               }
-                               
-                               
+                                    
+                                    
+                                    
+                                case .failure(let err):
+                                    print(err)
+                                }
+                                
+                                
                             }).disposed(by: self.disposeBag )
                             
                         }catch{
@@ -1311,7 +1296,7 @@ extension FirebaseService {
         }
         
     }
-  
+    
     
     
     func getFeedsUid( uid : String ) -> Single<[FeedModel]>{
@@ -1320,30 +1305,30 @@ extension FirebaseService {
             
             var feedModels : [FeedModel] = []
             self.db.collection("HealthySecretFeed").whereField("uuid", isEqualTo: uid).order(by: "date" , descending: true ).getDocuments() { (querySnapshot, err) in
-              if let err = err {
-                print("Error getting documents: \(err)")
-                  single(.failure(err))
-              } else {
-                  
-                  for doc in querySnapshot!.documents {
-                      
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    single(.failure(err))
+                } else {
                     
-                    do {
-                        let jsonData = try JSONSerialization.data(withJSONObject: doc.data(), options: [])
-                        let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
+                    for doc in querySnapshot!.documents {
                         
                         
-                        feedModels.append(feed)
-
-                        
-                    } catch let error {
-                        print("Error json parsing \(error)")
-                        
+                        do {
+                            let jsonData = try JSONSerialization.data(withJSONObject: doc.data(), options: [])
+                            let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
+                            
+                            
+                            feedModels.append(feed)
+                            
+                            
+                        } catch let error {
+                            print("Error json parsing \(error)")
+                            
+                        }
                     }
+                    single(.success(feedModels))
+                    
                 }
-                  single(.success(feedModels))
-
-              }
                 
             }
             
@@ -1357,14 +1342,14 @@ extension FirebaseService {
         return Completable.create{ completable in
             
             self.db.collection("HealthySecretFeed").document(feedUid).delete() { err in
-              if let err = err {
-                print("Error removing document: \(err)")
-                  completable(.error(err))
-              } else {
-                print("Document successfully removed!")
-              
-                  completable(.completed)
-              }
+                if let err = err {
+                    print("Error removing document: \(err)")
+                    completable(.error(err))
+                } else {
+                    print("Document successfully removed!")
+                    
+                    completable(.completed)
+                }
             }
             
             
@@ -1377,19 +1362,19 @@ extension FirebaseService {
         
     }
     
-   
     
     
-        
+    
+    
     
     
 }
 
 
 extension FirebaseService {
-        
+    
     //댓글 수정 삭제
-
+    
     
     
     func deleteComents(  coment : Coment , feedUid : String ) -> Single<[Coment]> {
@@ -1397,58 +1382,58 @@ extension FirebaseService {
             
             
             
-
-                    
-          
+            
+            
+            
             self.listener = self.db.collection("HealthySecretFeed").whereField("feedUid", isEqualTo: feedUid).addSnapshotListener{  querySnapshot, error in
-                        guard let snapshot = querySnapshot else {
-                          print("Error fetching snapshots: \(error!)")
-                          return
-                        }
-                     
+                guard let snapshot = querySnapshot else {
+                    print("Error fetching snapshots: \(error!)")
+                    return
+                }
+                
+                
+                print("listenr")
+                snapshot.documentChanges.forEach { diff in
                     
-                      print("listenr")
-                        snapshot.documentChanges.forEach { diff in
+                    
+                    
+                    if (diff.type == .modified) {
+                        //document 안에있는 Arr 안의 데이터를 삭제하므로 modified 를 찾는다.
+                        
+                        do{
+                            let jsonData = try JSONSerialization.data(withJSONObject: diff.document.data(), options: [])
+                            let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
+                            single(.success(feed.coments ?? []))
                             
-                        
-                     
-                          if (diff.type == .modified) {
-                            //document 안에있는 Arr 안의 데이터를 삭제하므로 modified 를 찾는다.
-                              
-                              do{
-                                  let jsonData = try JSONSerialization.data(withJSONObject: diff.document.data(), options: [])
-                                  let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
-                                  single(.success(feed.coments ?? []))
-                                  
-                                  
-                                  
-                              }
-                              catch{
-                                  single(.failure(CustomError.isNil))
-
-                              }
-                              
-                          } else {
-                              
-                              
-                              if let coment = coment.dictionary {
-                                  diff.document .reference.updateData([
-                                      
-                                      "coments" : FieldValue.arrayRemove([coment])
-                                      
-                                  ])
-                              }
-                              
-                          }
-                      
+                            
+                            
                         }
-                      
-                      
+                        catch{
+                            single(.failure(CustomError.isNil))
+                            
+                        }
+                        
+                    } else {
                         
                         
+                        if let coment = coment.dictionary {
+                            diff.document .reference.updateData([
+                                
+                                "coments" : FieldValue.arrayRemove([coment])
+                                
+                            ])
+                        }
                         
-                  }
-      
+                    }
+                    
+                }
+                
+                
+                
+                
+                
+            }
+            
             
             return Disposables.create()
         }
@@ -1461,59 +1446,59 @@ extension FirebaseService {
     func updateComents( feedUid : String , coment : Coment  ) -> Single<[Coment]> {
         return Single.create{ single in
             self.listener = self.db.collection("HealthySecretFeed").whereField("feedUid", isEqualTo: feedUid).addSnapshotListener{  querySnapshot, error in
-                        guard let snapshot = querySnapshot else {
-                          print("Error fetching snapshots: \(error!)")
-                          return
-                        }
-                     
+                guard let snapshot = querySnapshot else {
+                    print("Error fetching snapshots: \(error!)")
+                    return
+                }
+                
+                
+                print("listenr")
+                snapshot.documentChanges.forEach { diff in
                     
-                      print("listenr")
-                        snapshot.documentChanges.forEach { diff in
+                    
+                    
+                    if (diff.type == .modified) {
+                        //document 안에있는 Arr 안의 데이터를 추가하므로 modified 를 찾는다.
+                        
+                        do{
+                            let jsonData = try JSONSerialization.data(withJSONObject: diff.document.data(), options: [])
+                            let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
+                            single(.success(feed.coments ?? []))
                             
-                        
-                     
-                          if (diff.type == .modified) {
-                            //document 안에있는 Arr 안의 데이터를 추가하므로 modified 를 찾는다.
-                              
-                              do{
-                                  let jsonData = try JSONSerialization.data(withJSONObject: diff.document.data(), options: [])
-                                  let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
-                                  single(.success(feed.coments ?? []))
-                                  
-                                  
-                                  
-                              }
-                              catch{
-                                  single(.failure(CustomError.isNil))
-
-                              }
-                              
-                          } else {
-                              
-                              
-                              if let coment = coment.dictionary {
-                                  diff.document .reference.updateData([
-                                      
-                                      "coments" : FieldValue.arrayUnion([coment])
-                                      
-                                  ])
-                              }
-                              
-                          }
-                      
+                            
+                            
                         }
-                      
-                      
+                        catch{
+                            single(.failure(CustomError.isNil))
+                            
+                        }
+                        
+                    } else {
                         
                         
+                        if let coment = coment.dictionary {
+                            diff.document .reference.updateData([
+                                
+                                "coments" : FieldValue.arrayUnion([coment])
+                                
+                            ])
+                        }
                         
-                  }
-            
+                    }
                     
-                    
-                 
+                }
+                
+                
+                
+                
+                
+            }
             
-          
+            
+            
+            
+            
+            
             
             return Disposables.create()
         }
