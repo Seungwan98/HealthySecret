@@ -62,7 +62,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: CustomCollectionViewCell.identifier)
       
         
-        collectionView.register( CustomHeaderCollectionView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CustomHeaderCollectionView.identifier)
+        collectionView.register( ProfileHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ProfileHeaderView.identifier)
         
         collectionView.allowsMultipleSelection = false
         collectionView.alwaysBounceVertical = true
@@ -154,7 +154,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
     }
     var imagesArr : [[String]] = []
     var uidsArr : [String] = []
-    func setHeaderBindings(header : CustomHeaderCollectionView){
+    func setHeaderBindings(header : ProfileHeaderView){
 
 
         let input = OtherProfileVM.HeaderInput( viewWillApearEvent: header.appearEvent  ,  outputProfileImage: self.outputProfileImage.asObservable() )
@@ -322,7 +322,7 @@ extension OtherProfileVC :  UICollectionViewDataSource , UICollectionViewDelegat
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CustomHeaderCollectionView.identifier, for: indexPath) as? CustomHeaderCollectionView  else {
+        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ProfileHeaderView.identifier, for: indexPath) as? ProfileHeaderView  else {
             
             return UICollectionViewCell()
         }

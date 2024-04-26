@@ -250,14 +250,7 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         super.prepareForReuse()
         
         
-       
-        UIView.performWithoutAnimation {
-            contentLabel.appendReadmore(after: "", trailingContent: .readmore)
-            bottomView.invalidateIntrinsicContentSize()
-            invalidateIntrinsicContentSize()
-            
-            
-        }
+
         
 
         

@@ -16,10 +16,10 @@ class CommuVM : ViewModel {
     var disposeBag = DisposeBag()
     
     
-    var reload = PublishSubject<Bool>()
+    var reload = PublishSubject<Int>()
     
     struct Input {
-        let viewWillApearEvent : Observable<Void>
+        let viewWillAppearEvent : Observable<Void>
         let likesButtonTapped : Observable<[String : Bool]>
         let comentsTapped : Observable<String>
         let addButtonTapped : Observable<Void>
@@ -43,6 +43,8 @@ class CommuVM : ViewModel {
         
         
     }
+    
+    private let paginationCount = 4
     
     var likesCount : [ String : [ String ] ] = [:]
     
@@ -69,18 +71,20 @@ class CommuVM : ViewModel {
         
         let output = Output()
         
-        input.refreshControl.subscribe(onNext: { _ in
-            self.feedModels = []
-            self.firebaseService.query = nil
+        input.refreshControl.subscribe(onNext: { [weak self] _  in
             
-            DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) { [weak self] in
-                self?.reload.onNext(true)
+            self?.resetFirebaseValue()
+            
+          
+            DispatchQueue.main.asyncAfter(wallDeadline: .now() + 0.6) {}
+                
+                self?.reload.onNext(4)
                 
                 
-                    }
+                    
             
             
-        }).disposed(by: disposeBag)
+        }).disposed(by: self.disposeBag)
         
         input.profileTapped.subscribe(onNext : { feedUid in
             
@@ -103,11 +107,33 @@ class CommuVM : ViewModel {
             
         }).disposed(by: disposeBag)
         
-        input.deleteFeed.subscribe(onNext: { feedUid in
-            self.firebaseService.deleteFeed(feedUid: feedUid).subscribe({ event in
+        input.deleteFeed.subscribe(onNext: { [weak self] feedUid in
+            self?.firebaseService.deleteFeed(feedUid: feedUid).subscribe({ event in
                 switch(event){
                 case.completed:
-                    self.reload.onNext(true)
+                    var count : Int = 4
+                    if let feedModels = self?.feedModels{
+                        
+                        
+                        
+                        
+                        
+                        for i in 0..<feedModels.count{
+                            if(feedModels[i].feedUid == feedUid){
+                                self?.feedModels.remove(at: i)
+                                count = feedModels.count
+                                
+                            }
+                        }
+                        
+                    }
+                    
+                    self?.resetFirebaseValue()
+                    
+                    self?.reload.onNext(count)
+                    
+                    
+                    
                     
                 case.error(let err):
                     print(err)
@@ -122,19 +148,20 @@ class CommuVM : ViewModel {
             
         }).disposed(by: disposeBag)
         
-        input.comentsTapped.subscribe(onNext: { feedUid in
+        input.comentsTapped.subscribe(onNext: { [weak self] feedUid in
 
             var feed : FeedModel?
-            _ = self.feedModels.map({  if($0.feedUid == feedUid){ feed = $0}  })
+            
+            _ = self?.feedModels.map({  if($0.feedUid == feedUid){ feed = $0}  })
             
             guard let feed = feed else { return }
             
-            self.coordinator?.pushComents(coments: feed.coments ?? [] , feedUid : feedUid , feedUuid: feed.uuid )
+            self?.coordinator?.pushComents(coments: feed.coments ?? [] , feedUid : feedUid , feedUuid: feed.uuid )
             
             
         }).disposed(by: disposeBag)
         
-        input.likesButtonTapped.throttle(.seconds(2),  scheduler: MainScheduler.instance).subscribe(onNext: { dic in
+        input.likesButtonTapped.throttle(.seconds(1),  scheduler: MainScheduler.instance).subscribe(onNext: { dic in
             guard let feedUid = dic.keys.first else {return}
             guard let like = dic.values.first else {return}
             self.firebaseService.updateFeedLikes(feedUid: feedUid  , uuid: authUid, like: like ).subscribe({ event in
@@ -165,25 +192,38 @@ class CommuVM : ViewModel {
             
         }).disposed(by:disposeBag )
         
-        input.addButtonTapped.subscribe(onNext: { _ in
+        input.addButtonTapped.subscribe(onNext: { [weak self] _ in
             
             
-            self.coordinator?.pushAddFeedVC()
+            self?.coordinator?.pushAddFeedVC()
            
             
         }).disposed(by: disposeBag)
         
         
-        input.viewWillApearEvent.subscribe(onNext: { event in
+        input.viewWillAppearEvent.subscribe(onNext: { [weak self] _ in
+            var count = 4
+        
+            if let cnt = self?.feedModels.count {
+                if(cnt != 0 ){
+                    count = cnt
+                }
+            }
             
-            self.reload.onNext(true)
+            self?.resetFirebaseValue()
+            
+            self?.reload.onNext(count)
+            
+            
             
         }).disposed(by: disposeBag)
         
         
-        self.reload.subscribe(onNext: { _ in
+        self.reload.subscribe(onNext: { [self] count in
             
-            self.firebaseService.getFeedPagination(feeds: self.feedModels).subscribe({ event in
+            
+            
+            self.firebaseService.getFeedPagination(feeds: self.feedModels, pagesCount: count).subscribe({ event in
                 switch(event){
                     
                     
@@ -192,9 +232,7 @@ class CommuVM : ViewModel {
 
                     for i in 0..<feeds.count {
                         
-                        if self.likesCount[ feeds[i].feedUid ] == nil{
-                            self.likesCount[ feeds[i].feedUid ] = feeds[i].likes
-                        }
+                        self.likesCount[feeds[i].feedUid ] = feeds[i].likes
                     }
                     self.feedModels = feeds
                     
@@ -226,11 +264,11 @@ class CommuVM : ViewModel {
             
         }).disposed(by: disposeBag)
         
-        input.paging.subscribe(onNext:{ event in
+        input.paging.subscribe(onNext:{ [weak self] event in
             
             if(event){
 
-                self.reload.onNext(true)
+                self?.reload.onNext(4)
             }
             
             
@@ -336,6 +374,11 @@ class CommuVM : ViewModel {
     
     
     
+    
+    func resetFirebaseValue(){
+        self.feedModels = []
+        self.firebaseService.query = nil
+    }
     
     
     

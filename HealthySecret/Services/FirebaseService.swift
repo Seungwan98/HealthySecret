@@ -1159,23 +1159,23 @@ extension FirebaseService {
     
     
     
-    func getFeedPagination(feeds:[FeedModel]) -> Single<[FeedModel]> {
-        return Single<[FeedModel]>.create { single in
+    func getFeedPagination(feeds:[FeedModel] , pagesCount : Int) -> Single<[FeedModel]> {
+        return Single<[FeedModel]>.create { [weak self] single in
             var outputFeeds = feeds
             
             print("getFeedPagination")
-            if let query = self.query {
+            if let query = self?.query {
                 //There is last query
-                self.requestQuery = query
+                self?.requestQuery = query
             } else {
                 
                 //It's First query request
-                self.requestQuery = self.db.collection("HealthySecretFeed")
+                self?.requestQuery = self?.db.collection("HealthySecretFeed")
                     .order(by: "date" , descending: true )
-                    .limit(to: 4)
+                    .limit(to: pagesCount)
             }
             
-            self.requestQuery?.getDocuments{ [weak self] (snapshot, error) in
+            self?.requestQuery?.getDocuments{ [weak self] (snapshot, error) in
                 guard let self = self else { return }
                 
                 guard let snapshot = snapshot,
@@ -1187,7 +1187,7 @@ extension FirebaseService {
                 
                 let next = self.db.collection("HealthySecretFeed")
                     .order(by: "date" , descending: true)
-                    .limit(to: 2)
+                    .limit(to: pagesCount)
                     .start(afterDocument: lastDocument)
                 
                 //Set next query
@@ -1219,7 +1219,7 @@ extension FirebaseService {
                             outputFeeds[i].nickname = user.name
                             
                             if( i+1 >= outputFeeds.count){
-                                print("나간다")
+
                                 single(.success(outputFeeds))
                                 
                             }
@@ -1249,7 +1249,7 @@ extension FirebaseService {
     func getFeedFeedUid(feedUid : String) -> Single<FeedModel>{
         return Single.create { single in
             
-            self.db.collection("HealthySecretFeed").document(feedUid).getDocument{ doc,err in
+            self.db.collection("HealthySecretFeed").document(feedUid).getDocument{ [weak self] doc,err in
                 if let err = err{
                     single(.failure(err))
                 }else{
@@ -1258,7 +1258,7 @@ extension FirebaseService {
                             let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
                             var feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
                             
-                            self.getDocument(key: feed.uuid).subscribe({ event in
+                            self?.getDocument(key: feed.uuid).subscribe({ event in
                                 print("getDoc")
                                 switch(event){
                                 case.success(let user):
@@ -1275,7 +1275,7 @@ extension FirebaseService {
                                 }
                                 
                                 
-                            }).disposed(by: self.disposeBag )
+                            }).disposed(by: self!.disposeBag )
                             
                         }catch{
                             

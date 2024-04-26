@@ -169,8 +169,8 @@ class ProfileHeaderView : UICollectionReusableView  {
             
             profileImage.widthAnchor.constraint(equalToConstant: 120),
             profileImage.heightAnchor.constraint(equalToConstant: 120),
-            profileImage.centerXAnchor.constraint(equalTo: self.centerXAnchor ),
             profileImage.topAnchor.constraint(equalTo: self.topAnchor , constant: 40 ),
+            profileImage.leadingAnchor.constraint(equalTo: self.leadingAnchor , constant: 40 ),
             
             
             introduceLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor , constant: 20 ),

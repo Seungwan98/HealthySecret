@@ -122,9 +122,13 @@ class ProfileFeedVM : ViewModel {
             
         }).disposed(by: disposeBag)
         
-        input.likesButtonTapped.throttle(.seconds(2) , latest: true  ,  scheduler: MainScheduler.instance).subscribe(onNext: { like in
+        input.likesButtonTapped.throttle(.seconds(1) , latest: true  ,  scheduler: MainScheduler.instance).subscribe(onNext: { like in
           
             guard let feedUid = self.feedUid else {return}
+            
+            
+            
+            print("\(feedUid)  \(authUid)  \(like)")
             
             self.firebaseService.updateFeedLikes(feedUid: feedUid  , uuid: authUid, like: like ).subscribe({ event in
                 switch(event){

@@ -14,6 +14,47 @@ import RxSwift
 import Kingfisher
 
 class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDelegate  , UITableViewDataSource, UITableViewDelegate {
+    
+    
+    func getCell(idx : Int) -> FeedCollectionCell {
+        
+        var cell =  FeedCollectionCell()
+
+        if(idx == 0 ){
+            
+            
+            cell =  tableView.dequeueReusableCell(withIdentifier: "firstCell") as! FeedCollectionCell
+
+        }
+        else if(idx + 1 == self.feeds.count){
+            
+            cell = FeedCollectionCell()
+
+            print("lastCell")
+        }
+        else{
+            
+            cell = tableView.dequeueReusableCell(withIdentifier: "FeedCollectionCell") as! FeedCollectionCell
+
+        }
+        
+        return cell
+        
+    }
+    
+    
+    func tolikeCount(idx : String) -> Bool{
+        
+        if self.likesCount[idx]?.contains(self.authUid) == true {
+            
+            return true
+            
+        }else{
+            return false
+        }
+    }
+                           
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
                 
         return self.feeds.count
@@ -22,27 +63,29 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        
+       
         let uid = UserDefaults.standard.string(forKey: "uid")
         
-        var cell =  FeedCollectionCell()
         
         
-        if(indexPath.row == 0 || indexPath.row + 1 == self.feeds.count){
-            
-            
-            cell =  FeedCollectionCell()
-
-        }else {
-            
-            cell = tableView.dequeueReusableCell(withIdentifier: "FeedCollectionCell") as! FeedCollectionCell
-
-        }
-        
+       
+        let cell = getCell(idx: indexPath.row)
         
         let item = feeds[indexPath.row]
+
+        
+        cell.commuVC = self
+        
+        cell.delegate = self
+
+        cell.feedUid = item.feedUid
+        
+        cell.beforeContent = item.contents
+
+
+
             
-            cell.commuVC = self
+            
             
             if(uid!.contains(item.uuid)){
                 
@@ -51,32 +94,23 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
                 cell.own = false
             }
             
-            cell.mainImage.image = nil
+          
+        let val = tolikeCount(idx: item.feedUid)
+        
+        cell.likesButton.isSelected = val
+        cell.isTouched = val
+          
             
-            if self.likesCount[item.feedUid]?.contains(self.authUid) == true {
-                
-                cell.likesButton.isSelected = true
-                cell.isTouched = true
-                
-            }else{
-                
-                cell.likesButton.isSelected = false
-                cell.isTouched = false
-                
-            }
             
-            cell.feedUid = item.feedUid
-            
-            cell.delegate = self
             
             cell.setLikesLabel(count: self.likesCount[item.feedUid]?.count ?? 0 )
             
             cell.nicknameLabel.text = item.nickname
             
-            
             cell.comentsLabel.text = "댓글 \(String(describing: item.coments?.count ?? 0))개 보기"
             
-            
+            cell.dateLabel.text = CustomFormatter.shared.getDifferDate(date: item.date)
+
             
             let url = URL(string: item.profileImage ?? "")
             
@@ -97,7 +131,8 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
                         .transition(.fade(0.5)),  // 애니메이션 효과
                         .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
                     ])
-                
+                cell.profileImage.layer.cornerRadius = 20
+
                 
             }
             
@@ -105,40 +140,51 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             
             
             
-            cell.profileImage.layer.cornerRadius = 20
-            
-            
-            
-            
+          
+          
+       
             
             
             DispatchQueue.main.async {
+
+//
                 
-                //                cell.contentLabel.appendReadmore(after: item.contents, trailingContent: .readmore)
-                //                cell.bottomView.invalidateIntrinsicContentSize()
-                //cell.invalidateIntrinsicContentSize()
+                
+                let placeholdImage = UIImageView()
+                let xPos = cell.scrollView.frame.width * CGFloat(0)
                 
                 var idx = 0
+                
+                placeholdImage.frame = CGRect(x: xPos, y: 0, width: cell.scrollView.bounds.width, height: cell.scrollView.bounds.height)
+                
+                placeholdImage.backgroundColor = .white
+                
+                cell.scrollView.addSubview(placeholdImage)
+               
+                
                 _ = item.mainImgUrl.map{
                     
+
                     if let url = URL(string: $0 ) {
+                        let placeholdImage = UIImage()
+                      
                         let image = UIImageView()
                         let processor = DownsamplingImageProcessor(size: CGSize(width: cell.contentView.bounds.width , height: cell.scrollView.bounds.height) ) // 크기 지정 다운 샘플링
                         |> RoundCornerImageProcessor(cornerRadius: 0) // 모서리 둥글게
                         image.kf.indicatorType = .activity  // indicator 활성화
                         image.kf.setImage(
                             with: url,  // 이미지 불러올 url
-                            placeholder: UIImage(),  // 이미지 없을 때의 이미지 설정
+                            placeholder: placeholdImage ,  // 이미지 없을 때의 이미지 설정
                             options: [
                                 .processor(processor),
                                 .scaleFactor(UIScreen.main.scale),
-                                .transition(.fade(0.5)),  // 애니메이션 효과
+                                .transition(.none),  // 애니메이션 효과
                                 .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
                             ])
                         
                         
                         
-                        let xPos = cell.scrollView.frame.width * CGFloat(idx)
+                        
                         image.frame = CGRect(x: xPos, y: 0, width: cell.scrollView.bounds.width, height: cell.scrollView.bounds.height)
                         
                         cell.scrollView.addSubview(image)
@@ -152,9 +198,9 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
                     
                 }
                 
-                cell.dateLabel.text = CustomFormatter.shared.getDifferDate(date: item.date)
+
                 
-                
+                cell.setContentLabel()
                 
                 if(idx > 1){
                     
@@ -166,7 +212,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
                     
                 }
             }
-        
+            
         
         return cell
         
@@ -219,6 +265,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     var profileTapped = PublishSubject<String>()
     
     var isPaging = false
+    
     var isLastPage = false
     
     var isRefresh = false
@@ -334,6 +381,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
         
+        UIView.setAnimationsEnabled(true)
         
         
         
@@ -358,6 +406,8 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(FeedCollectionCell.self, forCellReuseIdentifier: "FeedCollectionCell")
+        tableView.register(FeedCollectionCell.self, forCellReuseIdentifier: "firstCell")
+        tableView.register(FeedCollectionCell.self, forCellReuseIdentifier: "lastCell")
        
 
         
@@ -390,7 +440,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         
         
         
-        let input = CommuVM.Input( viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), likesButtonTapped: likesButtonTapped, comentsTapped: self.comentsTapped.asObservable() , addButtonTapped: self.addButton.rx.tap.asObservable() , deleteFeed: deleteFeed , reportFeed : reportFeed , updateFeed: updateFeed , paging : paging.asObservable() , profileTapped : profileTapped.asObservable(), refreshControl: self.refreshControl.rx.controlEvent(.valueChanged).asObservable() )
+        let input = CommuVM.Input( viewWillAppearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), likesButtonTapped: likesButtonTapped, comentsTapped: self.comentsTapped.asObservable() , addButtonTapped: self.addButton.rx.tap.asObservable() , deleteFeed: deleteFeed , reportFeed : reportFeed , updateFeed: updateFeed , paging : paging.asObservable() , profileTapped : profileTapped.asObservable(), refreshControl: self.refreshControl.rx.controlEvent(.valueChanged).asObservable() )
         
         
         guard let output = viewModel?.transform(input: input, disposeBag: disposeBag) else {return}
@@ -421,20 +471,10 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         }).disposed(by: disposeBag)
         
         
-        
-        
-//        output.feedModel.bind(to: self.tableView.rx.items(cellIdentifier: "FeedCollectionCell" , cellType: FeedCollectionCell.self )){
-//            index,item,cell in
-//            
-//            
-//          
-//                      
-//            
-//        }.disposed(by: disposeBag)
+
         
         output.feedModel.subscribe(onNext:{ feeds in
             
-            print("\(feeds) get FeedModel")
             self.feeds = feeds
             
             self.tableView.reloadData()

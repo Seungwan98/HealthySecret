@@ -231,7 +231,10 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
     var own : Bool?
     
     func setLikesLabel(count : Int){
-        self.likesCount = likesCounts.count
+        
+        
+        
+        self.likesCount = count
         self.likesLabel.text = "좋아요 \(count)개"
         
     }
@@ -293,21 +296,27 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
         
         sender.isSelected = !sender.isSelected
         
+     
+        var cnt : Int
         if sender.isSelected {
-            let cnt = (self.likesCount ?? 0) + 1
-            setLikesLabel(count: cnt)
-            isTouched = true
-            self.likesButtonTapped.onNext(true)
+            
+            cnt = (self.likesCount ?? 0) + 1
+           
+            
+            self.isTouched = true
+   
         }else {
-            let cnt = (self.likesCount ?? 1) - 1
-            setLikesLabel(count: cnt)
+            cnt = (self.likesCount ?? 1) - 1
+            
 
-            isTouched = false
-            self.likesButtonTapped.onNext(false)
+            self.isTouched = false
 
         }
         
-        
+        self.likesButtonTapped.onNext(self.isTouched!)
+        self.likesCount = cnt
+        setLikesLabel(count: cnt)
+
         
         
     }
@@ -345,7 +354,8 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
-        
+        UIView.setAnimationsEnabled(true)
+
         
         
         
@@ -353,7 +363,8 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
     }
     override func viewWillDisappear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: true)
-        
+        UIView.setAnimationsEnabled(false)
+
     }
     
     
@@ -690,7 +701,9 @@ extension ProfileFeedVC : UIImagePickerControllerDelegate , UINavigationControll
         alert.addAction(cancel)
         alert.view.tintColor = .black
 
-        if(true){
+        guard let own = self.own else {return}
+        
+        if(own){
             let declaration = UIAlertAction(title: "삭제하기", style: .default) { [weak self] _ in
                 //
             }
@@ -699,6 +712,7 @@ extension ProfileFeedVC : UIImagePickerControllerDelegate , UINavigationControll
             }
             
 
+            
             declaration.setValue(UIColor.red, forKey: "titleTextColor")
             alert.addAction(update)
             alert.addAction(declaration)
