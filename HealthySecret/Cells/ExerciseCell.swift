@@ -30,6 +30,8 @@ class ExerciseCell : UITableViewCell {
     func layoutToEdit(){
         
         //layoutToEdit
+        //
+        //
         
         self.contentView.addSubview(self.name)
         self.contentView.addSubview(self.time)
