@@ -18,12 +18,15 @@ class ExerciseVM : ViewModel {
     
     struct Input {
         let viewWillApearEvent : Observable<Void>
-        let cellTapped : Observable<Data>
+        let cellTapped : Observable<ExerciseDtoData>
+        let searchText : Observable<String>
         
     }
     
     struct Output {
-        let exerciseArr = BehaviorSubject<[Data]>(value: [] )
+        let exerciseArr = BehaviorSubject<[ExerciseDtoData]>(value: [] )
+        let checkController = BehaviorSubject<Bool>(value: false)
+        let titleLabelText = BehaviorSubject<String>(value: "")
 
     }
     
@@ -39,7 +42,7 @@ class ExerciseVM : ViewModel {
     }
     
     
-    var exerciseArr : ExerciseModel?
+    var exerciseArr : ExerciseDTO?
     
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         
@@ -52,15 +55,38 @@ class ExerciseVM : ViewModel {
                         
                         switch single{
                         case.success(let exercise):
-                            output.exerciseArr.onNext(exercise.data)
+
                             
                             
+                            input.searchText.map({ [self] text in
+                                var arr = exercise.data
+
+                                print("\(text) text")
+                                var check : Bool = false
+                                if text.isEmpty{
+                                    check = false
+                                    output.exerciseArr.onNext(arr)
+
+                                }else{
+                                    arr = arr.filter{ $0.name.localizedCaseInsensitiveContains(text) }
+                                    print(arr)
+                                    output.exerciseArr.onNext(arr)
+                                    check = true
+                                    
+                                }
+                                
+                                
+                                
+                                return check
+                            }).bind(to: output.checkController).disposed(by: disposeBag)
                             
                             
                         case.failure(_):
                             print("exercise fail")
                         }
                         
+                
+                
                         
                     }).disposed(by: disposeBag)
             
@@ -71,12 +97,16 @@ class ExerciseVM : ViewModel {
         
         input.cellTapped.subscribe(onNext:{
             model in
+            
             self.coordinator?.pushDetailVC(model : model)
+            
+            
             
         }).disposed(by: disposeBag)
      
         
-        
+        output.titleLabelText.onNext(UserDefaults.standard.string(forKey: "date") ?? "")
+
     
      
         

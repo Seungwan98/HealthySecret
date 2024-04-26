@@ -30,11 +30,12 @@ class CalendarCoordinator: Coordinator {
         let firebaseService = FirebaseService()
         let viewModel = CalendarVM(coordinator: self, firebaseService: firebaseService)
         let calendarViewController = CalendarViewController(viewModel: viewModel)
-        calendarViewController.view.backgroundColor =  UIColor(red: 0.09, green: 0.176, blue: 0.031, alpha: 1)
+        calendarViewController.view.backgroundColor =  .white
+        calendarViewController.hidesBottomBarWhenPushed = true
 
         
         self.navigationController.navigationBar.topItem?.title = ""
-        self.navigationController.navigationBar.tintColor = .white
+        self.navigationController.navigationBar.tintColor = .black
         
         
         
@@ -42,6 +43,19 @@ class CalendarCoordinator: Coordinator {
         
         self.navigationController.pushViewController(calendarViewController, animated: true)
         
+    }
+    
+    func pushAddDiaryVC(pickDate : String , diarys : [Diary]){
+        let firebaseService = FirebaseService()
+        let viewModel = CalendarVM(coordinator: self, firebaseService: firebaseService)
+        viewModel.pickDate = pickDate
+        viewModel.diarys = diarys
+        let viewController = AddDiaryVC(viewModel: viewModel)
+        viewController.view.backgroundColor =  .white
+        
+     
+        self.navigationController.pushViewController(viewController, animated: true)
+
     }
     
     func BacktoDiaryVC(){

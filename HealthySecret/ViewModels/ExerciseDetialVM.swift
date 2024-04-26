@@ -12,7 +12,7 @@ import RxSwift
 
 class ExerciseDetailVM : ViewModel {
     
-    var model : Data?
+    var model : ExerciseDtoData?
     
     var disposeBag = DisposeBag()
     
@@ -65,7 +65,7 @@ class ExerciseDetailVM : ViewModel {
         
         input.minuteTextField.subscribe(onNext: { text in
             time = text
-            finalCalorie = self.getCalorie(text: text , weight : weight as! Int )
+            finalCalorie = self.getCalorie(text: text , weight : weight as! Int) 
             output.guessLabel.onNext(finalCalorie)
             
             output.buttonEnable.onNext(text.isEmpty)
@@ -83,7 +83,7 @@ class ExerciseDetailVM : ViewModel {
             
             let exercise = Exercise(date: UserDefaults.standard.string(forKey: "date") ?? "", name: name , time: time  , finalCalorie : finalCalorie , memo : memo  , key: UUID().uuidString , exerciseGram: exerciseGram)
 
-            self.firebaseService.addExercise(exercise: exercise, key: UserDefaults.standard.value(forKey: "email") as! String).subscribe{ com in
+            self.firebaseService.addExercise(exercise: exercise, key: UserDefaults.standard.value(forKey: "uid") as! String).subscribe{ com in
                 switch com {
                 case .completed:
                     self.coordinator?.back()
@@ -101,13 +101,12 @@ class ExerciseDetailVM : ViewModel {
         return output
     }
     
-    
     func getCalorie(text : String , weight : Int ) -> String {
         let weight = Double(weight)
         let min = Double(text) ?? 0
-        let met = Double(model!.exerciseGram) ?? 0
-        let result =  String(( ( met * (3.5 *  weight * min  )) / 1000 ) * 5 )
-        return result
+        let met = Double(model!.exerciseGram ) ?? 0
+        let result =  lroundl(( ( met * (3.5 *  weight * min  )) / 1000 ) * 5 )
+        return String(result)
         
         
     }

@@ -10,6 +10,7 @@ import RxSwift
 import RxRelay
 import RxCocoa
 import Foundation
+import FirebaseAuth
 
 class LoginVM : ViewModel {
 
@@ -30,6 +31,8 @@ class LoginVM : ViewModel {
         let loginButtonTapped : Observable<Void>
         let signUpButtonTapped : Observable<Void>
         let kakaoLoginButtonTapped : Observable<Void>
+        let appleLogin : Observable<OAuthCredential>
+
 
     }
     
@@ -56,6 +59,53 @@ class LoginVM : ViewModel {
             self.loginCoordinator?.pushSignUpVC()
             
         }).disposed(by: disposeBag)
+        
+        input.appleLogin.subscribe(onNext: { credential in
+            
+            
+            UserDefaults.standard.set("apple",forKey: "loginMethod")
+            
+            
+            print("\(credential)  credential")
+
+            Auth.auth().signIn(with: credential) { authResult, error in
+                if let error = error {
+                    print("Error Apple sign in: \(error.localizedDescription)")
+                    
+                    return
+                }
+                
+                
+                guard let authUser = authResult?.user else { return }
+       
+                UserDefaults.standard.set(authUser.email, forKey: "email")
+                UserDefaults.standard.set( authUser.uid  , forKey: "uid")
+                
+                
+                self.firebaseService?.getDocument(key: authUser.uid).subscribe({ event in
+                    switch(event){
+                    case.success(let user):
+                        
+                        
+                        UserDefaults.standard.set(user.name , forKey: "name")
+                        UserDefaults.standard.set( user.profileImage , forKey: "profileImage")
+                        self.loginCoordinator?.login()
+                        
+                    case.failure(_):
+                        UserDefaults.standard.set(authUser.providerID, forKey: "name")
+                        
+                        self.loginCoordinator?.pushSignUpVC()
+                        
+                    }
+                    
+                    
+                    
+                }).disposed(by: disposeBag)
+            }
+            
+            
+        }).disposed(by: disposeBag)
+        
             
         input.loginButtonTapped.subscribe(onNext: {
             
@@ -69,6 +119,7 @@ class LoginVM : ViewModel {
 
                 },
                  onError: { error in
+                     print("error")
 
 
                  }).disposed(by: disposeBag)
@@ -79,22 +130,31 @@ class LoginVM : ViewModel {
         
         input.kakaoLoginButtonTapped.subscribe(onNext : {
             _ in
+            UserDefaults.standard.set("kakao",forKey: "loginMethod")
+
             print("touch")
+            
             self.kakaoService?.kakaoLogin().subscribe({
                 event in
                 switch event{
                 case .success( let inform ):
-                    print("\(inform) 인폼")
+                    
+          
+                    print(inform)
                 
                         self.firebaseService?.signIn(email:inform["email"] ?? "" ,
-                                                     pw:inform["pw"] ?? "" ).subscribe({event in
+                                                     pw:inform["pw"] ?? "" ).subscribe({ event in
                             switch event{
                             case .completed:
                                 self.loginCoordinator?.login()
                                 
                             case .error(_):
+                                UserDefaults.standard.set("kakao",forKey: "loginMethod")
                                 UserDefaults.standard.set(inform["email"], forKey: "email")
+                                UserDefaults.standard.set(inform["name"], forKey: "name")
                                 UserDefaults.standard.set(inform["pw"], forKey: "password")
+                                
+                                
                                 self.loginCoordinator?.pushSignUpVC()
                             }
                             

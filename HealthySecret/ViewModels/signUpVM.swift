@@ -40,6 +40,7 @@ class SignUpVM : ViewModel {
     
     struct Output {
 
+        var nextButtonEnable = BehaviorSubject<Bool>(value: false)
         
     }
     
@@ -56,15 +57,42 @@ class SignUpVM : ViewModel {
     
     
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
-        let id : String = UserDefaults.standard.value(forKey: "email") as! String
-        let password : String = UserDefaults.standard.value(forKey: "password") as! String
+        let loginMethod = UserDefaults.standard.string(forKey: "loginMethod") ?? ""
+        let id : String = UserDefaults.standard.string(forKey: "email") ?? ""
+        let password : String = UserDefaults.standard.string(forKey: "password") ?? ""
+        let name : String = UserDefaults.standard.string(forKey: "name") ?? ""
+        let uuid = UserDefaults.standard.string(forKey: "uid") ?? ""
+
         
-        var userModel = UserModel(id: id , tall: "", age: "", sex: "", calorie: 0 , weight: 0.0 , ingredients: []  , exercise: [] )
         
         
-        input.nextButtonTapped.subscribe(onNext: {
+        var userModel = UserModel( uuid: uuid , id: id, name: name ,  tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, ingredients: [], exercise: [] , diarys: [] )
+        
+        
+        let output = Output()
+
+        
+        var isValid: Observable<Bool> {
+               return Observable
+                .combineLatest(input.ageInput, input.goalWeight , input.sexInput , input.startWeight , input.tallInput , input.exerciseInput)
+                   .map { age, goal , sex , start , tall , exercise in
+                       
+                       return !age.isEmpty && !goal.isEmpty && (sex < 2) && !start.isEmpty && !tall.isEmpty && (exercise < 3 )
+                   }
+           }
+        
+        
+        
+        isValid.subscribe(onNext: { event in
+            output.nextButtonEnable.onNext(event)
             
+        }).disposed(by: disposeBag)
         
+        input.nextButtonTapped.subscribe(onNext: { _ in
+            LoadingIndicator.showLoading()
+            print("tappe")
+            
+            
             
             input.sexInput.subscribe(onNext: {
                 sex
@@ -72,9 +100,10 @@ class SignUpVM : ViewModel {
                 userModel.sex = self.defaultSex[sex]
                 input.exerciseInput.subscribe(onNext: {
                     exercise in
-                    
+                    userModel.activity = exercise
                     input.goalWeight.subscribe(onNext: {
                         goal in
+                        userModel.goalWeight = Int(goal) ?? 0
                         userModel.calorie = Int(goal)! * self.defaultCalorie[sex][exercise]
                         
                     }).disposed(by: disposeBag)
@@ -98,57 +127,95 @@ class SignUpVM : ViewModel {
             
             input.startWeight.subscribe(onNext: {
                 start in print("\(start) startWeight " )
-                userModel.weight = Double(start) ?? 0.0
+                userModel.nowWeight = Int(start) ?? 0
             }).disposed(by: disposeBag)
             
             
-            self.firebaseService.signUp(email: id  , pw: password ).subscribe({event in
-                switch event{
-                case .completed:
-                    
-                    
-                    
-                    
-                    
-                    self.firebaseService.signIn(email: id, pw: password).subscribe({
-                        event in
-                        switch event{
-                        case .completed:
+            if loginMethod == "kakao" || loginMethod == "normal" {
+                self.firebaseService.signUp(email: id  , pw: password ).subscribe({event in
+                    switch event{
+                    case .completed:
+                        
+                        self.firebaseService.signIn(email: id, pw: password).subscribe(
                             
-                            self.firebaseService.createUsers(model: userModel).subscribe({
-                                event in
-                                switch event{
-                                case .completed:
-                                    print("cim")
-                                case .error(_):
-                                    print("error")
-                                }
+                            
+                            
+                            onCompleted: {
+                                let uuid = UserDefaults.standard.string(forKey: "uid") ?? ""
+                                userModel.uuid = uuid
+
                                 
+                                
+                                print("login")
+                                self.firebaseService.createUsers(model: userModel).subscribe({
+                                    event in
+                                    switch event{
+                                    case .completed:
+                                        
+                                        LoadingIndicator.hideLoading()
+                                        self.coordinator?.login()
+
+
+                                    case .error(_):
+                                        LoadingIndicator.hideLoading()
+                                        self.coordinator?.pushSignUpVC()
+
+                                        print("error")
+                                    }
+                                    
+                                    
+                                }).disposed(by: disposeBag)
+                                
+
+
+                                
+                            },
+                            onError: { error in
+                                print(error)
                                 
                             }).disposed(by: disposeBag)
-                            
-                            
-                            //self.coordinator?.login()
-                        case .error(_): break
-                            
-                        }
+                        
+                      
                         
                         
-                    }).disposed(by: disposeBag)
+                    case .error(_): break
+                        
+                    }
                     
-                case .error(_): break
                     
-                }
+                    
+                }).disposed(by: disposeBag)
+            }
+            else if(loginMethod == "apple"){
+                print("apple")
+                self.firebaseService.createUsers(model: userModel).subscribe({
+                    event in
+                    switch event{
+                    case .completed:
+                     
+                        self.coordinator?.login()
+                        LoadingIndicator.hideLoading()
+
+                            
+                      
+                        
+                    case .error(_):
+                        LoadingIndicator.hideLoading()
+
+                        print("error")
+                    }
+                    
+                    
+                }).disposed(by: disposeBag)
                 
                 
-                
-            }).disposed(by: disposeBag)
+            }
+            
                 
 
             
         }).disposed(by: disposeBag)
        
-        let output = Output()
         
         
      

@@ -29,7 +29,11 @@ class IngredientsVM : ViewModel {
     
     var filteredNumbersArr : [String] = []
     
+    var filteredIngredientsArr : [Row] = []
+    
     var realIndex : String?
+    
+    var lastArr : [Row] = []
     
     
     
@@ -51,85 +55,67 @@ class IngredientsVM : ViewModel {
         
         let output = Output()
         
-    
         
         
-        input.rightButtonTapped.subscribe(onNext: {
-            print("tap")
-         
-            let meal = UserDefaults.standard.string(forKey: "meal")
-            let date = UserDefaults.standard.string(forKey: "date")
-            let key = UserDefaults.standard.string(forKey: "email")
-                
-
-                    
-            _ = self.likes.map({ (key , value) in
-                    if value == 1 {
-                        self.filteredNumbersArr.append(key)
-
-                        print("\(self.likes) button")
-                        if let idx = self.ingredientsArr.firstIndex(where: { $0.num == key }){
-                            self.filteredArr.append(self.ingredientsArr[idx])
-                        }
-                        
-                    }
-                })
-
-            self.firebaseService.addIngredients(meal: meal ?? "" , date: date ?? "" , key: key ?? "" , mealArr : self.filteredNumbersArr ).subscribe({
-                event in
-                switch event{
-                case.completed:
-                    self.coordinator?.backToDiaryVC()
-
-                case .error(_):
-                    print("error")
-                }
-                
-                
-                
-            }).disposed(by: disposeBag)
-
-                
-            
-        
-            
-        }).disposed(by: disposeBag)
-        
-        
-        
-        
+       
         
         input.viewWillAppear.subscribe(onNext: { [self] in
-            print("appear")
+                //  print("appear")
+            
             self.firebaseService.getAllFromStore { [self]
                 parsed in self.ingredientsArr = parsed
-            }
-            
-            if let userEmail = UserDefaults.standard.string(forKey: "email") {
-                self.firebaseService.getDocument(key: userEmail).subscribe( { event in
-                    
-                    switch event{
-                    case .success(let user):
-                        self.recentSearchArr = user.recentSearch ?? []
-                        output.recentsearchArr.onNext(self.recentSearchArr)
-                        
-                    case .failure(_):
-                        print("fail")
-                        
-                    }
-                    
-                    
-                }).disposed(by: disposeBag)
+                
+               
                 
             }
             
+            
+            
+            
+            
+     
+
+            
+            
+            
+//
+//            if let userEmail = UserDefaults.standard.string(forKey: "email") {
+//                self.firebaseService.getDocument(key: userEmail).subscribe( { event in
+//
+//                    switch event{
+//                    case .success(let user):
+//                        self.recentSearchArr = user.recentSearch ?? []
+//                        output.recentsearchArr.onNext(self.recentSearchArr)
+//
+//
+//
+//
+//
+//
+//                    case .failure(_):
+//                        print("fail")
+//
+//                    }
+//
+//
+//                }).disposed(by: disposeBag)
+//
+//            }
+            
         }).disposed(by: disposeBag)
         
+        
+        
+        input.cellTouchToDetail.subscribe(onNext : { row in
+            self.coordinator?.pushIngredientsDetail(row: row)
+            
+            
+        }).disposed(by: disposeBag)
         
         
         
         input.searchText.map({ [self] text in
-            print("\(text) text")
+          //  print("\(text) text")
             var check : Bool = false
             if text.isEmpty{
                 check = false
@@ -137,27 +123,74 @@ class IngredientsVM : ViewModel {
                 self.searchArr = self.ingredientsArr.filter{ $0.descKor.localizedCaseInsensitiveContains(text) }
                 output.ingredientsArr.onNext(self.searchArr)
                 check = true
-                
+
             }
-            
+
             return check
         }).bind(to: output.checkController).disposed(by: disposeBag)
         
         self.rightButtonEvent.bind(to: output.rightButtonEnable).disposed(by: disposeBag)
         
-            
-     
-
-            
+   
         output.titleLabelTexts.onNext([UserDefaults.standard.string(forKey: "meal") ?? "" , UserDefaults.standard.string(forKey: "date") ?? ""])
 
+      
         
-        outputPushedCheck.subscribe(onNext: {
-            _ in
-            output.testOutput.onNext(self.likes)
-            print("touch")
+        
+        
+        
+        input.rightButtonTapped.subscribe(onNext: {
+            
+         
+//            let meal = UserDefaults.standard.string(forKey: "meal")
+//            let date = UserDefaults.standard.string(forKey: "date")
+//            let key = UserDefaults.standard.string(forKey: "email")
+
+
+                    
+            _ = self.likes.map({ (key , value) in
+                    if value == 1 {
+                        self.filteredNumbersArr.append(key)
+
+                        if let idx = self.ingredientsArr.firstIndex(where: { $0.num == key }){
+                            self.filteredArr.append(self.ingredientsArr[idx])
+                        }
+
+                    }
+                })
+
+            self.filteredArr += self.lastArr
+
+
+
+
+            self.coordinator?.finish()
+            self.coordinator?.pushIngredientsVC(arr: self.filteredArr)
+
+//
+//
+//            self.firebaseService.addIngredients(meal: meal ?? "" , date: date ?? "" , key: key ?? "" , mealArr : self.filteredArr ).subscribe({
+//                event in
+//                switch event{
+//                case.completed:
+//                    self.coordinator?.backToDiaryVC()
+//
+//                case .error(_):
+//                    print("error")
+//                }
+//
+//
+//
+//            }).disposed(by: disposeBag)
+
+                
+            
+        
+            
         }).disposed(by: disposeBag)
         
+        
+     
         
         
         return output
@@ -168,7 +201,7 @@ class IngredientsVM : ViewModel {
         let rightButtonTapped : Observable<Void>
         let searchText : Observable<String>
         let likesInputArr : Observable<[String:Int]>
-  
+        let cellTouchToDetail : Observable<Row>
         
         
         
@@ -189,6 +222,8 @@ class IngredientsVM : ViewModel {
         
         
         
+        
+        
     }
     
     
@@ -200,7 +235,8 @@ class IngredientsVM : ViewModel {
     
     func cellTransform(input: CellInput , disposeBag : DisposeBag) -> CellOutput {
         let output = CellOutput()
-
+        
+    
         input.checkBoxTapped.subscribe(onNext: {
             input.idx.subscribe(onNext: {
 

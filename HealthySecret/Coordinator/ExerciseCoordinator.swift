@@ -25,12 +25,19 @@ class ExerciseCoordinator: Coordinator {
     
     required init(_ navigationController: UINavigationController ) {
         self.navigationController = navigationController
+        self.navigationController.navigationBar.tintColor = .white
+        self.navigationController.navigationBar.topItem?.title = ""
+        
     }
     
     func start() {
         let firebaseService = FirebaseService()
         let viewModel = ExerciseVM(coordinator: self, firebaseService: firebaseService)
         let ExerciseViewController = ExerciseViewController(viewModel: viewModel)
+
+        ExerciseViewController.hidesBottomBarWhenPushed = true
+        ExerciseViewController.view.backgroundColor = .white
+        
         self.navigationController.pushViewController(ExerciseViewController, animated: false)
         
         
@@ -38,19 +45,21 @@ class ExerciseCoordinator: Coordinator {
         
     }
     
-    func pushDetailVC(model : Data){
+    func pushDetailVC(model : ExerciseDtoData){
         
         let firebaseService = FirebaseService()
         let viewModel = ExerciseDetailVM(coordinator: self, firebaseService: firebaseService)
         viewModel.model = model
         let viewController = ExerciseDetailVC(viewModel: viewModel)
         
+        viewController.hidesBottomBarWhenPushed = true
 
-        self.navigationController.pushViewController(viewController, animated: true)
-
+        self.navigationController.pushViewController(viewController, animated: false)
+        
     }
     
     func back() {
+        
         finishDelegate?.coordinatorDidFinish(childCoordinator: self)
         
         

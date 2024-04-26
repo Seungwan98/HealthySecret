@@ -6,8 +6,6 @@
 	<dict>
 		<key>Promises (Playground) 1.xcscheme</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
 			<key>orderHint</key>
 			<integer>2</integer>
 		</dict>
@@ -53,71 +51,72 @@
 		</dict>
 		<key>Promises (Playground) 18.xcscheme</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
 			<key>orderHint</key>
-			<integer>42</integer>
+			<integer>19</integer>
 		</dict>
 		<key>Promises (Playground) 19.xcscheme</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
 			<key>orderHint</key>
-			<integer>43</integer>
+			<integer>20</integer>
 		</dict>
 		<key>Promises (Playground) 2.xcscheme</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
 			<key>orderHint</key>
 			<integer>3</integer>
 		</dict>
 		<key>Promises (Playground) 20.xcscheme</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
 			<key>orderHint</key>
-			<integer>44</integer>
+			<integer>21</integer>
 		</dict>
-		<key>Promises (Playground) 3.xcscheme</key>
+		<key>Promises (Playground) 21.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>47</integer>
+		</dict>
+		<key>Promises (Playground) 22.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>48</integer>
+		</dict>
+		<key>Promises (Playground) 23.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>49</integer>
+		</dict>
+		<key>Promises (Playground) 3.xcscheme</key>
+		<dict>
 			<key>orderHint</key>
 			<integer>4</integer>
 		</dict>
 		<key>Promises (Playground) 4.xcscheme</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
 			<key>orderHint</key>
 			<integer>5</integer>
 		</dict>
 		<key>Promises (Playground) 5.xcscheme</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
 			<key>orderHint</key>
 			<integer>6</integer>
 		</dict>
 		<key>Promises (Playground) 6.xcscheme</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
 			<key>orderHint</key>
 			<integer>7</integer>
 		</dict>
 		<key>Promises (Playground) 7.xcscheme</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
 			<key>orderHint</key>
 			<integer>8</integer>
 		</dict>
 		<key>Promises (Playground) 8.xcscheme</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
 			<key>orderHint</key>
 			<integer>9</integer>
 		</dict>
@@ -128,8 +127,6 @@
 		</dict>
 		<key>Promises (Playground).xcscheme</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>

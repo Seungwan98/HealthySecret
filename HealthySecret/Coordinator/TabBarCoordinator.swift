@@ -16,6 +16,7 @@ class TabBarCoordinator : Coordinator {
   
     let firebaseService = FirebaseService()
     
+    
     var navigationController: UINavigationController
     
     var finishDelegate: CoordinatorFinishDelegate?
@@ -25,7 +26,9 @@ class TabBarCoordinator : Coordinator {
     var type: CoordinatorType
         
     var tabBarController: UITabBarController
+    
     var childCoordinator: [Coordinator] = []
+    
     var tabBarItems : [UITabBarItem] = []
     
     var tabBars : [UITabBar] = []
@@ -43,29 +46,43 @@ class TabBarCoordinator : Coordinator {
         
     }
     
+    
+    
+    
     func start(){
         tabBarItems = getTabBarItems()
         let controllers : [UINavigationController] = tabBarItems.map {
             getControllers($0 , UINavigationController())
         }
         
+        
+        
         let _ = controllers.map{ self.startCoordinator( _ : $0) }
         
         startTabBarController(controllers)
+        
+       
+        //네비게이션 겹침 상황을 없애기 위해 추가.
         navigationController.setNavigationBarHidden(true, animated: false)
         
-        //self.navigationController.setNavigationBarHidden(true, animated: false)
-        
-        navigationController.viewControllers = [tabBarController]
+      
         
         
 
+        navigationController.viewControllers = [tabBarController]
+
+
+       
+
     }
-    
+  
     
     func startTabBarController( _ controllers : [UINavigationController] ){
         // home의 index로 TabBar Index 세팅
         // TabBar 스타일 지정
+        
+    
+    
         self.tabBarController.setViewControllers( controllers , animated: true)
         self.tabBarController.view.backgroundColor = .systemBackground
         self.tabBarController.tabBar.backgroundColor = .systemBackground
@@ -75,39 +92,53 @@ class TabBarCoordinator : Coordinator {
     
     
     func getTabBarItems() -> [UITabBarItem] {
-        let firstItem = UITabBarItem(title: "홈" , image: UIImage.init(systemName: "house") , tag:0)
-        let secondItem = UITabBarItem(title: "다이어리" , image: UIImage.init(systemName: "fork.knife") , tag:1)
-        let thridItem = UITabBarItem(title: "test" , image: UIImage.init(systemName: "fork.knife") , tag:2)
         
-        return [firstItem , secondItem , thridItem]
+        let firstItem = UITabBarItem(title: "홈" , image: UIImage.init(systemName: "house")  , tag:0)
+        let secondItem = UITabBarItem(title: "소통" , image: UIImage.init(systemName: "message") , tag:1)
+        let thirdItem = UITabBarItem(title: "마이" , image: UIImage.init(systemName: "person") , tag:2)
+      
+     
+
+        
+        
+        return [firstItem , secondItem , thirdItem]
     }
+   
+    
     
     func startCoordinator(_ navigationTabController : UINavigationController ) {
         let navigationTabController = navigationTabController
+
         let tabBarItemTag : Int = navigationTabController.tabBarItem.tag
         
+        
+      
+      
+
         switch tabBarItemTag{
         case 0:
-            let homeCoordinator =  HomeCoordinator( navigationTabController )
-            homeCoordinator.parentCoordinator = self
-            childCoordinator.append(homeCoordinator)
-            homeCoordinator.finishDelegate = self
-            homeCoordinator.startPush()
-
-        case 1:
             let diaryCoordinator =  DiaryCoordinator( navigationTabController )
             diaryCoordinator.parentCoordinator = self
             childCoordinator.append(diaryCoordinator)
             diaryCoordinator.finishDelegate = self
             diaryCoordinator.pushDiaryVC()
-       // case 2:
-            //let viewModel = EditExerciseVM(coordinator: ExerciseCoordinator(navigationTabController), firebaseService: firebaseService)
-            //navigationTabController.pushViewController(EditExerciseVC(viewModel:viewModel), animated: false)
+        case 1:
+            let commuCoordinator =  CommuCoordinator( navigationTabController )
+            commuCoordinator.parentCoordinator = self
+            childCoordinator.append(commuCoordinator)
+            commuCoordinator.finishDelegate = self
+            commuCoordinator.startPush()
+        case 2:
+            let myprofileCoordinator =  MyProfileCoordinator( navigationTabController )
+            myprofileCoordinator.parentCoordinator = self
+            childCoordinator.append(myprofileCoordinator)
+            myprofileCoordinator.finishDelegate = self
+            myprofileCoordinator.startPush()
 
-       
 
-            
-    
+
+
+
         default:
             break
         }
@@ -121,8 +152,11 @@ class TabBarCoordinator : Coordinator {
     
     func getControllers(_ tabBarItem : UITabBarItem , _ nav : UINavigationController ) -> UINavigationController {
         let navigationController = nav
+        
+
 
         navigationController.tabBarItem = tabBarItem
+        
         return navigationController
         
     }
@@ -133,8 +167,8 @@ class TabBarCoordinator : Coordinator {
         self.logoutDelegate?.didLoggedOut(self)
         
     }
-    
-    
+ 
+
     
     
 }
@@ -154,7 +188,149 @@ extension TabBarCoordinator : CoordinatorFinishDelegate {
 
 
 //탭바 첫번째 인자 컨트롤러
+class CommuCoordinator : Coordinator  {
+    
+    var parentCoordinator: TabBarCoordinator?
+        
+    var finishDelegate: CoordinatorFinishDelegate?
+            
+    let firebaseService = FirebaseService()
+        
+    var type: CoordinatorType = .communicate
+            
+    var navigationController : UINavigationController
+        
+    var childCoordinator: [Coordinator] = []
+    
+    var user : UserModel?
+    
+    required init(_ navigationController: UINavigationController ) {
+        self.navigationController = navigationController
+        
+        
+    }
+    
+    func start() {}
+    
+    
+    func pushProfileVC(uuid:String){
+        let viewModel = OtherProfileVM(coordinator: self , firebaseService: self.firebaseService , uuid : uuid)
+        let viewController = OtherProfileVC(viewModel:viewModel)
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+        
+        viewController.hidesBottomBarWhenPushed = true
+
+        self.navigationController.pushViewController(viewController , animated: false)
+        
+        
+    }
+    
+    func pushUpdateFeed(feed:FeedModel){
+        let viewModel = UpdateFeedVM(coordinator: self, firebaseService: self.firebaseService)
+        viewModel.feed = feed
+        print(feed)
+        let viewController = UpdateFeedVC(viewModel:viewModel)
+        
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+        
+        viewController.hidesBottomBarWhenPushed = true
+
+        self.navigationController.pushViewController(viewController , animated: false)
+        
+        
+    }
+   
+    
+    
+ 
+    
+  
+    
+   
+    func pushComents(coments : [Coment] , feedUid : String , feedUuid : String){
+        let firebaseService = FirebaseService()
+        let viewModel = ComentsVM(coordinator: self, firebaseService: firebaseService)
+        viewModel.coments = coments
+        viewModel.feedUid = feedUid
+        viewModel.feedUuid = feedUuid
+        
+        let viewController = ComentsVC(viewModel:viewModel)
+        
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+        
+        viewController.hidesBottomBarWhenPushed = true
+
+        self.navigationController.pushViewController(viewController , animated: false)
+        
+        
+    }
+    
+    
+
+        
+    
+    
+    
+    
+    func startPush() {
+        
+        let viewController = CommuVC(viewModel : CommuVM(coordinator: self , firebaseService: self.firebaseService ))
+        
+        self.navigationController.pushViewController( viewController , animated: false )
+    
+    }
+    
+    func pushAddFeedVC(){
+        let viewController = AddFeedVC(viewModel: AddFeedVM(coordinator: self, firebaseService: self.firebaseService))
+        
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+        
+        viewController.hidesBottomBarWhenPushed = true
+
+        self.navigationController.pushViewController(viewController , animated: false)
+    }
+    
+    func pushProfileFeed(feedUid:String){
+        let viewModel =  ProfileFeedVM(coordinator: self , firebaseService: self.firebaseService )
+        viewModel.feedUid = feedUid
+        let viewController = ProfileFeedVC(viewModel: viewModel )
+        
+        
+        
+        
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+        
+        self.navigationController.pushViewController(viewController , animated: false)
+    }
+
+    
+    
+    
+    
+    
+}
+
+
+extension CommuCoordinator: CoordinatorFinishDelegate {
+    func coordinatorDidFinish(childCoordinator: Coordinator) {
+        print("CommuCoordinator DidFinish")
+        // 자식 뷰를 삭제하는 델리게이트 (자식 -> 부모 접근 -> 부모에서 자식 삭제)
+        self.childCoordinator = self.childCoordinator
+            .filter({ $0.type != childCoordinator.type })
+        childCoordinator.navigationController.popToRootViewController(animated: true)
+    }
+}
+
+
+
+//탭바 첫번째 인자 컨트롤러
 class HomeCoordinator : Coordinator  {
+ 
     
     var parentCoordinator: TabBarCoordinator?
         
@@ -201,9 +377,9 @@ class HomeCoordinator : Coordinator  {
     func startPush() {
         
         let firebaseService = self.firebaseService
-        let viewController = HomeViewController(viewModel : HomeVM ( coordinator : self , firebaseService: firebaseService ))
+       //let viewController = HomeViewController(viewModel : MyPro ( coordinator : self , firebaseService: firebaseService ))
         
-        self.navigationController.pushViewController( viewController , animated: true )
+      //  self.navigationController.pushViewController( viewController , animated: true )
     
     }
     
@@ -219,6 +395,7 @@ class HomeCoordinator : Coordinator  {
     
 }
 
+
 extension HomeCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         print("HomeCoordinatorDidFinish")
@@ -229,11 +406,158 @@ extension HomeCoordinator: CoordinatorFinishDelegate {
     }
 }
 
+class MyProfileCoordinator : Coordinator {
+    
+    let kakaoService = KakaoService()
+
+    
+    var parentCoordinator: TabBarCoordinator?
+        
+    var finishDelegate: CoordinatorFinishDelegate?
+            
+    let firebaseService = FirebaseService()
+        
+    var type: CoordinatorType = .myprofile
+            
+    var navigationController : UINavigationController
+        
+    var childCoordinator: [Coordinator] = []
+    
+    
+    required init(_ navigationController: UINavigationController ) {
+        self.navigationController = navigationController
+        
+        
+    }
+    
+    func start() {}
+ 
+   
+    func pushAddFeedVC(){
+        let viewController = AddFeedVC(viewModel: AddFeedVM( coordinator: self, firebaseService: self.firebaseService))
+        
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+        
+        viewController.hidesBottomBarWhenPushed = true
+
+        self.navigationController.pushViewController(viewController , animated: false)
+    }
+        
+    
+    
+    
+    
+    func startPush() {
+     
+        
+        let firebaseService = self.firebaseService
+        let kakaoService = self.kakaoService
+        let viewController =  MyProfileVC(viewModel : MyProfileVM ( coordinator : self , firebaseService: firebaseService, kakaoService: kakaoService ))
+        
+
+        
+       
+        self.navigationController.pushViewController( viewController , animated: true )
+    
+    }
+    
+    func pushChangeProfileVC(name : String , introduce : String , profileImage : Data? , beforeImageUrl : String){
+        let firebaseService = self.firebaseService
+        let kakaoService = self.kakaoService
+        let viewModel = ChangeIntroduceVM(coordinator: self, firebaseService: firebaseService , kakaoService: kakaoService)
+        viewModel.introduce = introduce
+        viewModel.name = name
+        viewModel.beforeImage = beforeImageUrl
+        viewModel.profileImage = profileImage
+        let viewController = ChangeIntroduceVC(viewModel: viewModel )
+        viewController.hidesBottomBarWhenPushed = true
+        
+        
+        
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+
+        self.navigationController.pushViewController(viewController, animated: false)
+        
+    }
+    
+    func pushSettingVC(){
+        print("setting")
+        let firebaseService = self.firebaseService
+        let kakaoService = self.kakaoService
+
+        let viewModel = MyProfileVM(coordinator: self , firebaseService : firebaseService , kakaoService: kakaoService)
+        let viewController = SettingVC(viewModel: viewModel)
+        
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+
+        self.navigationController.pushViewController(viewController, animated: false)
+        
+    }
+ 
+    
+    func logout() {
+        
+        
+        
+        self.coordinatorDidFinish(childCoordinator: self)
+        self.parentCoordinator?.logout()
+        
+    }
+    
+
+    
+    func pushChangeSignUpVC(user : UserModel){
+        let firebaseService = self.firebaseService
+        let viewModel = ChangeSignUpVM(coordinator: self, firebaseService: firebaseService)
+        viewModel.userModel = user
+        let viewController = ChangeSignUpVC(viewModel: viewModel)
+        viewController.hidesBottomBarWhenPushed = true
+        
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+        self.navigationController.navigationBar.backgroundColor = .clear
+        
+        
+        self.navigationController.pushViewController(viewController, animated: false)
+
+        
+    }
+    
+    
+        
+        
+        
+        
+    
+    
+    
+    
+    
+    
+}
+extension MyProfileCoordinator : CoordinatorFinishDelegate {
+    func coordinatorDidFinish(childCoordinator: Coordinator) {
+        
+        // 자식 뷰를 삭제하는 델리게이트 (자식 -> 부모 접근 -> 부모에서 자식 삭제)
+        self.childCoordinator = self.childCoordinator
+            .filter({ $0.type != childCoordinator.type })
+        childCoordinator.navigationController.popToRootViewController(animated: true)
+    }
+    
+}
 
 
 
 //탭바 첫번째 인자 컨트롤러
 class DiaryCoordinator : Coordinator  {
+    func start() {
+    }
+    
+
+    
     var navigationController: UINavigationController
     
 
@@ -249,7 +573,6 @@ class DiaryCoordinator : Coordinator  {
         
     var childCoordinator: [Coordinator] = []
     
-    var user : UserModel?
     
     required init(_ navigationController: UINavigationController ) {
         self.navigationController = navigationController
@@ -257,17 +580,27 @@ class DiaryCoordinator : Coordinator  {
         
     }
     
-    func start() {}
    
   
 
-        
+//
+//    
+//    func pushIngredientsVC() {
+//        let ingredientsCoordinator =  IngredientsCoordinator( self.navigationController )
+//        ingredientsCoordinator.finishDelegate = self
+//        childCoordinator.append(ingredientsCoordinator)
+//        ingredientsCoordinator.start()
+//
+//    }
     
-    func pushIngredientsVC() {
+    
+    
+    
+    func pushEditIngredientsVC(arr : [Row]) {
         let ingredientsCoordinator =  IngredientsCoordinator( self.navigationController )
         ingredientsCoordinator.finishDelegate = self
         childCoordinator.append(ingredientsCoordinator)
-        ingredientsCoordinator.start()
+        ingredientsCoordinator.pushIngredientsVC(arr : arr)
         
     }
      
@@ -295,7 +628,7 @@ class DiaryCoordinator : Coordinator  {
         let firebaseService = self.firebaseService
         let viewController = DiaryViewController(viewModel : DiaryVM ( coordinator : self , firebaseService: firebaseService ))
         
-     
+        self.navigationController.hidesBottomBarWhenPushed = false
         self.navigationController.pushViewController( viewController , animated: true )
     
     }
@@ -304,9 +637,28 @@ class DiaryCoordinator : Coordinator  {
         print("pushEdit")
         let firebaseService = self.firebaseService
         let viewController = EditExerciseVC(viewModel: EditExerciseVM(coordinator: self, firebaseService: firebaseService , exercises : exercises))
+        
         viewController.hidesBottomBarWhenPushed = true
+        
+//        self.navigationController.navigationBar.backIndicatorImage = UIImage(systemName: "xmark")
+//        self.navigationController.navigationBar.backIndicatorTransitionMaskImage = UIImage(systemName: "xmark")
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .white
+
         self.navigationController.pushViewController( viewController , animated: false )
 
+        
+    }
+    
+    func presentDetailView(arr : [String:Any] ){
+        print("pushDetailView")
+        let viewController = DetailModalVC(dic:arr)
+            
+        viewController.view.backgroundColor = .white
+        self.navigationController.present(viewController, animated: true)
+        
+        
+        
         
     }
     
@@ -327,7 +679,7 @@ class DiaryCoordinator : Coordinator  {
 extension DiaryCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         
-        print("HomeCoordinatorDidFinish")
+        print("DiaryCoordinatorFinish")
         // 자식 뷰를 삭제하는 델리게이트 (자식 -> 부모 접근 -> 부모에서 자식 삭제)
         self.childCoordinator = self.childCoordinator
             .filter({ $0.type != childCoordinator.type })
@@ -338,11 +690,6 @@ extension DiaryCoordinator: CoordinatorFinishDelegate {
 }
 
 
-
-
-
     
 
-
-    
 
