@@ -13,7 +13,171 @@ import RxCocoa
 import RxSwift
 import Kingfisher
 
-class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDelegate {
+class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDelegate  , UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+                
+        return self.feeds.count
+
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        
+        let uid = UserDefaults.standard.string(forKey: "uid")
+        
+        var cell =  FeedCollectionCell()
+        
+        
+        if(indexPath.row == 0 || indexPath.row + 1 == self.feeds.count){
+            
+            
+            cell =  FeedCollectionCell()
+
+        }else {
+            
+            cell = tableView.dequeueReusableCell(withIdentifier: "FeedCollectionCell") as! FeedCollectionCell
+
+        }
+        
+        
+        let item = feeds[indexPath.row]
+            
+            cell.commuVC = self
+            
+            if(uid!.contains(item.uuid)){
+                
+                cell.own = true
+            }else{
+                cell.own = false
+            }
+            
+            cell.mainImage.image = nil
+            
+            if self.likesCount[item.feedUid]?.contains(self.authUid) == true {
+                
+                cell.likesButton.isSelected = true
+                cell.isTouched = true
+                
+            }else{
+                
+                cell.likesButton.isSelected = false
+                cell.isTouched = false
+                
+            }
+            
+            cell.feedUid = item.feedUid
+            
+            cell.delegate = self
+            
+            cell.setLikesLabel(count: self.likesCount[item.feedUid]?.count ?? 0 )
+            
+            cell.nicknameLabel.text = item.nickname
+            
+            
+            cell.comentsLabel.text = "댓글 \(String(describing: item.coments?.count ?? 0))개 보기"
+            
+            
+            
+            let url = URL(string: item.profileImage ?? "")
+            
+            
+            
+            
+            DispatchQueue.main.async {
+                
+                let processor = DownsamplingImageProcessor(size: cell.profileImage.bounds.size ) // 크기 지정 다운 샘플링
+                // 모서리 둥글게
+                cell.profileImage.kf.indicatorType = .activity  // indicator 활성화
+                cell.profileImage.kf.setImage(
+                    with: url,  // 이미지 불러올 url
+                    placeholder: UIImage(named: "일반적.png"),  // 이미지 없을 때의 이미지 설정
+                    options: [
+                        .processor(processor),
+                        .scaleFactor(UIScreen.main.scale),
+                        .transition(.fade(0.5)),  // 애니메이션 효과
+                        .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
+                    ])
+                
+                
+            }
+            
+            
+            
+            
+            
+            cell.profileImage.layer.cornerRadius = 20
+            
+            
+            
+            
+            
+            
+            DispatchQueue.main.async {
+                
+                //                cell.contentLabel.appendReadmore(after: item.contents, trailingContent: .readmore)
+                //                cell.bottomView.invalidateIntrinsicContentSize()
+                //cell.invalidateIntrinsicContentSize()
+                
+                var idx = 0
+                _ = item.mainImgUrl.map{
+                    
+                    if let url = URL(string: $0 ) {
+                        let image = UIImageView()
+                        let processor = DownsamplingImageProcessor(size: CGSize(width: cell.contentView.bounds.width , height: cell.scrollView.bounds.height) ) // 크기 지정 다운 샘플링
+                        |> RoundCornerImageProcessor(cornerRadius: 0) // 모서리 둥글게
+                        image.kf.indicatorType = .activity  // indicator 활성화
+                        image.kf.setImage(
+                            with: url,  // 이미지 불러올 url
+                            placeholder: UIImage(),  // 이미지 없을 때의 이미지 설정
+                            options: [
+                                .processor(processor),
+                                .scaleFactor(UIScreen.main.scale),
+                                .transition(.fade(0.5)),  // 애니메이션 효과
+                                .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
+                            ])
+                        
+                        
+                        
+                        let xPos = cell.scrollView.frame.width * CGFloat(idx)
+                        image.frame = CGRect(x: xPos, y: 0, width: cell.scrollView.bounds.width, height: cell.scrollView.bounds.height)
+                        
+                        cell.scrollView.addSubview(image)
+                        cell.scrollView.contentSize.width = image.frame.width * CGFloat(idx + 1)
+                        
+                        
+                    }
+                    
+                    idx = idx + 1
+                    
+                    
+                }
+                
+                cell.dateLabel.text = CustomFormatter.shared.getDifferDate(date: item.date)
+                
+                
+                
+                if(idx > 1){
+                    
+                    cell.setPageControl(count: idx)
+                    
+                }else{
+                    
+                    cell.setPageControl(count: 0)
+                    
+                }
+            }
+        
+        
+        return cell
+        
+
+    }
+    
+    var feeds  = [FeedModel]()
+    
+   
+    
+    
     func didPressedProfile(for index: String) {
         print("tapped")
         profileTapped.onNext(index)
@@ -191,11 +355,11 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         
         self.refreshControl.endRefreshing()
         tableView.refreshControl = self.refreshControl
-        tableView.rx.setDelegate(self).disposed(by: disposeBag)
-        tableView.dataSource = nil
+        tableView.delegate = self
+        tableView.dataSource = self
         tableView.register(FeedCollectionCell.self, forCellReuseIdentifier: "FeedCollectionCell")
        
-        
+
         
         
         
@@ -224,7 +388,6 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         
         
         
-        let uid = UserDefaults.standard.string(forKey: "uid")
         
         
         let input = CommuVM.Input( viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), likesButtonTapped: likesButtonTapped, comentsTapped: self.comentsTapped.asObservable() , addButtonTapped: self.addButton.rx.tap.asObservable() , deleteFeed: deleteFeed , reportFeed : reportFeed , updateFeed: updateFeed , paging : paging.asObservable() , profileTapped : profileTapped.asObservable(), refreshControl: self.refreshControl.rx.controlEvent(.valueChanged).asObservable() )
@@ -258,154 +421,26 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         }).disposed(by: disposeBag)
         
         
-       
         
-        output.feedModel.bind(to: self.tableView.rx.items(cellIdentifier: "FeedCollectionCell" , cellType: FeedCollectionCell.self )){
-            index,item,cell in
+        
+//        output.feedModel.bind(to: self.tableView.rx.items(cellIdentifier: "FeedCollectionCell" , cellType: FeedCollectionCell.self )){
+//            index,item,cell in
+//            
+//            
+//          
+//                      
+//            
+//        }.disposed(by: disposeBag)
+        
+        output.feedModel.subscribe(onNext:{ feeds in
+            
+            print("\(feeds) get FeedModel")
+            self.feeds = feeds
+            
+            self.tableView.reloadData()
             
             
-            
-            
-            
-            
-            cell.commuVC = self
-            
-            if(uid!.contains(item.uuid)){
-                
-                cell.own = true
-            }else{
-                cell.own = false
-            }
-            
-            cell.mainImage.image = nil
-            
-            if self.likesCount[item.feedUid]?.contains(self.authUid) == true {
-                
-                cell.likesButton.isSelected = true
-                cell.isTouched = true
-                
-            }else{
-                
-                cell.likesButton.isSelected = false
-                cell.isTouched = false
-                
-            }
-            
-            cell.feedUid = item.feedUid
-            
-            cell.delegate = self
-            
-            cell.setLikesLabel(count: self.likesCount[item.feedUid]?.count ?? 0 )
-            
-            cell.nicknameLabel.text = item.nickname
-            
-            cell.beforeContent = item.contents
-            
-            cell.comentsLabel.text = "댓글 \(String(describing: item.coments?.count ?? 0))개 보기"
-            
-           
-            
-            let url = URL(string: item.profileImage ?? "")
-            
-            
-            
-            
-            DispatchQueue.main.async {
-                
-                let processor = DownsamplingImageProcessor(size: cell.profileImage.bounds.size ) // 크기 지정 다운 샘플링
-                // 모서리 둥글게
-                cell.profileImage.kf.indicatorType = .activity  // indicator 활성화
-                cell.profileImage.kf.setImage(
-                    with: url,  // 이미지 불러올 url
-                    placeholder: UIImage(named: "일반적.png"),  // 이미지 없을 때의 이미지 설정
-                    options: [
-                        .processor(processor),
-                        .scaleFactor(UIScreen.main.scale),
-                        .transition(.fade(0.5)),  // 애니메이션 효과
-                        .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
-                    ])
-                
-                
-            }
-            
-            
-            
-            
-            
-            cell.profileImage.layer.cornerRadius = 20
-            
-            
-            
-            if let url = URL(string:
-                                "https://firebasestorage.googleapis.com:443/v0/b/healthysecrets-f1b20.appspot.com/o/kLKq98RHJbRgJMbAzZa5CKFlVSa2%2F6DE25F9F-1591-4989-B9DD-6E56792403D21713975515.1394758?alt=media&token=d9565ad5-296b-420c-a7e7-bc4cb38b4cb8 ") {
-                let image = UIImageView()
-                let processor = DownsamplingImageProcessor(size: CGSize(width: cell.contentView.bounds.width , height: cell.scrollView.bounds.height) ) // 크기 지정 다운 샘플링
-                |> RoundCornerImageProcessor(cornerRadius: 0) // 모서리 둥글게
-                image.kf.indicatorType = .activity  // indicator 활성화
-                image.kf.setImage(
-                    with: url,  // 이미지 불러올 url
-                    placeholder: UIImage(),  // 이미지 없을 때의 이미지 설정
-                    options: [
-                        .processor(processor),
-                        .scaleFactor(UIScreen.main.scale),
-                        .transition(.fade(0.5)),  // 애니메이션 효과
-                        .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
-                    ])
-                
-                
-                cell.plusFeedsImage = image
-                
-            }
-            
-            
-            
-            var images : [UIImageView] = []
-      
-            _ = item.mainImgUrl.map{
-                if let url = URL(string: $0 ) {
-                    let image = UIImageView()
-                    let processor = DownsamplingImageProcessor(size: CGSize(width: cell.contentView.bounds.width , height: cell.scrollView.bounds.height) ) // 크기 지정 다운 샘플링
-                    |> RoundCornerImageProcessor(cornerRadius: 0) // 모서리 둥글게
-                    image.kf.indicatorType = .activity  // indicator 활성화
-                    image.kf.setImage(
-                        with: url,  // 이미지 불러올 url
-                        placeholder: UIImage(),  // 이미지 없을 때의 이미지 설정
-                        options: [
-                            .processor(processor),
-                            .scaleFactor(UIScreen.main.scale),
-                            .transition(.fade(0.5)),  // 애니메이션 효과
-                            .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
-                        ])
-                    
-                    
-                    images.append(image)
-                    
-                    
-                }
-                
-                
-                
-                
-            }
-            cell.dateLabel.text = CustomFormatter.shared.getDifferDate(date: item.date)
-            cell.imageViews = images
-            cell.addContentScrollView()
-            cell.setContentLabel()
-            
-            
-            if(images.count > 1){
-                
-                cell.setPageControl(count: images.count)
-                
-            }else{
-                
-                cell.setPageControl(count: 0)
-                
-            }
-            
-            
-            
-        }.disposed(by: disposeBag)
+        }).disposed(by: disposeBag)
         
         output.isLastPage.subscribe(onNext: { isLastPage in
             

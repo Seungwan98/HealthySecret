@@ -251,9 +251,11 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         
         
        
-        self.imageViews.forEach{
+        UIView.performWithoutAnimation {
+            contentLabel.appendReadmore(after: "", trailingContent: .readmore)
+            bottomView.invalidateIntrinsicContentSize()
+            invalidateIntrinsicContentSize()
             
-            $0.image = plusFeedsImage.image
             
         }
         
