@@ -136,6 +136,7 @@
 		60EAFE102BC5544D00D3EE73 /* DispatchQueue+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EAFE0F2BC5544D00D3EE73 /* DispatchQueue+.swift */; };
 		60EAFE122BC83CF400D3EE73 /* OtherProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EAFE112BC83CF400D3EE73 /* OtherProfileVM.swift */; };
 		60EAFE142BC852C800D3EE73 /* OtherProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EAFE132BC852C800D3EE73 /* OtherProfileVC.swift */; };
+		60EF3C8B2BDC34560007862F /* .gitattributes in Resources */ = {isa = PBXBuildFile; fileRef = 60EF3C8A2BDC34560007862F /* .gitattributes */; };
 		CB62F41F787B287CE4FA2161 /* Pods_HealthySecret.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */; };
 /* End PBXBuildFile section */
 
@@ -276,6 +277,7 @@
 		60EAFE0F2BC5544D00D3EE73 /* DispatchQueue+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+.swift"; sourceTree = "<group>"; };
 		60EAFE112BC83CF400D3EE73 /* OtherProfileVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfileVM.swift; sourceTree = "<group>"; };
 		60EAFE132BC852C800D3EE73 /* OtherProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfileVC.swift; sourceTree = "<group>"; };
+		60EF3C8A2BDC34560007862F /* .gitattributes */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitattributes; sourceTree = "<group>"; };
 		DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthySecret.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -410,6 +412,7 @@
 		6094C5292ACD915300D62B0A = {
 			isa = PBXGroup;
 			children = (
+				60EF3C8A2BDC34560007862F /* .gitattributes */,
 				6094C5342ACD915300D62B0A /* HealthySecret */,
 				6094C5332ACD915300D62B0A /* Products */,
 				EF80A9A0DA043E2738D44813 /* Pods */,
@@ -698,6 +701,7 @@
 				60BC990A2B34848E0013FAD9 /* Diary.png in Resources */,
 				606343B12B84961A0084E2CC /* edmitSnack.png in Resources */,
 				606343B62B84976D0084E2CC /* edmitLunch.jpg in Resources */,
+				60EF3C8B2BDC34560007862F /* .gitattributes in Resources */,
 				600DE9702B610C7100D5D797 /* add.png in Resources */,
 				60BB26B22B45CD3400191CB1 /* thirdDout.png in Resources */,
 				60BB26B62B46766700191CB1 /* union.png in Resources */,
