@@ -108,7 +108,6 @@ class DiaryVM : ViewModel {
     
         
         input.mealButtonsTapped.subscribe(onNext: { [weak self] _ in
-            let disposeBag2 = DisposeBag()
             let meal : String = UserDefaults.standard.value(forKey: "meal") as! String
             switch meal {
             case "아침식사":

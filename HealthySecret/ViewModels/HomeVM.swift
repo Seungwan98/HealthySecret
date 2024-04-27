@@ -49,7 +49,7 @@ class HomeVM : ViewModel {
  
 
         
-        var output = Output()
+        let output = Output()
         
         
         
@@ -64,7 +64,7 @@ class HomeVM : ViewModel {
         
         input.rightBarButtonTapped.subscribe(onNext: { [weak self] _ in
                 CoreMotionService.getSteps.subscribe(onNext: { step in
-                    let core = CoreMotionService.shared
+                    _ = CoreMotionService.shared
 
                     output.testLabel.onNext(step ?? "0")
                     

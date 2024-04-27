@@ -154,6 +154,8 @@ class ProfileHeaderView : UICollectionReusableView  {
     
     
     private func setUI() {
+   
+        
         self.addSubview(informationView)
         self.addSubview(profileImage)
         self.addSubview(introduceLabel)
@@ -162,7 +164,7 @@ class ProfileHeaderView : UICollectionReusableView  {
         self.addSubview(gramLabel)
         
         
-        
+  
         
         NSLayoutConstraint.activate([
             
@@ -176,7 +178,7 @@ class ProfileHeaderView : UICollectionReusableView  {
             introduceLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor , constant: 20 ),
             introduceLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor , constant: -20 ),
             introduceLabel.topAnchor.constraint(equalTo: self.profileImage.bottomAnchor , constant: 5 ),
-            introduceLabel.heightAnchor.constraint(equalToConstant: 60 ),
+           // introduceLabel.heightAnchor.constraint(equalToConstant: 60 ),
             
             
             goalLabel.leadingAnchor.constraint(equalTo: informationView.leadingAnchor),
@@ -194,6 +196,7 @@ class ProfileHeaderView : UICollectionReusableView  {
             informationView.leadingAnchor.constraint(equalTo: self.leadingAnchor , constant: 20),
             informationView.trailingAnchor.constraint(equalTo: self.trailingAnchor , constant: -20),
             informationView.topAnchor.constraint(equalTo: goalLabel.bottomAnchor , constant: 5),
+            informationView.bottomAnchor.constraint(equalTo: self.bottomAnchor , constant: 5),
             informationView.heightAnchor.constraint(equalToConstant: 120),
             
   

@@ -130,7 +130,6 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
         
         output.exerciseArr.bind(to: tableView.rx.items(cellIdentifier: "ExerciseCell" ,cellType: ExerciseCell.self )){index,item,cell in
             
-            print(item)
             cell.layoutToAdd()
             cell.exerciseGram.text = item.exerciseGram
             cell.name.text = item.name

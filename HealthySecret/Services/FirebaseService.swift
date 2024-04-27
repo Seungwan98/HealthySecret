@@ -723,7 +723,7 @@ extension FirebaseService {
     func updateSignUpData( model : UserModel , key : String ) -> Completable {
         return Completable.create{ completable in
             
-            self.db.collection("HealthySecretUsers").document()
+            self.db.collection("HealthySecretUsers").document(key)
                 .getDocument() { (doc, err) in
                     
                     if let err = err {
@@ -776,7 +776,7 @@ extension FirebaseService {
             
            
             
-            self.db.collection("HealthySecretUsers").document().getDocument() { (doc, err) in
+            self.db.collection("HealthySecretUsers").document(key).getDocument() { (doc, err) in
                     
                     if let err = err {
                         
@@ -786,6 +786,8 @@ extension FirebaseService {
                         // Some error occured
                     } else {
                   
+                        print("\(doc)  doc")
+                        
                         doc?.reference.updateData([
                             "name" : name ,
                             "introduce" : introduce ,

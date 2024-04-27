@@ -95,12 +95,11 @@ class ChangeIntroduceVM : ViewModel {
                    
                     
                     input.profileImageValue.subscribe(onNext: { image in
-                        print("\(image) imagesValue")
                         
                         input.profileChange.subscribe(onNext: { change in
                             
                             print("\(change)")
-                            guard let uuid = UserDefaults.standard.string(forKey: "email") else {return}
+                            guard let uuid = UserDefaults.standard.string(forKey: "uid") else {return}
                             
                             LoadingIndicator.showLoading()
 

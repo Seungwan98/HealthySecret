@@ -60,7 +60,6 @@ class ProfileFeedVM : ViewModel {
     
     
     func transform(input : Input , disposeBag: DisposeBag) -> Output {
-        let id = UserDefaults.standard.string(forKey: "email") ?? ""
         let authUid = UserDefaults.standard.string(forKey: "uid") ?? ""
         
         
