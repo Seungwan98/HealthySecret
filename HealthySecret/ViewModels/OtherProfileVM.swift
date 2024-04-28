@@ -26,6 +26,7 @@ class OtherProfileVM : ViewModel {
         let viewWillApearEvent : Observable<Void>
         let outputProfileImage : Observable<Data?>
         let imageTapped : Observable<String>
+        let addButtonTapped : Observable<Bool>
 
     }
     
@@ -52,10 +53,10 @@ class OtherProfileVM : ViewModel {
         var introduce = BehaviorSubject(value: "")
         var profileImage = BehaviorSubject<String?>(value: nil)
         var popView = BehaviorSubject<Bool>(value: false)
+        var followersSelected = BehaviorSubject<Bool>(value: false)
+        var followersCount = BehaviorSubject<Int>(value: 0)
         
     }
-    
-    
     
     
     weak var coordinator : CommuCoordinator?
@@ -74,9 +75,14 @@ class OtherProfileVM : ViewModel {
     }
     
     func HeaderTransform(input : HeaderInput , disposeBag: DisposeBag) -> HeaderOutput {
-        let uid = self.uuid
         
         let output = HeaderOutput()
+
+        
+        guard let authUid = UserDefaults.standard.string(forKey: "uid") else { return output  }
+        
+        let uid = self.uuid
+        
         
         input.outputProfileImage.subscribe(onNext:{ image in
 
@@ -102,6 +108,24 @@ class OtherProfileVM : ViewModel {
                     output.name.onNext(user.name)
                     output.profileImage.onNext(user.profileImage ?? nil)
                     
+                    var selected = false
+                    
+                    if let followings = user.followings {
+                        
+                        
+                        
+                        print("\(followings) follwings")
+                        
+                        if(followings.contains(authUid)){
+
+                            selected = true
+                        }
+                        output.followersCount.onNext(followings.count)
+
+                    }
+                    
+                    output.followersSelected.onNext(selected)
+                    
                     
                 case .failure(_):
                     print("fail to get Doc")
@@ -121,16 +145,37 @@ class OtherProfileVM : ViewModel {
     
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         
+        
+        
         let uid = self.uuid
         
         let output = Output()
         
+        guard let authUid = UserDefaults.standard.string(forKey: "uid") else { return output  }
+        
+        input.addButtonTapped.throttle(.seconds(1),  scheduler: MainScheduler.instance).subscribe(onNext:{ selected in
+            print("tapped")
+            
+            self.firebaseService.updateFollowers(ownUid: authUid , opponentUid: uid, follow: selected).subscribe({ completable in
+                switch(completable){
+                    
+                case.completed: print("comoplete")
+                    
+                case.error(let err):
+                    print(err)
+                    
+                }
+                
+                
+            }).disposed(by: disposeBag)
+            
+            
+        }).disposed(by: disposeBag)
       
         input.imageTapped.subscribe(onNext:{ feedUid in
           
             self.feeds?.forEach({
                 if(feedUid == $0.feedUid){
-                    let result = $0
                     self.coordinator?.pushProfileFeed(feedUid: feedUid)
                 }
                 
@@ -141,7 +186,7 @@ class OtherProfileVM : ViewModel {
         
         input.viewWillApearEvent.subscribe(onNext: { event in
             
-
+                
             
         
                     self.firebaseService.getFeedsUid(uid: uid).subscribe({ event in
@@ -176,17 +221,7 @@ class OtherProfileVM : ViewModel {
         }).disposed(by: disposeBag)
         
         
-        
-        
-        
-        
-        
-        
-        
      
-        
-        
-        
         
         
         return output
@@ -197,91 +232,5 @@ class OtherProfileVM : ViewModel {
     
     
     
-    //
-    //    struct ChangeInput {
-    //        let viewWillApearEvent : Observable<Void>
-    //        let addButtonTapped : Observable<Void>
-    //        let nameTextField : Observable<String>
-    //        let introduceTextField : Observable<String>
-    //        let profileImageTapped : Observable<UITapGestureRecognizer>
-    //        let profileImageValue : Observable<UIImage?>
-    //
-    //    }
-    //
-    //    struct ChageOutput {
-    //        var name = BehaviorSubject<String>(value: "")
-    //        var introduce = BehaviorSubject<String>(value: "")
-    //        var profileImage = BehaviorSubject<Data?>(value: nil)
-    //
-    //
-    //    }
-    //
-    //
-    //
-    //    func ChangeTransform(input: ChangeInput, disposeBag: DisposeBag ) -> ChageOutput {
-    //
-    //        let output = ChageOutput()
-    //
-    //        input.viewWillApearEvent.subscribe(onNext: {
-    //
-    //            output.name.onNext(self.name!)
-    //            output.introduce.onNext(self.introduce ?? "")
-    //            output.profileImage.onNext(self.profileImage ?? nil)
-    //
-    //
-    //
-    //        }).disposed(by: disposeBag)
-    //
-    //
-    //
-    //
-    //        input.addButtonTapped.subscribe(onNext: { _ in
-    //            input.nameTextField.subscribe(onNext: { name in
-    //                input.introduceTextField.subscribe(onNext: { introduce in
-    //
-    //
-    //
-    //                    input.profileImageValue.subscribe(onNext: { image in
-    //                        self.firebaseService.updateValues(name: name , introduce: introduce  , key: UserDefaults.standard.string(forKey: "email") ?? "" , image : image , beforeImage: self.beforeImage ?? "" ).subscribe{ event in
-    //                            switch(event){
-    //                            case.completed:
-    //                                print("업데이트완료")
-    //
-    //                            case.error(_):
-    //                                print("error")
-    //                            }
-    //
-    //
-    //                            let imageData = image?.jpegData(compressionQuality: 0.1)
-    //                            UserDefaults.standard.set(imageData, forKey: "profileImage")
-    //
-    //                          //  self.coordinator?.navigationController.popViewController(animated: false)
-    //
-    //
-    //
-    //
-    //                        }.disposed(by: disposeBag)
-    //
-    //
-    //                    }).disposed(by: disposeBag)
-    //
-    //                }).disposed(by: disposeBag)
-    //
-    //
-    //
-    //
-    //            }).disposed(by: disposeBag)
-    //
-    //
-    //
-    //
-    //        }).disposed(by: disposeBag)
-    //
-    //
-    //        return output
-    //    }
-    //
-    
    
-    
 }

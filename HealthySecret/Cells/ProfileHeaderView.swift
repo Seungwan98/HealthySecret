@@ -149,6 +149,7 @@ class ProfileHeaderView : UICollectionViewCell  {
     }()
     
     
+    
     let topImage = UIImageView(image:UIImage(named:  "camera.png"))
 
     
@@ -157,6 +158,7 @@ class ProfileHeaderView : UICollectionViewCell  {
         super.init(frame: frame)
         setUI()
         setStackViews()
+        
 
         print("headerInit")
     }
@@ -211,7 +213,7 @@ class ProfileHeaderView : UICollectionViewCell  {
         
     }
     
-    
+   
     
     private func setUI() {
         
@@ -270,7 +272,9 @@ class ProfileHeaderView : UICollectionViewCell  {
             informationStackView.centerYAnchor.constraint(equalTo: profileImage.centerYAnchor ,constant: 4),
             informationStackView.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor ,constant: 30),
             informationStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor ,constant: -30),
-            informationStackView.heightAnchor.constraint(equalToConstant: 80),
+            informationStackView.heightAnchor.constraint(equalToConstant: 40),
+            
+            
            
             
   

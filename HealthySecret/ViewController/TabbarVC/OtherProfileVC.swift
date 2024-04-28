@@ -19,17 +19,14 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         
         self.imageTapped.onNext(feedUid)
     }
-    
-    
-    
-    
+
     
     
     let disposeBag = DisposeBag()
     
     var firstBind = true
+    
     var loadControll = false
-
     
     private var viewModel : OtherProfileVM?
     
@@ -48,15 +45,16 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
    
 
 
-
     
-    private let collectionView: UICollectionView = {
+    lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
         layout.scrollDirection = .vertical
         layout.sectionInset = UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 0)
+        layout.headerReferenceSize = CGSize(width: self.view.frame.width, height: 400)
+        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
         collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: CustomCollectionViewCell.identifier)
@@ -65,6 +63,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         collectionView.register( ProfileHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ProfileHeaderView.identifier)
         
         collectionView.allowsMultipleSelection = false
+        
         collectionView.alwaysBounceVertical = true
         
         
@@ -86,21 +85,33 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.collectionView.dataSource = self
-        self.collectionView.delegate = self
         
+        self.collectionView.dataSource = self
+        
+        self.collectionView.delegate = self
         
         setUI()
         setBindings()
-        
-        
-        
-        
-        
+        addFollowButton()
         
     }
     
     
+    
+    let addButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 30
+        button.tintColor = .white
+        button.backgroundColor = .systemBlue
+        button.setTitle("팔로우", for: .normal )
+        button.titleLabel?.font = .boldSystemFont(ofSize: 18)
+        
+        
+        return button
+        
+        
+    }()
     
     
     
@@ -110,21 +121,41 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
         
-        
-        
-        
-        
     }
     override func viewWillDisappear(_ animated: Bool) {
+        
         self.navigationController?.setNavigationBarHidden(true, animated: true)
         
     }
     
 
+    func addFollowButton() {
+        
+        self.view.addSubview(self.addButton)
+        
+        self.addButton.addTarget(self, action: #selector(self.didPressedFollow), for: .touchUpInside)
+        
+        NSLayoutConstraint.activate([
+        
+            self.addButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.addButton.widthAnchor.constraint(equalToConstant: 160 ),
+            self.addButton.heightAnchor.constraint(equalToConstant: 60 ),
+            self.addButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor , constant: -40)
+         
+            
+
+        
+        ])
+        
+        
+        
+        
+    }
     
     func setUI(){
         
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
         
         view.addSubview(self.collectionView)
         
@@ -136,8 +167,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
             self.collectionView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
             self.collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor ),
       
-        
-        
+                
         
         
         
@@ -152,8 +182,70 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         
         
     }
+    
+     let addButtonTapped = PublishSubject<Bool>()
+    
+    @objc
+    func didPressedFollow(_ sender: UIButton) {
+        
+        sender.isSelected = !sender.isSelected
+
+        let selected  = sender.isSelected
+        
+        print("selected")
+        
+        self.isTouched = selected
+        
+        self.setHeadersCount(selected: selected)
+
+        self.addButtonTapped.onNext(selected)
+
+    
+        
+      
+
+        
+        
+    }
+    var isTouched: Bool? {
+        didSet {
+            if isTouched == true {
+                addButton.backgroundColor = .lightGray
+                addButton.setTitle("팔로잉", for: .normal)
+            }else{
+                addButton.backgroundColor = .systemBlue
+                addButton.setTitle("팔로우", for: .normal)
+            }
+        }
+    }
+    
+    
+    
+    
+    var followersCount : Int?
+    
     var imagesArr : [[String]] = []
+    
     var uidsArr : [String] = []
+    
+    var profileHeader : ProfileHeaderView?
+    
+    func setHeadersCount( selected : Bool ){
+        
+        var count =  self.followersCount ?? 0
+        
+        
+        if(selected){
+            count += 1
+        }else{
+            count -= 1
+        }
+        self.profileHeader?.informationValLabels[1].text = String(count)
+        self.followersCount = count
+
+    }
+    
+    
     func setHeaderBindings(header : ProfileHeaderView){
 
 
@@ -162,7 +254,18 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
                 
         guard let output = self.viewModel?.HeaderTransform(input: input, disposeBag: header.disposeBag) else { return }
 
-                
+        
+        let size = CGSize(width: view.frame.width, height: CGFloat.infinity)
+        
+        let estimatedSize = header.introduceLabel.sizeThatFits(size)
+        
+        if let layout = self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.headerReferenceSize = CGSize(width: view.frame.width, height: estimatedSize.height + 310 )
+            self.collectionView.layoutIfNeeded()
+                print("estimatedSize \(estimatedSize)")
+            
+            
+        }
                 
                 Observable.zip( output.calorie , output.goalWeight , output.nowWeight , output.name , output.introduce , output.profileImage ).subscribe(onNext: { [self] in
                     
@@ -175,6 +278,9 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
                     
                     
                     self.navigationController?.navigationBar.topItem?.title = $3
+                    
+                    
+                    
                     
                     
                     
@@ -215,40 +321,41 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
                             
                         }
                         
-                        header.profileImage.layer.cornerRadius = 60
+                        
+                       
 
                     } else {
-                        header.profileImage.layer.cornerRadius = 0
-                        
-                        let bottomImage = UIImage(named: "일반적.png")
-                        let topImage = UIImage(named: "camera.png")
                         
                         
-                        let bottomSize = CGSize(width: 300, height: 300)
-                        let topSize = CGSize(width: 80, height: 80)
-                        UIGraphicsBeginImageContext(bottomSize)
-                        
-                        let areaSize = CGRect(x: 0, y: 0, width: bottomSize.width, height: bottomSize.height)
-                        let areaSize2 = CGRect(x: 212, y: 220, width: topSize.width, height: topSize.height)
-                        bottomImage!.draw(in: areaSize)
-                        
-                        topImage!.draw(in: areaSize2 , blendMode: .normal , alpha: 1)
-                        
-                        let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-                        UIGraphicsEndImageContext()
-                        
-                        header.profileImage.image = newImage
-                        
-                        
+                        header.profileImage.image = UIImage(named: "일반적.png")
                         
                         
                         
                     }
                     
-                    
+                    header.informationValLabels[0].text = String(self.imagesArr.count)
+                    header.topImage.isHidden = false
+                    header.profileImage.layer.cornerRadius = 50
                     
                 }).disposed(by: header.disposeBag)
      
+        
+        output.followersSelected.subscribe(onNext: { [weak self] selected in
+            
+            
+            self?.addButton.isSelected = selected
+            self?.isTouched = selected
+
+            
+            
+        }).disposed(by: disposeBag)
+        
+        output.followersCount.subscribe(onNext: { [weak self] count in
+            
+            header.informationValLabels[1].text = String(count)
+            self?.followersCount = count
+            
+        }).disposed(by: disposeBag)
         
        
         
@@ -261,11 +368,12 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
     
         
         
-        let input = OtherProfileVM.Input(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable()  , outputProfileImage : outputProfileImage.asObservable(), imageTapped: self.imageTapped.asObservable() 
+        let input = OtherProfileVM.Input(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable()  , outputProfileImage : outputProfileImage.asObservable(), imageTapped: self.imageTapped.asObservable() , addButtonTapped : addButtonTapped.asObservable()
                                       
         )
         
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else { return }
+        
         
         
         
@@ -310,10 +418,6 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
 
 extension OtherProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        
-        return CGSize(width: view.frame.size.width, height: 400)
-    }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print(self.imagesArr[indexPath.row])
@@ -341,8 +445,10 @@ extension OtherProfileVC :  UICollectionViewDataSource , UICollectionViewDelegat
             loadControll = false
 
         }
+        
+        self.profileHeader = header
 
-        print("header reload")
+        
         
         return header
         

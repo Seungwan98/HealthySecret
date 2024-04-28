@@ -786,7 +786,7 @@ extension FirebaseService {
                         // Some error occured
                     } else {
                   
-                        print("\(doc)  doc")
+      
                         
                         doc?.reference.updateData([
                             "name" : name ,
@@ -860,6 +860,75 @@ extension FirebaseService {
             
         }
     }
+    
+    
+    func updateFollowers(  ownUid : String , opponentUid : String  , follow : Bool) -> Completable {
+        return Completable.create{ completable in
+            self.db.collection("HealthySecretUsers").document(ownUid).getDocument{ doc , err in
+                if let err = err {
+                    completable(.error(err))
+                }else{
+                    
+                    if(follow){
+                        doc?.reference.updateData([
+                            
+                            "followings" : FieldValue.arrayUnion([opponentUid])
+                            
+                        ])}
+                    else{
+                        
+                        doc?.reference.updateData([
+                            
+                            "followings" : FieldValue.arrayRemove([opponentUid])
+                            
+                        ])
+                    }
+                    
+                    
+                }
+                
+                self.db.collection("HealthySecretUsers").document(opponentUid).getDocument{ doc , err in
+                    if let err = err {
+                        completable(.error(err))
+                    }else{
+                        
+                        if(follow){
+                            doc?.reference.updateData([
+                                
+                                "followers" : FieldValue.arrayUnion([ownUid])
+                                
+                            ])}
+                        else{
+                            
+                            doc?.reference.updateData([
+                                
+                                "followers" : FieldValue.arrayRemove([ownUid])
+                                
+                            ])
+                            
+                            
+                        }
+                        
+                        completable(.completed)
+                    }
+                    
+                    
+                    
+                    
+                }
+                
+                
+                
+                
+            }
+            
+            
+            
+            return Disposables.create()
+        }
+        
+    }
+    
     
 }
 
@@ -1161,7 +1230,7 @@ extension FirebaseService {
     
     
     
-    func getFeedPagination(feeds:[FeedModel] , pagesCount : Int) -> Single<[FeedModel]> {
+    func getFeedPagination(feeds:[FeedModel] , pagesCount : Int , block : [String]) -> Single<[FeedModel]> {
         return Single<[FeedModel]>.create { [weak self] single in
             var outputFeeds = feeds
             
@@ -1172,7 +1241,7 @@ extension FirebaseService {
             } else {
                 
                 //It's First query request
-                self?.requestQuery = self?.db.collection("HealthySecretFeed")
+                self?.requestQuery = self?.db.collection("HealthySecretFeed").whereField("uuid", isNotEqualTo: block )
                     .order(by: "date" , descending: true )
                     .limit(to: pagesCount)
             }
@@ -1187,7 +1256,7 @@ extension FirebaseService {
                 }
                 
                 
-                let next = self.db.collection("HealthySecretFeed")
+                let next = self.db.collection("HealthySecretFeed").whereField("uuid", isNotEqualTo: block )
                     .order(by: "date" , descending: true)
                     .limit(to: pagesCount)
                     .start(afterDocument: lastDocument)

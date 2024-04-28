@@ -221,9 +221,9 @@ class CommuVM : ViewModel {
         
         self.reload.subscribe(onNext: { [self] count in
             
+           // guard let block : [String] = UserDefaults.standard.stringArray(forKey: "block") else { return }
             
-            
-            self.firebaseService.getFeedPagination(feeds: self.feedModels, pagesCount: count).subscribe({ event in
+            self.firebaseService.getFeedPagination(feeds: self.feedModels, pagesCount: count , block: [] ).subscribe({ event in
                 switch(event){
                     
                     

@@ -203,7 +203,7 @@ class MyProfileVC : UIViewController {
         
         
     }
-    func setHeaderBindings(header : ProfileHeaderView){
+    func setHeaderBindings( header : ProfileHeaderView ){
         
         
         let input = MyProfileVM.HeaderInput( viewWillApearEvent: header.appearEvent  , goalLabelTapped: Observable.merge(header.goalLabel.rx.tapGesture().when(.recognized).asObservable()), changeProfile: header.profileImage.rx.tapGesture().when(.recognized).asObservable(), outputProfileImage: self.outputProfileImage.asObservable() )
@@ -233,7 +233,9 @@ class MyProfileVC : UIViewController {
             
             if let layout = self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
                 layout.headerReferenceSize = CGSize(width: view.frame.width, height: estimatedSize.height + 310 )
-                self.collectionView.layoutIfNeeded() }
+                self.collectionView.layoutIfNeeded()
+                    print("estimatedSize \(estimatedSize)")
+            }
             
             
             
@@ -282,22 +284,18 @@ class MyProfileVC : UIViewController {
                     
                 }
                 
-                header.topImage.isHidden = false
-                header.profileImage.layer.cornerRadius = 50
+            
                 
             } else {
-                header.profileImage.layer.cornerRadius = 0
                 
+                header.profileImage.image = UIImage(named: "일반적.png")
                 
 
                 
-                
-                
-                
-                
             }
             
-            
+            header.topImage.isHidden = false
+            header.profileImage.layer.cornerRadius = 50
             header.informationValLabels[0].text =  String(self.imagesArr.count)
             
             

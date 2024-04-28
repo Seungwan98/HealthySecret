@@ -214,10 +214,7 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
          pageControl.currentPage = currentPage
      }
      
-//     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//         let value = scrollView.contentOffset.x/scrollView.frame.size.width
-//         setPageControlSelectedPage(currentPage: Int(round(value)))
-//     }
+
     
     
     
