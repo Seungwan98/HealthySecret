@@ -111,15 +111,22 @@ class MyProfileVC : UIViewController {
         
     }()
     
+
+    
     lazy var rightBarButton = UIBarButtonItem(customView: rightBarImage)
+    
     lazy var leftBarButton = UIBarButtonItem(customView: leftBarLabel)
     
     let imageAttachment = NSTextAttachment(image: UIImage(named: "arrow.png")!)
     
     var outputProfileImage = BehaviorSubject<Data?>(value: nil)
     
+    var HEADER_HEIGHT : CGFloat = 0
+    
+    var imagesArr : [[String]] = []
     
     
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -161,7 +168,6 @@ class MyProfileVC : UIViewController {
     
     
     func setUI(){
-        // collectionView.frame = view.bounds
         
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -197,7 +203,6 @@ class MyProfileVC : UIViewController {
         
         
     }
-    var imagesArr : [[String]] = []
     func setHeaderBindings(header : ProfileHeaderView){
         
         
@@ -213,12 +218,13 @@ class MyProfileVC : UIViewController {
             
             
             header.calorieLabel.text = $0 + " kcal"
-     
-            
             
             header.goalWeight.text = $1 + " kg"
+            
             header.nowWeight.text = $2 + " kg"
+            
             header.introduceLabel.text = $4
+            
             
             
             let size = CGSize(width: view.frame.width, height: CGFloat.infinity)
@@ -226,8 +232,7 @@ class MyProfileVC : UIViewController {
             let estimatedSize = header.introduceLabel.sizeThatFits(size)
             
             if let layout = self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-                print("layoutt \(estimatedSize)")
-                layout.headerReferenceSize = CGSize(width: view.frame.width, height: max(estimatedSize.height + header.frame.height  , 400  ))
+                layout.headerReferenceSize = CGSize(width: view.frame.width, height: estimatedSize.height + 310 )
                 self.collectionView.layoutIfNeeded() }
             
             
@@ -271,35 +276,20 @@ class MyProfileVC : UIViewController {
                     
                     
                     
-                    
-                    
+         
+
                     
                     
                 }
                 
-                header.profileImage.layer.cornerRadius = 60
+                header.topImage.isHidden = false
+                header.profileImage.layer.cornerRadius = 50
                 
             } else {
                 header.profileImage.layer.cornerRadius = 0
                 
-                let bottomImage = UIImage(named: "일반적.png")
-                let topImage = UIImage(named: "camera.png")
                 
-                
-                let bottomSize = CGSize(width: 300, height: 300)
-                let topSize = CGSize(width: 80, height: 80)
-                UIGraphicsBeginImageContext(bottomSize)
-                
-                let areaSize = CGRect(x: 0, y: 0, width: bottomSize.width, height: bottomSize.height)
-                let areaSize2 = CGRect(x: 212, y: 220, width: topSize.width, height: topSize.height)
-                bottomImage!.draw(in: areaSize)
-                
-                topImage!.draw(in: areaSize2 , blendMode: .normal , alpha: 1)
-                
-                let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-                UIGraphicsEndImageContext()
-                
-                header.profileImage.image = newImage
+
                 
                 
                 
@@ -307,6 +297,8 @@ class MyProfileVC : UIViewController {
                 
             }
             
+            
+            header.informationValLabels[0].text =  String(self.imagesArr.count)
             
             
         }).disposed(by: header.disposeBag)
@@ -337,6 +329,8 @@ class MyProfileVC : UIViewController {
             print("\(imagesArr) imagesArr")
             
             loadControll = true
+            
+            
             
             
             self.imagesArr = imagesArr
@@ -373,7 +367,7 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ProfileHeaderView.identifier, for: indexPath) as? ProfileHeaderView  else {
+        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ProfileHeaderView.identifier , for: indexPath) as? ProfileHeaderView  else {
             
             return UICollectionViewCell()
         }
@@ -381,7 +375,7 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
         
         
         if(firstBind){
-            print("바인드")
+            self.HEADER_HEIGHT = header.frame.height
             self.setHeaderBindings(header: header)
             
             firstBind = false

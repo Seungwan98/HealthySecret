@@ -649,7 +649,7 @@ class DiaryViewController : UIViewController {
     var minuteLabel = UILabel()
     var exCalorieLabel = UILabel()
     lazy var exerciseView : UIView = {
-        let image = UIImageView(image: UIImage(named: "dumbbell.png"))
+        let image = UIImageView(image: UIImage(named: "dumbbellPic.png"))
         let view = UIView()
         let centerLabel = UILabel()
         

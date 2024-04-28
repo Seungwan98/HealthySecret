@@ -10,17 +10,35 @@ import RxSwift
 import UIKit
 
 
-class ProfileHeaderView : UICollectionReusableView  {
+class ProfileHeaderView : UICollectionViewCell  {
     
     let disposeBag = DisposeBag()
     
+    static let identifier = "profileHeaderView"
     
     var appearEvent = PublishSubject<Bool>()
     
    var setBind = PublishSubject<Bool>()
    
     
-    static let identifier = "CustomHeaderCollectionView"
+    let informationValLabels = [UILabel() , UILabel() , UILabel()]
+    
+    let informationTextLabels = [UILabel() , UILabel() , UILabel()]
+    
+    let informationTexts = ["피드" , "팔로워" , "팔로잉"]
+    
+    lazy var informationStackView = {
+       let stackview = UIStackView(arrangedSubviews: informationValLabels)
+        stackview.translatesAutoresizingMaskIntoConstraints = false
+        stackview.axis = .horizontal
+        stackview.distribution = .fillEqually
+        stackview.alignment = .center
+        
+        
+        return stackview
+    }()
+    
+    
     
     let profileImage : UIImageView = {
         let view = UIImageView()
@@ -38,10 +56,10 @@ class ProfileHeaderView : UICollectionReusableView  {
     let introduceLabel : UILabel = {
         let label = UILabel()
         label.text = "아직 소개글이 없어요."
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.numberOfLines = 0
         label.sizeToFit()
-        label.font =  .boldSystemFont(ofSize: 18 )
+        label.font =  .systemFont(ofSize: 16 )
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
         
@@ -131,12 +149,14 @@ class ProfileHeaderView : UICollectionReusableView  {
     }()
     
     
-    
+    let topImage = UIImageView(image:UIImage(named:  "camera.png"))
+
     
     
     override init(frame: CGRect ) {
         super.init(frame: frame)
         setUI()
+        setStackViews()
 
         print("headerInit")
     }
@@ -150,39 +170,83 @@ class ProfileHeaderView : UICollectionReusableView  {
     
   
     
+    private func setStackViews(){
+        var idx = 0
+        
+        informationValLabels.forEach{
+            
+            $0.textAlignment = .center
+            $0.text = "0"
+            $0.font = .boldSystemFont(ofSize: 24)
+            
+            
+            
+            
+            informationTextLabels[idx].translatesAutoresizingMaskIntoConstraints = false
+            
+            self.addSubview(informationTextLabels[idx])
+            
+            informationTextLabels[idx].text = informationTexts[idx]
+            informationTextLabels[idx].font = .systemFont(ofSize: 12)
+            
+
+            NSLayoutConstraint.activate([
+                
+                
+                informationTextLabels[idx].centerXAnchor.constraint(equalTo: $0.centerXAnchor),
+                informationTextLabels[idx].bottomAnchor.constraint(equalTo: $0.topAnchor , constant: -10),
+
+            
+            
+            ])
+
+            
+            
+            idx += 1
+
+            
+        }
+        
+        
+        
+    }
     
     
     
     private func setUI() {
-   
+        
         
         self.addSubview(informationView)
         self.addSubview(profileImage)
+        self.addSubview(informationStackView)
         self.addSubview(introduceLabel)
         self.addSubview(goalLabel)
         self.addSubview(rightLabel)
         self.addSubview(gramLabel)
+        self.addSubview(topImage)
         
         
+        topImage.translatesAutoresizingMaskIntoConstraints = false
+        topImage.isHidden = true
   
         
         NSLayoutConstraint.activate([
             
             
-            profileImage.widthAnchor.constraint(equalToConstant: 120),
-            profileImage.heightAnchor.constraint(equalToConstant: 120),
-            profileImage.topAnchor.constraint(equalTo: self.topAnchor , constant: 40 ),
-            profileImage.leadingAnchor.constraint(equalTo: self.leadingAnchor , constant: 40 ),
+            profileImage.widthAnchor.constraint(equalToConstant: 100),
+            profileImage.heightAnchor.constraint(equalToConstant: 100),
+            profileImage.topAnchor.constraint(equalTo: self.topAnchor , constant: 20 ),
+            profileImage.leadingAnchor.constraint(equalTo: self.leadingAnchor , constant: 20 ),
             
             
             introduceLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor , constant: 20 ),
             introduceLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor , constant: -20 ),
-            introduceLabel.topAnchor.constraint(equalTo: self.profileImage.bottomAnchor , constant: 5 ),
-           // introduceLabel.heightAnchor.constraint(equalToConstant: 60 ),
+            introduceLabel.topAnchor.constraint(equalTo: self.profileImage.bottomAnchor , constant: 10 ),
+            introduceLabel.bottomAnchor.constraint(equalTo: self.goalLabel.topAnchor , constant: -10  ),
             
             
             goalLabel.leadingAnchor.constraint(equalTo: informationView.leadingAnchor),
-            goalLabel.topAnchor.constraint(equalTo: introduceLabel.bottomAnchor , constant: 10),
+            goalLabel.bottomAnchor.constraint(equalTo: informationView.topAnchor , constant: -10),
             
             
             gramLabel.trailingAnchor.constraint(equalTo: informationView.trailingAnchor ),
@@ -195,9 +259,19 @@ class ProfileHeaderView : UICollectionReusableView  {
             
             informationView.leadingAnchor.constraint(equalTo: self.leadingAnchor , constant: 20),
             informationView.trailingAnchor.constraint(equalTo: self.trailingAnchor , constant: -20),
-            informationView.topAnchor.constraint(equalTo: goalLabel.bottomAnchor , constant: 5),
-            informationView.bottomAnchor.constraint(equalTo: self.bottomAnchor , constant: 5),
             informationView.heightAnchor.constraint(equalToConstant: 120),
+            informationView.bottomAnchor.constraint(equalTo: self.bottomAnchor ,constant: -20),
+            
+            topImage.widthAnchor.constraint(equalToConstant: 30),
+            topImage.heightAnchor.constraint(equalToConstant: 30) ,
+            topImage.trailingAnchor.constraint(equalTo: self.profileImage.trailingAnchor),
+            topImage.bottomAnchor.constraint(equalTo: self.profileImage.bottomAnchor),
+            
+            informationStackView.centerYAnchor.constraint(equalTo: profileImage.centerYAnchor ,constant: 4),
+            informationStackView.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor ,constant: 30),
+            informationStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor ,constant: -30),
+            informationStackView.heightAnchor.constraint(equalToConstant: 80),
+           
             
   
         ])

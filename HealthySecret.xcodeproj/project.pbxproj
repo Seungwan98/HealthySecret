@@ -84,7 +84,6 @@
 		60A380052B6A37D800C9A2E6 /* Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A380042B6A37D800C9A2E6 /* Custom.swift */; };
 		60A380072B6A5F6B00C9A2E6 /* EditExerciseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A380062B6A5F6B00C9A2E6 /* EditExerciseVC.swift */; };
 		60A380092B6A663E00C9A2E6 /* EditExerciseVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A380082B6A663E00C9A2E6 /* EditExerciseVM.swift */; };
-		60A3800D2B6A7E9F00C9A2E6 /* dumbbell.png in Resources */ = {isa = PBXBuildFile; fileRef = 60A3800C2B6A7E9F00C9A2E6 /* dumbbell.png */; };
 		60A380102B6A81A400C9A2E6 /* ExerciseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A3800F2B6A81A400C9A2E6 /* ExerciseCell.swift */; };
 		60A380122B6CD8B200C9A2E6 /* IngredientsDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A380112B6CD8B200C9A2E6 /* IngredientsDetailVC.swift */; };
 		60A380142B6D245D00C9A2E6 /* EditIngredientsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A380132B6D245D00C9A2E6 /* EditIngredientsVC.swift */; };
@@ -137,6 +136,7 @@
 		60EAFE122BC83CF400D3EE73 /* OtherProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EAFE112BC83CF400D3EE73 /* OtherProfileVM.swift */; };
 		60EAFE142BC852C800D3EE73 /* OtherProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EAFE132BC852C800D3EE73 /* OtherProfileVC.swift */; };
 		60EF3C8B2BDC34560007862F /* .gitattributes in Resources */ = {isa = PBXBuildFile; fileRef = 60EF3C8A2BDC34560007862F /* .gitattributes */; };
+		60EF3C8F2BDE74070007862F /* dumbbellPic.png in Resources */ = {isa = PBXBuildFile; fileRef = 60EF3C8E2BDE74070007862F /* dumbbellPic.png */; };
 		CB62F41F787B287CE4FA2161 /* Pods_HealthySecret.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */; };
 /* End PBXBuildFile section */
 
@@ -231,7 +231,6 @@
 		60A380042B6A37D800C9A2E6 /* Custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Custom.swift; sourceTree = "<group>"; };
 		60A380062B6A5F6B00C9A2E6 /* EditExerciseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditExerciseVC.swift; sourceTree = "<group>"; };
 		60A380082B6A663E00C9A2E6 /* EditExerciseVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditExerciseVM.swift; sourceTree = "<group>"; };
-		60A3800C2B6A7E9F00C9A2E6 /* dumbbell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dumbbell.png; path = ../../../../../../Downloads/dumbbell.png; sourceTree = "<group>"; };
 		60A3800F2B6A81A400C9A2E6 /* ExerciseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseCell.swift; sourceTree = "<group>"; };
 		60A380112B6CD8B200C9A2E6 /* IngredientsDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsDetailVC.swift; sourceTree = "<group>"; };
 		60A380132B6D245D00C9A2E6 /* EditIngredientsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditIngredientsVC.swift; sourceTree = "<group>"; };
@@ -278,6 +277,7 @@
 		60EAFE112BC83CF400D3EE73 /* OtherProfileVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfileVM.swift; sourceTree = "<group>"; };
 		60EAFE132BC852C800D3EE73 /* OtherProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfileVC.swift; sourceTree = "<group>"; };
 		60EF3C8A2BDC34560007862F /* .gitattributes */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitattributes; sourceTree = "<group>"; };
+		60EF3C8E2BDE74070007862F /* dumbbellPic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dumbbellPic.png; sourceTree = "<group>"; };
 		DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthySecret.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -574,7 +574,6 @@
 				60BB26AF2B45CD3100191CB1 /* secondDout.png */,
 				606343C42B8E19830084E2CC /* camera.png */,
 				600DE97F2B69424F00D5D797 /* snack.png */,
-				60A3800C2B6A7E9F00C9A2E6 /* dumbbell.png */,
 				60BB26B52B46766700191CB1 /* union.png */,
 				60BB26B12B45CD3400191CB1 /* thirdDout.png */,
 				6067B99A2B4D578B00D536FF /* calendarIcon.png */,
@@ -583,6 +582,7 @@
 				606343B32B84976D0084E2CC /* edmitLunch.jpg */,
 				60BB269B2B453EB900191CB1 /* line.png */,
 				60BB26992B45385C00191CB1 /* sangsaeButton.png */,
+				60EF3C8E2BDE74070007862F /* dumbbellPic.png */,
 				60BB26972B4533A200191CB1 /* dinnerButton.png */,
 				600DE9652B60208600D5D797 /* apple_login.png */,
 				60BC990B2B3583340013FAD9 /* tableBackGround.png */,
@@ -697,7 +697,6 @@
 				60BB26962B45336100191CB1 /* lunchButton.png in Resources */,
 				60BB26AE2B45CD2F00191CB1 /* firstDout.png in Resources */,
 				60BB26982B4533A200191CB1 /* dinnerButton.png in Resources */,
-				60A3800D2B6A7E9F00C9A2E6 /* dumbbell.png in Resources */,
 				60BC990A2B34848E0013FAD9 /* Diary.png in Resources */,
 				606343B12B84961A0084E2CC /* edmitSnack.png in Resources */,
 				606343B62B84976D0084E2CC /* edmitLunch.jpg in Resources */,
@@ -718,6 +717,7 @@
 				600DE94D2B57CC1C00D5D797 /* menButton.png in Resources */,
 				600DE9802B69424F00D5D797 /* snack.png in Resources */,
 				6094C5422ACD915300D62B0A /* Assets.xcassets in Resources */,
+				60EF3C8F2BDE74070007862F /* dumbbellPic.png in Resources */,
 				600DE9492B57CA4200D5D797 /* 활동많음_fill.png in Resources */,
 				600DE96E2B61081900D5D797 /* lunch.png in Resources */,
 				600DE9642B601F8800D5D797 /* kakao_login.png in Resources */,

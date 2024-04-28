@@ -73,6 +73,7 @@ class ChangeIntroduceVM : ViewModel {
         let backgroundScheduler = ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global())
 
         input.viewWillApearEvent.subscribe(onNext: {
+            print("appear")
             
             output.name.onNext(self.name!)
             output.introduce.onNext(self.introduce ?? "")

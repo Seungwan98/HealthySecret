@@ -49,26 +49,12 @@ class ChangeIntroduceVC : UIViewController {
         
     }()
     
-    private let profileImage : UIImage = {
-        let bottomImage = UIImage(named: "일반적.png")
-        let topImage = UIImage(named: "camera.png")
-        
-        
-        var bottomSize = CGSize(width: 300, height: 300)
-        var topSize = CGSize(width: 80, height: 80)
-        UIGraphicsBeginImageContext(bottomSize)
-
-        let areaSize = CGRect(x: 0, y: 0, width: bottomSize.width, height: bottomSize.height)
-        let areaSize2 = CGRect(x: 212, y: 220, width: topSize.width, height: topSize.height)
-        bottomImage!.draw(in: areaSize)
-
-        topImage!.draw(in: areaSize2 , blendMode: .normal , alpha: 1)
-
-        var newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return newImage
-        
-    }()
+    private let maxCount = 50
+       private var textCount = 0 {
+           didSet { self.writeContentLabel.text = "\(textCount)/\(maxCount)" }
+       }
+    
+    
     
     private let nameTextField : UITextField = {
         let textField = UITextField()
@@ -86,7 +72,7 @@ class ChangeIntroduceVC : UIViewController {
     }()
 
     
-    let introduceTextField : UITextView = {
+    lazy var introduceTextView : UITextView = {
         // Create a TextView.
         let textView: UITextView = UITextView()
 
@@ -103,22 +89,30 @@ class ChangeIntroduceVC : UIViewController {
         
         textView.font = UIFont.boldSystemFont(ofSize: 18)
 
-        // Set font color.
         textView.textColor = UIColor.black
 
-        // Set left justified.
         textView.textAlignment = NSTextAlignment.left
 
-        // Automatically detect links, dates, etc. and convert them to links.
         textView.dataDetectorTypes = UIDataDetectorTypes.all
   
-
-        // Make text uneditable.
         textView.isEditable = true
 
+        textView.textColor = .black
         
         textView.tintColor = .black
+       
+        textView.delegate = self
         return textView
+    }()
+    
+    let writeContentLabel : UILabel = {
+        let label = UILabel()
+        label.textColor = .lightGray
+        label.text = "0/100"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+        
+        
     }()
 
     
@@ -187,9 +181,17 @@ class ChangeIntroduceVC : UIViewController {
     
 
     let labels = [UILabel() , UILabel()]
+    
     let text = ["닉네임" , "내 소개"]
     
+    let topImage = UIImageView(image:UIImage(named: "camera.png"))
+
+   
+  
     func setUI(){
+        
+        topImage.translatesAutoresizingMaskIntoConstraints = false
+        topImage.isHidden = true
         
         self.view.addSubview(contentScrollView)
         self.view.addSubview(bottomView)
@@ -197,10 +199,15 @@ class ChangeIntroduceVC : UIViewController {
         self.contentScrollView.addSubview(contentView)
         
         self.contentView.addSubview(profileImageView)
+        self.contentView.addSubview(topImage)
         self.contentView.addSubview(firstView)
         
+        
+        
         firstView.addSubview(nameTextField)
-        firstView.addSubview(introduceTextField)
+        firstView.addSubview(introduceTextView)
+        
+        firstView.addSubview(writeContentLabel)
         
         firstView.translatesAutoresizingMaskIntoConstraints = false
             
@@ -227,6 +234,12 @@ class ChangeIntroduceVC : UIViewController {
         
         NSLayoutConstraint.activate([
             
+            topImage.widthAnchor.constraint(equalToConstant: 30),
+            topImage.heightAnchor.constraint(equalToConstant: 30) ,
+            topImage.trailingAnchor.constraint(equalTo: self.profileImageView.trailingAnchor),
+            topImage.bottomAnchor.constraint(equalTo: self.profileImageView.bottomAnchor),
+            
+            
             bottomView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             bottomView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             bottomView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
@@ -250,10 +263,12 @@ class ChangeIntroduceVC : UIViewController {
             contentView.leadingAnchor.constraint(equalTo: self.contentScrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: self.contentScrollView.trailingAnchor),
             self.contentView.widthAnchor.constraint(equalTo: self.contentScrollView.widthAnchor , multiplier: 1.0),
+            
+   
 
             
-            profileImageView.widthAnchor.constraint(equalToConstant: 120),
-            profileImageView.heightAnchor.constraint(equalToConstant: 120),
+            profileImageView.widthAnchor.constraint(equalToConstant: 100),
+            profileImageView.heightAnchor.constraint(equalToConstant: 100),
             profileImageView.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor ),
             profileImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor , constant: 40 ),
             
@@ -267,20 +282,21 @@ class ChangeIntroduceVC : UIViewController {
             labels[0].topAnchor.constraint(equalTo: firstView.topAnchor ),
             labels[0].leadingAnchor.constraint(equalTo: firstView.leadingAnchor),
 
-            nameTextField.topAnchor.constraint(equalTo: labels[0].bottomAnchor , constant: 20),
+            nameTextField.topAnchor.constraint(equalTo: labels[0].bottomAnchor , constant: 10),
             nameTextField.leadingAnchor.constraint(equalTo:firstView.leadingAnchor),
             nameTextField.trailingAnchor.constraint(equalTo: firstView.trailingAnchor ),
             nameTextField.heightAnchor.constraint(equalToConstant: 60 ),
             
-            labels[1].topAnchor.constraint(equalTo: nameTextField.bottomAnchor , constant: 40),
+            labels[1].topAnchor.constraint(equalTo: nameTextField.bottomAnchor , constant: 20),
             labels[1].leadingAnchor.constraint(equalTo: firstView.leadingAnchor),
             
-            introduceTextField.topAnchor.constraint(equalTo: labels[1].bottomAnchor , constant: 20),
-            introduceTextField.leadingAnchor.constraint(equalTo:firstView.leadingAnchor),
-            introduceTextField.trailingAnchor.constraint(equalTo: firstView.trailingAnchor ),
-            introduceTextField.heightAnchor.constraint(equalToConstant: 260 ),
+            introduceTextView.topAnchor.constraint(equalTo: labels[1].bottomAnchor , constant: 10),
+            introduceTextView.leadingAnchor.constraint(equalTo:firstView.leadingAnchor),
+            introduceTextView.trailingAnchor.constraint(equalTo: firstView.trailingAnchor ),
+            introduceTextView.heightAnchor.constraint(equalToConstant: 260 ),
             
-            
+            writeContentLabel.trailingAnchor.constraint(equalTo: introduceTextView.trailingAnchor , constant: -5),
+            writeContentLabel.bottomAnchor.constraint(equalTo: introduceTextView.bottomAnchor , constant: -5),
 
          
             
@@ -305,22 +321,40 @@ class ChangeIntroduceVC : UIViewController {
 
         
         
-        let input = ChangeIntroduceVM.Input(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , addButtonTapped : self.addButton.rx.tap.asObservable()  , nameTextField: nameTextField.rx.text.orEmpty.distinctUntilChanged().asObservable() , introduceTextField: introduceTextField.rx.text.orEmpty.distinctUntilChanged().asObservable() ,
+        let input = ChangeIntroduceVM.Input(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , addButtonTapped : self.addButton.rx.tap.asObservable()  , nameTextField: nameTextField.rx.text.orEmpty.distinctUntilChanged().asObservable() , introduceTextField: introduceTextView.rx.text.orEmpty.distinctUntilChanged().asObservable() ,
                                             profileImageTapped : profileImageView.rx.tapGesture().when(.recognized).asObservable() , profileImageValue : self.imageOutput, profileChange: imageChanging.asObservable())
         
         
         
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag ) else {return}
         
-       
         
         
+        var idx = 0
         
         
-        Observable.zip(output.name , output.introduce , output.profileImage ).subscribe(onNext: {
+        Observable.zip(output.name.asObservable() , output.introduce.asObservable() , output.profileImage.asObservable() ).subscribe(onNext: {
+            
+            
+            
+            if  $1.count <= 0 {
+         
+                    
+                    self.introduceTextView.textColor = .lightGray
+                    self.introduceTextView.text = "내 소개를 입력하여 주세요."
+            
+            }else{
+                self.introduceTextView.textColor = .black
+                self.writeContentLabel.text = "\($1.count)/\(self.maxCount)"
+
+            }
             
             self.nameTextField.text = $0
-            self.introduceTextField.text = $1
+            self.introduceTextView.text = $1
+            
+           
+            
+           
             
             if let data = $2 {
                 
@@ -347,7 +381,7 @@ class ChangeIntroduceVC : UIViewController {
                             ])
                         
                         
-                        
+                        self.topImage.isHidden = false
                         
                      
                         
@@ -355,19 +389,17 @@ class ChangeIntroduceVC : UIViewController {
                         
                     }
                     
-                    self.profileImageView.layer.cornerRadius = 60
+                    self.profileImageView.layer.cornerRadius = 50
 
                 }
-                
-//                self.profileImageView.image = UIImage(data: data)
-                //self.imageOutput.onNext(UIImage(data:data))
+
 
 
                 
             }else{
                 self.profileImageView.layer.cornerRadius = 0
 
-                self.profileImageView.image = self.profileImage
+                self.profileImageView.image = UIImage(named: "일반적.png")
                 
 
             }
@@ -416,7 +448,7 @@ extension ChangeIntroduceVC : UIImagePickerControllerDelegate , UINavigationCont
         let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
         let replaceImage = UIAlertAction(title: "삭제" , style: .default ){
             [weak self] _ in
-            self?.profileImageView.image = self?.profileImage
+            self?.profileImageView.image = self?.topImage.image
             self?.profileImageView.layer.cornerRadius = 0
             self?.imageOutput.onNext(nil)
             self?.imageChanging.onNext(true)
@@ -503,5 +535,94 @@ extension ChangeIntroduceVC : UIImagePickerControllerDelegate , UINavigationCont
     }
     
 }
+extension ChangeIntroduceVC : UITextViewDelegate {
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+   
+        if textView.text.count <= 0 {
+            
+            textView.textColor = .lightGray
+            textView.text = "내 소개를 입력하여 주세요."
+
+            
+        }
+    }
+    
+    func textView(
+           _ textView: UITextView,
+           shouldChangeTextIn range: NSRange,
+           replacementText text: String
+       ) -> Bool {
+           let lastText = textView.text as NSString
+           let allText = lastText.replacingCharacters(in: range, with: text)
+
+           let canUseInput = allText.count <= maxCount
+
+           defer {
+               if canUseInput {
+                   textCount = allText.count
+               } else {
+                   textCount = textView.text.count
+               }
+           }
+           
+           guard !canUseInput else { return canUseInput }
+           
+               if textView.text.count < maxCount {
+                   /// "abc{최대글자가 넘는 문자열 붙여넣기}def"
+                   /// 기대결과: "abc{문자열}def"
+                   let appendingText = text.substring(from: 0, to: maxCount - textView.text.count - 1)
+                   textView.text = textView.text.inserting(appendingText, at: range.lowerBound)
+                   
+                   let isLastCursor = range.lowerBound >= textView.text.count
+                   let movingCursorPosition = isLastCursor ? maxCount : (range.lowerBound + appendingText.count)
+                   DispatchQueue.main.async {
+                       textView.selectedRange = NSMakeRange(movingCursorPosition, 0)
+                   }
+               } else {
+                   /// 카운트 값을 넘었을때 중간 커서에서 붙여넣기 > 커서가 문자열만큼 뒤로 가는 버그 > 다시 커서 제자리로 위치시키는 코드
+                   DispatchQueue.main.async {
+                       textView.selectedRange = NSMakeRange(range.lowerBound, 0)
+                   }
+               }
+
+           return canUseInput
+       }
+   }
+
+   extension String {
+       func substring(from: Int, to: Int) -> String {
+           guard from < count, to >= 0, to - from >= 0 else { return "" }
+           let startIndex = index(startIndex, offsetBy: from)
+           let endIndex = index(startIndex, offsetBy: to + 1)
+           return String(self[startIndex ..< endIndex])
+       }
+       
+       func inserting(_ string: String, at index: Int) -> String {
+           var originalString = self
+           originalString.insert(contentsOf: string, at: self.index(self.startIndex, offsetBy: index))
+           return originalString
+       }
+   }
+   
+//    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+//        let currentText = textView.text ?? ""
+//        
+//        textView.textColor = .black
+//                
+//        guard let stringRange = Range(range , in:currentText) else {return false}
+//        
+//        let chagedText = currentText.replacingCharacters(in: stringRange, with: text)
+//        
+//    
+//        
+//        writeContentLabel.text = "\(chagedText.count)/100"
+//        
+//        
+//        
+//        return chagedText.count <= 99
+//    }
+    
+//}
 
 
