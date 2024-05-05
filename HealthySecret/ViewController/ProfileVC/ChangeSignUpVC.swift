@@ -242,6 +242,8 @@ class ChangeSignUpVC : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
+        
+        self.hideKeyboardWhenTappedAround()
 
         addSubView()
         setInformationStack()

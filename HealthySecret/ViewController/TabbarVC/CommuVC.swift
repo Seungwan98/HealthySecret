@@ -151,11 +151,10 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
                 
                 
                 let placeholdImage = UIImageView()
-                let xPos = cell.scrollView.frame.width * CGFloat(0)
                 
                 var idx = 0
                 
-                placeholdImage.frame = CGRect(x: xPos, y: 0, width: cell.scrollView.bounds.width, height: cell.scrollView.bounds.height)
+          
                 
                 placeholdImage.backgroundColor = .white
                 
@@ -163,6 +162,10 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
                
                 
                 _ = item.mainImgUrl.map{
+                    let xPos = cell.scrollView.frame.width * CGFloat(0)
+                    placeholdImage.frame = CGRect(x: xPos, y: 0, width: cell.scrollView.bounds.width, height: cell.scrollView.bounds.height)
+
+                    print("mainImgUrl \(item.mainImgUrl)")
                     
 
                     if let url = URL(string: $0 ) {
@@ -186,9 +189,9 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
                         
                         
                         image.frame = CGRect(x: xPos, y: 0, width: cell.scrollView.bounds.width, height: cell.scrollView.bounds.height)
-                        
-                        cell.scrollView.addSubview(image)
                         cell.scrollView.contentSize.width = image.frame.width * CGFloat(idx + 1)
+
+                        cell.scrollView.addSubview(image)
                         
                         
                     }

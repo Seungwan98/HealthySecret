@@ -485,29 +485,38 @@ extension LoginViewController : ASAuthorizationControllerDelegate {
             }
             
             
+            let given = appleIDCredential.fullName?.givenName ?? ""
+            let family = appleIDCredential.fullName?.familyName ?? ""
             
             
+            UserDefaults.standard.set( "\(family)+\(given)"  , forKey: "name")
             let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString , rawNonce: nonce)
             self.appleLogin.onNext(credential)
-            
-            
-          
-            
-            
-            
-            
-            
-            
-            
-                        }
         }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     }
-    
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        // Handle error.
-        print("Sign in with Apple errored: \(error)")
-    }
-   
+}
+
+func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+    // Handle error.
+    print("Sign in with Apple errored: \(error)")
+}
+
 
 extension LoginViewController: ASAuthorizationControllerPresentationContextProviding {
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {

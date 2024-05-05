@@ -288,19 +288,25 @@ final class FirebaseService {
     
     func getDocument( key : String ) -> Single<UserModel> {
         return Single.create { [weak self] single in
-            guard let self = self else { return Disposables.create() }
+            
+            print("getDoc")
             
             
-            
-            self.db.collection("HealthySecretUsers").document(key).getDocument{ doc , err in
+            self?.db.collection("HealthySecretUsers").document(key).getDocument{ doc , err in
                 if let err = err { single(.failure(err))}
+                
+
                 
                 
                 
                 if let data = doc?.data() {
                     do {
+                        print("getDo2")
+
                         let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
                         let creditCard = try JSONDecoder().decode(UserModel.self, from: jsonData)
+                        print("\(creditCard)")
+
                         single(.success(creditCard))
                         
                     } catch let error {
@@ -308,6 +314,8 @@ final class FirebaseService {
                         single(.failure(CustomError.isNil))
                         
                     }
+                }else{
+                    single(.failure(CustomError.isNil))
                 }
                 
                 

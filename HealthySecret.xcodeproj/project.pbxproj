@@ -137,6 +137,9 @@
 		60EAFE142BC852C800D3EE73 /* OtherProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EAFE132BC852C800D3EE73 /* OtherProfileVC.swift */; };
 		60EF3C8B2BDC34560007862F /* .gitattributes in Resources */ = {isa = PBXBuildFile; fileRef = 60EF3C8A2BDC34560007862F /* .gitattributes */; };
 		60EF3C8F2BDE74070007862F /* dumbbellPic.png in Resources */ = {isa = PBXBuildFile; fileRef = 60EF3C8E2BDE74070007862F /* dumbbellPic.png */; };
+		60EF3C912BDF564A0007862F /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60EF3C902BDF564A0007862F /* AdSupport.framework */; };
+		60EF3C932BE0C7220007862F /* FollowsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C922BE0C7220007862F /* FollowsVC.swift */; };
+		60EF3C952BE0C7AD0007862F /* FollowsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C942BE0C7AD0007862F /* FollowsVM.swift */; };
 		CB62F41F787B287CE4FA2161 /* Pods_HealthySecret.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */; };
 /* End PBXBuildFile section */
 
@@ -278,6 +281,9 @@
 		60EAFE132BC852C800D3EE73 /* OtherProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfileVC.swift; sourceTree = "<group>"; };
 		60EF3C8A2BDC34560007862F /* .gitattributes */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitattributes; sourceTree = "<group>"; };
 		60EF3C8E2BDE74070007862F /* dumbbellPic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dumbbellPic.png; sourceTree = "<group>"; };
+		60EF3C902BDF564A0007862F /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		60EF3C922BE0C7220007862F /* FollowsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsVC.swift; sourceTree = "<group>"; };
+		60EF3C942BE0C7AD0007862F /* FollowsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsVM.swift; sourceTree = "<group>"; };
 		DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthySecret.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -287,6 +293,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				60BC98D82AF919B40013FAD9 /* FirebaseFirestoreSwift in Frameworks */,
+				60EF3C912BDF564A0007862F /* AdSupport.framework in Frameworks */,
 				60BC98DC2AFA3A890013FAD9 /* FirebaseAuth in Frameworks */,
 				60BC98D22AF919B40013FAD9 /* FirebaseAnalytics in Frameworks */,
 				60BC98D62AF919B40013FAD9 /* FirebaseFirestoreCombine-Community in Frameworks */,
@@ -377,6 +384,7 @@
 				609C064A2BBE9C2400D61F53 /* ComentsVC.swift */,
 				60EAFE0B2BC4357600D3EE73 /* UpdateFeedVC.swift */,
 				60EAFE0D2BC4361200D3EE73 /* UpdateFeedVM.swift */,
+				60EF3C922BE0C7220007862F /* FollowsVC.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -512,6 +520,7 @@
 				60EAFE052BC125BD00D3EE73 /* ComentsVM.swift */,
 				60EAFE112BC83CF400D3EE73 /* OtherProfileVM.swift */,
 				6093BC0C2BD82C0800D3BE3C /* ProfileFeedVM.swift */,
+				60EF3C942BE0C7AD0007862F /* FollowsVM.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -597,6 +606,7 @@
 		AA1FAA90DEBD527FB70DC4D9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				60EF3C902BDF564A0007862F /* AdSupport.framework */,
 				60A380012B6963A500C9A2E6 /* FSCalendar.framework */,
 				60A37FFB2B6961C900C9A2E6 /* FSCalendar.framework */,
 				60A37FF92B69609400C9A2E6 /* FSCalendar.framework */,
@@ -846,7 +856,9 @@
 				6003998A2BDB9C7F0030D9EF /* ProfileHeaderView.swift in Sources */,
 				609C064D2BBEE3B500D61F53 /* AppleService.swift in Sources */,
 				600DE97C2B67A23E00D5D797 /* ExerciseDetialVM.swift in Sources */,
+				60EF3C932BE0C7220007862F /* FollowsVC.swift in Sources */,
 				600DE9742B6269BD00D5D797 /* ExerciseVC.swift in Sources */,
+				60EF3C952BE0C7AD0007862F /* FollowsVM.swift in Sources */,
 				60EAFE0A2BC2DF9400D3EE73 /* ComentsCell.swift in Sources */,
 				607ABE502B9824B400C3FCCF /* ViewController+.swift in Sources */,
 				609C062F2B9ABC0D00D61F53 /* RunCoordinator.swift in Sources */,

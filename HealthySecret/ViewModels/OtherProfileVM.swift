@@ -55,6 +55,8 @@ class OtherProfileVM : ViewModel {
         var popView = BehaviorSubject<Bool>(value: false)
         var followersSelected = BehaviorSubject<Bool>(value: false)
         var followersCount = BehaviorSubject<Int>(value: 0)
+        var followingsCount = BehaviorSubject<Int>(value: 0)
+        var followersEnable = BehaviorSubject<Bool>(value: false)
         
     }
     
@@ -107,24 +109,36 @@ class OtherProfileVM : ViewModel {
                     output.calorie.onNext(String(user.calorie))
                     output.name.onNext(user.name)
                     output.profileImage.onNext(user.profileImage ?? nil)
+                    output.followingsCount.onNext((user.followings ?? []).count)
+                    
+                    
+                    
+                    
+                    
                     
                     var selected = false
                     
-                    if let followings = user.followings {
+                    if let followers = user.followers {
                         
                         
                         
-                        print("\(followings) follwings")
+                        print("\(followers) followers")
                         
-                        if(followings.contains(authUid)){
+                        if(followers.contains(authUid)){
 
                             selected = true
                         }
-                        output.followersCount.onNext(followings.count)
+                        output.followersCount.onNext(followers.count)
 
                     }
                     
+                    
+                    let event = (uid == authUid)
+                    output.followersEnable.onNext(event)
                     output.followersSelected.onNext(selected)
+
+                    
+                    
                     
                     
                 case .failure(_):

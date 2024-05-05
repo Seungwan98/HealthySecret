@@ -387,7 +387,6 @@ class MyProfileVM : ViewModel {
                
 
                 
-                print("\(email) email")
                 
                 
                self.kakaoService.kakaoGetToken().subscribe({ single in
@@ -438,7 +437,6 @@ class MyProfileVM : ViewModel {
         
         
         input.values.subscribe(onNext: { codeString , userId in
-            
             input.OAuthCredential.subscribe(onNext: { auth in
                 
                 

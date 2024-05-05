@@ -143,6 +143,8 @@ class CalendarVM : ViewModel {
         
         let output = AddOutput()
         
+        guard let authUid = UserDefaults.standard.string(forKey: "uid") else {return output}
+
         
         
         input.addButtonTapped.subscribe(onNext: { _ in
@@ -164,8 +166,7 @@ class CalendarVM : ViewModel {
                     self.diarys.append(diary)
                     
                     
-                    
-                    self.firebaseService.updateDiary(diary: self.diarys, key: UserDefaults.standard.string(forKey: "email") ?? "").subscribe{
+                    self.firebaseService.updateDiary(diary: self.diarys, key: authUid ).subscribe{
                         
                         event in
                         switch(event){

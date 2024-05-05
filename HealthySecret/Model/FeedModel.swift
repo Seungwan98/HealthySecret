@@ -41,7 +41,7 @@ struct FeedModel : Codable {
         case nickname = "nickname"
         case likes = "likes"
         case contents = "contents"
-        case mainImgUrl = "mainImg"
+        case mainImgUrl = "mainImgUrl"
         case coments = "coments"
         case profileImage = "profileImage"
         

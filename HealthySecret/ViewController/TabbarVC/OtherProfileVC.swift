@@ -98,7 +98,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
     
     
     
-    let addButton : UIButton = {
+    let followButton : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 30
@@ -118,6 +118,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
     
     override func viewWillAppear(_ animated: Bool) {
 
+       
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
         
@@ -131,16 +132,16 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
 
     func addFollowButton() {
         
-        self.view.addSubview(self.addButton)
+        self.view.addSubview(self.followButton)
         
-        self.addButton.addTarget(self, action: #selector(self.didPressedFollow), for: .touchUpInside)
+        self.followButton.addTarget(self, action: #selector(self.didPressedFollow), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
         
-            self.addButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.addButton.widthAnchor.constraint(equalToConstant: 160 ),
-            self.addButton.heightAnchor.constraint(equalToConstant: 60 ),
-            self.addButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor , constant: -40)
+            self.followButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.followButton.widthAnchor.constraint(equalToConstant: 160 ),
+            self.followButton.heightAnchor.constraint(equalToConstant: 60 ),
+            self.followButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor , constant: -40)
          
             
 
@@ -210,11 +211,11 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
     var isTouched: Bool? {
         didSet {
             if isTouched == true {
-                addButton.backgroundColor = .lightGray
-                addButton.setTitle("팔로잉", for: .normal)
+                followButton.backgroundColor = .lightGray
+                followButton.setTitle("팔로잉", for: .normal)
             }else{
-                addButton.backgroundColor = .systemBlue
-                addButton.setTitle("팔로우", for: .normal)
+                followButton.backgroundColor = .systemBlue
+                followButton.setTitle("팔로우", for: .normal)
             }
         }
     }
@@ -247,6 +248,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
     
     
     func setHeaderBindings(header : ProfileHeaderView){
+        
 
 
         let input = OtherProfileVM.HeaderInput( viewWillApearEvent: header.appearEvent  ,  outputProfileImage: self.outputProfileImage.asObservable() )
@@ -343,7 +345,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         output.followersSelected.subscribe(onNext: { [weak self] selected in
             
             
-            self?.addButton.isSelected = selected
+            self?.followButton.isSelected = selected
             self?.isTouched = selected
 
             
@@ -357,8 +359,24 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
             
         }).disposed(by: disposeBag)
         
-       
+        output.followingsCount.subscribe(onNext: { [weak self] count in
+            
+            header.informationValLabels[2].text = String(count)
+            
+            
+        }).disposed(by: disposeBag)
         
+        output.followersEnable.subscribe(onNext: { [weak self] enable in
+            
+            print("enable \(enable)")
+            
+            self?.followButton.isHidden = enable
+
+            
+        }).disposed(by: disposeBag)
+        
+        
+      
         
     }
     

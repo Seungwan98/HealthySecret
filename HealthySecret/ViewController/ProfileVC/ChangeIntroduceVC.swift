@@ -79,13 +79,10 @@ class ChangeIntroduceVC : UIViewController {
         textView.translatesAutoresizingMaskIntoConstraints = false
         // Round the corners.
         textView.backgroundColor = .lightGray.withAlphaComponent(0.2)
-
         // Set the size of the roundness.
         textView.layer.cornerRadius = 10
 
         textView.textAlignment = .left
-        
-        
         
         textView.font = UIFont.boldSystemFont(ofSize: 18)
 
@@ -105,10 +102,10 @@ class ChangeIntroduceVC : UIViewController {
         return textView
     }()
     
-    let writeContentLabel : UILabel = {
+    lazy var writeContentLabel : UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
-        label.text = "0/100"
+        label.text = "0/\(self.maxCount)"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
         
@@ -170,8 +167,12 @@ class ChangeIntroduceVC : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.hideKeyboardWhenTappedAround()
+
+        
         setUI()
         setBindings()
+        
         
     }
     
@@ -203,13 +204,12 @@ class ChangeIntroduceVC : UIViewController {
         self.contentView.addSubview(firstView)
         
         
-        
         firstView.addSubview(nameTextField)
         firstView.addSubview(introduceTextView)
-        
         firstView.addSubview(writeContentLabel)
-        
         firstView.translatesAutoresizingMaskIntoConstraints = false
+        
+        
             
         for i in 0..<labels.count{
             firstView.addSubview(labels[i])
@@ -336,7 +336,6 @@ class ChangeIntroduceVC : UIViewController {
         Observable.zip(output.name.asObservable() , output.introduce.asObservable() , output.profileImage.asObservable() ).subscribe(onNext: {
             
             
-            
             if  $1.count <= 0 {
          
                     
@@ -418,10 +417,9 @@ class ChangeIntroduceVC : UIViewController {
     
         
         self.profileImageView.rx.tapGesture().when(.recognized).subscribe(onNext:{ _ in
+            
             self.actionSheetAlert()
 
-            
-            
         }).disposed(by: disposeBag)
         
         
@@ -548,11 +546,23 @@ extension ChangeIntroduceVC : UITextViewDelegate {
         }
     }
     
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.text.count >= 0 {
+            
+            textView.textColor = .black
+            textView.text = ""
+
+            
+        }
+    }
+    
     func textView(
            _ textView: UITextView,
            shouldChangeTextIn range: NSRange,
            replacementText text: String
        ) -> Bool {
+           
+           
            let lastText = textView.text as NSString
            let allText = lastText.replacingCharacters(in: range, with: text)
 
@@ -605,24 +615,6 @@ extension ChangeIntroduceVC : UITextViewDelegate {
        }
    }
    
-//    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-//        let currentText = textView.text ?? ""
-//        
-//        textView.textColor = .black
-//                
-//        guard let stringRange = Range(range , in:currentText) else {return false}
-//        
-//        let chagedText = currentText.replacingCharacters(in: stringRange, with: text)
-//        
-//    
-//        
-//        writeContentLabel.text = "\(chagedText.count)/100"
-//        
-//        
-//        
-//        return chagedText.count <= 99
-//    }
-    
-//}
+
 
 

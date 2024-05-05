@@ -37,6 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         appWindow.rootViewController = navController
         appWindow.makeKeyAndVisible()
         
+        
         // 5
         self.window = appWindow
         

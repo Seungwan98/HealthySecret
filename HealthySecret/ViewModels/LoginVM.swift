@@ -66,7 +66,6 @@ class LoginVM : ViewModel {
             UserDefaults.standard.set("apple",forKey: "loginMethod")
             
             
-            print("\(credential)  credential")
 
             Auth.auth().signIn(with: credential) { authResult, error in
                 if let error = error {
@@ -74,25 +73,26 @@ class LoginVM : ViewModel {
                     
                     return
                 }
-                
+            
                 
                 guard let authUser = authResult?.user else { return }
        
                 UserDefaults.standard.set(authUser.email, forKey: "email")
                 UserDefaults.standard.set( authUser.uid  , forKey: "uid")
+
+
                 
+                print(authUser.uid)
                 
                 self.firebaseService?.getDocument(key: authUser.uid).subscribe({ event in
                     switch(event){
                     case.success(let user):
-                        
-                        
-                        UserDefaults.standard.set(user.name , forKey: "name")
+                    
+                        print("getDoc success")
                         UserDefaults.standard.set( user.profileImage , forKey: "profileImage")
                         self.loginCoordinator?.login()
                         
                     case.failure(_):
-                        UserDefaults.standard.set(authUser.providerID, forKey: "name")
                         
                         self.loginCoordinator?.pushSignUpVC()
                         

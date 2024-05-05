@@ -229,12 +229,16 @@ class CommuVM : ViewModel {
                     
                 case(.success(let feeds)):
                     
+                    
+                    self.feedModels = feeds
+                    
+                    print(feeds)
+
 
                     for i in 0..<feeds.count {
                         
                         self.likesCount[feeds[i].feedUid ] = feeds[i].likes
                     }
-                    self.feedModels = feeds
                     
                     if(feeds.count < 2){
                         
@@ -245,6 +249,8 @@ class CommuVM : ViewModel {
                         output.isLastPage.onNext(false)
 
                     }
+                    
+                    
                     
                     output.feedModel.onNext(self.feedModels)
                     output.likesCount.onNext(self.likesCount)

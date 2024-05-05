@@ -56,6 +56,8 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
     }
     
     
+   
+    
     func start() {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
@@ -71,10 +73,22 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
                 print("success")
                 var email : String?
                 var uid : String?
-                print(email , uid)
                 
-                if user.email == nil || user.uid.isEmpty {
-                    self.didLoggedOut(self)
+                if user.uid.isEmpty {
+                    
+                    print("sign Out")
+                    
+                    self.firebaseService.signOut().subscribe({ event in
+                        switch(event) {
+                        case.completed:
+                            self.didLoggedOut(self)
+                        case.error(let err):
+                            print(err)
+                        }
+                        
+                        
+                    }).disposed(by: self.disposeBag)
+                    
 
                 }else{
                     email = user.email
@@ -83,10 +97,9 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
                 }
                 
              
-
+               
                 
-                let backgroundScheduler = ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global())
-                self.firebaseService.getDocument(key: uid ?? "").subscribe(on: backgroundScheduler).subscribe{ event in
+                self.firebaseService.getDocument(key: uid ?? "").subscribe{ event in
                     switch event{
      
                         
@@ -112,7 +125,7 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
                         self.firebaseService.signOut().subscribe({ event in
                             switch(event){
                             case.completed:
-                                self.showLoginViewController()
+                                self.showSignUpVC()
                             case.error(_):
                                 print("err")
                             }
@@ -152,9 +165,22 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
         print("showLoginVC")
         
         let coordinator = LoginCoordinator(self.navigationController)
+        
         coordinator.delegate = self
         
         coordinator.start()
+        
+        self.childCoordinator.append(coordinator)
+        
+    } 
+    func showSignUpVC() {
+        print("showLoginVC")
+        
+        let coordinator = LoginCoordinator(self.navigationController)
+        
+        coordinator.delegate = self
+        
+        coordinator.pushSignUpVC()
         
         self.childCoordinator.append(coordinator)
         
@@ -235,6 +261,7 @@ class LoginCoordinator : Coordinator  {
     
     
     func start() {
+        print("startLoginVC")
         let viewModel = LoginVM(firebaseService: self.firebaseService, loginCoordinator: self , kakaoService: self.kakaoService)
         let loginViewController = LoginViewController(viewModel: viewModel)
         loginViewController.view.backgroundColor = .white
