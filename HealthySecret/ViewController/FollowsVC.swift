@@ -6,11 +6,24 @@
 //
 import UIKit
 import RxSwift
+import Kingfisher
 
 
-class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate   {
+class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , FollowsCellDelegate   {
+    
+    //cell delegate
+    func didPressFollows(for index: String, like: Bool) {
+        self.pressedFollows.onNext([index:like])
+        
+    }
     
     
+    private var cellTouchToSearch = PublishSubject<String>()
+    private var likesInputArr = PublishSubject<[String:Int]>()
+    private var getBool = PublishSubject<Bool>()
+    private var cellTouchToDetail = PublishSubject<Row>()
+    private var segmentChanged = PublishSubject<Bool>()
+    private var pressedFollows = PublishSubject<[String:Bool]>()
     
     
     let disposeBag = DisposeBag()
@@ -29,6 +42,49 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate  
     
     private var likes : [String:Int] = [:]
     
+    private lazy var containerView: UIView = {
+        let container = UIView()
+        container.backgroundColor = .clear
+        container.translatesAutoresizingMaskIntoConstraints = false
+        return container
+    }()
+    
+    private lazy var segmentControl: UISegmentedControl = {
+        
+        let segment = UISegmentedControl()
+        
+        segment.selectedSegmentTintColor = .clear
+        
+        segment.setBackgroundImage(UIImage(), for: .normal, barMetrics: .default)
+
+        segment.setDividerImage(UIImage(), forLeftSegmentState: .normal, rightSegmentState: .normal, barMetrics: .default)
+        
+        segment.insertSegment(withTitle: "팔로워", at: 0, animated: false)
+        segment.insertSegment(withTitle: "팔로잉", at: 1, animated: false)
+        
+        
+        // 선택 되어 있지 않을때 폰트 및 폰트컬러
+        segment.setTitleTextAttributes([
+            NSAttributedString.Key.foregroundColor: UIColor.lightGray,
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .regular)
+        ], for: .normal)
+        
+        // 선택 되었을때 폰트 및 폰트컬러
+        segment.setTitleTextAttributes([
+            NSAttributedString.Key.foregroundColor: UIColor.black,
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .bold)
+        ], for: .selected)
+        
+        
+        segment.translatesAutoresizingMaskIntoConstraints = false
+        
+        return segment
+    }()
+    
+    
+    
+    
+    
     lazy private var tableView : UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -37,14 +93,13 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate  
         return tableView
     }()
     
-
-  
     
     
-  
     
     
-    private var cellTouchToSearch = PublishSubject<String>()
+    
+    
+    
     
     
     
@@ -68,19 +123,27 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate  
         
         self.setUI()
         self.setBind()
-
+        
         
     }
     
+    let backBarButtonItem = UIBarButtonItem() // title 부분 수정
+    
+    
+    
     override func viewWillAppear(_ animated: Bool) {
-   
-
         
-       
+        
+        
+        backBarButtonItem.tintColor = .black
+        backBarButtonItem.image = UIImage(systemName: "chevron.backward")
+        self.navigationItem.backBarButtonItem = nil
+        
+        
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         
         
-     
+        
     }
     override func viewWillDisappear(_ animated: Bool) {
         
@@ -90,7 +153,6 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate  
     
     
     
-  
     
     
     
@@ -100,15 +162,34 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate  
     
     let mainView = UIView()
     
+    
+    @objc private func didChangeValue(segment: UISegmentedControl) {
+        print(segment.selectedSegmentIndex)
+        if(segmentControl.selectedSegmentIndex == 0){
+            
+            self.segmentChanged.onNext(true)
+
+        }else{
+            self.segmentChanged.onNext(false)
+
+        }
+        
+    }
+    
+    
+    
     func setUI(){
         
         
+        self.segmentControl.addTarget(self, action: #selector(didChangeValue(segment: )), for: .valueChanged )
         
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
         tableView.dataSource = nil
         tableView.register(FollowsCell.self, forCellReuseIdentifier: "FollowsCell")
-
+        
         mainView.translatesAutoresizingMaskIntoConstraints = false
+        
+        
         
         
         
@@ -121,15 +202,27 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate  
         
         
         
-        
+        view.addSubview(containerView)
+        containerView.addSubview(segmentControl)
         
         
         
         NSLayoutConstraint.activate([
             
+            containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            containerView.heightAnchor.constraint(equalToConstant: 40),
+            
+            segmentControl.topAnchor.constraint(equalTo: containerView.topAnchor),
+            segmentControl.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            segmentControl.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            segmentControl.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
             
             
-            mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor ),
+            
+            
+            mainView.topAnchor.constraint(equalTo: containerView.bottomAnchor ),
             mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             mainView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             mainView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
@@ -140,10 +233,10 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate  
             tableView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
             
-
             
-      
-//
+            
+            
+            //
             
             
         ])
@@ -154,22 +247,22 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate  
     }
     
     
-    
-    var likesInputArr = PublishSubject<[String:Int]>()
-    var getBool = PublishSubject<Bool>()
-    var cellTouchToDetail = PublishSubject<Row>()
+  
     
     
     
     func setBind() {
         
         
-        
+        guard let ownUid = UserDefaults.standard.string(forKey: "uid") else {
+            print("ownUid nil")
+            return  }
         
         
         let input = FollowsVM.Input( viewWillApearEvent : self.rx.methodInvoked(#selector(viewWillAppear(_:)))
-            .map( { _ in }).asObservable()
-                                         
+            .map( { _ in }).asObservable() , backButtonTapped : self.backBarButtonItem.rx.tap.asObservable() , segmentChanged: self.segmentChanged.asObservable(), pressedFollows: self.pressedFollows.asObservable()  
+                                     
+                                     
         )
         
         
@@ -177,30 +270,100 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate  
         
         guard let output = viewModel?.transform(input: input, disposeBag: self.disposeBag ) else {return}
         
-        tableView.rx.rowHeight.onNext(50)
+        tableView.rx.rowHeight.onNext(60)
         tableView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
             self?.tableView.deselectRow(at: indexPath, animated: true)
         }).disposed(by: disposeBag)
         
+        
+        
+        output.follow.subscribe(onNext: { [weak self] follow in
+            guard let follow = follow  , let self = self else {return}
+            
+            if(follow){
+                self.segmentControl.selectedSegmentIndex = 0
+                
+            }else{
+                self.segmentControl.selectedSegmentIndex = 1
+                
+            }
+            
+        }).disposed(by: disposeBag)
+        
+        
+        
         output.userModels.bind(to: tableView.rx.items(cellIdentifier: "FollowsCell" , cellType: FollowsCell.self )){
-          [weak self] index , item , cell in
+            [weak self] index , item , cell in
+            guard let self = self else {return}
             
             
             
+            if let followers = item.followers {
+                if(followers.contains(ownUid)){
+                    cell.isTouched = true
+                    cell.followButton.isSelected = true
+                }else{
+                    cell.isTouched = false
+                    cell.followButton.isSelected = false
+                }
+            }
+            
+            
+            
+            cell.index = item.uuid
             cell.nickname.text = item.name
             
-            //
+        
+            
+            
+            cell.delegate = self
+            
+            DispatchQueue.main.async {
+                
+                
+                
+                if let url = URL(string: item.profileImage ?? "" ) {
+                    
+                    
+                    let processor = DownsamplingImageProcessor(size: CGSize(width: cell.profileImage.bounds.width , height: cell.profileImage.bounds.height) ) // 크기 지정 다운 샘플링
+                    |> RoundCornerImageProcessor(cornerRadius: 0) // 모서리 둥글게
+                    cell.profileImage.kf.indicatorType = .activity  // indicator 활성화
+                    cell.profileImage.kf.setImage(
+                        with: url,  // 이미지 불러올 url
+                        placeholder: UIImage(named: "일반적.png") ,  // 이미지 없을 때의 이미지 설정
+                        options: [
+                            .processor(processor),
+                            .scaleFactor(UIScreen.main.scale),
+                            .transition(.none),  // 애니메이션 효과
+                            .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
+                        ])
+                    
+                    
+                    
+                    
+                }else{
+                    cell.profileImage.image = UIImage(named: "일반적.png")
+                }
+                
+                
+                
+                
+            }
+            
+            
+            
             
             
             
             
         }.disposed(by: disposeBag)
-       
         
         
         
-  
-
+        
+        
+        
+        
         
         
     }
@@ -233,7 +396,7 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate  
 
 
 protocol FollowsCellDelegate {
-    func didPressFollows(for index: String, like: Bool)
+    func didPressFollows(for index: String , like: Bool)
 }
 
 class FollowsCell : UITableViewCell {
@@ -242,12 +405,14 @@ class FollowsCell : UITableViewCell {
     let followButton : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = 13
-       // button.clipsToBounds = true
+        button.layer.cornerRadius = 15
+        // button.clipsToBounds = true
         button.tintColor = .white
         button.backgroundColor = .systemBlue
         button.setTitle("팔로우", for: .normal )
         button.titleLabel?.font = .boldSystemFont(ofSize: 12)
+        button.isUserInteractionEnabled = true
+        
         
         
         return button
@@ -255,25 +420,43 @@ class FollowsCell : UITableViewCell {
         
     }()
     var nickname = UILabel()
-    var profileImage = UIImageView()
+    var profileImage : UIImageView = {
+        let imageView = UIImageView()
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 20
+        
+        
+        
+        return imageView
+        
+        
+        
+    }()
     var delegate: FollowsCellDelegate?
     var selector : Bool?
     var index : String?
     
     
-    @IBAction func didPressedHeart(_ sender: UIButton) {
+    @IBAction func didPressedFollow(_ sender: UIButton) {
         
-        guard let idx = index else {return}
+        print("touch")
         
+        guard let index = self.index else {return}
+
         sender.isSelected = !sender.isSelected
         
         if sender.isSelected {
             
+            delegate?.didPressFollows(for: index , like: true)
+
             isTouched = true
         }else {
+            delegate?.didPressFollows(for: index , like: false)
+
             isTouched = false
-            delegate?.didPressFollows(for: idx, like: false)
+            
         }
+
         
         
     }
@@ -283,7 +466,7 @@ class FollowsCell : UITableViewCell {
                 
                 followButton.backgroundColor = .lightGray
                 followButton.setTitle("팔로잉", for: .normal)
-              
+                
             }else{
                 followButton.backgroundColor = .systemBlue
                 followButton.setTitle("팔로우", for: .normal)
@@ -295,7 +478,7 @@ class FollowsCell : UITableViewCell {
     
     required override init( style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier )
-        followButton.addTarget(self, action: #selector(didPressedHeart) , for: .touchUpInside )
+        followButton.addTarget(self, action: #selector(didPressedFollow) , for: .touchUpInside )
         
         layout()
         
@@ -316,11 +499,14 @@ class FollowsCell : UITableViewCell {
     
     
     func layout() {
+        
+        
+        
         self.followButton.translatesAutoresizingMaskIntoConstraints = false
         self.nickname.translatesAutoresizingMaskIntoConstraints = false
         self.profileImage.translatesAutoresizingMaskIntoConstraints = false
         
-        self.nickname.font = .systemFont(ofSize: 14)
+        self.nickname.font = .systemFont(ofSize: 18)
         
         self.addSubview(contentView)
         self.contentView.addSubview(self.followButton)
@@ -331,26 +517,27 @@ class FollowsCell : UITableViewCell {
         NSLayoutConstraint.activate([
             
             
-            self.profileImage.widthAnchor.constraint(equalToConstant: 30),
-            self.profileImage.heightAnchor.constraint(equalToConstant: 30),
+            self.profileImage.widthAnchor.constraint(equalToConstant: 40),
+            self.profileImage.heightAnchor.constraint(equalToConstant: 40),
             self.profileImage.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             self.profileImage.leadingAnchor.constraint(equalTo: self.leadingAnchor , constant: 16),
             
             
             self.followButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -12),
             self.followButton.centerYAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.centerYAnchor),
-            self.followButton.widthAnchor.constraint(equalToConstant: 60),
-            self.followButton.heightAnchor.constraint(equalToConstant: 26),
+            self.followButton.widthAnchor.constraint(equalToConstant: 80),
+            self.followButton.heightAnchor.constraint(equalToConstant: 30),
             
             
             self.nickname.leadingAnchor.constraint(equalTo: self.profileImage.trailingAnchor , constant: 10),
             self.nickname.centerYAnchor.constraint(equalTo: self.centerYAnchor ),
+            self.nickname.trailingAnchor.constraint(equalTo: self.followButton.leadingAnchor , constant: -10 ),
             
             
         ])
         
-       
-     
+        
+        
         
         
         

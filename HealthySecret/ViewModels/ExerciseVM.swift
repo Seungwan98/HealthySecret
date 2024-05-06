@@ -58,7 +58,7 @@ class ExerciseVM : ViewModel {
 
                             
                             
-                            input.searchText.map({ [self] text in
+                            input.searchText.map({ [weak self] text in
                                 var arr = exercise.data
 
                                 print("\(text) text")

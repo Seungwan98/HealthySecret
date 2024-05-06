@@ -31,6 +31,7 @@ protocol Coordinator: AnyObject {
 extension Coordinator {
     
     func finish() {
+        
         childCoordinator.removeAll()
         finishDelegate?.coordinatorDidFinish(childCoordinator: self)
     }
@@ -39,6 +40,9 @@ extension Coordinator {
 
 protocol CoordinatorFinishDelegate: AnyObject {
     func coordinatorDidFinish(childCoordinator: Coordinator)
+    
+    func coordinatorDidFinishNotRoot(childCoordinator: Coordinator)
+    
 }
 
 // MARK: - CoordinatorType

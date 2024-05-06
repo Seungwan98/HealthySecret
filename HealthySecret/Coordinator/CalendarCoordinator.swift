@@ -69,6 +69,10 @@ class CalendarCoordinator: Coordinator {
 }
 
 extension CalendarCoordinator : CoordinatorFinishDelegate {
+    func coordinatorDidFinishNotRoot(childCoordinator: any Coordinator) {
+        //
+    }
+    
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         print("CalendarDidFinished")
         self.childCoordinator = self.childCoordinator

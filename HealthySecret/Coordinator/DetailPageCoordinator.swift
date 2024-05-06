@@ -37,6 +37,10 @@ class DetailPageCoordinator: Coordinator {
 }
 
 extension DetailPageCoordinator : CoordinatorFinishDelegate {
+    func coordinatorDidFinishNotRoot(childCoordinator: any Coordinator) {
+        //
+    }
+    
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         // 자식 뷰를 삭제하는 델리게이트 (자식 -> 부모 접근 -> 부모에서 자식 삭제)
         print("DetailPageDidFinish")

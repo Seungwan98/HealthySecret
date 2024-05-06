@@ -38,7 +38,6 @@
 		600DE9802B69424F00D5D797 /* snack.png in Resources */ = {isa = PBXBuildFile; fileRef = 600DE97F2B69424F00D5D797 /* snack.png */; };
 		606343B12B84961A0084E2CC /* edmitSnack.png in Resources */ = {isa = PBXBuildFile; fileRef = 606343B02B84961A0084E2CC /* edmitSnack.png */; };
 		606343B52B84976D0084E2CC /* edmitDinner.png in Resources */ = {isa = PBXBuildFile; fileRef = 606343B22B84976D0084E2CC /* edmitDinner.png */; };
-		606343B62B84976D0084E2CC /* edmitLunch.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 606343B32B84976D0084E2CC /* edmitLunch.jpg */; };
 		606343B72B84976D0084E2CC /* edmitBreakfast.png in Resources */ = {isa = PBXBuildFile; fileRef = 606343B42B84976D0084E2CC /* edmitBreakfast.png */; };
 		606343BF2B8CCAFD0084E2CC /* MyProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606343BE2B8CCAFD0084E2CC /* MyProfileVC.swift */; };
 		606343C12B8CCB290084E2CC /* MyProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606343C02B8CCB290084E2CC /* MyProfileVM.swift */; };
@@ -141,6 +140,7 @@
 		60EF3C932BE0C7220007862F /* FollowsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C922BE0C7220007862F /* FollowsVC.swift */; };
 		60EF3C952BE0C7AD0007862F /* FollowsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C942BE0C7AD0007862F /* FollowsVM.swift */; };
 		60EF3C972BE8B04D0007862F /* FollowsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C962BE8B04D0007862F /* FollowsCoordinator.swift */; };
+		60EF3C992BE94B8D0007862F /* edmitLunch.png in Resources */ = {isa = PBXBuildFile; fileRef = 60EF3C982BE94B8D0007862F /* edmitLunch.png */; };
 		CB62F41F787B287CE4FA2161 /* Pods_HealthySecret.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */; };
 /* End PBXBuildFile section */
 
@@ -183,7 +183,6 @@
 		600DE9872B69602500D5D797 /* FSCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FSCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		606343B02B84961A0084E2CC /* edmitSnack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edmitSnack.png; sourceTree = "<group>"; };
 		606343B22B84976D0084E2CC /* edmitDinner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edmitDinner.png; sourceTree = "<group>"; };
-		606343B32B84976D0084E2CC /* edmitLunch.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = edmitLunch.jpg; sourceTree = "<group>"; };
 		606343B42B84976D0084E2CC /* edmitBreakfast.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edmitBreakfast.png; sourceTree = "<group>"; };
 		606343BE2B8CCAFD0084E2CC /* MyProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileVC.swift; sourceTree = "<group>"; };
 		606343C02B8CCB290084E2CC /* MyProfileVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileVM.swift; sourceTree = "<group>"; };
@@ -286,6 +285,7 @@
 		60EF3C922BE0C7220007862F /* FollowsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsVC.swift; sourceTree = "<group>"; };
 		60EF3C942BE0C7AD0007862F /* FollowsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsVM.swift; sourceTree = "<group>"; };
 		60EF3C962BE8B04D0007862F /* FollowsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsCoordinator.swift; sourceTree = "<group>"; };
+		60EF3C982BE94B8D0007862F /* edmitLunch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = edmitLunch.png; path = ../../../../../../Downloads/edmitLunch.png; sourceTree = "<group>"; };
 		DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthySecret.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -520,8 +520,8 @@
 				609C06322B9F0FF600D61F53 /* ChagneIntroduceVM.swift */,
 				609C06382BA9A25000D61F53 /* CommuVM.swift */,
 				60EAFE052BC125BD00D3EE73 /* ComentsVM.swift */,
-				60EAFE112BC83CF400D3EE73 /* OtherProfileVM.swift */,
 				6093BC0C2BD82C0800D3BE3C /* ProfileFeedVM.swift */,
+				60EAFE112BC83CF400D3EE73 /* OtherProfileVM.swift */,
 				60EF3C942BE0C7AD0007862F /* FollowsVM.swift */,
 			);
 			path = ViewModels;
@@ -591,11 +591,11 @@
 				6067B99A2B4D578B00D536FF /* calendarIcon.png */,
 				606343B42B84976D0084E2CC /* edmitBreakfast.png */,
 				606343B22B84976D0084E2CC /* edmitDinner.png */,
-				606343B32B84976D0084E2CC /* edmitLunch.jpg */,
 				60BB269B2B453EB900191CB1 /* line.png */,
 				60BB26992B45385C00191CB1 /* sangsaeButton.png */,
 				60EF3C8E2BDE74070007862F /* dumbbellPic.png */,
 				60BB26972B4533A200191CB1 /* dinnerButton.png */,
+				60EF3C982BE94B8D0007862F /* edmitLunch.png */,
 				600DE9652B60208600D5D797 /* apple_login.png */,
 				60BC990B2B3583340013FAD9 /* tableBackGround.png */,
 				60BC99092B34848E0013FAD9 /* Diary.png */,
@@ -708,11 +708,11 @@
 				60BC99082B3476650013FAD9 /* lunchImg.png in Resources */,
 				600DE9682B60E1C000D5D797 /* check.png in Resources */,
 				60BB26962B45336100191CB1 /* lunchButton.png in Resources */,
+				60EF3C992BE94B8D0007862F /* edmitLunch.png in Resources */,
 				60BB26AE2B45CD2F00191CB1 /* firstDout.png in Resources */,
 				60BB26982B4533A200191CB1 /* dinnerButton.png in Resources */,
 				60BC990A2B34848E0013FAD9 /* Diary.png in Resources */,
 				606343B12B84961A0084E2CC /* edmitSnack.png in Resources */,
-				606343B62B84976D0084E2CC /* edmitLunch.jpg in Resources */,
 				60EF3C8B2BDC34560007862F /* .gitattributes in Resources */,
 				600DE9702B610C7100D5D797 /* add.png in Resources */,
 				60BB26B22B45CD3400191CB1 /* thirdDout.png in Resources */,

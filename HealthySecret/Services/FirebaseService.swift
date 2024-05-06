@@ -872,6 +872,8 @@ extension FirebaseService {
     
     func updateFollowers(  ownUid : String , opponentUid : String  , follow : Bool) -> Completable {
         return Completable.create{ completable in
+            
+            print("\(ownUid) , \(opponentUid) , \(follow)")
             self.db.collection("HealthySecretUsers").document(ownUid).getDocument{ doc , err in
                 if let err = err {
                     completable(.error(err))
@@ -1581,6 +1583,63 @@ extension FirebaseService {
             
             return Disposables.create()
         }
+        
+    }
+    
+    
+    func getFollows(uid:[String] ) -> Single<[UserModel]>{
+        return Single.create{ single in
+            
+            var usersArr : [UserModel] = []
+
+            if(uid.isEmpty){
+                single(.success(usersArr))
+            }else{
+                
+                
+                
+                self.db.collection("HealthySecretUsers").whereField( "uuid" , in : uid ).getDocuments{ query , err in
+                    if let err = err{
+                        single(.failure(err))
+                    }else{
+                        
+                        let docs = query!.documents
+                        for doc in docs {
+                            
+                            
+                            do{
+                                print("dooooo")
+                                
+                                let jsonData = try JSONSerialization.data( withJSONObject: doc.data() , options: [] )
+                                let user = try JSONDecoder().decode( UserModel.self, from: jsonData )
+                                
+                                usersArr.append(user)
+                                
+                            }
+                            catch{
+                                
+                                
+                                single(.failure(CustomError.isNil))
+                                
+                            }
+                            
+                            
+                        }
+                        
+                        print("successsssss")
+                        
+                        single(.success(usersArr))
+                    }
+                    
+                    
+                }
+            }
+            
+            return Disposables.create()
+        }
+        
+        
+        
         
     }
     

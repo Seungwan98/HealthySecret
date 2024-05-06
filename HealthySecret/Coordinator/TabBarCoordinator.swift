@@ -175,6 +175,10 @@ class TabBarCoordinator : Coordinator {
 
 
 extension TabBarCoordinator : CoordinatorFinishDelegate {
+    func coordinatorDidFinishNotRoot(childCoordinator: any Coordinator) {
+        //
+    }
+    
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         print("TabBarCoordinatorDidFinish")
         self.childCoordinator.removeAll()
@@ -331,8 +335,20 @@ extension CommuCoordinator: CoordinatorFinishDelegate {
         // 자식 뷰를 삭제하는 델리게이트 (자식 -> 부모 접근 -> 부모에서 자식 삭제)
         self.childCoordinator = self.childCoordinator
             .filter({ $0.type != childCoordinator.type })
+        
         childCoordinator.navigationController.popToRootViewController(animated: true)
     }
+    
+    func coordinatorDidFinishNotRoot(childCoordinator: Coordinator) {
+        print("CommuCoordinator DidFinish")
+        // 자식 뷰를 삭제하는 델리게이트 (자식 -> 부모 접근 -> 부모에서 자식 삭제)
+        self.childCoordinator = self.childCoordinator
+            .filter({ $0.type != childCoordinator.type })
+        
+        childCoordinator.navigationController.popViewController(animated: false)
+        
+    }
+    
 }
 
 
@@ -406,6 +422,10 @@ class HomeCoordinator : Coordinator  {
 
 
 extension HomeCoordinator: CoordinatorFinishDelegate {
+    func coordinatorDidFinishNotRoot(childCoordinator: any Coordinator) {
+        
+    }
+    
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         print("HomeCoordinatorDidFinish")
         // 자식 뷰를 삭제하는 델리게이트 (자식 -> 부모 접근 -> 부모에서 자식 삭제)
@@ -548,6 +568,10 @@ class MyProfileCoordinator : Coordinator {
     
 }
 extension MyProfileCoordinator : CoordinatorFinishDelegate {
+    func coordinatorDidFinishNotRoot(childCoordinator: any Coordinator) {
+        //
+    }
+    
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         
         // 자식 뷰를 삭제하는 델리게이트 (자식 -> 부모 접근 -> 부모에서 자식 삭제)
@@ -686,6 +710,10 @@ class DiaryCoordinator : Coordinator  {
 }
 
 extension DiaryCoordinator: CoordinatorFinishDelegate {
+    func coordinatorDidFinishNotRoot(childCoordinator: any Coordinator) {
+        //
+    }
+    
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         
         print("DiaryCoordinatorFinish")

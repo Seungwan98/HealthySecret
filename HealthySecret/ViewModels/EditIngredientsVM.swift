@@ -50,18 +50,18 @@ class EditIngredientsVM : ViewModel {
        
 
         let output = Output()
-        var value = 0
+        let value = 0
 
         
         switch UserDefaults.standard.string(forKey: "meal"){
         case "아침식사":
-            output.imagePicker.onNext(value)
+            output.imagePicker.onNext(0)
         case "점심식사":
-            output.imagePicker.onNext(value)
+            output.imagePicker.onNext(1)
         case "저녁식사":
-            output.imagePicker.onNext(value)
+            output.imagePicker.onNext(2)
         case "간식":
-            output.imagePicker.onNext(value)
+            output.imagePicker.onNext(3)
 
             
         case .none:
@@ -74,8 +74,8 @@ class EditIngredientsVM : ViewModel {
 
         output.ingredientsArr.onNext(self.Ingredients)
 
-        input.edmitButtonTapped.subscribe(onNext: { _ in
-            
+        input.edmitButtonTapped.subscribe(onNext: { [weak self] _ in
+            guard let self = self else {return}
             input.inputArr.subscribe(onNext: { arr in
                 self.firebaseService.addIngredients(meal: UserDefaults.standard.string(forKey: "meal") ?? "", date:  UserDefaults.standard.string(forKey: "date") ?? "", key:  UserDefaults.standard.string(forKey: "uid") ?? "", mealArr: arr).subscribe({ event in
                     switch event{

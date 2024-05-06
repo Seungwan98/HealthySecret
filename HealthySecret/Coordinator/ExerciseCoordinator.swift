@@ -72,6 +72,8 @@ class ExerciseCoordinator: Coordinator {
 }
 
 extension ExerciseCoordinator : CoordinatorFinishDelegate {
+  
+    
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         print("CalendarDidFinished")
         self.childCoordinator = self.childCoordinator
@@ -79,5 +81,13 @@ extension ExerciseCoordinator : CoordinatorFinishDelegate {
         childCoordinator.navigationController.popToRootViewController(animated: true)
     }
     
+    
+    func coordinatorDidFinishNotRoot(childCoordinator: any Coordinator) {
+        
+        
+        print("coordinatorDidFinishNotRoot")
+        
+        
+    }
     
 }

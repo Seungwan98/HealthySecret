@@ -150,16 +150,17 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
 //
                 
                 
-                let placeholdImage = UIImageView()
                 
                 var idx = 0
                 
           
-                
+                let placeholdImage = UIImageView()
                 placeholdImage.backgroundColor = .white
-                
+                let xPos = cell.scrollView.frame.width * CGFloat(idx)
+                placeholdImage.frame = CGRect(x: xPos, y: 0, width: cell.scrollView.bounds.width, height: cell.scrollView.bounds.height)
                 cell.scrollView.addSubview(placeholdImage)
                
+                
                 
                 _ = item.mainImgUrl.map{
                     let xPos = cell.scrollView.frame.width * CGFloat(idx)

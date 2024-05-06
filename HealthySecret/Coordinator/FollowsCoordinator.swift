@@ -28,8 +28,6 @@ class FollowsCoordinator : Coordinator  {
     var firebaseService: FirebaseService
     var disposeBag = DisposeBag()
     
-    var follow : Bool?
-    var feedUid : String?
     
     // MARK: - Initializers
     required init(_ navigationController : UINavigationController ){
@@ -47,16 +45,23 @@ class FollowsCoordinator : Coordinator  {
         let viewModel = FollowsVM(coordinator: self , firebaseService: self.firebaseService)
         
         viewModel.follow = follow
-        viewModel.feedUid = feedUid
+        viewModel.uid = uid
         
         let viewController = FollowsVC(viewModel: viewModel)
         
-        self.navigationController.pushViewController(viewController, animated: false)
+        
+        self.navigationController.pushViewController(viewController , animated: false)
         
         
     }
     
+    
+    func finish() {
+        print("finish")
+        self.finishDelegate?.coordinatorDidFinishNotRoot(childCoordinator: self)
+    }
 
+   
 
     
    
@@ -75,6 +80,10 @@ class FollowsCoordinator : Coordinator  {
 }
 
 extension FollowsCoordinator: CoordinatorFinishDelegate {
+    func coordinatorDidFinishNotRoot(childCoordinator: any Coordinator) {
+        //
+    }
+    
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         print("RunCoordinatorDidfinish")
         self.childCoordinator = self.childCoordinator

@@ -19,7 +19,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         
         self.imageTapped.onNext(feedUid)
     }
-
+    
     
     
     let disposeBag = DisposeBag()
@@ -41,10 +41,10 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         fatalError("init(coder:) has not been implemented")
     }
     
- 
-   
-
-
+    
+    
+    
+    
     
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -58,7 +58,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
         collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: CustomCollectionViewCell.identifier)
-      
+        
         
         collectionView.register( ProfileHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ProfileHeaderView.identifier)
         
@@ -72,7 +72,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
     
     
     
-   
+    
     
     var outputFollows = PublishSubject<Bool>()
     
@@ -117,8 +117,8 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
     
     
     override func viewWillAppear(_ animated: Bool) {
-
-       
+        
+        
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
         
@@ -129,7 +129,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         
     }
     
-
+    
     func addFollowButton() {
         
         
@@ -144,15 +144,15 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         self.followButton.addTarget(self, action: #selector(self.didPressedFollowButton), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
-        
+            
             self.followButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             self.followButton.widthAnchor.constraint(equalToConstant: 160 ),
             self.followButton.heightAnchor.constraint(equalToConstant: 60 ),
             self.followButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor , constant: -40)
-         
             
-
-        
+            
+            
+            
         ])
         
         
@@ -162,6 +162,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
     
     func setUI(){
         
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "", image: UIImage(systemName: "ellipsis"), target: self, action: nil)
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         
@@ -174,11 +175,11 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
             self.collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor  ),
             self.collectionView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
             self.collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor ),
-      
-                
-        
-        
-        
+            
+            
+            
+            
+            
         ])
         
         
@@ -191,7 +192,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         
     }
     
-     let addButtonTapped = PublishSubject<Bool>()
+    let addButtonTapped = PublishSubject<Bool>()
     
     
     @objc
@@ -214,7 +215,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
     func didPressedFollowButton(_ sender: UIButton) {
         
         sender.isSelected = !sender.isSelected
-
+        
         let selected  = sender.isSelected
         
         print("selected")
@@ -222,13 +223,13 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         self.isTouched = selected
         
         self.setHeadersCount(selected: selected)
-
-        self.addButtonTapped.onNext(selected)
-
-    
         
-      
-
+        self.addButtonTapped.onNext(selected)
+        
+        
+        
+        
+        
         
         
     }
@@ -268,7 +269,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         }
         self.profileHeader?.feedInformValLabels[1].text = String(count)
         self.followersCount = count
-
+        
     }
     
     
@@ -277,14 +278,13 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         
         
         
-  
-
-
+        
+        
         let input = OtherProfileVM.HeaderInput( viewWillApearEvent: header.appearEvent  ,  outputProfileImage: self.outputProfileImage.asObservable()   , outputFollows : Observable.merge( header.feedInformValLabels[1].rx.tapGesture().when(.recognized).asObservable() , header.feedInformValLabels[2].rx.tapGesture().when(.recognized).asObservable()  ) )
-                
-                
+        
+        
         guard let output = self.viewModel?.HeaderTransform(input: input, disposeBag: header.disposeBag) else { return }
-
+        
         
         
         let size = CGSize(width: view.frame.width, height: CGFloat.infinity)
@@ -297,75 +297,86 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
             
             
         }
+        
+        input.viewWillApearEvent.subscribe({ [weak self] _ in
+            
+            guard let self = self else {return}
+            //will appear
+            
+            
+        }).disposed(by: header.disposeBag)
+        
+        
+        
+        
+        Observable.zip( output.calorie , output.goalWeight , output.nowWeight , output.name , output.introduce , output.profileImage ).subscribe(onNext: { [self] in
+            
+            
+            
+            header.calorieLabel.text = $0 + " kcal"
+            header.goalWeight.text = $1 + " kg"
+            header.nowWeight.text = $2 + " kg"
+            header.introduceLabel.text = $4
+            
+            
+            self.navigationController?.navigationBar.topItem?.title = $3
+            
+            
+            
+            let weight = (Double($1) ?? 0.0) - (Double($2) ?? 0.0)
+            
+            if weight > 0 {
+                header.gramLabel.text = "+" + String(weight) + " kg"
+            }else{
+                header.gramLabel.text = String(weight) + " kg"
+            }
+            
+            if let url = URL(string: $5 ?? ""){
                 
-                Observable.zip( output.calorie , output.goalWeight , output.nowWeight , output.name , output.introduce , output.profileImage ).subscribe(onNext: { [self] in
+                
+                DispatchQueue.main.async {
+                    
+                    
+                    let processor = DownsamplingImageProcessor(size: header.profileImage.bounds.size) // 크기 지정 다운 샘플링
+                    // 모서리 둥글게
+                    
+                    header.profileImage.kf.indicatorType = .activity  // indicator 활성화
+                    header.profileImage.kf.setImage(
+                        with: url,  // 이미지 불러올 url
+                        placeholder: UIImage(named: "일반적.png"),  // 이미지 없을 때의 이미지 설정
+                        options: [
+                            .processor(processor),
+                            .scaleFactor(UIScreen.main.scale),
+                            .transition(.fade(0.5)),  // 애니메이션 효과
+                            .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
+                        ])
                     
                     
                     
-                    header.calorieLabel.text = $0 + " kcal"
-                    header.goalWeight.text = $1 + " kg"
-                    header.nowWeight.text = $2 + " kg"
-                    header.introduceLabel.text = $4
                     
                     
-                    self.navigationController?.navigationBar.topItem?.title = $3
                     
-  
                     
-                    let weight = (Double($1) ?? 0.0) - (Double($2) ?? 0.0)
-                    
-                    if weight > 0 {
-                        header.gramLabel.text = "+" + String(weight) + " kg"
-                    }else{
-                        header.gramLabel.text = String(weight) + " kg"
-                    }
-                    
-                    if let url = URL(string: $5 ?? ""){
-                        
-                     
-                        DispatchQueue.main.async {
-                            
-                            
-                            let processor = DownsamplingImageProcessor(size: header.profileImage.bounds.size) // 크기 지정 다운 샘플링
-                            // 모서리 둥글게
-                            
-                            header.profileImage.kf.indicatorType = .activity  // indicator 활성화
-                            header.profileImage.kf.setImage(
-                                with: url,  // 이미지 불러올 url
-                                placeholder: UIImage(named: "일반적.png"),  // 이미지 없을 때의 이미지 설정
-                                options: [
-                                    .processor(processor),
-                                    .scaleFactor(UIScreen.main.scale),
-                                    .transition(.fade(0.5)),  // 애니메이션 효과
-                                    .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
-                                ])
-                            
-                            
-                            
-                         
-                            
-                            
-                            
-                        }
-                        
-                        
-                       
-
-                    } else {
-                        
-                        
-                        header.profileImage.image = UIImage(named: "일반적.png")
-                        
-                        
-                        
-                    }
-                    
-                    header.feedInformValLabels[0].text = String(self.imagesArr.count)
-                    header.topImage.isHidden = false
-                    header.profileImage.layer.cornerRadius = 50
-                    
-                }).disposed(by: header.disposeBag)
-     
+                }
+                
+                
+                
+                
+            } else {
+                
+                
+                header.profileImage.image = UIImage(named: "일반적.png")
+                
+                
+                
+            }
+            
+            header.feedInformValLabels[0].text = String(self.imagesArr.count)
+            header.topImage.isHidden = false
+            header.profileImage.layer.cornerRadius = 50
+            
+        }).disposed(by: header.disposeBag)
+        
         
         output.followersSelected.subscribe(onNext: { [weak self] selected in
             
@@ -373,7 +384,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
             
             self?.followButton.isSelected = selected
             self?.isTouched = selected
-
+            
             
             
         }).disposed(by: disposeBag)
@@ -387,6 +398,8 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         
         output.followingsCount.subscribe(onNext: { [weak self] count in
             
+            guard let self = self else {return}
+            
             header.feedInformValLabels[2].text = String(count)
             
             
@@ -397,23 +410,23 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
             print("enable \(enable)")
             
             self?.followButton.isHidden = enable
-
+            
             
         }).disposed(by: header.disposeBag)
         
         
-      
+        
         
     }
     
     
     func setBindings() {
         print("setbind")
-    
+        
         
         
         let input = OtherProfileVM.Input(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable()  , outputProfileImage : outputProfileImage.asObservable(), imageTapped: self.imageTapped.asObservable() , addButtonTapped : addButtonTapped.asObservable()
-                                      
+                                         
         )
         
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else { return }
@@ -421,16 +434,16 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         
         
         
-    
-            
-    
-            
+        
+        
+        
+        
         output.feedImage.subscribe( onNext: { [weak self] imagesArr in
             guard let imagesArr = imagesArr else { return }
             
             
             self?.loadControll = true
-
+            
             
             self?.imagesArr = imagesArr
             self?.collectionView.reloadData()
@@ -440,11 +453,11 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         
         output.feedUid.subscribe( onNext: { [weak self] uidsArr in
             guard let uidsArr = uidsArr else { return }
-
+            
             self?.uidsArr = uidsArr
             
         }).disposed(by: disposeBag)
-       
+        
         
         
         
@@ -477,22 +490,22 @@ extension OtherProfileVC :  UICollectionViewDataSource , UICollectionViewDelegat
         }
         
         
-
+        
         if(firstBind){
             print("바인드")
             self.setHeaderBindings(header: header)
             
             firstBind = false
         }
-
+        
         if(loadControll){
             header.appearEvent.onNext(true)
             loadControll = false
-
+            
         }
         
         self.profileHeader = header
-
+        
         
         
         return header
@@ -556,7 +569,7 @@ extension OtherProfileVC :  UICollectionViewDataSource , UICollectionViewDelegat
 extension OtherProfileVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = view.frame.size.width / 3
-
+        
         return CGSize(width: width  , height: width  )
     }
 }

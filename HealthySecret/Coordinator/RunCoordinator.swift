@@ -60,6 +60,10 @@ class RunCoordinator : Coordinator  {
 }
 
 extension RunCoordinator: CoordinatorFinishDelegate {
+    func coordinatorDidFinishNotRoot(childCoordinator: any Coordinator) {
+        //
+    }
+    
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         print("RunCoordinatorDidfinish")
         self.childCoordinator = self.childCoordinator
