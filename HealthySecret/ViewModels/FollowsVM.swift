@@ -12,6 +12,8 @@ import RxSwift
 
 class FollowsVM : ViewModel {
     
+    var follow : Bool?
+    var uid : String?
    // var coreMotionService = CoreMotionService.shared
     
     var disposeBag = DisposeBag()
@@ -31,14 +33,14 @@ class FollowsVM : ViewModel {
     }
     
     
-    weak var coordinator : AppCoordinator?
+    weak var coordinator : FollowsCoordinator?
     
     
     
     
     private var firebaseService : FirebaseService
     
-    init( coordinator : AppCoordinator , firebaseService : FirebaseService ){
+    init( coordinator : FollowsCoordinator , firebaseService : FirebaseService ){
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
         
@@ -47,15 +49,24 @@ class FollowsVM : ViewModel {
     
     
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
-        var model1 = UserModel.init(uuid: "", id: "", name: "양승완", tall: "", age: "", sex: "", calorie: 1902, nowWeight:12 , goalWeight: 12, ingredients: [], exercise: [], diarys: [])
-        var model2 = UserModel.init(uuid: "", id: "", name: "양승완", tall: "", age: "", sex: "", calorie: 1902, nowWeight:12 , goalWeight: 12, ingredients: [], exercise: [], diarys: [])
-        var model3 = UserModel.init(uuid: "", id: "", name: "양승완", tall: "", age: "", sex: "", calorie: 1902, nowWeight:12 , goalWeight: 12, ingredients: [], exercise: [], diarys: [])
-        var model4 = UserModel.init(uuid: "", id: "", name: "양승완", tall: "", age: "", sex: "", calorie: 1902, nowWeight:12 , goalWeight: 12, ingredients: [], exercise: [], diarys: [])
         
-        var testModels = [model1 , model2 , model3 , model4]
-
+        guard let uid = self.uid else { print("uid nil") }
         
         let output = Output()
+        
+        input.viewWillApearEvent.subscribe({ _ in
+            
+            
+            
+            self.firebaseService.getDocument(key: uid).subscribe({ [weak self] _ in
+                
+                
+                
+            }).disposed(by: disposeBag )
+            
+            
+            
+        }).disposed(by: disposeBag)
         
         output.userModels.onNext(testModels)
         

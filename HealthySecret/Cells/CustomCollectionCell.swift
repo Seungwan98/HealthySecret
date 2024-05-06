@@ -23,6 +23,9 @@ class CustomCollectionViewCell: UICollectionViewCell {
         
     }()
     
+    
+    
+    
     var squareImage : UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "square.fill.on.square.fill"))
         imageView.translatesAutoresizingMaskIntoConstraints = false

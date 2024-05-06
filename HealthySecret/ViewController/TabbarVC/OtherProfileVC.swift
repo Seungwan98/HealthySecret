@@ -74,7 +74,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
     
    
     
-    
+    var outputFollows = PublishSubject<Bool>()
     
     var imageTapped = PublishSubject<String>()
     
@@ -132,9 +132,16 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
 
     func addFollowButton() {
         
+        
+        
+        
+        
+        
+        
+        
         self.view.addSubview(self.followButton)
         
-        self.followButton.addTarget(self, action: #selector(self.didPressedFollow), for: .touchUpInside)
+        self.followButton.addTarget(self, action: #selector(self.didPressedFollowButton), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
         
@@ -186,8 +193,25 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
     
      let addButtonTapped = PublishSubject<Bool>()
     
+    
     @objc
-    func didPressedFollow(_ sender: UIButton) {
+    func didPressedFollowers(_ sender: UITapGestureRecognizer){
+        
+        self.outputFollows.onNext(true)
+        
+    }
+    
+    @objc
+    func didPressedFollowings(_ sender: UITapGestureRecognizer){
+        
+        self.outputFollows.onNext(false)
+        
+    }
+    
+    
+    
+    @objc
+    func didPressedFollowButton(_ sender: UIButton) {
         
         sender.isSelected = !sender.isSelected
 
@@ -210,6 +234,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
     }
     var isTouched: Bool? {
         didSet {
+            
             if isTouched == true {
                 followButton.backgroundColor = .lightGray
                 followButton.setTitle("팔로잉", for: .normal)
@@ -241,21 +266,26 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         }else{
             count -= 1
         }
-        self.profileHeader?.informationValLabels[1].text = String(count)
+        self.profileHeader?.feedInformValLabels[1].text = String(count)
         self.followersCount = count
 
     }
     
     
+    
     func setHeaderBindings(header : ProfileHeaderView){
         
+        
+        
+  
 
 
-        let input = OtherProfileVM.HeaderInput( viewWillApearEvent: header.appearEvent  ,  outputProfileImage: self.outputProfileImage.asObservable() )
+        let input = OtherProfileVM.HeaderInput( viewWillApearEvent: header.appearEvent  ,  outputProfileImage: self.outputProfileImage.asObservable()   , outputFollows : Observable.merge( header.feedInformValLabels[1].rx.tapGesture().when(.recognized).asObservable() , header.feedInformValLabels[2].rx.tapGesture().when(.recognized).asObservable()  ) )
                 
                 
         guard let output = self.viewModel?.HeaderTransform(input: input, disposeBag: header.disposeBag) else { return }
 
+        
         
         let size = CGSize(width: view.frame.width, height: CGFloat.infinity)
         
@@ -264,7 +294,6 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         if let layout = self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.headerReferenceSize = CGSize(width: view.frame.width, height: estimatedSize.height + 310 )
             self.collectionView.layoutIfNeeded()
-                print("estimatedSize \(estimatedSize)")
             
             
         }
@@ -281,11 +310,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
                     
                     self.navigationController?.navigationBar.topItem?.title = $3
                     
-                    
-                    
-                    
-                    
-                    
+  
                     
                     let weight = (Double($1) ?? 0.0) - (Double($2) ?? 0.0)
                     
@@ -335,7 +360,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
                         
                     }
                     
-                    header.informationValLabels[0].text = String(self.imagesArr.count)
+                    header.feedInformValLabels[0].text = String(self.imagesArr.count)
                     header.topImage.isHidden = false
                     header.profileImage.layer.cornerRadius = 50
                     
@@ -344,6 +369,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         
         output.followersSelected.subscribe(onNext: { [weak self] selected in
             
+            guard let selected = selected else {return}
             
             self?.followButton.isSelected = selected
             self?.isTouched = selected
@@ -354,17 +380,17 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         
         output.followersCount.subscribe(onNext: { [weak self] count in
             
-            header.informationValLabels[1].text = String(count)
+            header.feedInformValLabels[1].text = String(count)
             self?.followersCount = count
             
-        }).disposed(by: disposeBag)
+        }).disposed(by: header.disposeBag)
         
         output.followingsCount.subscribe(onNext: { [weak self] count in
             
-            header.informationValLabels[2].text = String(count)
+            header.feedInformValLabels[2].text = String(count)
             
             
-        }).disposed(by: disposeBag)
+        }).disposed(by: header.disposeBag)
         
         output.followersEnable.subscribe(onNext: { [weak self] enable in
             
@@ -373,7 +399,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
             self?.followButton.isHidden = enable
 
             
-        }).disposed(by: disposeBag)
+        }).disposed(by: header.disposeBag)
         
         
       
@@ -410,6 +436,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
             self?.collectionView.reloadData()
             
         }).disposed(by: disposeBag)
+        
         
         output.feedUid.subscribe( onNext: { [weak self] uidsArr in
             guard let uidsArr = uidsArr else { return }

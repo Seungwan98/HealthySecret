@@ -41,6 +41,7 @@ class OtherProfileVM : ViewModel {
         
         let viewWillApearEvent : Observable<Bool>
         let outputProfileImage : Observable<Data?>
+        let outputFollows : Observable<UITapGestureRecognizer>
         
     }
     
@@ -53,10 +54,10 @@ class OtherProfileVM : ViewModel {
         var introduce = BehaviorSubject(value: "")
         var profileImage = BehaviorSubject<String?>(value: nil)
         var popView = BehaviorSubject<Bool>(value: false)
-        var followersSelected = BehaviorSubject<Bool>(value: false)
+        var followersSelected = BehaviorSubject<Bool?>(value: nil)
         var followersCount = BehaviorSubject<Int>(value: 0)
         var followingsCount = BehaviorSubject<Int>(value: 0)
-        var followersEnable = BehaviorSubject<Bool>(value: false)
+        var followersEnable = BehaviorSubject<Bool>(value: true)
         
     }
     
@@ -90,6 +91,21 @@ class OtherProfileVM : ViewModel {
 
             self.profileImage = image
 
+        }).disposed(by: disposeBag)
+        
+        input.outputFollows.subscribe(onNext: { event in
+          
+            guard let view = event.view else {return}
+            
+            if(view.tag == 1 ){
+                self.coordinator?.pushFollowsVC(follow: true , uid : uid)
+                
+            }else{
+                
+                self.coordinator?.pushFollowsVC(follow: false , uid : uid)
+            }
+            
+            
         }).disposed(by: disposeBag)
         
        
@@ -201,7 +217,7 @@ class OtherProfileVM : ViewModel {
         input.viewWillApearEvent.subscribe(onNext: { event in
             
                 
-            
+            print("view")
         
                     self.firebaseService.getFeedsUid(uid: uid).subscribe({ event in
                     switch(event){

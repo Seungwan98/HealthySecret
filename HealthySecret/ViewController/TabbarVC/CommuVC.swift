@@ -162,7 +162,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
                
                 
                 _ = item.mainImgUrl.map{
-                    let xPos = cell.scrollView.frame.width * CGFloat(0)
+                    let xPos = cell.scrollView.frame.width * CGFloat(idx)
                     placeholdImage.frame = CGRect(x: xPos, y: 0, width: cell.scrollView.bounds.width, height: cell.scrollView.bounds.height)
 
                     print("mainImgUrl \(item.mainImgUrl)")

@@ -94,9 +94,16 @@ class MyProfileVC : UIViewController {
     let leftBarLabel : UILabel = {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 22)
-        label.bounds = CGRect(x: 0, y: 0, width: 150, height: 40)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
         
+    }()
+    
+    let leftBarView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+       return view
     }()
     
     
@@ -115,9 +122,10 @@ class MyProfileVC : UIViewController {
     
     lazy var rightBarButton = UIBarButtonItem(customView: rightBarImage)
     
-    lazy var leftBarButton = UIBarButtonItem(customView: leftBarLabel)
+    lazy var leftBarButton = UIBarButtonItem(customView: leftBarView)
     
-    let imageAttachment = NSTextAttachment(image: UIImage(named: "arrow.png")!)
+    
+    let leftBarImage = UIImageView(image: UIImage(named: "arrow.png"))
     
     var outputProfileImage = BehaviorSubject<Data?>(value: nil)
     
@@ -169,13 +177,38 @@ class MyProfileVC : UIViewController {
     
     func setUI(){
         
+        
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
+        self.leftBarImage.translatesAutoresizingMaskIntoConstraints = false
+        
+        leftBarView.addSubview(leftBarLabel)
+        leftBarView.addSubview(leftBarImage)
         
         view.addSubview(self.collectionView)
         view.addSubview(self.addButton)
         
         
         NSLayoutConstraint.activate([
+            
+            
+            leftBarView.widthAnchor.constraint(equalToConstant: 140),
+            leftBarView.heightAnchor.constraint(equalToConstant: 40),
+            
+            leftBarLabel.heightAnchor.constraint(equalTo: leftBarView.heightAnchor ),
+            leftBarLabel.widthAnchor.constraint(equalToConstant: 100),
+            leftBarLabel.centerYAnchor.constraint(equalTo: leftBarView.centerYAnchor ),
+            
+            leftBarImage.heightAnchor.constraint(equalToConstant: 12 ),
+            leftBarImage.widthAnchor.constraint(equalToConstant: 12 ),
+            leftBarImage.centerYAnchor.constraint(equalTo: leftBarView.centerYAnchor ),
+            leftBarImage.leadingAnchor.constraint(equalTo: leftBarLabel.trailingAnchor , constant: 2 ),
+            
+        
+            
+            
+
+            
+
             
             self.collectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ),
             self.collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor  ),
@@ -206,7 +239,7 @@ class MyProfileVC : UIViewController {
     func setHeaderBindings( header : ProfileHeaderView ){
         
         
-        let input = MyProfileVM.HeaderInput( viewWillApearEvent: header.appearEvent  , goalLabelTapped: Observable.merge(header.goalLabel.rx.tapGesture().when(.recognized).asObservable()), changeProfile: header.profileImage.rx.tapGesture().when(.recognized).asObservable(), outputProfileImage: self.outputProfileImage.asObservable() )
+        let input = MyProfileVM.HeaderInput( viewWillApearEvent: header.appearEvent  , goalLabelTapped: header.goalLabel.rx.tapGesture().when(.recognized).asObservable(), changeProfile: header.profileImage.rx.tapGesture().when(.recognized).asObservable(), outputProfileImage: self.outputProfileImage.asObservable() )
         
         
         guard let output = self.viewModel?.HeaderTransform(input: input, disposeBag: header.disposeBag) else { return }
@@ -240,12 +273,11 @@ class MyProfileVC : UIViewController {
             
             
             let a = $3
-            let attributedString = NSMutableAttributedString(string: "")
-            attributedString.append(NSAttributedString(string: " "+a+" "))
-            imageAttachment.bounds = CGRect(x: 0, y: 2, width: 12, height: 12)
-            attributedString.append(NSAttributedString(attachment: imageAttachment))
+
             
-            self.leftBarLabel.attributedText = attributedString
+
+            self.leftBarLabel.text = a
+
             
             
             let weight = (Double($1) ?? 0.0) - (Double($2) ?? 0.0)
@@ -296,7 +328,7 @@ class MyProfileVC : UIViewController {
             
             header.topImage.isHidden = false
             header.profileImage.layer.cornerRadius = 50
-            header.informationValLabels[0].text =  String(self.imagesArr.count)
+            header.feedInformValLabels[0].text =  String(self.imagesArr.count)
             
             
         }).disposed(by: header.disposeBag)

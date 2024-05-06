@@ -309,6 +309,15 @@ class CommuCoordinator : Coordinator  {
     }
 
     
+    func pushFollowsVC( follow : Bool , uid : String ) {
+        
+        let coordinator = FollowsCoordinator(self.navigationController)
+        
+        childCoordinator.append(coordinator)
+        coordinator.finishDelegate = self
+        coordinator.startPush(follow: follow , uid : uid  )
+        
+    }
     
     
     

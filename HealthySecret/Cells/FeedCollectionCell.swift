@@ -448,6 +448,8 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         
             self.nicknameLabel.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor ),
             self.nicknameLabel.leadingAnchor.constraint(equalTo: self.profileImage.trailingAnchor , constant: 10 ),
+            self.nicknameLabel.trailingAnchor.constraint(equalTo: self.ellipsis.leadingAnchor , constant: -10 ),
+            
             
             self.ellipsis.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor ),
             self.ellipsis.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor ),

@@ -21,14 +21,14 @@ class ProfileHeaderView : UICollectionViewCell  {
    var setBind = PublishSubject<Bool>()
    
     
-    let informationValLabels = [UILabel() , UILabel() , UILabel()]
+    let feedInformValLabels = [UILabel() , UILabel() , UILabel()]
     
-    let informationTextLabels = [UILabel() , UILabel() , UILabel()]
+    let feedInformTextLabels = [UILabel() , UILabel() , UILabel()]
     
-    let informationTexts = ["피드" , "팔로워" , "팔로잉"]
+    let feedInformTexts = ["피드" , "팔로워" , "팔로잉"]
     
     lazy var informationStackView = {
-       let stackview = UIStackView(arrangedSubviews: informationValLabels)
+       let stackview = UIStackView(arrangedSubviews: feedInformValLabels)
         stackview.translatesAutoresizingMaskIntoConstraints = false
         stackview.axis = .horizontal
         stackview.distribution = .fillEqually
@@ -158,15 +158,13 @@ class ProfileHeaderView : UICollectionViewCell  {
         super.init(frame: frame)
         setUI()
         setStackViews()
-        
-
         print("headerInit")
     }
     
     required init?(coder: NSCoder) {
         
-        
         fatalError("init(coder:) has not been implemented")
+        
     }
     
     
@@ -175,8 +173,9 @@ class ProfileHeaderView : UICollectionViewCell  {
     private func setStackViews(){
         var idx = 0
         
-        informationValLabels.forEach{
+        feedInformValLabels.forEach{
             
+            $0.tag = idx
             $0.textAlignment = .center
             $0.text = "0"
             $0.font = .boldSystemFont(ofSize: 24)
@@ -184,19 +183,19 @@ class ProfileHeaderView : UICollectionViewCell  {
             
             
             
-            informationTextLabels[idx].translatesAutoresizingMaskIntoConstraints = false
+            feedInformTextLabels[idx].translatesAutoresizingMaskIntoConstraints = false
             
-            self.addSubview(informationTextLabels[idx])
+            self.addSubview(feedInformTextLabels[idx])
             
-            informationTextLabels[idx].text = informationTexts[idx]
-            informationTextLabels[idx].font = .systemFont(ofSize: 12)
+            feedInformTextLabels[idx].text = feedInformTexts[idx]
+            feedInformTextLabels[idx].font = .systemFont(ofSize: 12)
             
 
             NSLayoutConstraint.activate([
                 
                 
-                informationTextLabels[idx].centerXAnchor.constraint(equalTo: $0.centerXAnchor),
-                informationTextLabels[idx].bottomAnchor.constraint(equalTo: $0.topAnchor , constant: -10),
+                feedInformTextLabels[idx].centerXAnchor.constraint(equalTo: $0.centerXAnchor),
+                feedInformTextLabels[idx].bottomAnchor.constraint(equalTo: $0.topAnchor , constant: -5),
 
             
             
@@ -264,18 +263,17 @@ class ProfileHeaderView : UICollectionViewCell  {
             informationView.heightAnchor.constraint(equalToConstant: 120),
             informationView.bottomAnchor.constraint(equalTo: self.bottomAnchor ,constant: -20),
             
+            
             topImage.widthAnchor.constraint(equalToConstant: 30),
             topImage.heightAnchor.constraint(equalToConstant: 30) ,
             topImage.trailingAnchor.constraint(equalTo: self.profileImage.trailingAnchor),
             topImage.bottomAnchor.constraint(equalTo: self.profileImage.bottomAnchor),
             
+            
             informationStackView.centerYAnchor.constraint(equalTo: profileImage.centerYAnchor ,constant: 4),
             informationStackView.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor ,constant: 30),
             informationStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor ,constant: -30),
             informationStackView.heightAnchor.constraint(equalToConstant: 40),
-            
-            
-           
             
   
         ])
@@ -286,16 +284,14 @@ class ProfileHeaderView : UICollectionViewCell  {
             informLabelArr[i].textColor = .lightGray.withAlphaComponent(0.8)
             informLabelArr[i].font = .boldSystemFont(ofSize: 16)
             
-            
             self.addSubview(informDataArr[i])
+            
             informDataArr[i].translatesAutoresizingMaskIntoConstraints = false
             informDataArr[i].font = .boldSystemFont(ofSize: 16)
             informDataArr[i].textColor = .black
             
             
             informDataArr[i].centerXAnchor.constraint(equalTo: informLabelArr[i].centerXAnchor).isActive = true
-            
-            
             informDataArr[i].centerYAnchor.constraint(equalTo: informationView.centerYAnchor , constant: 15).isActive = true
             
             
