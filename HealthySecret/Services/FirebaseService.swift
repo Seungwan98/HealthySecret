@@ -731,8 +731,7 @@ extension FirebaseService {
     func updateSignUpData( model : UserModel , key : String ) -> Completable {
         return Completable.create{ completable in
             
-            self.db.collection("HealthySecretUsers").document(key)
-                .getDocument() { (doc, err) in
+            self.db.collection("HealthySecretUsers").document(key).getDocument() { (doc, err) in
                     
                     if let err = err {
                         
@@ -831,6 +830,7 @@ extension FirebaseService {
                             }).disposed(by: self.disposeBag)
                             
                             if !((beforeImage ?? "").isEmpty){ self.deleteImage(urlString: beforeImage ?? "").subscribe{ [weak self] event in
+                                guard let self = self else {return}
                                 switch(event){
                                     
                                 case .error(_):
@@ -1242,7 +1242,8 @@ extension FirebaseService {
     
     func getFeedPagination(feeds:[FeedModel] , pagesCount : Int , block : [String]) -> Single<[FeedModel]> {
         return Single<[FeedModel]>.create { [weak self] single in
-            var outputFeeds = feeds
+            var outputFeeds : [FeedModel] = []
+            var newFeeds : [FeedModel] = feeds
             
             print("getFeedPagination")
             if let query = self?.query {
@@ -1274,6 +1275,7 @@ extension FirebaseService {
                 //Set next query
                 self.query = next
                 
+                var arr : [Observable<UserModel>] = []
                 
                 _ = snapshot.documents.map({ document in
                     
@@ -1282,15 +1284,52 @@ extension FirebaseService {
                         
                         outputFeeds.append(feedModel)
                         
-                        print("sdo")
                         
                     } catch {
                         single(.failure(CustomError.isNil))
                     }
                 })
                 
+              
+                
+              
+                
                 var idx = 0
+                        
+                    
+                    
+                    
+              
+                
+                
+//                Observable.concat(arr)
+//                    .flatMap { value -> Observable<Int> in
+//                        // 결과를 배열에 저장
+//                        
+//                        print("\(i)  index")
+//                        outputFeeds[i].profileImage = value.profileImage
+//                        outputFeeds[i].nickname = value.name
+//                        
+//                        newFeeds.append(outputFeeds[idx])
+//
+//                        idx += 1
+//                        // Observable.empty()를 반환하여 값을 무시하고 계속 진행
+//                        return Observable.empty()
+//                    }
+//                    .subscribe(onCompleted: {
+//                        
+//                        single(.success(newFeeds))
+//
+//                    })
+//                    .disposed(by: disposeBag)
+//
+                
+                
+                
                 for i in 0..<outputFeeds.count{
+                    
+                    
+                    
                     
                     self.getDocument(key: outputFeeds[i].uuid).subscribe({ event in
                         print("getDoc")
@@ -1300,10 +1339,14 @@ extension FirebaseService {
                             outputFeeds[i].profileImage = user.profileImage
                             outputFeeds[i].nickname = user.name
                             
+                            
                             if( idx+1 >= outputFeeds.count){
                                 
-
-                                single(.success(outputFeeds))
+                                for i in outputFeeds {
+                                    newFeeds.append(i)
+                                }
+                                single(.success(newFeeds))
+                                    
                                 
                             }else{
                                 idx += 1
@@ -1463,7 +1506,6 @@ extension FirebaseService {
     //댓글 수정 삭제
     
     
-    
     func deleteComents(  coment : Coment , feedUid : String ) -> Single<[Coment]> {
         return Single.create{ single in
             
@@ -1531,7 +1573,8 @@ extension FirebaseService {
     
     
     func updateComents( feedUid : String , coment : Coment  ) -> Single<[Coment]> {
-        return Single.create{ single in
+        return Single.create{ [weak self] single in
+            guard let self = self else { return Disposables.create()}
             self.listener = self.db.collection("HealthySecretFeed").whereField("feedUid", isEqualTo: feedUid).addSnapshotListener{  querySnapshot, error in
                 guard let snapshot = querySnapshot else {
                     print("Error fetching snapshots: \(error!)")
@@ -1539,7 +1582,6 @@ extension FirebaseService {
                 }
                 
                 
-                print("listenr")
                 snapshot.documentChanges.forEach { diff in
                     
                     
@@ -1550,7 +1592,40 @@ extension FirebaseService {
                         do{
                             let jsonData = try JSONSerialization.data(withJSONObject: diff.document.data(), options: [])
                             let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
-                            single(.success(feed.coments ?? []))
+                            
+                            guard   feed.coments != nil else {return}
+                            
+                            var coments = feed.coments!
+                            var index = 0
+                            for i in 0..<coments.count {
+                                
+                                self.getDocument(key: coments[i].uid ).subscribe({ event in
+                                    
+                                    switch(event){
+                                    case.success(let user):
+                                        
+                                        
+                                        coments[i].profileImage = user.profileImage ?? ""
+                                        coments[i].nickname = user.name
+                                        
+                                        if(index + 1 >= coments.count){
+                                            single(.success(coments))
+                                        }else{
+                                            index += 1
+                                        }
+                                        
+                                        
+
+                                        
+                                    case .failure(_):
+                                        single(.failure(CustomError.isNil))
+                                    }
+                                    
+                                    
+                                    
+                                }).disposed(by: self.disposeBag)
+                                
+                            }
                             
                             
                             
@@ -1591,6 +1666,81 @@ extension FirebaseService {
         }
         
     }
+    
+    func getComents(feedUid : String) -> Single<[Coment]>{
+        return Single.create{ [weak self] single in
+            
+            guard let self = self else {return Disposables.create()}
+            
+            self.db.collection("HealthySecretFeed").document(feedUid).getDocument{ doc , err in
+                
+                if let err = err {
+                    single(.failure(err))
+                }else{
+                    guard let data = doc?.data() else {return}
+                    do{
+                        let jsonData = try JSONSerialization.data(withJSONObject: data , options: [])
+                        let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
+                        
+                 
+                        var coments = feed.coments ?? []
+                        var index = 0
+                        
+                        for i in 0..<coments.count {
+                            
+                            self.getDocument(key: coments[i].uid ).subscribe({ event in
+                                
+                                switch(event){
+                                case.success(let user):
+                                    
+                                    
+                                    coments[i].profileImage = user.profileImage ?? ""
+                                    coments[i].nickname = user.name
+                                    
+                                    if(index + 1 >= coments.count){
+                                        single(.success(coments))
+                                    }else{
+                                        index += 1
+                                    }
+                                    
+                                    
+
+                                    
+                                case .failure(_):
+                                    single(.failure(CustomError.isNil))
+                                }
+                                
+                                
+                                
+                            }).disposed(by: self.disposeBag)
+                            
+                        }
+                        
+                        
+                        
+                    }
+                    catch{
+                        single(.failure(CustomError.isNil))
+                        
+                    }
+                    
+                    
+                }
+                
+                
+                
+                
+            }
+            
+            return Disposables.create()
+        }
+        
+        
+       
+        
+        
+    }
+    
     
     
     func getFollows(uid:[String] ) -> Single<[UserModel]>{

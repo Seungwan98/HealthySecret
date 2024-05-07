@@ -15,7 +15,6 @@ import Kingfisher
 
 class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDelegate  , UITableViewDataSource, UITableViewDelegate {
     
-    
     func getCell(idx : Int) -> FeedCollectionCell {
         
         var cell =  FeedCollectionCell()
@@ -26,11 +25,12 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             cell =  tableView.dequeueReusableCell(withIdentifier: "firstCell") as! FeedCollectionCell
 
         }
-        else if(idx + 1 == self.feeds.count){
+        else if( (idx + 1 ) % 4  == 0){
             
-            cell = FeedCollectionCell()
-
-            print("lastCell")
+            print("idx \(idx) count \(self.feeds.count)")
+            
+            cell = tableView.dequeueReusableCell(withIdentifier: "lastCell") as! FeedCollectionCell
+            
         }
         else{
             
@@ -53,13 +53,27 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             return false
         }
     }
+    
+  
                            
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-                
-        return self.feeds.count
+        
+        let count = self.feeds.count
+        
+       
+    
+        
+        return count
 
     }
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        // Cell의 애니메이션 중단
+        cell.layer.removeAllAnimations()
+        cell.alpha = 0
+    }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
@@ -72,6 +86,8 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         let cell = getCell(idx: indexPath.row)
         
         let item = feeds[indexPath.row]
+        
+
 
         
         cell.commuVC = self
@@ -100,7 +116,6 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         cell.likesButton.isSelected = val
         cell.isTouched = val
           
-            
             
             
             cell.setLikesLabel(count: self.likesCount[item.feedUid]?.count ?? 0 )
@@ -273,11 +288,13 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     var isLastPage = false
     
     var isRefresh = false
-    // (delegate) Cell터치 시.
-    
+
+    var backgroundView = CustomBackgroundView()
     
     let refreshControl = UIRefreshControl()
     
+    
+    // (delegate) Cell터치 시.
     func didPressHeart(for index: String, like: Bool) {
         var beforeArr : [String] = []
         likesButtonTapped.onNext([index:like])
@@ -369,7 +386,6 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         
         self.authUid = UserDefaults.standard.string(forKey: "uid") ?? ""
         
-        
         setUI()
         setBindings()
         
@@ -404,8 +420,12 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     
     func setUI(){
         
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundView.backgroundLabel.text = "아직 피드가 없어요"
+        
         self.view.addSubview(tableView)
         self.view.addSubview(addButton)
+        self.view.addSubview(backgroundView)
         
         
         self.refreshControl.endRefreshing()
@@ -417,7 +437,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         tableView.register(FeedCollectionCell.self, forCellReuseIdentifier: "lastCell")
        
 
-        
+        tableView.backgroundView = self.backgroundView
         
         
         NSLayoutConstraint.activate([
@@ -426,11 +446,18 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             self.addButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor , constant: -20 ),
             self.addButton.widthAnchor.constraint(equalToConstant: 50 ),
             self.addButton.heightAnchor.constraint(equalToConstant: 50),
+          
+            self.backgroundView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.backgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.backgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.backgroundView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
             
             self.tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            
+  
             
         ])
         
@@ -480,10 +507,10 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         
 
         
-        output.feedModel.subscribe(onNext:{ feeds in
-            
+        output.feedModel.subscribe(onNext:{ [weak self] feeds in
+            guard let self = self else {return}
             self.feeds = feeds
-            
+            self.backgroundView.isHidden = !(feeds.count <= 0 )
             self.tableView.reloadData()
             
             

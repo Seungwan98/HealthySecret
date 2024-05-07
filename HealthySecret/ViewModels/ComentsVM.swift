@@ -33,6 +33,7 @@ class ComentsVM : ViewModel {
         
         var coments = BehaviorSubject<[Coment]>(value: [])
         var feedUuid = BehaviorSubject<String>(value: "")
+        var backgroundHidden = BehaviorSubject<Bool>(value: false)
 
         
     }
@@ -54,13 +55,32 @@ class ComentsVM : ViewModel {
         let output = Output()
         var coment : String = ""
 
-        
-        if let coments = self.coments {
+        if let feedUid = self.feedUid {
             
+            firebaseService.getComents(feedUid: feedUid ).subscribe({ [weak self] event in
+                guard let self = self else {return}
+                
+                switch(event){
+                    
+                case.success(let coments):
+                    output.coments.onNext(coments)
+                    output.backgroundHidden.onNext( !coments.isEmpty )
+                case.failure(let err):
+                    print(err)
+                    break
+                }
+                    
+                
+                
+                
+            }).disposed(by: disposeBag)
+                
+                
             
-            
-            output.coments.onNext(coments)
         }
+        
+        
+        
         
         if let feedUuid = self.feedUuid {
             output.feedUuid.onNext(feedUuid)
@@ -83,7 +103,9 @@ class ComentsVM : ViewModel {
                 switch(event){
                 case.success(let coments):
                     output.coments.onNext(coments)
-                    output.coments.onNext(coments)
+                    output.backgroundHidden.onNext( !coments.isEmpty )
+
+                    
                     self.firebaseService.listener?.remove()
 
                     
@@ -132,6 +154,8 @@ class ComentsVM : ViewModel {
                 switch(event){
                 case.success(let coments):
                     output.coments.onNext(coments)
+                    output.backgroundHidden.onNext( !coments.isEmpty )
+
                     self.firebaseService.listener?.remove()
 
 

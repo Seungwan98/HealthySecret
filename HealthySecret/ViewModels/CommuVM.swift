@@ -35,7 +35,7 @@ class CommuVM : ViewModel {
     
     struct Output {
         
-        var feedModel = BehaviorSubject<[FeedModel]>(value: [])
+        var feedModel = PublishSubject<[FeedModel]>()
         var likesCount = BehaviorSubject<[ String : [ String ] ]>(value: [:] )
         var isLastPage = BehaviorSubject<Bool>(value:false)
         var isPaging = BehaviorSubject<Bool>(value: false)
@@ -74,6 +74,7 @@ class CommuVM : ViewModel {
         input.refreshControl.subscribe(onNext: { [weak self] _  in
             
             self?.resetFirebaseValue()
+            
             
           
             DispatchQueue.main.asyncAfter(wallDeadline: .now() + 0.6) {}

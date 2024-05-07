@@ -13,7 +13,7 @@ import RxCocoa
 import RxSwift
 import Kingfisher
 
-class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
+class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     
     func imageTapped(feedUid: String) {
         
@@ -86,6 +86,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         self.collectionView.dataSource = self
         
         self.collectionView.delegate = self
@@ -114,10 +115,12 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
     }()
     
     
+    let backgroundView = CustomBackgroundView()
     
+
     
     override func viewWillAppear(_ animated: Bool) {
-        
+
         
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
@@ -170,12 +173,22 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         
+        self.backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundView.backgroundLabel.text = "아직 피드가 없어요"
+        
+        
         view.addSubview(self.collectionView)
+        view.addSubview(self.backgroundView)
         
         
         NSLayoutConstraint.activate([
             
             
+            
+            self.backgroundView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ),
+            self.backgroundView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor  ),
+            self.backgroundView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
+            self.backgroundView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor ),
             
             self.collectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ),
             self.collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor  ),

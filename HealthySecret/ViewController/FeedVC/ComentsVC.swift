@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import RxSwift
 import Kingfisher
+import RxCocoa
 
 class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     func profileTapped(comentsUuid: String) {
@@ -104,6 +105,9 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         return tableView
     }()
     
+    var backgroundView = CustomBackgroundView()
+
+    
     override func viewDidLoad() {
         self.hidedKeyboardWhenTappedAround()
         setUI()
@@ -128,6 +132,9 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     
     
     func setUI(){
+        
+        self.backgroundView.backgroundLabel.text = "아직 댓글이 없어요."
+        
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
         tableView.dataSource = nil
         tableView.register(ComentsCell.self, forCellReuseIdentifier: "ComentsCell")
@@ -137,11 +144,19 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
 
         self.view.addSubview(self.tableView)
         self.view.addSubview(self.bottomView)
+        self.view.addSubview(backgroundView)
+        
+        
         self.bottomView.addSubview(self.textView)
         self.bottomView.addSubview(self.addButton)
         
         
         NSLayoutConstraint.activate([
+            
+            backgroundView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            backgroundView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            backgroundView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            backgroundView.bottomAnchor.constraint(equalTo: bottomView.topAnchor),
             
             self.tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.tableView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
@@ -184,8 +199,11 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         let input = ComentsVM.Input(addButtonTapped : addButton.rx.tap.asObservable(), coments: self.textView.rx.text.orEmpty.distinctUntilChanged().asObservable() , comentsDelete : comentsDelete.asObservable() , profileTapped : self.profileTapped.asObservable()  )
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else {return}
         
-        output.feedUuid.subscribe(onNext: { val in
-            feedUuid = val
+        output.backgroundHidden.bind(to: self.backgroundView.rx.isHidden ).disposed(by: disposeBag)
+        
+        output.feedUuid.subscribe(onNext: { feedUid in
+            
+            feedUuid = feedUid
             
             
         }).disposed(by: disposeBag)
@@ -196,12 +214,12 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         
         
         
-        
         output.coments.bind(to: self.tableView.rx.items(cellIdentifier: "ComentsCell" , cellType: ComentsCell.self )){
             index,item,cell in
             cell.comentsLabel.text = item.coment
             cell.nicknameLabel.text = item.nickname
             
+            cell.delegate = self
             cell.delegate = self
             cell.comentsVC = self
             

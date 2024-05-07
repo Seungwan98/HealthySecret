@@ -60,9 +60,8 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
         imageView.isUserInteractionEnabled = true
 
         imageView.layer.cornerRadius = 20
-        imageView.image = UIImage(named: "일반적.png")
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .lightGray
+        imageView.backgroundColor = .clear
         
         return imageView
     }()
@@ -71,7 +70,6 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.text = "승팔"
         return label
         
         

@@ -56,9 +56,8 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         imageView.isUserInteractionEnabled = true
 
         imageView.layer.cornerRadius = 20
-        imageView.image = UIImage(named: "일반적.png")
+        imageView.backgroundColor = .clear
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .lightGray
         
         return imageView
     }()
@@ -67,7 +66,6 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.text = "승팔"
         return label
         
         
@@ -249,8 +247,7 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        
-
+    
         
 
         

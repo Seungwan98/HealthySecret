@@ -408,7 +408,26 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
             
             
             self.imagesArr = imagesArr
-            self.collectionView.reloadData()
+            
+            var indexPathsToReload : [IndexPath] = []
+         
+            if( self.imagesArr.count == self.collectionView.numberOfItems(inSection: 0)){
+                for i in 0..<self.imagesArr.count{
+                    indexPathsToReload.append( IndexPath(row: i, section: 0) )
+                }
+                self.collectionView.reloadItems(at: indexPathsToReload)
+
+
+            }else{
+                self.collectionView.reloadData()
+            }
+                        
+         
+            
+            
+    
+             
+            
             
         }).disposed(by: disposeBag)
         
@@ -437,6 +456,10 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
 
 extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
     
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        cell.alpha = 0
+        cell.layer.removeAllAnimations()
+    }
   
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

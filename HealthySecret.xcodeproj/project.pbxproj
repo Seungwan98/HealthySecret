@@ -142,6 +142,7 @@
 		60EF3C972BE8B04D0007862F /* FollowsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C962BE8B04D0007862F /* FollowsCoordinator.swift */; };
 		60EF3C992BE94B8D0007862F /* edmitLunch.png in Resources */ = {isa = PBXBuildFile; fileRef = 60EF3C982BE94B8D0007862F /* edmitLunch.png */; };
 		60EF3C9D2BE9E4CB0007862F /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C9C2BE9E4CB0007862F /* ProfileCoordinator.swift */; };
+		60EF3C9F2BEA2BD10007862F /* CustomBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C9E2BEA2BD10007862F /* CustomBackgroundView.swift */; };
 		CB62F41F787B287CE4FA2161 /* Pods_HealthySecret.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */; };
 /* End PBXBuildFile section */
 
@@ -288,6 +289,7 @@
 		60EF3C962BE8B04D0007862F /* FollowsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsCoordinator.swift; sourceTree = "<group>"; };
 		60EF3C982BE94B8D0007862F /* edmitLunch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = edmitLunch.png; path = ../../../../../../Downloads/edmitLunch.png; sourceTree = "<group>"; };
 		60EF3C9C2BE9E4CB0007862F /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
+		60EF3C9E2BEA2BD10007862F /* CustomBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBackgroundView.swift; sourceTree = "<group>"; };
 		DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthySecret.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -344,10 +346,6 @@
 				60BC98F82B2728C40013FAD9 /* DiaryVC.swift */,
 				6067B99E2B502A5E00D536FF /* CalendarVC.swift */,
 				60A3801B2B7F22E400C9A2E6 /* DetailModalVC.swift */,
-				609C06362BA9A0B700D61F53 /* CommuVC.swift */,
-				609C06422BBA8C5200D61F53 /* FeedVC.swift */,
-				60EAFE132BC852C800D3EE73 /* OtherProfileVC.swift */,
-				6093BC0A2BD823EB00D3BE3C /* ProfileFeedVC.swift */,
 			);
 			path = TabbarVC;
 			sourceTree = "<group>";
@@ -365,6 +363,7 @@
 			isa = PBXGroup;
 			children = (
 				606343BE2B8CCAFD0084E2CC /* MyProfileVC.swift */,
+				60EAFE132BC852C800D3EE73 /* OtherProfileVC.swift */,
 				606343C62B8E34CD0084E2CC /* ChangeIntroduceVC.swift */,
 				606343CB2B9051440084E2CC /* SettingVC.swift */,
 				606343D12B9637A40084E2CC /* ChangeSignUpVC.swift */,
@@ -375,6 +374,7 @@
 		608DF9702AD567C500DD27DB /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				60EF3CA02BEA84660007862F /* FeedVC */,
 				606343CA2B8F344E0084E2CC /* ProfileVC */,
 				606343BC2B84E7DD0084E2CC /* SignVC */,
 				606343BB2B84E78F0084E2CC /* TabbarVC */,
@@ -383,12 +383,8 @@
 				606343B82B84E74E0084E2CC /* EditVC */,
 				606343C82B8F34430084E2CC /* AddDiaryVC.swift */,
 				609C06342BA30E4F00D61F53 /* BeforeMyProfileVC.swift */,
-				609C06442BBA9E8500D61F53 /* AddFeedVC.swift */,
 				609C06482BBD733500D61F53 /* AddFeedVM.swift */,
-				609C064A2BBE9C2400D61F53 /* ComentsVC.swift */,
-				60EAFE0B2BC4357600D3EE73 /* UpdateFeedVC.swift */,
 				60EAFE0D2BC4361200D3EE73 /* UpdateFeedVM.swift */,
-				60EF3C922BE0C7220007862F /* FollowsVC.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -474,6 +470,7 @@
 				609C06462BBB33AB00D61F53 /* LoadingIndicator.swift */,
 				60EAFE072BC1375400D3EE73 /* CALayer+.swift */,
 				60EAFE0F2BC5544D00D3EE73 /* DispatchQueue+.swift */,
+				60EF3C9E2BEA2BD10007862F /* CustomBackgroundView.swift */,
 			);
 			path = Customs;
 			sourceTree = "<group>";
@@ -607,6 +604,20 @@
 				60BC99052B3476400013FAD9 /* dinnerImg.png */,
 			);
 			path = Image;
+			sourceTree = "<group>";
+		};
+		60EF3CA02BEA84660007862F /* FeedVC */ = {
+			isa = PBXGroup;
+			children = (
+				609C06362BA9A0B700D61F53 /* CommuVC.swift */,
+				6093BC0A2BD823EB00D3BE3C /* ProfileFeedVC.swift */,
+				609C06422BBA8C5200D61F53 /* FeedVC.swift */,
+				60EF3C922BE0C7220007862F /* FollowsVC.swift */,
+				60EAFE0B2BC4357600D3EE73 /* UpdateFeedVC.swift */,
+				609C064A2BBE9C2400D61F53 /* ComentsVC.swift */,
+				609C06442BBA9E8500D61F53 /* AddFeedVC.swift */,
+			);
+			path = FeedVC;
 			sourceTree = "<group>";
 		};
 		AA1FAA90DEBD527FB70DC4D9 /* Frameworks */ = {
@@ -848,6 +859,7 @@
 				60BC98EA2B0B501E0013FAD9 /* ExerciseDetailVC.swift in Sources */,
 				60EAFE0C2BC4357600D3EE73 /* UpdateFeedVC.swift in Sources */,
 				609C06372BA9A0B700D61F53 /* CommuVC.swift in Sources */,
+				60EF3C9F2BEA2BD10007862F /* CustomBackgroundView.swift in Sources */,
 				60EAFE062BC125BD00D3EE73 /* ComentsVM.swift in Sources */,
 				608DF96B2AD4352F00DD27DB /* ingredientsDTO.swift in Sources */,
 				600DE9762B62A00A00D5D797 /* ExerciseVM.swift in Sources */,

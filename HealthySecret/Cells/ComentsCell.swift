@@ -207,8 +207,9 @@ class ComentsCell : UITableViewCell  {
 
             self.nicknameLabel.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor ),
             self.nicknameLabel.leadingAnchor.constraint(equalTo: self.profileImage.trailingAnchor , constant: 10 ),
-            self.nicknameLabel.trailingAnchor.constraint(equalTo: self.ellipsis.leadingAnchor , constant: -10 ),
             
+            NSLayoutConstraint(item: self.nicknameLabel, attribute: .width, relatedBy: .lessThanOrEqual, toItem: self , attribute: .width, multiplier: 1.0, constant: -60),
+
             
             self.ellipsis.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor ),
             self.ellipsis.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor ),
