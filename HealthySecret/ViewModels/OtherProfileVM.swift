@@ -62,14 +62,14 @@ class OtherProfileVM : ViewModel {
     }
     
     
-    weak var coordinator : CommuCoordinator?
+    weak var coordinator : ProfileCoordinator?
     
     private var firebaseService : FirebaseService
     
     var nowUser : UserModel?
 
     
-    init( coordinator : CommuCoordinator , firebaseService : FirebaseService , uuid : String ){
+    init( coordinator : ProfileCoordinator , firebaseService : FirebaseService , uuid : String ){
         
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
@@ -233,7 +233,6 @@ class OtherProfileVM : ViewModel {
                             $0.feedUid
                         })
                         
-                        print("\(uidArr)  uidArr")
                         
                         output.feedImage.onNext(imageArr)
                         output.feedUid.onNext(uidArr)

@@ -122,10 +122,14 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
         
+
+        
     }
     override func viewWillDisappear(_ animated: Bool) {
         
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
+
         
     }
     
@@ -171,12 +175,12 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate{
         
         NSLayoutConstraint.activate([
             
+            
+            
             self.collectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ),
             self.collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor  ),
             self.collectionView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
             self.collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor ),
-            
-            
             
             
             

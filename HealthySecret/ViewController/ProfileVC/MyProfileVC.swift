@@ -13,7 +13,12 @@ import RxCocoa
 import RxSwift
 import Kingfisher
 
-class MyProfileVC : UIViewController {
+class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
+    func imageTapped(feedUid: String) {
+        print("tappe")
+        self.imageTapped.onNext(feedUid)
+    }
+    
     
     
     
@@ -93,8 +98,12 @@ class MyProfileVC : UIViewController {
     
     let leftBarLabel : UILabel = {
         let label = UILabel()
+        label.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
         label.font = .boldSystemFont(ofSize: 22)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.sizeToFit()
+        label.layer.masksToBounds = true
+        
         return label
         
     }()
@@ -118,6 +127,7 @@ class MyProfileVC : UIViewController {
         
     }()
     
+    var imageTapped = PublishSubject<String>()
 
     
     lazy var rightBarButton = UIBarButtonItem(customView: rightBarImage)
@@ -127,13 +137,36 @@ class MyProfileVC : UIViewController {
     
     let leftBarImage = UIImageView(image: UIImage(named: "arrow.png"))
     
+    
+    
     var outputProfileImage = BehaviorSubject<Data?>(value: nil)
+    
+
     
     var HEADER_HEIGHT : CGFloat = 0
     
+    var followersCount : Int?
+
     var imagesArr : [[String]] = []
     
+    var uidsArr : [String] = []
+
+    var profileHeader : ProfileHeaderView?
     
+    func setHeadersCount( selected : Bool ){
+        
+        var count =  self.followersCount ?? 0
+        
+        
+        if(selected){
+            count += 1
+        }else{
+            count -= 1
+        }
+        self.profileHeader?.feedInformValLabels[1].text = String(count)
+        self.followersCount = count
+        
+    }
 
     
     override func viewDidLoad() {
@@ -160,6 +193,8 @@ class MyProfileVC : UIViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(false)
+
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
         
@@ -169,7 +204,10 @@ class MyProfileVC : UIViewController {
         
     }
     override func viewWillDisappear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        super.viewWillDisappear(false)
+
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+
         
     }
     
@@ -177,7 +215,7 @@ class MyProfileVC : UIViewController {
     
     func setUI(){
         
-        
+       
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         self.leftBarImage.translatesAutoresizingMaskIntoConstraints = false
         
@@ -188,15 +226,19 @@ class MyProfileVC : UIViewController {
         view.addSubview(self.addButton)
         
         
+        
         NSLayoutConstraint.activate([
             
             
-            leftBarView.widthAnchor.constraint(equalToConstant: 140),
+            leftBarView.widthAnchor.constraint(equalToConstant: 180),
             leftBarView.heightAnchor.constraint(equalToConstant: 40),
             
-            leftBarLabel.heightAnchor.constraint(equalTo: leftBarView.heightAnchor ),
-            leftBarLabel.widthAnchor.constraint(equalToConstant: 100),
+            
             leftBarLabel.centerYAnchor.constraint(equalTo: leftBarView.centerYAnchor ),
+            leftBarLabel.leadingAnchor.constraint(equalTo: leftBarView.leadingAnchor ),
+            
+            NSLayoutConstraint(item: self.leftBarLabel, attribute: .width, relatedBy: .lessThanOrEqual, toItem: self.leftBarView, attribute: .width, multiplier: 1.0, constant: -20),
+         
             
             leftBarImage.heightAnchor.constraint(equalToConstant: 12 ),
             leftBarImage.widthAnchor.constraint(equalToConstant: 12 ),
@@ -234,12 +276,11 @@ class MyProfileVC : UIViewController {
         
         
         
-        
     }
     func setHeaderBindings( header : ProfileHeaderView ){
         
         
-        let input = MyProfileVM.HeaderInput( viewWillApearEvent: header.appearEvent  , goalLabelTapped: header.goalLabel.rx.tapGesture().when(.recognized).asObservable(), changeProfile: header.profileImage.rx.tapGesture().when(.recognized).asObservable(), outputProfileImage: self.outputProfileImage.asObservable() )
+        let input = MyProfileVM.HeaderInput( viewWillApearEvent: header.appearEvent  , goalLabelTapped: header.goalLabel.rx.tapGesture().when(.recognized).asObservable(), changeProfile: header.profileImage.rx.tapGesture().when(.recognized).asObservable(), outputProfileImage: self.outputProfileImage.asObservable(),  outputFollows : Observable.merge( header.feedInformValLabels[1].rx.tapGesture().when(.recognized).asObservable() , header.feedInformValLabels[2].rx.tapGesture().when(.recognized).asObservable()  ) )
         
         
         guard let output = self.viewModel?.HeaderTransform(input: input, disposeBag: header.disposeBag) else { return }
@@ -278,7 +319,8 @@ class MyProfileVC : UIViewController {
 
             self.leftBarLabel.text = a
 
-            
+           
+
             
             let weight = (Double($1) ?? 0.0) - (Double($2) ?? 0.0)
             
@@ -346,7 +388,9 @@ class MyProfileVC : UIViewController {
         
         
         
-        let input = MyProfileVM.Input(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable()  , leftBarButton : leftBarLabel.rx.tapGesture().when(.recognized).asObservable() , settingTapped: rightBarImage.rx.tapGesture().when(.recognized).asObservable() , addButtonTapped : addButton.rx.tap.asObservable() , outputProfileImage : outputProfileImage.asObservable()
+        
+        
+        let input = MyProfileVM.Input(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable()  , leftBarButton : leftBarView.rx.tapGesture().when(.recognized).asObservable() , settingTapped: rightBarImage.rx.tapGesture().when(.recognized).asObservable() , addButtonTapped : addButton.rx.tap.asObservable() , outputProfileImage : outputProfileImage.asObservable(), imageTapped: self.imageTapped.asObservable()
                                       
         )
         
@@ -368,7 +412,12 @@ class MyProfileVC : UIViewController {
             
         }).disposed(by: disposeBag)
         
-        
+        output.feedUid.subscribe( onNext: { [weak self] uidsArr in
+            guard let uidsArr = uidsArr else { return }
+            
+            self?.uidsArr = uidsArr
+            
+        }).disposed(by: disposeBag)
         
         
         
@@ -435,7 +484,10 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
             return UICollectionViewCell()
         }
         
+        
         if let url = URL(string: self.imagesArr[indexPath.row].first ?? "" ){
+            cell.delegate = self
+            cell.feedUid = uidsArr[indexPath.row]
             
             if self.imagesArr[indexPath.row].count > 1 {
                 cell.squareImage.isHidden = false
@@ -447,6 +499,7 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
                 
                 let processor = DownsamplingImageProcessor(size: cell.image.bounds.size) // 크기 지정 다운 샘플링
                 |> RoundCornerImageProcessor(cornerRadius: 0 ) // 모서리 둥글게
+                
                 cell.image.kf.indicatorType = .activity  // indicator 활성화
                 cell.image.kf.setImage(
                     with: url,  // 이미지 불러올 url
@@ -469,6 +522,7 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
         
         
         return cell
+        
     }
     
 }

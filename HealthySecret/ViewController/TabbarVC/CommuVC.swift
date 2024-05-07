@@ -382,17 +382,20 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(false)
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
         
-        UIView.setAnimationsEnabled(true)
         
         
         
         
     }
     override func viewWillDisappear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        super.viewWillDisappear(false)
+
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+
         
     }
     

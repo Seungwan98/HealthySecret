@@ -232,7 +232,10 @@ class CommuVM : ViewModel {
                     
                     self.feedModels = feeds
                     
-                    print(feeds)
+                    for i in feeds{
+                        print("nickname \(i.nickname)")
+                    }
+                    
 
 
                     for i in 0..<feeds.count {

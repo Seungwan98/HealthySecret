@@ -9,7 +9,6 @@ import Foundation
 
 struct UserModel : Codable {
     var uuid : String
-    var id : String
     var name : String
     var recentAdd : [String]?
     var recentSearch : [String]?

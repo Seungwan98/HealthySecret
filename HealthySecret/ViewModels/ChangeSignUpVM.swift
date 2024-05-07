@@ -53,14 +53,14 @@ class ChangeSignUpVM : ViewModel {
     }
 
     
-    var userModel = UserModel(uuid: "", id: "", name: "" ,  tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, ingredients: [], exercise: [] , diarys: [] )
+    var userModel = UserModel(uuid: "", name: "" ,  tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, ingredients: [], exercise: [] , diarys: [] )
 
     
-    weak var coordinator : MyProfileCoordinator?
+    weak var coordinator : ProfileCoordinator?
     
     private var firebaseService : FirebaseService
     
-    init( coordinator : MyProfileCoordinator , firebaseService : FirebaseService ){
+    init( coordinator : ProfileCoordinator , firebaseService : FirebaseService ){
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
         
@@ -68,10 +68,8 @@ class ChangeSignUpVM : ViewModel {
     
     
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
-        let id : String = UserDefaults.standard.value(forKey: "email") as! String
         //let name : String = UserDefaults.standard.value(forKey: "name") as! String
         
-        userModel.id = id
         
         let output = Output()
         print(userModel.tall)

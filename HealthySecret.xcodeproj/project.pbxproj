@@ -141,6 +141,7 @@
 		60EF3C952BE0C7AD0007862F /* FollowsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C942BE0C7AD0007862F /* FollowsVM.swift */; };
 		60EF3C972BE8B04D0007862F /* FollowsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C962BE8B04D0007862F /* FollowsCoordinator.swift */; };
 		60EF3C992BE94B8D0007862F /* edmitLunch.png in Resources */ = {isa = PBXBuildFile; fileRef = 60EF3C982BE94B8D0007862F /* edmitLunch.png */; };
+		60EF3C9D2BE9E4CB0007862F /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C9C2BE9E4CB0007862F /* ProfileCoordinator.swift */; };
 		CB62F41F787B287CE4FA2161 /* Pods_HealthySecret.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */; };
 /* End PBXBuildFile section */
 
@@ -286,6 +287,7 @@
 		60EF3C942BE0C7AD0007862F /* FollowsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsVM.swift; sourceTree = "<group>"; };
 		60EF3C962BE8B04D0007862F /* FollowsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsCoordinator.swift; sourceTree = "<group>"; };
 		60EF3C982BE94B8D0007862F /* edmitLunch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = edmitLunch.png; path = ../../../../../../Downloads/edmitLunch.png; sourceTree = "<group>"; };
+		60EF3C9C2BE9E4CB0007862F /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
 		DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthySecret.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -546,6 +548,7 @@
 				600DE9772B62A12000D5D797 /* ExerciseCoordinator.swift */,
 				609C062E2B9ABC0D00D61F53 /* RunCoordinator.swift */,
 				60EF3C962BE8B04D0007862F /* FollowsCoordinator.swift */,
+				60EF3C9C2BE9E4CB0007862F /* ProfileCoordinator.swift */,
 			);
 			path = Coordinator;
 			sourceTree = "<group>";
@@ -821,6 +824,7 @@
 				609C06452BBA9E8500D61F53 /* AddFeedVC.swift in Sources */,
 				60A3801A2B72143800C9A2E6 /* IngredientsDetailVM.swift in Sources */,
 				609C06412BAAEA7400D61F53 /* TapGesture+.swift in Sources */,
+				60EF3C9D2BE9E4CB0007862F /* ProfileCoordinator.swift in Sources */,
 				606343D52B9818F10084E2CC /* CoreMotionService.swift in Sources */,
 				60EAFE122BC83CF400D3EE73 /* OtherProfileVM.swift in Sources */,
 				606343CC2B9051440084E2CC /* SettingVC.swift in Sources */,

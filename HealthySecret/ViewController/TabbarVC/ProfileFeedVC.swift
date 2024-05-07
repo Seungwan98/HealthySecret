@@ -351,7 +351,7 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
-        UIView.setAnimationsEnabled(true)
+        
 
         
         
@@ -359,8 +359,8 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
         
     }
     override func viewWillDisappear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
-        UIView.setAnimationsEnabled(false)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
 
     }
     

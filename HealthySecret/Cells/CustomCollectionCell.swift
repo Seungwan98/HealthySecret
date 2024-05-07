@@ -39,6 +39,9 @@ class CustomCollectionViewCell: UICollectionViewCell {
         
     }()
     
+    override func prepareForReuse() {
+        self.image.image?.remove(from: self.image)
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)

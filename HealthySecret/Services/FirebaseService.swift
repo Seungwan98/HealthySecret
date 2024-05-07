@@ -1289,21 +1289,27 @@ extension FirebaseService {
                     }
                 })
                 
-                
+                var idx = 0
                 for i in 0..<outputFeeds.count{
                     
                     self.getDocument(key: outputFeeds[i].uuid).subscribe({ event in
                         print("getDoc")
                         switch(event){
                         case.success(let user):
+                            
                             outputFeeds[i].profileImage = user.profileImage
                             outputFeeds[i].nickname = user.name
                             
-                            if( i+1 >= outputFeeds.count){
+                            if( idx+1 >= outputFeeds.count){
+                                
 
                                 single(.success(outputFeeds))
                                 
+                            }else{
+                                idx += 1
                             }
+                            
+                            
                             
                         case .failure(let err):
                             print(err)

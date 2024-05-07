@@ -447,7 +447,7 @@ class AddFeedVC : UIViewController {
 
 }
 
-extension AddFeedVC : UIImagePickerControllerDelegate , UINavigationControllerDelegate{
+extension AddFeedVC : UIImagePickerControllerDelegate , UINavigationControllerDelegate {
     
     func actionSheetAlert(){
         

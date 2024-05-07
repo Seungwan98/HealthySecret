@@ -28,12 +28,15 @@ class MyProfileVM : ViewModel {
         let settingTapped : Observable<UITapGestureRecognizer>
         let addButtonTapped : Observable<Void>
         let outputProfileImage : Observable<Data?>
+        let imageTapped : Observable<String>
 
     }
     
     struct Output {
         
         var feedImage = BehaviorSubject<[[String]]?>(value: nil)
+        var feedUid = BehaviorSubject<[String]?>(value: nil)
+
         
         
     }
@@ -44,6 +47,8 @@ class MyProfileVM : ViewModel {
         let goalLabelTapped : Observable<UITapGestureRecognizer>
         let changeProfile : Observable<UITapGestureRecognizer>
         let outputProfileImage : Observable<Data?>
+        let outputFollows : Observable<UITapGestureRecognizer>
+
         
         
         
@@ -58,12 +63,16 @@ class MyProfileVM : ViewModel {
         var introduce = BehaviorSubject(value: "")
         var profileImage = BehaviorSubject<String?>(value: nil)
         var popView = BehaviorSubject<Bool>(value: false)
+        var followersSelected = BehaviorSubject<Bool?>(value: nil)
+        var followersCount = BehaviorSubject<Int>(value: 0)
+        var followingsCount = BehaviorSubject<Int>(value: 0)
+        var followersEnable = BehaviorSubject<Bool>(value: true)
     }
     
     
     
     
-    weak var coordinator : MyProfileCoordinator?
+    weak var coordinator : ProfileCoordinator?
     
     private var kakaoService : KakaoService
     
@@ -72,7 +81,7 @@ class MyProfileVM : ViewModel {
     var nowUser : UserModel?
 
     
-    init( coordinator : MyProfileCoordinator , firebaseService : FirebaseService , kakaoService : KakaoService){
+    init( coordinator : ProfileCoordinator , firebaseService : FirebaseService , kakaoService : KakaoService){
         
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
@@ -111,6 +120,8 @@ class MyProfileVM : ViewModel {
             
             
         }).disposed(by: disposeBag)
+        
+        
         
         input.viewWillApearEvent.subscribe(onNext: { event in
             
@@ -173,6 +184,19 @@ class MyProfileVM : ViewModel {
         
         let output = Output()
         
+        input.imageTapped.subscribe(onNext:{ feedUid in
+          
+            print(feedUid)
+            self.feeds?.forEach({
+                if(feedUid == $0.feedUid){
+                    self.coordinator?.pushProfileFeed(feedUid: feedUid)
+                }
+                
+                
+            })
+            
+        }).disposed(by: disposeBag)
+        
         input.leftBarButton.subscribe(onNext:{ _ in
             print("tapped")
             
@@ -204,8 +228,14 @@ class MyProfileVM : ViewModel {
                         let imageArr = feedArr.map({
                             $0.mainImgUrl
                         })
-                        output.feedImage.onNext(imageArr)
                         
+                        let uidArr =  feedArr.map({
+                            $0.feedUid
+                        })
+                        
+                        output.feedImage.onNext(imageArr)
+                        output.feedUid.onNext(uidArr)
+
                         
                         
                     case.failure(let err):

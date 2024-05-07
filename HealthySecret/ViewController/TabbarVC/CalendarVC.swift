@@ -115,12 +115,16 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         self.navigationController?.hidesBottomBarWhenPushed = true
         navigationController?.navigationBar.shadowImage = UIImage()
         
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        
+        
+        
         
         
     }
     override func viewWillDisappear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+
         
     }
     override func viewDidLoad() {

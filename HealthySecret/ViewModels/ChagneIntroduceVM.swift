@@ -28,13 +28,13 @@ class ChangeIntroduceVM : ViewModel {
     
 
     
-    weak var coordinator : MyProfileCoordinator?
+    weak var coordinator : ProfileCoordinator?
     
     private var kakaoService : KakaoService
     
     private var firebaseService : FirebaseService
     
-    init( coordinator : MyProfileCoordinator , firebaseService : FirebaseService , kakaoService : KakaoService){
+    init( coordinator : ProfileCoordinator , firebaseService : FirebaseService , kakaoService : KakaoService){
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
         self.kakaoService =  kakaoService
