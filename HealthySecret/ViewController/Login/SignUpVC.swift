@@ -352,7 +352,7 @@ class SignUpVC : UIViewController {
             stackview.translatesAutoresizingMaskIntoConstraints = false
             stackview.axis = .horizontal
             stackview.alignment = .center
-            stackview.distribution = .equalSpacing
+            stackview.distribution = .equalCentering
             
             return stackview
         }()
@@ -365,21 +365,24 @@ class SignUpVC : UIViewController {
 
         
         
-        
         index = 0
         
         _ = thirdViewButtons.map({ button in
-            
             button.setImage(thirdViewButtonImages[index], for: .normal)
             button.tag = index
             button.addTarget(self, action: #selector(exerciseButtonAction), for: .touchUpInside)
             
-            button.translatesAutoresizingMaskIntoConstraints = false
-            
+
+            if(index == 2){
+                button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -3)
+            }
+        
+           
             button.widthAnchor.constraint(equalToConstant: 50).isActive = true
             button.heightAnchor.constraint(equalToConstant: 50).isActive = true
             
             thirdStackView.addArrangedSubview(button)
+            
             index += 1
             
         })
@@ -457,8 +460,8 @@ class SignUpVC : UIViewController {
             thirdLabel.topAnchor.constraint(equalTo: thirdView.topAnchor , constant: 50),
             thirdLabel.leadingAnchor.constraint(equalTo: thirdView.leadingAnchor ),
             
-            thirdStackView.leadingAnchor.constraint(equalTo: thirdView.leadingAnchor , constant: 50),
-            thirdStackView.trailingAnchor.constraint(equalTo: thirdView.trailingAnchor , constant: -50 ),
+            thirdStackView.leadingAnchor.constraint(equalTo: thirdView.leadingAnchor , constant: 40),
+            thirdStackView.trailingAnchor.constraint(equalTo: thirdView.trailingAnchor , constant: -40 ),
             thirdStackView.centerYAnchor.constraint(equalTo: thirdView.centerYAnchor , constant: 20 ),
             
             
