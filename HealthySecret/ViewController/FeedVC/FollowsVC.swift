@@ -90,12 +90,14 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorColor = .clear
         tableView.allowsMultipleSelection = true
+        tableView.backgroundView = self.backgroundView
         return tableView
     }()
     
     
     
     
+    private var backgroundView = CustomBackgroundView()
     
     
     
@@ -126,6 +128,7 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
         
         
     }
+    
     
     let backBarButtonItem = UIBarButtonItem() // title 부분 수정
     
@@ -168,9 +171,13 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
         if(segmentControl.selectedSegmentIndex == 0){
             
             self.segmentChanged.onNext(true)
+            self.backgroundView.backgroundLabel.text = "아직 팔로우한 상대가 없어요"
+
 
         }else{
             self.segmentChanged.onNext(false)
+            self.backgroundView.backgroundLabel.text = "아직 팔로잉한 상대가 없어요"
+
 
         }
         
@@ -180,6 +187,7 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
     
     func setUI(){
         
+        self.loadingView.translatesAutoresizingMaskIntoConstraints = false
         
         self.segmentControl.addTarget(self, action: #selector(didChangeValue(segment: )), for: .valueChanged )
         
@@ -187,27 +195,41 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
         tableView.dataSource = nil
         tableView.register(FollowsCell.self, forCellReuseIdentifier: "FollowsCell")
         
-        mainView.translatesAutoresizingMaskIntoConstraints = false
+        self.mainView.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundView.translatesAutoresizingMaskIntoConstraints = false
+
         
         
         
         
         
+        self.view.addSubview(self.mainView)
         
+
+        self.mainView.addSubview(self.tableView)
         
-        self.view.addSubview(mainView)
-        
-        self.mainView.addSubview(tableView)
         
         
         
         
         view.addSubview(containerView)
+        view.addSubview(self.loadingView)
         containerView.addSubview(segmentControl)
         
         
         
         NSLayoutConstraint.activate([
+            
+            
+            
+            
+            self.loadingView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor ),
+            self.loadingView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor  ),
+            self.loadingView.topAnchor.constraint(equalTo: self.view.topAnchor ),
+            self.loadingView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor ),
+            
+            
+            
             
             containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
@@ -233,6 +255,13 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
             tableView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
             
+            backgroundView.topAnchor.constraint(equalTo: mainView.topAnchor),
+            backgroundView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor),
+            backgroundView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
+            backgroundView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
+            
+            
+            
             
             
             
@@ -250,9 +279,16 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
   
     
     
-    
+    var loadingView = LoadingView()
+
     func setBind() {
         
+        loadingView.isLoading = true
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.loadingView.isLoading = false
+            
+          }
         
         guard let ownUid = UserDefaults.standard.string(forKey: "uid") else {
             print("ownUid nil")
@@ -270,12 +306,15 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
         
         guard let output = viewModel?.transform(input: input, disposeBag: self.disposeBag ) else {return}
         
+        
+        
         tableView.rx.rowHeight.onNext(60)
+        
         tableView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
             self?.tableView.deselectRow(at: indexPath, animated: true)
         }).disposed(by: disposeBag)
         
-        
+        output.backgroundViewHidden.bind(to: self.backgroundView.rx.isHidden).disposed(by: disposeBag)
         
         output.follow.subscribe(onNext: { [weak self] follow in
             guard let follow = follow  , let self = self else {return}
@@ -283,10 +322,13 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
             if(follow){
                 self.segmentControl.selectedSegmentIndex = 0
                 
+                self.backgroundView.backgroundLabel.text = "아직 팔로우한 상대가 없어요"
             }else{
                 self.segmentControl.selectedSegmentIndex = 1
-                
+                self.backgroundView.backgroundLabel.text = "아직 팔로잉한 상대가 없어요"
             }
+         
+
             
         }).disposed(by: disposeBag)
         
@@ -297,19 +339,22 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
             guard let self = self else {return}
             
             
-            
-            if let followers = item.followers {
-                if(followers.contains(ownUid)){
-                    cell.isTouched = true
-                    cell.followButton.isSelected = true
-                }else{
-                    cell.isTouched = false
-                    cell.followButton.isSelected = false
+            if ownUid == item.uuid {
+                cell.followButton.isHidden = true
+                
+            }else{
+                if let followers = item.followers {
+                    if(followers.contains(ownUid)){
+                        cell.isTouched = true
+                        cell.followButton.isSelected = true
+                    }else{
+                        cell.isTouched = false
+                        cell.followButton.isSelected = false
+                    }
                 }
+                
+                
             }
-            
-            
-            
             cell.index = item.uuid
             cell.nickname.text = item.name
             

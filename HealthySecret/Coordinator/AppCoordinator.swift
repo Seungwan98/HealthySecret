@@ -50,7 +50,7 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
     }
   
     func didLoggedOut(_ coordinator: Coordinator) {
-        self.childCoordinator = self.childCoordinator.filter { $0 !== coordinator }
+        self.finishDelegate?.coordinatorDidFinish(childCoordinator: coordinator)
         self.showLoginViewController()
         
     }
@@ -107,7 +107,7 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
                     
                         
                    
-                        print("success")
+                        print("success \(uid)")
 
                         
                         
@@ -156,6 +156,9 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
         coordinator.finishDelegate = self
         coordinator.start()
         self.childCoordinator.append(coordinator)
+        
+        
+        
     }
     
     
@@ -209,17 +212,20 @@ extension AppCoordinator: CoordinatorFinishDelegate {
     
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         
-        print("AppCoordinatorDidFinish")
+        print("AppCoordinatorDidFinish \(childCoordinator.type) \(self.childCoordinator)")
 
         
         self.childCoordinator = self.childCoordinator.filter({ $0.type != childCoordinator.type })
         self.navigationController.view.backgroundColor = .systemBackground
         self.navigationController.viewControllers.removeAll()
         
+        print("AppCoordinatorDidFinish \(childCoordinator.type) \(self.childCoordinator)")
+
+        
         switch childCoordinator.type {
         case .tab:
             self.showMainViewController()
-        case .home:
+        case .login:
             self.showLoginViewController()
         default:
             break
@@ -256,7 +262,7 @@ class LoginCoordinator : Coordinator  {
     
     required init(_ navigationController  : UINavigationController ){
         self.navigationController = navigationController
-        self.type = CoordinatorType.tab
+        self.type = .login
         self.firebaseService = FirebaseService()
         self.kakaoService = KakaoService()
         

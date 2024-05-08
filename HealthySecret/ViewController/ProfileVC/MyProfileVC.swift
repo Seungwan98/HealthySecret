@@ -14,6 +14,7 @@ import RxSwift
 import Kingfisher
 
 class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
+    
     func imageTapped(feedUid: String) {
         print("tappe")
         self.imageTapped.onNext(feedUid)
@@ -69,11 +70,15 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         
+ 
+        
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
         layout.scrollDirection = .vertical
         layout.sectionInset = UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 0)
         layout.headerReferenceSize = CGSize(width: self.view.frame.width, height: 400)
+        
+        print(layout.headerReferenceSize.height)
  
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
@@ -85,6 +90,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         collectionView.allowsMultipleSelection = false
         collectionView.alwaysBounceVertical = true
         
+        self.backgroundView.isHidden = false
         
         return collectionView
     }()
@@ -127,21 +133,32 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         
     }()
     
-    var imageTapped = PublishSubject<String>()
 
     
     lazy var rightBarButton = UIBarButtonItem(customView: rightBarImage)
     
     lazy var leftBarButton = UIBarButtonItem(customView: leftBarView)
     
+    var profileHeader : ProfileHeaderView?
+    
+    
+    
     
     let leftBarImage = UIImageView(image: UIImage(named: "arrow.png"))
+    
+    let backgroundView = CustomBackgroundView()
     
     
     
     var outputProfileImage = BehaviorSubject<Data?>(value: nil)
     
-
+    var outputFollows = PublishSubject<Bool>()
+    
+    var imageTapped = PublishSubject<String>()
+    
+    var headerAppearEvent = PublishSubject<Bool>()
+    
+    
     
     var HEADER_HEIGHT : CGFloat = 0
     
@@ -151,7 +168,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     
     var uidsArr : [String] = []
 
-    var profileHeader : ProfileHeaderView?
+
     
     func setHeadersCount( selected : Bool ){
         
@@ -168,14 +185,23 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         
     }
 
+    var loadingView = LoadingView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadingView.isLoading = true
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.loadingView.isLoading = false
+            self.navigationController?.navigationBar.topItem?.rightBarButtonItem = self.rightBarButton
+            self.navigationController?.navigationBar.topItem?.leftBarButtonItem = self.leftBarButton
+          }
+      
+        
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
-        self.navigationController?.navigationBar.topItem?.rightBarButtonItem = self.rightBarButton
-        self.navigationController?.navigationBar.topItem?.leftBarButtonItem = self.leftBarButton
         
+      
         
         setUI()
         setBindings()
@@ -186,19 +212,18 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         
         
     }
-    
-    
+   
     
     
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
-
+        
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
         
-        
+        self.headerAppearEvent.onNext(true)
         
         
         
@@ -212,20 +237,46 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     }
     
     
+    @objc
+    func didPressedFollowers(_ sender: UITapGestureRecognizer){
+        
+        self.outputFollows.onNext(true)
+        
+    }
+    
+    @objc
+    func didPressedFollowings(_ sender: UITapGestureRecognizer){
+        
+        self.outputFollows.onNext(false)
+        
+    }
     
     func setUI(){
         
-       
+        self.backgroundView.translatesAutoresizingMaskIntoConstraints = false
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         self.leftBarImage.translatesAutoresizingMaskIntoConstraints = false
+        self.loadingView.translatesAutoresizingMaskIntoConstraints = false
+
+        self.backgroundView.backgroundLabel.text = "아직 피드가 없어요"
         
         leftBarView.addSubview(leftBarLabel)
         leftBarView.addSubview(leftBarImage)
         
+        
+        
+
         view.addSubview(self.collectionView)
+       // view.addSubview(self.backgroundView)
+
         view.addSubview(self.addButton)
         
+        view.addSubview(self.loadingView)
         
+        self.backgroundView.isHidden = false
+        
+   
+
         
         NSLayoutConstraint.activate([
             
@@ -244,18 +295,24 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
             leftBarImage.widthAnchor.constraint(equalToConstant: 12 ),
             leftBarImage.centerYAnchor.constraint(equalTo: leftBarView.centerYAnchor ),
             leftBarImage.leadingAnchor.constraint(equalTo: leftBarLabel.trailingAnchor , constant: 2 ),
-            
-        
-            
-            
 
             
-
+            
+            
+            
+            self.loadingView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor ),
+            self.loadingView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor  ),
+            self.loadingView.topAnchor.constraint(equalTo: self.view.topAnchor ),
+            self.loadingView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor ),
             
             self.collectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ),
             self.collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor  ),
             self.collectionView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
             self.collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor ),
+            
+           
+            
+        
             
             
             self.addButton.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor , constant: -20 ),
@@ -277,10 +334,12 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         
         
     }
+   
+    
     func setHeaderBindings( header : ProfileHeaderView ){
         
         
-        let input = MyProfileVM.HeaderInput( viewWillApearEvent: header.appearEvent  , goalLabelTapped: header.goalLabel.rx.tapGesture().when(.recognized).asObservable(), changeProfile: header.profileImage.rx.tapGesture().when(.recognized).asObservable(), outputProfileImage: self.outputProfileImage.asObservable(),  outputFollows : Observable.merge( header.feedInformValLabels[1].rx.tapGesture().when(.recognized).asObservable() , header.feedInformValLabels[2].rx.tapGesture().when(.recognized).asObservable()  ) )
+        let input = MyProfileVM.HeaderInput( viewWillApearEvent: headerAppearEvent.asObservable()  , goalLabelTapped: header.goalLabel.rx.tapGesture().when(.recognized).asObservable(), changeProfile: header.profileImage.rx.tapGesture().when(.recognized).asObservable(), outputProfileImage: self.outputProfileImage.asObservable(),  outputFollows : Observable.merge( header.feedInformValLabels[1].rx.tapGesture().when(.recognized).asObservable() , header.feedInformValLabels[2].rx.tapGesture().when(.recognized).asObservable()  ) )
         
         
         guard let output = self.viewModel?.HeaderTransform(input: input, disposeBag: header.disposeBag) else { return }
@@ -307,6 +366,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
             
             if let layout = self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
                 layout.headerReferenceSize = CGSize(width: view.frame.width, height: estimatedSize.height + 310 )
+                
                 self.collectionView.layoutIfNeeded()
                     print("estimatedSize \(estimatedSize)")
             }
@@ -372,13 +432,35 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
             header.profileImage.layer.cornerRadius = 50
             header.feedInformValLabels[0].text =  String(self.imagesArr.count)
             
+         
             
         }).disposed(by: header.disposeBag)
         
+//        NSLayoutConstraint.activate([
+//            
+//        self.backgroundView.trailingAnchor.constraint(equalTo: self.collectionView.safeAreaLayoutGuide.trailingAnchor ),
+//        self.backgroundView.bottomAnchor.constraint(equalTo: self.collectionView.safeAreaLayoutGuide.bottomAnchor  ),
+//        self.backgroundView.topAnchor.constraint(equalTo: header.informationView.bottomAnchor  ),
+//        self.backgroundView.leadingAnchor.constraint(equalTo: self.collectionView.safeAreaLayoutGuide.leadingAnchor ),
+//        
+//        ])
         
-        // leftBarLabel.rx.tapGesture().when(.recognized).asObservable() ,
         
+        output.followersCount.subscribe(onNext: { [weak self] count in
+            
+            header.feedInformValLabels[1].text = String(count)
+            self?.followersCount = count
+            
+        }).disposed(by: header.disposeBag)
         
+        output.followingsCount.subscribe(onNext: { [weak self] count in
+            
+            guard let self = self else {return}
+            
+            header.feedInformValLabels[2].text = String(count)
+            
+            
+        }).disposed(by: header.disposeBag)
         
     }
     
@@ -402,7 +484,6 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
             
             print("\(imagesArr) imagesArr")
             
-            loadControll = true
             
             
             
@@ -432,9 +513,10 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         }).disposed(by: disposeBag)
         
         output.feedUid.subscribe( onNext: { [weak self] uidsArr in
-            guard let uidsArr = uidsArr else { return }
-            
-            self?.uidsArr = uidsArr
+            guard let uidsArr = uidsArr , let self = self else { return }
+            self.loadControll = true
+
+            self.uidsArr = uidsArr
             
         }).disposed(by: disposeBag)
         
@@ -457,7 +539,6 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
 extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        cell.alpha = 0
         cell.layer.removeAllAnimations()
     }
   
@@ -474,6 +555,7 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
             return UICollectionViewCell()
         }
         
+        print("head start")
         
         
         if(firstBind){
@@ -483,15 +565,14 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
             firstBind = false
         }
         
-        if(loadControll){
-            header.appearEvent.onNext(true)
-            loadControll = false
-            
-        }
         
         
+        self.headerAppearEvent.onNext(true)
         
-        print("header reload")
+        self.profileHeader = header
+        
+        
+
         
         return header
         

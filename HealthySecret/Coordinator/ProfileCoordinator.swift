@@ -52,13 +52,14 @@ class ProfileCoordinator : Coordinator {
     
     func PushMyProfileVC() {
      
+
         
         let firebaseService = self.firebaseService
         let kakaoService = self.kakaoService
         let viewController =  MyProfileVC(viewModel : MyProfileVM ( coordinator : self , firebaseService: firebaseService, kakaoService: kakaoService ))
         
 
-        
+
        
         self.navigationController.pushViewController( viewController , animated: true )
     
@@ -118,7 +119,7 @@ class ProfileCoordinator : Coordinator {
         
         
         
-        self.coordinatorDidFinish(childCoordinator: self)
+        self.finishDelegate?.coordinatorDidFinish(childCoordinator: self)
         self.parentCoordinator?.logout()
         
     }
@@ -154,13 +155,13 @@ class ProfileCoordinator : Coordinator {
 
     
     
-    func pushFollowsVC( follow : Bool , uid : String ) {
+    func pushFollowsVC( follow : Bool , uid : String , name : String ) {
         
         let coordinator = FollowsCoordinator(self.navigationController)
         
         childCoordinator.append(coordinator)
         coordinator.finishDelegate = self
-        coordinator.startPush(follow: follow , uid : uid  )
+        coordinator.startPush(follow: follow , uid : uid, name: name  )
         
     }
    

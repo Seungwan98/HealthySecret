@@ -40,7 +40,7 @@ class FollowsCoordinator : Coordinator  {
     
   
     
-    func startPush( follow : Bool , uid : String ) {
+    func startPush( follow : Bool , uid : String , name : String) {
         
         let viewModel = FollowsVM(coordinator: self , firebaseService: self.firebaseService)
         
@@ -49,6 +49,12 @@ class FollowsCoordinator : Coordinator  {
         
         let viewController = FollowsVC(viewModel: viewModel)
         
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+        
+        viewController.navigationItem.title = "\(name)"
+        
+        viewController.hidesBottomBarWhenPushed = true
         
         self.navigationController.pushViewController(viewController , animated: false)
         

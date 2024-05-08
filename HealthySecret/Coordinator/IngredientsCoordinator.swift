@@ -104,7 +104,7 @@ class IngredientsCoordinator : Coordinator {
     
     func backToDiaryVC(){
         self.navigationController.hidesBottomBarWhenPushed = false
-        finishDelegate?.coordinatorDidFinish(childCoordinator: self)
+        self.finishDelegate?.coordinatorDidFinish(childCoordinator: self)
         
     }
     

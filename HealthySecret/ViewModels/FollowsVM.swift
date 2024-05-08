@@ -34,6 +34,7 @@ class FollowsVM : ViewModel {
         
         var userModels = BehaviorSubject<[UserModel]>(value: [])
         var follow = BehaviorSubject<Bool?>(value: nil)
+        var backgroundViewHidden = PublishSubject<Bool>()
 
         
     }
@@ -79,9 +80,13 @@ class FollowsVM : ViewModel {
             if(event){
                 print("changed \(self.followers) " )
                 output.userModels.onNext(self.followers)
+                output.backgroundViewHidden.onNext(!self.followers.isEmpty)
+                
             }else{
                     print("changed \(self.followings) " )
                 output.userModels.onNext(self.followings)
+                output.backgroundViewHidden.onNext(!self.followings.isEmpty)
+
             }
             
         }).disposed(by: disposeBag)
@@ -132,17 +137,28 @@ class FollowsVM : ViewModel {
         
         input.viewWillApearEvent.subscribe({ [weak self] _ in
             
+            
                 guard let self = self else { return }
+            
+            if let follow = self.follow {
+                
+                
+                output.follow.onNext(follow)
+                
+                
+                
+                
+                
                 
                 self.firebaseService.getDocument(key: uid).subscribe({  event in
                     
-                  
+                    
                     
                     
                     
                     switch(event){
                     case.success(let user):
-                 
+                        
                         self.firebaseService.getFollows(uid: user.followers ?? [] ).subscribe({ event in
                             switch(event){
                             case.success(let followers):
@@ -155,20 +171,21 @@ class FollowsVM : ViewModel {
                                         
                                         self.followings = followings
                                         
-                                       
-                                        if let follow = self.follow {
+                                        
+                                     
                                             
                                             if(follow){
+                                                
                                                 output.userModels.onNext(self.followers)
-                                                output.follow.onNext(true)
+                                                output.backgroundViewHidden.onNext(!self.followers.isEmpty)
                                             }else{
                                                 output.userModels.onNext(self.followings)
-                                                output.follow.onNext(false)
+                                                output.backgroundViewHidden.onNext(!self.followings.isEmpty)
                                             }
                                             
                                             
-                                            
-                                        }
+
+                                        
                                         
                                         
                                     case.failure(let err):
@@ -202,7 +219,7 @@ class FollowsVM : ViewModel {
                     
                 }).disposed(by: disposeBag )
                 
-                
+            }
             
             
         }).disposed(by: disposeBag)

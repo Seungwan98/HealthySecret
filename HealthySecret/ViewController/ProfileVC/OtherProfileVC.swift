@@ -70,35 +70,6 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         return collectionView
     }()
     
-    
-    
-    
-    
-    var outputFollows = PublishSubject<Bool>()
-    
-    var imageTapped = PublishSubject<String>()
-    
-    var outputProfileImage = BehaviorSubject<Data?>(value: nil)
-    
-    
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        
-        self.collectionView.dataSource = self
-        
-        self.collectionView.delegate = self
-        
-        setUI()
-        setBindings()
-        addFollowButton()
-        
-    }
-    
-    
-    
     let followButton : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -113,6 +84,40 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         
         
     }()
+    
+    
+    var outputFollows = PublishSubject<Bool>()
+    
+    var imageTapped = PublishSubject<String>()
+    
+    var outputProfileImage = BehaviorSubject<Data?>(value: nil)
+    
+    
+    var loadingView = LoadingView()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        loadingView.isLoading = true
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.loadingView.isLoading = false
+           
+          }
+      
+        
+        self.collectionView.dataSource = self
+        
+        self.collectionView.delegate = self
+        
+        setUI()
+        setBindings()
+        addFollowButton()
+        
+    }
+    
+    
+    
+    
     
     
     let backgroundView = CustomBackgroundView()
@@ -168,7 +173,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     }
     
     func setUI(){
-        
+        self.loadingView.translatesAutoresizingMaskIntoConstraints = false
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "", image: UIImage(systemName: "ellipsis"), target: self, action: nil)
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -178,9 +183,11 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         
         
         view.addSubview(self.collectionView)
+        
         view.addSubview(self.backgroundView)
         
-        
+        view.addSubview(self.loadingView)
+
         NSLayoutConstraint.activate([
             
             
@@ -415,7 +422,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         
         output.followingsCount.subscribe(onNext: { [weak self] count in
             
-            guard let self = self else {return}
+            guard self != nil else {return}
             
             header.feedInformValLabels[2].text = String(count)
             
@@ -464,6 +471,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
             
             self?.imagesArr = imagesArr
             self?.collectionView.reloadData()
+            
             
         }).disposed(by: disposeBag)
         

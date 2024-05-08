@@ -118,7 +118,7 @@ class ProfileHeaderView : UICollectionViewCell  {
     let informLabel3 = UILabel()
     lazy var informLabelArr = [informLabel1 , informLabel2 , informLabel3]
     lazy var informDataArr = [nowWeight , calorieLabel , goalWeight]
-    lazy var informationView : UIView = {
+    public lazy var informationView : UIView = {
         let view = UIView()
         
         let stackView = UIStackView(arrangedSubviews: informLabelArr )
@@ -148,7 +148,9 @@ class ProfileHeaderView : UICollectionViewCell  {
         
     }()
     
-    
+    override func prepareForReuse() {
+        self.profileImage.image?.remove(from: self.profileImage)
+    }
     
     let topImage = UIImageView(image:UIImage(named:  "camera.png"))
 

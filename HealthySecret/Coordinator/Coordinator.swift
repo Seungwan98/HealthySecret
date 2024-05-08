@@ -47,7 +47,7 @@ protocol CoordinatorFinishDelegate: AnyObject {
 
 // MARK: - CoordinatorType
 enum CoordinatorType {
-    case home , tab , detailPage , diaryPage , ingredients , calendar , exercise , myprofile , run ,communicate , follow
+    case login , tab  , diaryPage , ingredients , calendar , exercise , myprofile , run ,communicate , follow
 }
 
 

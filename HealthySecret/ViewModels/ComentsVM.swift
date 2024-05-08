@@ -58,7 +58,7 @@ class ComentsVM : ViewModel {
         if let feedUid = self.feedUid {
             
             firebaseService.getComents(feedUid: feedUid ).subscribe({ [weak self] event in
-                guard let self = self else {return}
+                guard self != nil else {return}
                 
                 switch(event){
                     

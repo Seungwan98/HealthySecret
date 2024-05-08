@@ -20,6 +20,8 @@ class OtherProfileVM : ViewModel {
     var uuid:String
 
     var profileImage:Data?
+    
+    var name:String?
  
     struct Input {
         
@@ -82,7 +84,7 @@ class OtherProfileVM : ViewModel {
         let output = HeaderOutput()
 
         
-        guard let authUid = UserDefaults.standard.string(forKey: "uid") else { return output  }
+        guard let ownUid = UserDefaults.standard.string(forKey: "uid") else { return output  }
         
         let uid = self.uuid
         
@@ -96,13 +98,14 @@ class OtherProfileVM : ViewModel {
         input.outputFollows.subscribe(onNext: { event in
           
             guard let view = event.view else {return}
+            let name = self.name ?? ""
             
             if(view.tag == 1 ){
-                self.coordinator?.pushFollowsVC(follow: true , uid : uid)
+                self.coordinator?.pushFollowsVC(follow: true , uid : uid , name: name)
                 
             }else{
                 
-                self.coordinator?.pushFollowsVC(follow: false , uid : uid)
+                self.coordinator?.pushFollowsVC(follow: false , uid : uid , name: name)
             }
             
             
@@ -114,11 +117,14 @@ class OtherProfileVM : ViewModel {
             
             self.firebaseService.getDocument(key: uid ).subscribe{ [weak self]
                 event in
+                guard let self = self else {return}
                 switch(event){
                 case.success(let user):
                     
                     
-                    self?.nowUser = user
+                    self.nowUser = user
+                    self.name = user.name
+                    
                     output.introduce.onNext(user.introduce ?? "아직 소개글이 없어요")
                     output.goalWeight.onNext(String(user.goalWeight))
                     output.nowWeight.onNext(String(user.nowWeight))
@@ -140,7 +146,7 @@ class OtherProfileVM : ViewModel {
                         
                         print("\(followers) followers")
                         
-                        if(followers.contains(authUid)){
+                        if(followers.contains(ownUid)){
 
                             selected = true
                         }
@@ -149,7 +155,7 @@ class OtherProfileVM : ViewModel {
                     }
                     
                     
-                    let event = (uid == authUid)
+                    let event = (uid == ownUid)
                     output.followersEnable.onNext(event)
                     output.followersSelected.onNext(selected)
 
@@ -181,15 +187,14 @@ class OtherProfileVM : ViewModel {
         
         let output = Output()
         
-        guard let authUid = UserDefaults.standard.string(forKey: "uid") else { return output  }
+        guard let ownUid = UserDefaults.standard.string(forKey: "uid") else { return output  }
         
         input.addButtonTapped.throttle(.seconds(1),  scheduler: MainScheduler.instance).subscribe(onNext:{ selected in
-            print("tapped")
             
-            self.firebaseService.updateFollowers(ownUid: authUid , opponentUid: uid, follow: selected).subscribe({ completable in
+            self.firebaseService.updateFollowers(ownUid: ownUid , opponentUid: uid, follow: selected).subscribe({ completable in
                 switch(completable){
                     
-                case.completed: print("comoplete")
+                case.completed: print("complete update Followers")
                     
                 case.error(let err):
                     print(err)

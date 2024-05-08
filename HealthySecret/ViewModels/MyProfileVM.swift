@@ -17,6 +17,7 @@ class MyProfileVM : ViewModel {
     
     var disposeBag = DisposeBag()
     
+    var name : String?
     
     var feeds:[FeedModel]?
 
@@ -90,10 +91,32 @@ class MyProfileVM : ViewModel {
     }
     
     func HeaderTransform(input : HeaderInput , disposeBag: DisposeBag) -> HeaderOutput {
-        let uid = UserDefaults.standard.string(forKey: "uid") ?? ""
+        let ownUid = UserDefaults.standard.string(forKey: "uid") ?? ""
         
         
         let output = HeaderOutput()
+        
+        
+        input.outputProfileImage.subscribe(onNext:{ image in
+
+            self.profileImage = image
+
+        }).disposed(by: disposeBag)
+        
+        input.outputFollows.subscribe(onNext: { event in
+          
+            guard let view = event.view else {return}
+            let name = self.name ?? ""
+            if(view.tag == 1 ){
+                self.coordinator?.pushFollowsVC(follow: true , uid : ownUid, name: name)
+                
+            }else{
+                
+                self.coordinator?.pushFollowsVC(follow: false , uid : ownUid, name: name)
+            }
+            
+            
+        }).disposed(by: disposeBag)
         
         input.changeProfile.when(.recognized).subscribe(onNext: { [weak self] _ in
             //print(nowUser)
@@ -129,37 +152,41 @@ class MyProfileVM : ViewModel {
             
             
             print("viewWillAppeear")
-            self.firebaseService.getDocument(key: uid ).subscribe{ [weak self]
+            self.firebaseService.getDocument(key: ownUid ).subscribe{ [weak self]
                 event in
+                guard let self = self else {return}
                 switch(event){
                 case.success(let user):
                     
                     UserDefaults.standard.set(user.profileImage, forKey: "profileImage")
                     
                     
-                    self?.nowUser = user
+                    self.nowUser = user
+                    self.name = user.name
                     output.introduce.onNext(user.introduce ?? "아직 소개글이 없어요")
                     output.goalWeight.onNext(String(user.goalWeight))
                     output.nowWeight.onNext(String(user.nowWeight))
                     output.calorie.onNext(String(user.calorie))
                     output.name.onNext(user.name)
                     output.profileImage.onNext(user.profileImage ?? nil)
+                    output.followingsCount.onNext(user.followings?.count ?? 0)
+                    output.followersCount.onNext(user.followers?.count ?? 0)
+
                     
                     
+                    
+            
+                        
+                        
+                        
+                        
+                       
+
                     
                     
                     
                 
-                    
-                    
-//                    if let data = UserDefaults.standard.data(forKey: "profileImage"){
-//                        output.profileImage.onNext(data)
-//                        self?.profileImage = data
-//                    }else{
-//                        print("없음")
-//                        output.profileImage.onNext(nil)
-//                        self?.profileImage = nil
-//                    }
+ 
                     
                     
                 case .failure(_):
@@ -220,7 +247,6 @@ class MyProfileVM : ViewModel {
             
 
                 if let uid = UserDefaults.standard.string(forKey: "uid"){
-                print(uid)
                     self.firebaseService.getFeedsUid(uid: uid).subscribe({ event in
                     switch(event){
                     case.success(let feedArr):
@@ -382,8 +408,8 @@ class MyProfileVM : ViewModel {
         
         let output = SettingOutput()
         
-        input.logoutTapped.subscribe(onNext: { _ in
-            
+        input.logoutTapped.subscribe(onNext: { [weak self]  _ in
+            guard let self = self else {return}
             if( UserDefaults.standard.string(forKey: "loginMethod") == "kakao" ){
                 
                 self.kakaoService.kakaoLogout().subscribe{ event in
@@ -402,7 +428,23 @@ class MyProfileVM : ViewModel {
             
             }else if(UserDefaults.standard.string(forKey: "loginMethod") == "apple"){
                 
-                self.coordinator?.logout()
+                firebaseService.signOut().subscribe({ event in
+                    
+                    switch(event){
+                    case.completed:
+                        self.coordinator?.logout()
+                    case.error(let err):
+                        print("logoutErr")
+
+                    }
+                    
+                    
+                    
+
+                    
+                }).disposed(by: disposeBag)
+            
+                
                 
             }
             

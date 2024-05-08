@@ -26,7 +26,6 @@ class CustomBackgroundView: UIView {
    
     
     func setLayout(){
-        self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundImage.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundLabel.translatesAutoresizingMaskIntoConstraints = false
         

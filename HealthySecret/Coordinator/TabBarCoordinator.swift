@@ -163,7 +163,11 @@ class TabBarCoordinator : Coordinator {
     
     
     func logout(){
-        self.coordinatorDidFinish(childCoordinator: self)
+        self.finishDelegate?.coordinatorDidFinish(childCoordinator: self)
+        
+        
+        
+        
         self.logoutDelegate?.didLoggedOut(self)
         
     }
@@ -340,88 +344,6 @@ extension CommuCoordinator: CoordinatorFinishDelegate {
 }
 
 
-
-//탭바 첫번째 인자 컨트롤러
-class HomeCoordinator : Coordinator  {
- 
-    
-    var parentCoordinator: TabBarCoordinator?
-        
-    var finishDelegate: CoordinatorFinishDelegate?
-            
-    let firebaseService = FirebaseService()
-        
-    var type: CoordinatorType = .home
-            
-    var navigationController : UINavigationController
-        
-    var childCoordinator: [Coordinator] = []
-    
-    var user : UserModel?
-    
-    required init(_ navigationController: UINavigationController ) {
-        self.navigationController = navigationController
-        
-        
-    }
-    
-    func start() {}
-   
-    
-    
- 
-    
-    func pushIngredientsVC() {
-        let IngredientsCoordinator =  IngredientsCoordinator( self.navigationController )
-        IngredientsCoordinator.finishDelegate = self
-        childCoordinator.append(IngredientsCoordinator)
-        IngredientsCoordinator.start()
-        
-    }
-    
-   
-   
-
-        
-    
-    
-    
-    
-    func startPush() {
-        
-        let firebaseService = self.firebaseService
-       //let viewController = HomeViewController(viewModel : MyPro ( coordinator : self , firebaseService: firebaseService ))
-        
-      //  self.navigationController.pushViewController( viewController , animated: true )
-    
-    }
-    
-    func logout() {
-        self.coordinatorDidFinish(childCoordinator: self)
-        self.parentCoordinator?.logout()
-        
-    }
-    
-    
-    
-    
-    
-}
-
-
-extension HomeCoordinator: CoordinatorFinishDelegate {
-    func coordinatorDidFinishNotRoot(childCoordinator: any Coordinator) {
-        
-    }
-    
-    func coordinatorDidFinish(childCoordinator: Coordinator) {
-        print("HomeCoordinatorDidFinish")
-        // 자식 뷰를 삭제하는 델리게이트 (자식 -> 부모 접근 -> 부모에서 자식 삭제)
-        self.childCoordinator = self.childCoordinator
-            .filter({ $0.type != childCoordinator.type })
-        childCoordinator.navigationController.popToRootViewController(animated: true)
-    }
-}
 
 
 
