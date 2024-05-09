@@ -54,6 +54,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         layout.scrollDirection = .vertical
         layout.sectionInset = UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 0)
         layout.headerReferenceSize = CGSize(width: self.view.frame.width, height: 400)
+        layout.footerReferenceSize = CGSize(width: 0 , height: 0)
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
@@ -99,15 +100,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadingView.isLoading = true
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-            self.loadingView.isLoading = false
-            self.navigationController?.setNavigationBarHidden(false, animated: false)
-            self.navigationController?.navigationBar.backgroundColor = .clear
-            
-            self.headerAppearEvent.onNext(true)
-          }
+      
       
         
         self.collectionView.dataSource = self
@@ -131,7 +124,15 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     override func viewWillAppear(_ animated: Bool) {
       
         
-        
+        loadingView.isLoading = true
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+            self.loadingView.isLoading = false
+            self.navigationController?.setNavigationBarHidden(false, animated: false)
+            self.navigationController?.navigationBar.backgroundColor = .clear
+            
+            self.headerAppearEvent.onNext(true)
+          }
 
         
     }
@@ -515,26 +516,38 @@ extension OtherProfileVC :  UICollectionViewDataSource , UICollectionViewDelegat
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ProfileHeaderView.identifier, for: indexPath) as? ProfileHeaderView  else {
+     
+        if kind == UICollectionView.elementKindSectionHeader{
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ProfileHeaderView.identifier, for: indexPath) as? ProfileHeaderView  else {
+                
+                return UICollectionViewCell()
+            }
             
-            return UICollectionViewCell()
+            
+            
+            if(firstBind){
+                print("바인드")
+                self.setHeaderBindings(header: header)
+                
+                firstBind = false
+            }
+            self.headerAppearEvent.onNext(true)
+            
+            self.profileHeader = header
+            
+            
+            
+            return header
+        }else{
+            guard let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DummyCollectionCell.identifier, for: indexPath) as? DummyCollectionCell else {
+                return UICollectionViewCell()
+                
+            }
+        
+            
+            return footer
         }
         
-        
-        
-        if(firstBind){
-            print("바인드")
-            self.setHeaderBindings(header: header)
-            
-            firstBind = false
-        }
-        self.headerAppearEvent.onNext(true)
-        
-        self.profileHeader = header
-        
-        
-        
-        return header
         
     }
     
@@ -598,6 +611,18 @@ extension OtherProfileVC: UICollectionViewDelegateFlowLayout {
         
         return CGSize(width: width  , height: width  )
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+       
+        if(self.imagesArr.count > 0){
+            return CGSize(width: 0 , height: 0 )
+        }else{
+            return CGSize(width: collectionView.frame.width, height: collectionView.frame.width)
+
+        }
+        
+      
+     }
 }
 
 

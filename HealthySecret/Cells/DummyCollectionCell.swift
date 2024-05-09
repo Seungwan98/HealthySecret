@@ -1,31 +1,29 @@
-//
-//  CustomBackgroundView.swift
-//  HealthySecret
-//
-//  Created by 양승완 on 5/7/24.
-//
-
-import Foundation
 import UIKit
 
-class CustomBackgroundView: UIView {
-   
-    private let backgroundImage = UIImageView(image: UIImage(named: "활동적음.png"))
+
+
+class DummyCollectionCell: UICollectionViewCell {
+    static let identifier = "DummyCollectionCell"
+    
+    
+    private let backgroundImage = UIImageView(image: UIImage(named: "일반적.png"))
     
     public let backgroundLabel = UILabel()
-    // 1. Code
+  
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setLayout()
+        setUI()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-   
-    
-    func setLayout(){
+    private func setUI() {
         self.backgroundImage.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -50,12 +48,12 @@ class CustomBackgroundView: UIView {
         
             
             self.backgroundLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            self.backgroundLabel.topAnchor.constraint(equalTo: self.backgroundImage.bottomAnchor , constant: 4),
+            self.backgroundLabel.topAnchor.constraint(equalTo: self.backgroundImage.bottomAnchor , constant: 2),
         ])
         
         
         
     }
-   
+    
     
 }

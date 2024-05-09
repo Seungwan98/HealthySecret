@@ -148,9 +148,7 @@ class ProfileHeaderView : UICollectionViewCell  {
         
     }()
     
-    override func prepareForReuse() {
-        self.profileImage.image?.remove(from: self.profileImage)
-    }
+    
     
     let topImage = UIImageView(image:UIImage(named:  "camera.png"))
 

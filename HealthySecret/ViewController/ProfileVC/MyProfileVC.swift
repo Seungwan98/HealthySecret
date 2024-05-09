@@ -70,16 +70,16 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         
- 
+        
         
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
         layout.scrollDirection = .vertical
         layout.sectionInset = UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 0)
         layout.headerReferenceSize = CGSize(width: self.view.frame.width, height: 400)
+        layout.footerReferenceSize  = CGSize(width: 0, height: 0)
         
-        print(layout.headerReferenceSize.height)
- 
+        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
         collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: CustomCollectionViewCell.identifier)
@@ -87,10 +87,12 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         
         collectionView.register( ProfileHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ProfileHeaderView.identifier)
         
+        collectionView.register( DummyCollectionCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DummyCollectionCell.identifier)
+        
         collectionView.allowsMultipleSelection = false
         collectionView.alwaysBounceVertical = true
         
-        self.backgroundView.isHidden = false
+        
         
         return collectionView
     }()
@@ -118,7 +120,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
-       return view
+        return view
     }()
     
     
@@ -133,7 +135,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         
     }()
     
-
+    
     
     lazy var rightBarButton = UIBarButtonItem(customView: rightBarImage)
     
@@ -163,12 +165,12 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     var HEADER_HEIGHT : CGFloat = 0
     
     var followersCount : Int?
-
+    
     var imagesArr : [[String]] = []
     
     var uidsArr : [String] = []
-
-
+    
+    
     
     func setHeadersCount( selected : Bool ){
         
@@ -184,24 +186,24 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         self.followersCount = count
         
     }
-
+    
     var loadingView = LoadingView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadingView.isLoading = true
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
             self.loadingView.isLoading = false
             self.navigationController?.navigationBar.topItem?.rightBarButtonItem = self.rightBarButton
             self.navigationController?.navigationBar.topItem?.leftBarButtonItem = self.leftBarButton
-          }
-      
+        }
+        
         
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
         
-      
+        
         
         setUI()
         setBindings()
@@ -212,7 +214,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         
         
     }
-   
+    
     
     
     
@@ -222,7 +224,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
-      
+        
         
         self.headerAppearEvent.onNext(true)
         
@@ -231,9 +233,9 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(false)
-
+        
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-
+        
         
     }
     
@@ -258,7 +260,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         self.leftBarImage.translatesAutoresizingMaskIntoConstraints = false
         self.loadingView.translatesAutoresizingMaskIntoConstraints = false
-
+        
         self.backgroundView.backgroundLabel.text = "아직 피드가 없어요"
         
         leftBarView.addSubview(leftBarLabel)
@@ -266,17 +268,17 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         
         
         
-
+        
         view.addSubview(self.collectionView)
-
+        
         view.addSubview(self.addButton)
         
         view.addSubview(self.loadingView)
         
         self.backgroundView.isHidden = false
         
-   
-
+        
+        
         
         NSLayoutConstraint.activate([
             
@@ -289,13 +291,13 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
             leftBarLabel.leadingAnchor.constraint(equalTo: leftBarView.leadingAnchor ),
             
             NSLayoutConstraint(item: self.leftBarLabel, attribute: .width, relatedBy: .lessThanOrEqual, toItem: self.leftBarView, attribute: .width, multiplier: 1.0, constant: -20),
-         
+            
             
             leftBarImage.heightAnchor.constraint(equalToConstant: 12 ),
             leftBarImage.widthAnchor.constraint(equalToConstant: 12 ),
             leftBarImage.centerYAnchor.constraint(equalTo: leftBarView.centerYAnchor ),
             leftBarImage.leadingAnchor.constraint(equalTo: leftBarLabel.trailingAnchor , constant: 2 ),
-
+            
             
             
             
@@ -310,9 +312,9 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
             self.collectionView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
             self.collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor ),
             
-           
             
-        
+            
+            
             
             
             self.addButton.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor , constant: -20 ),
@@ -334,7 +336,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         
         
     }
-   
+    
     
     func setHeaderBindings( header : ProfileHeaderView ){
         
@@ -368,19 +370,19 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
                 layout.headerReferenceSize = CGSize(width: view.frame.width, height: estimatedSize.height + 310 )
                 
                 self.collectionView.layoutIfNeeded()
-                    print("estimatedSize \(estimatedSize)")
+                print("estimatedSize \(estimatedSize)")
             }
             
             
             
             let a = $3
-
             
-
+            
+            
             self.leftBarLabel.text = a
-
-           
-
+            
+            
+            
             
             let weight = (Double($1) ?? 0.0) - (Double($2) ?? 0.0)
             
@@ -412,19 +414,19 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
                     
                     
                     
-         
-
+                    
+                    
                     
                     
                 }
                 
-            
+                
                 
             } else {
                 
                 header.profileImage.image = UIImage(named: "일반적.png")
                 
-
+                
                 
             }
             
@@ -432,10 +434,10 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
             header.profileImage.layer.cornerRadius = 50
             header.feedInformValLabels[0].text =  String(self.imagesArr.count)
             
-         
+            
             
         }).disposed(by: header.disposeBag)
-
+        
         
         
         output.followersCount.subscribe(onNext: { [weak self] count in
@@ -483,23 +485,23 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
             self.imagesArr = imagesArr
             
             var indexPathsToReload : [IndexPath] = []
-         
+            
             if( self.imagesArr.count == self.collectionView.numberOfItems(inSection: 0)){
                 for i in 0..<self.imagesArr.count{
                     indexPathsToReload.append( IndexPath(row: i, section: 0) )
                 }
                 self.collectionView.reloadItems(at: indexPathsToReload)
-
-
+                
+                
             }else{
                 self.collectionView.reloadData()
             }
-                        
-         
             
             
-    
-             
+            
+            
+            
+            
             
             
         }).disposed(by: disposeBag)
@@ -507,7 +509,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         output.feedUid.subscribe( onNext: { [weak self] uidsArr in
             guard let uidsArr = uidsArr , let self = self else { return }
             self.loadControll = true
-
+            
             self.uidsArr = uidsArr
             
         }).disposed(by: disposeBag)
@@ -533,7 +535,7 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         cell.layer.removeAllAnimations()
     }
-  
+    
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print(self.imagesArr[indexPath.row])
@@ -542,33 +544,50 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ProfileHeaderView.identifier , for: indexPath) as? ProfileHeaderView  else {
+        
+        if kind == UICollectionView.elementKindSectionHeader {
             
-            return UICollectionViewCell()
-        }
-        
-        print("head start")
-        
-        
-        if(firstBind){
-            self.HEADER_HEIGHT = header.frame.height
-            self.setHeaderBindings(header: header)
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ProfileHeaderView.identifier , for: indexPath) as? ProfileHeaderView  else {
+                
+                return UICollectionViewCell()
+            }
             
-            firstBind = false
-        }
+            print("head start")
+            
+            
+            if(firstBind){
+                self.HEADER_HEIGHT = header.frame.height
+                self.setHeaderBindings(header: header)
+                
+                firstBind = false
+            }
+            
+            
+            
+            self.headerAppearEvent.onNext(true)
+            
+            self.profileHeader = header
+            
+            return header
+        } else {
+            
+          
+                guard let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DummyCollectionCell.identifier, for: indexPath) as? DummyCollectionCell else {
+                    return UICollectionViewCell()
+                    
+                }
+            
+                
+                return footer
+            }
         
         
         
-        self.headerAppearEvent.onNext(true)
-        
-        self.profileHeader = header
-        
-        
-
-        
-        return header
         
     }
+    
+    
+    
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         print(self.imagesArr.count)
@@ -630,10 +649,24 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
 
 extension MyProfileVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        
+        
         let width = view.frame.size.width / 3
         
         return CGSize(width: width  , height: width  )
     }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+       
+        if(self.imagesArr.count > 0){
+            return CGSize(width: 0 , height: 0 )
+        }else{
+            return CGSize(width: collectionView.frame.width, height: collectionView.frame.width)
+
+        }
+        
+      
+     }
 }
 
 
