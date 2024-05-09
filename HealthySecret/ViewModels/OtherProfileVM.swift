@@ -156,6 +156,7 @@ class OtherProfileVM : ViewModel {
                     
                     
                     let event = (uid == ownUid)
+                    
                     output.followersEnable.onNext(event)
                     output.followersSelected.onNext(selected)
 

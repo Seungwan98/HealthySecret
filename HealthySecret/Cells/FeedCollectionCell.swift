@@ -521,7 +521,7 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
 }
 
 
-extension FeedCollectionCell : UIImagePickerControllerDelegate , UINavigationControllerDelegate {
+extension FeedCollectionCell :  UINavigationControllerDelegate {
     @objc func actionSheetAlert( ){
         let alert = UIAlertController(title: nil , message: nil , preferredStyle: .actionSheet)
         

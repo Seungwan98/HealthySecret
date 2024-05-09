@@ -63,6 +63,8 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         
         collectionView.register( ProfileHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ProfileHeaderView.identifier)
         
+        collectionView.register( DummyCollectionCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DummyCollectionCell.identifier)
+        
         collectionView.allowsMultipleSelection = false
         
         collectionView.alwaysBounceVertical = true
@@ -177,7 +179,10 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     
     func setUI(){
         self.loadingView.translatesAutoresizingMaskIntoConstraints = false
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "", image: UIImage(systemName: "ellipsis"), target: self, action: nil)
+        
+        
+        
+        
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         
@@ -441,6 +446,11 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
             print("enable \(enable)")
             
             self?.followButton.isHidden = enable
+            if(!enable){
+                self?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "", image: UIImage(systemName: "ellipsis"), target: self, action: #selector(self?.actionSheetAlert))
+            }else{
+                self?.navigationItem.rightBarButtonItem = nil
+            }
             
             
         }).disposed(by: header.disposeBag)
@@ -625,4 +635,28 @@ extension OtherProfileVC: UICollectionViewDelegateFlowLayout {
      }
 }
 
-
+extension OtherProfileVC : UINavigationControllerDelegate {
+    @objc func actionSheetAlert( ){
+        let alert = UIAlertController(title: nil , message: nil , preferredStyle: .actionSheet)
+        
+        let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        alert.addAction(cancel)
+        alert.view.tintColor = .black
+        
+        
+        let report = UIAlertAction(title: "신고하기", style: .default) { [weak self] _ in
+            
+            //
+        }
+        report.setValue(UIColor.red, forKey: "titleTextColor")
+        
+        alert.addAction(report)
+        
+        
+        
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    
+    
+}
