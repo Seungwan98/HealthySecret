@@ -92,7 +92,6 @@ class ChangeSignUpVC : UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("다음", for: .normal)
         button.tintColor = .white
-        button.titleLabel?.font = .boldSystemFont(ofSize: 20)
         button.layer.cornerRadius = 30
         button.backgroundColor =  .black
         
@@ -347,6 +346,9 @@ class ChangeSignUpVC : UIViewController {
             textField.leftViewMode = .always
             textField.rightView = rightView
             textField.leftView = leftView
+           textField.keyboardType = .numberPad
+
+           textField.delegate = self
             
         }
         index = 0
@@ -433,7 +435,10 @@ class ChangeSignUpVC : UIViewController {
             button.tag = index
             button.addTarget(self, action: #selector(exerciseButtonAction), for: .touchUpInside)
             
-            button.translatesAutoresizingMaskIntoConstraints = false
+            button.backgroundColor = .red
+            if(index == 2){
+                button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -3)
+            }
             
             button.widthAnchor.constraint(equalToConstant: 50).isActive = true
             button.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -607,8 +612,8 @@ class ChangeSignUpVC : UIViewController {
             
             
             nextButton.heightAnchor.constraint(equalToConstant: 60),
-            nextButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor , constant: -15),
-            nextButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor , constant: 15),
+            nextButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor , constant: -20),
+            nextButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor , constant: 20),
             nextButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
             
             
@@ -629,4 +634,13 @@ class ChangeSignUpVC : UIViewController {
     }
     
 }
-
+extension ChangeSignUpVC : UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // 붙여넣기가 발생하면 false를 반환하여 입력을 막습니다.
+        if let pasteboardString = UIPasteboard.general.string, string == pasteboardString {
+            return false
+        }
+        return true
+    }
+}

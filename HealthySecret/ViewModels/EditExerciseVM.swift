@@ -30,11 +30,11 @@ class EditExerciseVM : ViewModel {
     }
     
     
-    weak var coordinator : DiaryCoordinator?
+    weak var coordinator : ExerciseCoordinator?
     
     private var firebaseService : FirebaseService
     
-    init( coordinator : DiaryCoordinator , firebaseService : FirebaseService , exercises : [Exercise]){
+    init( coordinator : ExerciseCoordinator , firebaseService : FirebaseService , exercises : [Exercise]){
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
         self.exercises =  exercises
@@ -57,7 +57,7 @@ class EditExerciseVM : ViewModel {
                     switch event {
                     case.completed:
                         
-                        self.coordinator?.finishChild()
+                        self.coordinator?.finish()
       
                     case .error(_):
                         print("error")
@@ -73,7 +73,8 @@ class EditExerciseVM : ViewModel {
         }).disposed(by: disposeBag )
         
         input.addButtonTapped.subscribe(onNext: { _ in
-            self.coordinator?.pushExerciseVC()
+            
+            self.coordinator?.pushExerciseVC(exercises: self.exercises)
             
         }).disposed(by: disposeBag)
        

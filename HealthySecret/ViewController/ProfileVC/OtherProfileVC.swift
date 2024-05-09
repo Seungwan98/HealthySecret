@@ -92,6 +92,8 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     
     var outputProfileImage = BehaviorSubject<Data?>(value: nil)
     
+    var headerAppearEvent = PublishSubject<Bool>()
+    
     
     var loadingView = LoadingView()
 
@@ -99,9 +101,12 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         super.viewDidLoad()
         loadingView.isLoading = true
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
             self.loadingView.isLoading = false
-           
+            self.navigationController?.setNavigationBarHidden(false, animated: false)
+            self.navigationController?.navigationBar.backgroundColor = .clear
+            
+            self.headerAppearEvent.onNext(true)
           }
       
         
@@ -123,12 +128,9 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     let backgroundView = CustomBackgroundView()
     
 
-    
     override func viewWillAppear(_ animated: Bool) {
-
+      
         
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
-        self.navigationController?.navigationBar.backgroundColor = .clear
         
 
         
@@ -200,8 +202,12 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
             self.collectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ),
             self.collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor  ),
             self.collectionView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
-            self.collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor ),
+            self.collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor ),  
             
+            self.loadingView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ),
+            self.loadingView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor  ),
+            self.loadingView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
+            self.loadingView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor ),
             
             
         ])
@@ -304,7 +310,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         
         
         
-        let input = OtherProfileVM.HeaderInput( viewWillApearEvent: header.appearEvent  ,  outputProfileImage: self.outputProfileImage.asObservable()   , outputFollows : Observable.merge( header.feedInformValLabels[1].rx.tapGesture().when(.recognized).asObservable() , header.feedInformValLabels[2].rx.tapGesture().when(.recognized).asObservable()  ) )
+        let input = OtherProfileVM.HeaderInput( viewWillApearEvent: headerAppearEvent.asObservable()  ,  outputProfileImage: self.outputProfileImage.asObservable()   , outputFollows : Observable.merge( header.feedInformValLabels[1].rx.tapGesture().when(.recognized).asObservable() , header.feedInformValLabels[2].rx.tapGesture().when(.recognized).asObservable()  ) )
         
         
         guard let output = self.viewModel?.HeaderTransform(input: input, disposeBag: header.disposeBag) else { return }
@@ -522,12 +528,7 @@ extension OtherProfileVC :  UICollectionViewDataSource , UICollectionViewDelegat
             
             firstBind = false
         }
-        
-        if(loadControll){
-            header.appearEvent.onNext(true)
-            loadControll = false
-            
-        }
+        self.headerAppearEvent.onNext(true)
         
         self.profileHeader = header
         

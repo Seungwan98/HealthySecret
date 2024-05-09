@@ -30,7 +30,6 @@ class ComentsCell : UITableViewCell  {
         imageView.layer.cornerRadius = 15
         imageView.image = UIImage(named: "일반적.png")
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .lightGray
         return imageView
     }()
     
@@ -195,8 +194,8 @@ class ComentsCell : UITableViewCell  {
             
             self.profileImage.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
             self.profileImage.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor , constant: 10),
-            self.profileImage.widthAnchor.constraint(equalToConstant: 30),
-            self.profileImage.heightAnchor.constraint(equalToConstant: 30),
+            self.profileImage.widthAnchor.constraint(equalToConstant: 36),
+            self.profileImage.heightAnchor.constraint(equalToConstant: 36),
             
             
             self.ownTitle.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),

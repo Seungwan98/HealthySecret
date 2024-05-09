@@ -56,8 +56,8 @@ struct FeedModel : Codable {
 struct Coment : Codable {
     var coment : String
     var date : String
-    var nickname : String
-    var profileImage : String
+    var nickname : String?
+    var profileImage : String?
     var uid : String
     var comentUid : String
     var feedUid : String
@@ -65,8 +65,6 @@ struct Coment : Codable {
     enum CodingKeys: String, CodingKey {
         case coment = "coment"
         case date = "date"
-        case nickname = "nickname"
-        case profileImage = "profileImage"
         case uid = "uid"
         case comentUid = "comentUid"
         case feedUid = "feedUid"

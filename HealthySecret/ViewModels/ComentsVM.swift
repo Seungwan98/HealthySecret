@@ -33,7 +33,7 @@ class ComentsVM : ViewModel {
         
         var coments = BehaviorSubject<[Coment]>(value: [])
         var feedUuid = BehaviorSubject<String>(value: "")
-        var backgroundHidden = BehaviorSubject<Bool>(value: false)
+        var backgroundHidden = PublishSubject<Bool>()
 
         
     }
@@ -56,7 +56,8 @@ class ComentsVM : ViewModel {
         var coment : String = ""
 
         if let feedUid = self.feedUid {
-            
+            print("nil")
+
             firebaseService.getComents(feedUid: feedUid ).subscribe({ [weak self] event in
                 guard self != nil else {return}
                 
@@ -64,6 +65,7 @@ class ComentsVM : ViewModel {
                     
                 case.success(let coments):
                     output.coments.onNext(coments)
+                    
                     output.backgroundHidden.onNext( !coments.isEmpty )
                 case.failure(let err):
                     print(err)
@@ -97,6 +99,7 @@ class ComentsVM : ViewModel {
         
         input.comentsDelete.subscribe(onNext: { coment in
             LoadingIndicator.showLoading()
+            
 
             guard let feedUid = self.feedUid else {return}
             self.firebaseService.deleteComents( coment: coment , feedUid: feedUid ).subscribe({ event in
@@ -129,6 +132,8 @@ class ComentsVM : ViewModel {
             
             
         }).disposed(by: disposeBag)
+        
+        
       
 
         input.addButtonTapped.subscribe(onNext: { _ in

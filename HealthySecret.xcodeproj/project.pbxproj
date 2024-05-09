@@ -12,11 +12,6 @@
 		600DE92F2B511E9D00D5D797 /* CalendarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600DE92E2B511E9D00D5D797 /* CalendarVM.swift */; };
 		600DE9312B557EC400D5D797 /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600DE9302B557EC400D5D797 /* SignUpVC.swift */; };
 		600DE9332B55802A00D5D797 /* SignUpVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600DE9322B55802A00D5D797 /* SignUpVM.swift */; };
-		600DE93F2B56FDE500D5D797 /* 활동많음.png in Resources */ = {isa = PBXBuildFile; fileRef = 600DE93E2B56FDE500D5D797 /* 활동많음.png */; };
-		600DE9412B56FF2A00D5D797 /* 활동적음.png in Resources */ = {isa = PBXBuildFile; fileRef = 600DE9402B56FF2A00D5D797 /* 활동적음.png */; };
-		600DE9432B56FF4B00D5D797 /* 일반적.png in Resources */ = {isa = PBXBuildFile; fileRef = 600DE9422B56FF4B00D5D797 /* 일반적.png */; };
-		600DE9472B57CA4200D5D797 /* 활동적음_fill.png in Resources */ = {isa = PBXBuildFile; fileRef = 600DE9442B57CA4200D5D797 /* 활동적음_fill.png */; };
-		600DE9482B57CA4200D5D797 /* 일반적_fill.png in Resources */ = {isa = PBXBuildFile; fileRef = 600DE9452B57CA4200D5D797 /* 일반적_fill.png */; };
 		600DE9492B57CA4200D5D797 /* 활동많음_fill.png in Resources */ = {isa = PBXBuildFile; fileRef = 600DE9462B57CA4200D5D797 /* 활동많음_fill.png */; };
 		600DE94C2B57CC1C00D5D797 /* womenButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 600DE94A2B57CC1C00D5D797 /* womenButton.png */; };
 		600DE94D2B57CC1C00D5D797 /* menButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 600DE94B2B57CC1C00D5D797 /* menButton.png */; };
@@ -36,6 +31,10 @@
 		600DE97C2B67A23E00D5D797 /* ExerciseDetialVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600DE97B2B67A23E00D5D797 /* ExerciseDetialVM.swift */; };
 		600DE97E2B69385B00D5D797 /* breakfastTest.png in Resources */ = {isa = PBXBuildFile; fileRef = 600DE97D2B69385B00D5D797 /* breakfastTest.png */; };
 		600DE9802B69424F00D5D797 /* snack.png in Resources */ = {isa = PBXBuildFile; fileRef = 600DE97F2B69424F00D5D797 /* snack.png */; };
+		6052D5B92BEBCCE80085B826 /* 활동많음.png in Resources */ = {isa = PBXBuildFile; fileRef = 6052D5B82BEBCCE80085B826 /* 활동많음.png */; };
+		6052D5BD2BEBCE830085B826 /* 활동적음.png in Resources */ = {isa = PBXBuildFile; fileRef = 6052D5BC2BEBCE820085B826 /* 활동적음.png */; };
+		6052D5C12BEBDB910085B826 /* 일반적_fill.png in Resources */ = {isa = PBXBuildFile; fileRef = 6052D5C02BEBDB910085B826 /* 일반적_fill.png */; };
+		6052D5C52BEBF1410085B826 /* DiaryCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6052D5C42BEBF1410085B826 /* DiaryCoordinator.swift */; };
 		606343B12B84961A0084E2CC /* edmitSnack.png in Resources */ = {isa = PBXBuildFile; fileRef = 606343B02B84961A0084E2CC /* edmitSnack.png */; };
 		606343B52B84976D0084E2CC /* edmitDinner.png in Resources */ = {isa = PBXBuildFile; fileRef = 606343B22B84976D0084E2CC /* edmitDinner.png */; };
 		606343B72B84976D0084E2CC /* edmitBreakfast.png in Resources */ = {isa = PBXBuildFile; fileRef = 606343B42B84976D0084E2CC /* edmitBreakfast.png */; };
@@ -66,7 +65,6 @@
 		609C062F2B9ABC0D00D61F53 /* RunCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609C062E2B9ABC0D00D61F53 /* RunCoordinator.swift */; };
 		609C06312B9AFBA200D61F53 /* CustomCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609C06302B9AFBA200D61F53 /* CustomCollectionCell.swift */; };
 		609C06332B9F0FF600D61F53 /* ChagneIntroduceVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609C06322B9F0FF600D61F53 /* ChagneIntroduceVM.swift */; };
-		609C06352BA30E5000D61F53 /* BeforeMyProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609C06342BA30E4F00D61F53 /* BeforeMyProfileVC.swift */; };
 		609C06372BA9A0B700D61F53 /* CommuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609C06362BA9A0B700D61F53 /* CommuVC.swift */; };
 		609C06392BA9A25000D61F53 /* CommuVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609C06382BA9A25000D61F53 /* CommuVM.swift */; };
 		609C063B2BA9A53200D61F53 /* FeedCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609C063A2BA9A53200D61F53 /* FeedCollectionCell.swift */; };
@@ -120,6 +118,8 @@
 		60BC99082B3476650013FAD9 /* lunchImg.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BC99072B3476650013FAD9 /* lunchImg.png */; };
 		60BC990A2B34848E0013FAD9 /* Diary.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BC99092B34848E0013FAD9 /* Diary.png */; };
 		60BC990C2B3583340013FAD9 /* tableBackGround.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BC990B2B3583340013FAD9 /* tableBackGround.png */; };
+		60C289AB2BEC8AF000213AAD /* 일반적.png in Resources */ = {isa = PBXBuildFile; fileRef = 60C289AA2BEC8AEF00213AAD /* 일반적.png */; };
+		60C289AD2BECACE100213AAD /* UIResponder+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C289AC2BECACE100213AAD /* UIResponder+.swift */; };
 		60D9878E2AE8BBA20049CE05 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D9878D2AE8BBA20049CE05 /* Coordinator.swift */; };
 		60D987902AEA731C0049CE05 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D9878F2AEA731C0049CE05 /* LoginVC.swift */; };
 		60D987922AEA781D0049CE05 /* TabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D987912AEA781D0049CE05 /* TabBarCoordinator.swift */; };
@@ -140,6 +140,7 @@
 		60EF3C992BE94B8D0007862F /* edmitLunch.png in Resources */ = {isa = PBXBuildFile; fileRef = 60EF3C982BE94B8D0007862F /* edmitLunch.png */; };
 		60EF3C9D2BE9E4CB0007862F /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C9C2BE9E4CB0007862F /* ProfileCoordinator.swift */; };
 		60EF3C9F2BEA2BD10007862F /* CustomBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C9E2BEA2BD10007862F /* CustomBackgroundView.swift */; };
+		60EF3CA62BEBCB210007862F /* 활동적음_fill.png in Resources */ = {isa = PBXBuildFile; fileRef = 60EF3CA52BEBCB210007862F /* 활동적음_fill.png */; };
 		CB62F41F787B287CE4FA2161 /* Pods_HealthySecret.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */; };
 /* End PBXBuildFile section */
 
@@ -153,11 +154,6 @@
 		600DE92E2B511E9D00D5D797 /* CalendarVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarVM.swift; sourceTree = "<group>"; };
 		600DE9302B557EC400D5D797 /* SignUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
 		600DE9322B55802A00D5D797 /* SignUpVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpVM.swift; sourceTree = "<group>"; };
-		600DE93E2B56FDE500D5D797 /* 활동많음.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "활동많음.png"; path = "../../../../../../Downloads/활동많음.png"; sourceTree = "<group>"; };
-		600DE9402B56FF2A00D5D797 /* 활동적음.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "활동적음.png"; path = "../../../../../../Downloads/활동적음.png"; sourceTree = "<group>"; };
-		600DE9422B56FF4B00D5D797 /* 일반적.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "일반적.png"; path = "../../../../../../Downloads/일반적.png"; sourceTree = "<group>"; };
-		600DE9442B57CA4200D5D797 /* 활동적음_fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "활동적음_fill.png"; sourceTree = "<group>"; };
-		600DE9452B57CA4200D5D797 /* 일반적_fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "일반적_fill.png"; sourceTree = "<group>"; };
 		600DE9462B57CA4200D5D797 /* 활동많음_fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "활동많음_fill.png"; sourceTree = "<group>"; };
 		600DE94A2B57CC1C00D5D797 /* womenButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = womenButton.png; sourceTree = "<group>"; };
 		600DE94B2B57CC1C00D5D797 /* menButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menButton.png; sourceTree = "<group>"; };
@@ -180,6 +176,10 @@
 		600DE97F2B69424F00D5D797 /* snack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = snack.png; sourceTree = "<group>"; };
 		600DE9832B695FF400D5D797 /* FSCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FSCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		600DE9872B69602500D5D797 /* FSCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FSCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6052D5B82BEBCCE80085B826 /* 활동많음.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "활동많음.png"; path = "../../../../../../Downloads/활동많음.png"; sourceTree = "<group>"; };
+		6052D5BC2BEBCE820085B826 /* 활동적음.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "활동적음.png"; path = "../../../../../../Downloads/활동적음.png"; sourceTree = "<group>"; };
+		6052D5C02BEBDB910085B826 /* 일반적_fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "일반적_fill.png"; path = "../../../../../../Downloads/일반적_fill.png"; sourceTree = "<group>"; };
+		6052D5C42BEBF1410085B826 /* DiaryCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryCoordinator.swift; sourceTree = "<group>"; };
 		606343B02B84961A0084E2CC /* edmitSnack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edmitSnack.png; sourceTree = "<group>"; };
 		606343B22B84976D0084E2CC /* edmitDinner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edmitDinner.png; sourceTree = "<group>"; };
 		606343B42B84976D0084E2CC /* edmitBreakfast.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edmitBreakfast.png; sourceTree = "<group>"; };
@@ -213,7 +213,6 @@
 		609C062E2B9ABC0D00D61F53 /* RunCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunCoordinator.swift; sourceTree = "<group>"; };
 		609C06302B9AFBA200D61F53 /* CustomCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCollectionCell.swift; sourceTree = "<group>"; };
 		609C06322B9F0FF600D61F53 /* ChagneIntroduceVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChagneIntroduceVM.swift; sourceTree = "<group>"; };
-		609C06342BA30E4F00D61F53 /* BeforeMyProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeforeMyProfileVC.swift; sourceTree = "<group>"; };
 		609C06362BA9A0B700D61F53 /* CommuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommuVC.swift; sourceTree = "<group>"; };
 		609C06382BA9A25000D61F53 /* CommuVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommuVM.swift; sourceTree = "<group>"; };
 		609C063A2BA9A53200D61F53 /* FeedCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCollectionCell.swift; sourceTree = "<group>"; };
@@ -264,6 +263,8 @@
 		60BC99072B3476650013FAD9 /* lunchImg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lunchImg.png; sourceTree = "<group>"; };
 		60BC99092B34848E0013FAD9 /* Diary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Diary.png; sourceTree = "<group>"; };
 		60BC990B2B3583340013FAD9 /* tableBackGround.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tableBackGround.png; sourceTree = "<group>"; };
+		60C289AA2BEC8AEF00213AAD /* 일반적.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "일반적.png"; path = "../../../../../../Downloads/일반적.png"; sourceTree = "<group>"; };
+		60C289AC2BECACE100213AAD /* UIResponder+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIResponder+.swift"; sourceTree = "<group>"; };
 		60D9878D2AE8BBA20049CE05 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		60D9878F2AEA731C0049CE05 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		60D987912AEA781D0049CE05 /* TabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarCoordinator.swift; sourceTree = "<group>"; };
@@ -284,6 +285,7 @@
 		60EF3C982BE94B8D0007862F /* edmitLunch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = edmitLunch.png; path = ../../../../../../Downloads/edmitLunch.png; sourceTree = "<group>"; };
 		60EF3C9C2BE9E4CB0007862F /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
 		60EF3C9E2BEA2BD10007862F /* CustomBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBackgroundView.swift; sourceTree = "<group>"; };
+		60EF3CA52BEBCB210007862F /* 활동적음_fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "활동적음_fill.png"; path = "../../../../../../Downloads/활동적음_fill.png"; sourceTree = "<group>"; };
 		DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthySecret.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -306,50 +308,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		606343B82B84E74E0084E2CC /* EditVC */ = {
+		6052D5C22BEBED770085B826 /* Ingredients */ = {
 			isa = PBXGroup;
 			children = (
-				60A380062B6A5F6B00C9A2E6 /* EditExerciseVC.swift */,
+				60A380112B6CD8B200C9A2E6 /* IngredientsDetailVC.swift */,
 				60A380132B6D245D00C9A2E6 /* EditIngredientsVC.swift */,
-			);
-			path = EditVC;
-			sourceTree = "<group>";
-		};
-		606343B92B84E7600084E2CC /* TableVC */ = {
-			isa = PBXGroup;
-			children = (
-				600DE9732B6269BD00D5D797 /* ExerciseVC.swift */,
 				6094C54C2ACEBDF300D62B0A /* IngredientsVC.swift */,
 			);
-			path = TableVC;
+			path = Ingredients;
 			sourceTree = "<group>";
 		};
-		606343BA2B84E77C0084E2CC /* DetailVC */ = {
-			isa = PBXGroup;
-			children = (
-				60BC98E92B0B501E0013FAD9 /* ExerciseDetailVC.swift */,
-				60A380112B6CD8B200C9A2E6 /* IngredientsDetailVC.swift */,
-			);
-			path = DetailVC;
-			sourceTree = "<group>";
-		};
-		606343BB2B84E78F0084E2CC /* TabbarVC */ = {
+		6052D5C32BEBEDFC0085B826 /* main */ = {
 			isa = PBXGroup;
 			children = (
 				60BC98F82B2728C40013FAD9 /* DiaryVC.swift */,
-				6067B99E2B502A5E00D536FF /* CalendarVC.swift */,
 				60A3801B2B7F22E400C9A2E6 /* DetailModalVC.swift */,
+				606343C82B8F34430084E2CC /* AddDiaryVC.swift */,
+				6067B99E2B502A5E00D536FF /* CalendarVC.swift */,
 			);
-			path = TabbarVC;
+			path = main;
 			sourceTree = "<group>";
 		};
-		606343BC2B84E7DD0084E2CC /* SignVC */ = {
+		606343B92B84E7600084E2CC /* Exercise */ = {
+			isa = PBXGroup;
+			children = (
+				60BC98E92B0B501E0013FAD9 /* ExerciseDetailVC.swift */,
+				600DE9732B6269BD00D5D797 /* ExerciseVC.swift */,
+				60A380062B6A5F6B00C9A2E6 /* EditExerciseVC.swift */,
+			);
+			path = Exercise;
+			sourceTree = "<group>";
+		};
+		606343BC2B84E7DD0084E2CC /* Login */ = {
 			isa = PBXGroup;
 			children = (
 				600DE9302B557EC400D5D797 /* SignUpVC.swift */,
 				60D9878F2AEA731C0049CE05 /* LoginVC.swift */,
 			);
-			path = SignVC;
+			path = Login;
 			sourceTree = "<group>";
 		};
 		606343CA2B8F344E0084E2CC /* ProfileVC */ = {
@@ -367,17 +363,12 @@
 		608DF9702AD567C500DD27DB /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
-				60EF3CA02BEA84660007862F /* FeedVC */,
+				6052D5C32BEBEDFC0085B826 /* main */,
+				6052D5C22BEBED770085B826 /* Ingredients */,
+				606343B92B84E7600084E2CC /* Exercise */,
+				60EF3CA02BEA84660007862F /* Feed */,
 				606343CA2B8F344E0084E2CC /* ProfileVC */,
-				606343BC2B84E7DD0084E2CC /* SignVC */,
-				606343BB2B84E78F0084E2CC /* TabbarVC */,
-				606343BA2B84E77C0084E2CC /* DetailVC */,
-				606343B92B84E7600084E2CC /* TableVC */,
-				606343B82B84E74E0084E2CC /* EditVC */,
-				606343C82B8F34430084E2CC /* AddDiaryVC.swift */,
-				609C06342BA30E4F00D61F53 /* BeforeMyProfileVC.swift */,
-				609C06482BBD733500D61F53 /* AddFeedVM.swift */,
-				60EAFE0D2BC4361200D3EE73 /* UpdateFeedVM.swift */,
+				606343BC2B84E7DD0084E2CC /* Login */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -464,6 +455,7 @@
 				60EAFE072BC1375400D3EE73 /* CALayer+.swift */,
 				60EAFE0F2BC5544D00D3EE73 /* DispatchQueue+.swift */,
 				60EF3C9E2BEA2BD10007862F /* CustomBackgroundView.swift */,
+				60C289AC2BECACE100213AAD /* UIResponder+.swift */,
 			);
 			path = Customs;
 			sourceTree = "<group>";
@@ -495,22 +487,24 @@
 		60BC98EB2B0B68140013FAD9 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				60BC98EC2B0B68650013FAD9 /* LoginVM.swift */,
 				60BC98F22B1867BB0013FAD9 /* ViewModel.swift */,
+				60BC98EC2B0B68650013FAD9 /* LoginVM.swift */,
+				600DE9322B55802A00D5D797 /* SignUpVM.swift */,
 				60BC98FA2B27297F0013FAD9 /* DiaryVM.swift */,
 				600DE92E2B511E9D00D5D797 /* CalendarVM.swift */,
-				600DE9322B55802A00D5D797 /* SignUpVM.swift */,
 				60BC98F42B1DC71F0013FAD9 /* IngredientsVM.swift */,
+				60A380192B72143800C9A2E6 /* IngredientsDetailVM.swift */,
+				60A380152B6D27D400C9A2E6 /* EditIngredientsVM.swift */,
 				600DE9752B62A00A00D5D797 /* ExerciseVM.swift */,
 				600DE97B2B67A23E00D5D797 /* ExerciseDetialVM.swift */,
 				60A380082B6A663E00C9A2E6 /* EditExerciseVM.swift */,
-				60A380152B6D27D400C9A2E6 /* EditIngredientsVM.swift */,
-				60A380192B72143800C9A2E6 /* IngredientsDetailVM.swift */,
-				606343C02B8CCB290084E2CC /* MyProfileVM.swift */,
-				606343CF2B9622280084E2CC /* ChangeSignUpVM.swift */,
-				609C06322B9F0FF600D61F53 /* ChagneIntroduceVM.swift */,
 				609C06382BA9A25000D61F53 /* CommuVM.swift */,
+				60EAFE0D2BC4361200D3EE73 /* UpdateFeedVM.swift */,
 				60EAFE052BC125BD00D3EE73 /* ComentsVM.swift */,
+				606343C02B8CCB290084E2CC /* MyProfileVM.swift */,
+				609C06482BBD733500D61F53 /* AddFeedVM.swift */,
+				609C06322B9F0FF600D61F53 /* ChagneIntroduceVM.swift */,
+				606343CF2B9622280084E2CC /* ChangeSignUpVM.swift */,
 				6093BC0C2BD82C0800D3BE3C /* ProfileFeedVM.swift */,
 				60EAFE112BC83CF400D3EE73 /* OtherProfileVM.swift */,
 				60EF3C942BE0C7AD0007862F /* FollowsVM.swift */,
@@ -529,11 +523,12 @@
 			isa = PBXGroup;
 			children = (
 				60D9878D2AE8BBA20049CE05 /* Coordinator.swift */,
-				60D987912AEA781D0049CE05 /* TabBarCoordinator.swift */,
 				60BC98E22B02A0590013FAD9 /* AppCoordinator.swift */,
+				60D987912AEA781D0049CE05 /* TabBarCoordinator.swift */,
+				6052D5C42BEBF1410085B826 /* DiaryCoordinator.swift */,
 				60BC98E42B0361950013FAD9 /* IngredientsCoordinator.swift */,
-				6067B99C2B502A2900D536FF /* CalendarCoordinator.swift */,
 				600DE9772B62A12000D5D797 /* ExerciseCoordinator.swift */,
+				6067B99C2B502A2900D536FF /* CalendarCoordinator.swift */,
 				609C062E2B9ABC0D00D61F53 /* RunCoordinator.swift */,
 				60EF3C962BE8B04D0007862F /* FollowsCoordinator.swift */,
 				60EF3C9C2BE9E4CB0007862F /* ProfileCoordinator.swift */,
@@ -565,12 +560,12 @@
 				600DE94B2B57CC1C00D5D797 /* menButton.png */,
 				600DE94A2B57CC1C00D5D797 /* womenButton.png */,
 				600DE9462B57CA4200D5D797 /* 활동많음_fill.png */,
-				600DE9452B57CA4200D5D797 /* 일반적_fill.png */,
-				600DE9442B57CA4200D5D797 /* 활동적음_fill.png */,
-				600DE9402B56FF2A00D5D797 /* 활동적음.png */,
-				600DE9422B56FF4B00D5D797 /* 일반적.png */,
+				6052D5B82BEBCCE80085B826 /* 활동많음.png */,
+				6052D5C02BEBDB910085B826 /* 일반적_fill.png */,
+				60C289AA2BEC8AEF00213AAD /* 일반적.png */,
+				60EF3CA52BEBCB210007862F /* 활동적음_fill.png */,
+				6052D5BC2BEBCE820085B826 /* 활동적음.png */,
 				60BB26952B45336100191CB1 /* lunchButton.png */,
-				600DE93E2B56FDE500D5D797 /* 활동많음.png */,
 				60BB26932B45335700191CB1 /* breakfastButton.png */,
 				60BB26B72B494BD400191CB1 /* sangsaeButton2.png */,
 				60BB26AD2B45CD2F00191CB1 /* firstDout.png */,
@@ -597,7 +592,7 @@
 			path = Image;
 			sourceTree = "<group>";
 		};
-		60EF3CA02BEA84660007862F /* FeedVC */ = {
+		60EF3CA02BEA84660007862F /* Feed */ = {
 			isa = PBXGroup;
 			children = (
 				609C06362BA9A0B700D61F53 /* CommuVC.swift */,
@@ -608,7 +603,7 @@
 				609C064A2BBE9C2400D61F53 /* ComentsVC.swift */,
 				609C06442BBA9E8500D61F53 /* AddFeedVC.swift */,
 			);
-			path = FeedVC;
+			path = Feed;
 			sourceTree = "<group>";
 		};
 		AA1FAA90DEBD527FB70DC4D9 /* Frameworks */ = {
@@ -712,21 +707,23 @@
 				6067B99B2B4D578B00D536FF /* calendarIcon.png in Resources */,
 				60BC99082B3476650013FAD9 /* lunchImg.png in Resources */,
 				600DE9682B60E1C000D5D797 /* check.png in Resources */,
+				6052D5BD2BEBCE830085B826 /* 활동적음.png in Resources */,
 				60BB26962B45336100191CB1 /* lunchButton.png in Resources */,
 				60EF3C992BE94B8D0007862F /* edmitLunch.png in Resources */,
 				60BB26AE2B45CD2F00191CB1 /* firstDout.png in Resources */,
+				60EF3CA62BEBCB210007862F /* 활동적음_fill.png in Resources */,
 				60BB26982B4533A200191CB1 /* dinnerButton.png in Resources */,
+				6052D5C12BEBDB910085B826 /* 일반적_fill.png in Resources */,
 				60BC990A2B34848E0013FAD9 /* Diary.png in Resources */,
 				606343B12B84961A0084E2CC /* edmitSnack.png in Resources */,
 				60EF3C8B2BDC34560007862F /* .gitattributes in Resources */,
+				60C289AB2BEC8AF000213AAD /* 일반적.png in Resources */,
 				600DE9702B610C7100D5D797 /* add.png in Resources */,
 				60BB26B22B45CD3400191CB1 /* thirdDout.png in Resources */,
 				60BB26B62B46766700191CB1 /* union.png in Resources */,
 				60BB269C2B453EB900191CB1 /* line.png in Resources */,
 				600DE97E2B69385B00D5D797 /* breakfastTest.png in Resources */,
 				600DE96C2B61081900D5D797 /* breakFast.png in Resources */,
-				600DE9412B56FF2A00D5D797 /* 활동적음.png in Resources */,
-				600DE9482B57CA4200D5D797 /* 일반적_fill.png in Resources */,
 				60BB26942B45335700191CB1 /* breakfastButton.png in Resources */,
 				606343B72B84976D0084E2CC /* edmitBreakfast.png in Resources */,
 				6094C5452ACD915300D62B0A /* LaunchScreen.storyboard in Resources */,
@@ -739,12 +736,11 @@
 				600DE9492B57CA4200D5D797 /* 활동많음_fill.png in Resources */,
 				600DE96E2B61081900D5D797 /* lunch.png in Resources */,
 				600DE9642B601F8800D5D797 /* kakao_login.png in Resources */,
-				600DE9472B57CA4200D5D797 /* 활동적음_fill.png in Resources */,
 				600DE97A2B63950400D5D797 /* 운동하는유미.png in Resources */,
 				60050C6F2AF8E399000FAAA4 /* GoogleService-Info.plist in Resources */,
+				6052D5B92BEBCCE80085B826 /* 활동많음.png in Resources */,
 				60BC99062B3476400013FAD9 /* dinnerImg.png in Resources */,
 				60BC990C2B3583340013FAD9 /* tableBackGround.png in Resources */,
-				600DE9432B56FF4B00D5D797 /* 일반적.png in Resources */,
 				60BB269A2B45385C00191CB1 /* sangsaeButton.png in Resources */,
 				600DE9662B60208600D5D797 /* apple_login.png in Resources */,
 				60BC99042B3474FE0013FAD9 /* breakfastImg.png in Resources */,
@@ -753,7 +749,6 @@
 				606343B52B84976D0084E2CC /* edmitDinner.png in Resources */,
 				600DE94C2B57CC1C00D5D797 /* womenButton.png in Resources */,
 				606343C32B8DF0170084E2CC /* arrow.png in Resources */,
-				600DE93F2B56FDE500D5D797 /* 활동많음.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -844,7 +839,6 @@
 				609C06492BBD733500D61F53 /* AddFeedVM.swift in Sources */,
 				60D987902AEA731C0049CE05 /* LoginVC.swift in Sources */,
 				600DE9722B624CDF00D5D797 /* ExerciseDTO.swift in Sources */,
-				609C06352BA30E5000D61F53 /* BeforeMyProfileVC.swift in Sources */,
 				60A380162B6D27D400C9A2E6 /* EditIngredientsVM.swift in Sources */,
 				60A380182B6D2DA600C9A2E6 /* EditIngredientsCell.swift in Sources */,
 				60BC98EA2B0B501E0013FAD9 /* ExerciseDetailVC.swift in Sources */,
@@ -862,6 +856,7 @@
 				600DE95C2B5935F400D5D797 /* KakaoService.swift in Sources */,
 				600DE92F2B511E9D00D5D797 /* CalendarVM.swift in Sources */,
 				60A380102B6A81A400C9A2E6 /* ExerciseCell.swift in Sources */,
+				60C289AD2BECACE100213AAD /* UIResponder+.swift in Sources */,
 				60EAFE102BC5544D00D3EE73 /* DispatchQueue+.swift in Sources */,
 				6003998A2BDB9C7F0030D9EF /* ProfileHeaderView.swift in Sources */,
 				609C064D2BBEE3B500D61F53 /* AppleService.swift in Sources */,
@@ -876,6 +871,7 @@
 				60A380052B6A37D800C9A2E6 /* Custom.swift in Sources */,
 				609C06432BBA8C5200D61F53 /* FeedVC.swift in Sources */,
 				606343C72B8E34CD0084E2CC /* ChangeIntroduceVC.swift in Sources */,
+				6052D5C52BEBF1410085B826 /* DiaryCoordinator.swift in Sources */,
 				600DE9782B62A12000D5D797 /* ExerciseCoordinator.swift in Sources */,
 				60BC98E32B02A0590013FAD9 /* AppCoordinator.swift in Sources */,
 				609C063F2BAAD7A400D61F53 /* UILabel+.swift in Sources */,

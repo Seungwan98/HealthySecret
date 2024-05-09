@@ -31,7 +31,6 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
         
         button.setTitle("추가", for: .normal)
         button.tintColor = .white
-        button.titleLabel?.font = .boldSystemFont(ofSize: 20)
         button.layer.cornerRadius = 30
         button.backgroundColor = .systemBlue.withAlphaComponent(0.8)
         return button
@@ -42,7 +41,6 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
         
         
         button.setTitle("기록하기", for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 20)
 
         button.backgroundColor = .black
         button.layer.cornerRadius = 30
@@ -65,7 +63,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     
     
     private let imageView : UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "dumbbell.png"))
+        let imageView = UIImageView(image: UIImage(named: "dumbbellPic.png"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         return imageView

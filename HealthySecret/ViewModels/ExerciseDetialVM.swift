@@ -14,6 +14,8 @@ class ExerciseDetailVM : ViewModel {
     
     var model : ExerciseDtoData?
     
+    var exercises : [Exercise]?
+    
     var disposeBag = DisposeBag()
     
     
@@ -47,11 +49,12 @@ class ExerciseDetailVM : ViewModel {
         
         let weight = UserDefaults.standard.object(forKey: "weight")
         
+        
         var time = ""
         var finalCalorie = ""
         var memo = ""
-        var name = self.model?.name ?? ""
-        var exerciseGram = self.model?.exerciseGram ?? ""
+        let name = self.model?.name ?? ""
+        let exerciseGram = self.model?.exerciseGram ?? ""
 
         let output = Output()
         
@@ -83,15 +86,12 @@ class ExerciseDetailVM : ViewModel {
             
             let exercise = Exercise(date: UserDefaults.standard.string(forKey: "date") ?? "", name: name , time: time  , finalCalorie : finalCalorie , memo : memo  , key: UUID().uuidString , exerciseGram: exerciseGram)
 
-            self.firebaseService.addExercise(exercise: exercise, key: UserDefaults.standard.value(forKey: "uid") as! String).subscribe{ com in
-                switch com {
-                case .completed:
-                    self.coordinator?.back()
-                case .error(_):
-                    print("error")
-                }
-                
-            }.disposed(by: disposeBag)
+            var exercises = self.exercises ?? []
+            exercises.append(exercise)
+            
+            self.coordinator?.navigationController.popViewController(animated: false)
+            self.coordinator?.pushEditExerciseVC(exercises: exercises)
+              
             
         }).disposed(by: disposeBag)
         

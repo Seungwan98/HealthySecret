@@ -11,6 +11,10 @@ import Foundation
 
 
 class ExerciseCoordinator: Coordinator {
+    func start() {
+        
+    }
+    
     
     
     var childCoordinator: [Coordinator] = []
@@ -23,16 +27,20 @@ class ExerciseCoordinator: Coordinator {
     
     var type: CoordinatorType = .exercise
     
-    required init(_ navigationController: UINavigationController ) {
+    let firebaseService : FirebaseService
+    
+    required init(_ navigationController: UINavigationController  ) {
         self.navigationController = navigationController
+        self.firebaseService = FirebaseService()
+
         self.navigationController.navigationBar.tintColor = .white
         self.navigationController.navigationBar.topItem?.title = ""
         
     }
     
-    func start() {
-        let firebaseService = FirebaseService()
+    func pushExerciseVC(exercises : [Exercise]) {
         let viewModel = ExerciseVM(coordinator: self, firebaseService: firebaseService)
+        viewModel.exercises =  exercises
         let ExerciseViewController = ExerciseViewController(viewModel: viewModel)
 
         ExerciseViewController.hidesBottomBarWhenPushed = true
@@ -42,14 +50,14 @@ class ExerciseCoordinator: Coordinator {
         
         
         
-        
     }
     
-    func pushDetailVC(model : ExerciseDtoData){
+    func pushExerciseDetailVC(model : ExerciseDtoData , exercises : [Exercise]){
         
         let firebaseService = FirebaseService()
         let viewModel = ExerciseDetailVM(coordinator: self, firebaseService: firebaseService)
         viewModel.model = model
+        viewModel.exercises = exercises
         let viewController = ExerciseDetailVC(viewModel: viewModel)
         
         viewController.hidesBottomBarWhenPushed = true
@@ -58,13 +66,33 @@ class ExerciseCoordinator: Coordinator {
         
     }
     
-    func back() {
+    func pushEditExerciseVC(exercises:[Exercise]){
+        print("pushEdit")
+        let firebaseService = self.firebaseService
+        let viewController = EditExerciseVC(viewModel: EditExerciseVM(coordinator: self, firebaseService: firebaseService , exercises : exercises))
+
+        viewController.hidesBottomBarWhenPushed = true
+
+//        self.navigationController.navigationBar.backIndicatorImage = UIImage(systemName: "xmark")
+//        self.navigationController.navigationBar.backIndicatorTransitionMaskImage = UIImage(systemName: "xmark")
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .white
+
+        self.navigationController.pushViewController( viewController , animated: false )
+    }
+    
+    
+    
+    
+    func finish() {
         
         finishDelegate?.coordinatorDidFinish(childCoordinator: self)
         
         
         
     }
+    
+    
     
    
     

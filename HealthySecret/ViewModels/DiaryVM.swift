@@ -87,14 +87,14 @@ class DiaryVM : ViewModel {
         
         input.execiseButtonTapped.subscribe(onNext: { [weak self] _ in
             getExercises.subscribe(onNext: { exercises in
-                if exercises.isEmpty{
-                    self?.coordinator?.pushExerciseVC()
+             
+              
                     
-                }else{
+          
                     
-                    self?.coordinator?.pushEditExerciseVC(exercises: exercises)
+                self?.coordinator?.startExerciseCoordinator(exercises: exercises)
                     
-                }
+                
                 
             }).disposed(by: DisposeBag())
             
@@ -108,31 +108,32 @@ class DiaryVM : ViewModel {
     
         
         input.mealButtonsTapped.subscribe(onNext: { [weak self] _ in
+            guard let self = self else {return}
             let meal : String = UserDefaults.standard.value(forKey: "meal") as! String
             switch meal {
             case "아침식사":
-                self?.getBreakfast.subscribe(onNext: { arr in
-                    self?.coordinator?.pushEditIngredientsVC(arr: arr)
+                self.getBreakfast.subscribe(onNext: { arr in
+                    self.coordinator?.pushEditIngredientsVC(arr: arr)
                    
                 }).disposed(by: DisposeBag())
 
                 
             case "점심식사":
-                self?.getLunch.subscribe(onNext: { arr in
-                    self?.coordinator?.pushEditIngredientsVC(arr: arr)
+                self.getLunch.subscribe(onNext: { arr in
+                    self.coordinator?.pushEditIngredientsVC(arr: arr)
                    
                 }).disposed(by: DisposeBag())
 
                 
             case "저녁식사":
-                self?.getDinner.subscribe(onNext: { arr in
-                    self?.coordinator?.pushEditIngredientsVC(arr: arr)
+                self.getDinner.subscribe(onNext: { arr in
+                    self.coordinator?.pushEditIngredientsVC(arr: arr)
                    
                 }).disposed(by: DisposeBag())
                 
             case "간식":
-                self?.getSnack.subscribe(onNext: { arr in
-                    self?.coordinator?.pushEditIngredientsVC(arr: arr)
+                self.getSnack.subscribe(onNext: { arr in
+                    self.coordinator?.pushEditIngredientsVC(arr: arr)
                    
                 }).disposed(by: DisposeBag()  )
                 

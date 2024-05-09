@@ -191,7 +191,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         super.viewDidLoad()
         loadingView.isLoading = true
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
             self.loadingView.isLoading = false
             self.navigationController?.navigationBar.topItem?.rightBarButtonItem = self.rightBarButton
             self.navigationController?.navigationBar.topItem?.leftBarButtonItem = self.leftBarButton
@@ -222,6 +222,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
+      
         
         self.headerAppearEvent.onNext(true)
         
@@ -267,7 +268,6 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         
 
         view.addSubview(self.collectionView)
-       // view.addSubview(self.backgroundView)
 
         view.addSubview(self.addButton)
         
@@ -435,15 +435,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
          
             
         }).disposed(by: header.disposeBag)
-        
-//        NSLayoutConstraint.activate([
-//            
-//        self.backgroundView.trailingAnchor.constraint(equalTo: self.collectionView.safeAreaLayoutGuide.trailingAnchor ),
-//        self.backgroundView.bottomAnchor.constraint(equalTo: self.collectionView.safeAreaLayoutGuide.bottomAnchor  ),
-//        self.backgroundView.topAnchor.constraint(equalTo: header.informationView.bottomAnchor  ),
-//        self.backgroundView.leadingAnchor.constraint(equalTo: self.collectionView.safeAreaLayoutGuide.leadingAnchor ),
-//        
-//        ])
+
         
         
         output.followersCount.subscribe(onNext: { [weak self] count in

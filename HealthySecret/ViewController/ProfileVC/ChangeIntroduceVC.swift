@@ -77,9 +77,9 @@ class ChangeIntroduceVC : UIViewController {
         let textView: UITextView = UITextView()
 
         textView.translatesAutoresizingMaskIntoConstraints = false
-        // Round the corners.
+
         textView.backgroundColor = .lightGray.withAlphaComponent(0.2)
-        // Set the size of the roundness.
+
         textView.layer.cornerRadius = 10
 
         textView.textAlignment = .left
@@ -99,6 +99,7 @@ class ChangeIntroduceVC : UIViewController {
         textView.tintColor = .black
        
         textView.delegate = self
+        
         return textView
     }()
     
@@ -154,6 +155,9 @@ class ChangeIntroduceVC : UIViewController {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
 
         self.navigationController?.navigationBar.backgroundColor = .white
+        self.navigationController?.navigationBar.topItem?.title = "프로필 수정"
+        self.setupKeyboardEvent()
+        
 
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -179,7 +183,7 @@ class ChangeIntroduceVC : UIViewController {
     
     
     
-    
+    var BOTTOMVIEW_ORIGIN_Y : CGFloat?
 
     let labels = [UILabel() , UILabel()]
     
@@ -319,8 +323,6 @@ class ChangeIntroduceVC : UIViewController {
   
        
 
-        
-        
         let input = ChangeIntroduceVM.Input(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , addButtonTapped : self.addButton.rx.tap.asObservable()  , nameTextField: nameTextField.rx.text.orEmpty.distinctUntilChanged().asObservable() , introduceTextField: introduceTextView.rx.text.orEmpty.distinctUntilChanged().asObservable() ,
                                             profileImageTapped : profileImageView.rx.tapGesture().when(.recognized).asObservable() , profileImageValue : self.imageOutput, profileChange: imageChanging.asObservable())
         
@@ -330,7 +332,7 @@ class ChangeIntroduceVC : UIViewController {
         
         
         
-        var idx = 0
+    
         
         
         Observable.zip(output.name.asObservable() , output.introduce.asObservable() , output.profileImage.asObservable() ).subscribe(onNext: {
@@ -338,7 +340,8 @@ class ChangeIntroduceVC : UIViewController {
             
             if  $1.count <= 0 {
          
-                    
+                
+                    print("empty")
                     self.introduceTextView.textColor = .lightGray
                     self.introduceTextView.text = "내 소개를 입력하여 주세요."
             
@@ -348,7 +351,21 @@ class ChangeIntroduceVC : UIViewController {
 
             }
             
+            
+            if($0.isEmpty){
+                self.addButton.backgroundColor = .lightGray
+                self.addButton.isEnabled = false
+            }else{
+                self.addButton.backgroundColor = .black
+                self.addButton.isEnabled = true
+                
+            }
+            
             self.nameTextField.text = $0
+          
+            
+            
+            
             self.introduceTextView.text = $1
             
            
@@ -360,7 +377,7 @@ class ChangeIntroduceVC : UIViewController {
                 if let url = URL(string: data){
                     
                     
-                    
+                    print(url)
                     DispatchQueue.main.async {
                         
                       
@@ -380,7 +397,6 @@ class ChangeIntroduceVC : UIViewController {
                             ])
                         
                         
-                        self.topImage.isHidden = false
                         
                      
                         
@@ -393,7 +409,9 @@ class ChangeIntroduceVC : UIViewController {
                 }
 
 
+                self.profileImageView.layer.cornerRadius = 0
 
+                self.profileImageView.image = UIImage(named: "일반적.png")
                 
             }else{
                 self.profileImageView.layer.cornerRadius = 0
@@ -402,7 +420,8 @@ class ChangeIntroduceVC : UIViewController {
                 
 
             }
-            
+            self.topImage.isHidden = false
+
             
             
         }).disposed(by: disposeBag)
@@ -424,6 +443,19 @@ class ChangeIntroduceVC : UIViewController {
         
         
         
+        nameTextField.rx.text.orEmpty.map{ !$0.isEmpty }.distinctUntilChanged().subscribe(onNext:{ [weak self]  event in
+            
+            self?.addButton.isEnabled = event
+            
+            if(event){
+                self?.addButton.backgroundColor = .black
+            }else{
+                self?.addButton.backgroundColor = .lightGray
+            }
+            
+            
+            
+        }).disposed(by: disposeBag )
         
         
     }
@@ -547,13 +579,10 @@ extension ChangeIntroduceVC : UITextViewDelegate {
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.text.count >= 0 {
-            
+       
             textView.textColor = .black
-            textView.text = ""
 
-            
-        }
+        
     }
     
     func textView(
@@ -579,8 +608,8 @@ extension ChangeIntroduceVC : UITextViewDelegate {
            guard !canUseInput else { return canUseInput }
            
                if textView.text.count < maxCount {
-                   /// "abc{최대글자가 넘는 문자열 붙여넣기}def"
-                   /// 기대결과: "abc{문자열}def"
+                 
+                   
                    let appendingText = text.substring(from: 0, to: maxCount - textView.text.count - 1)
                    textView.text = textView.text.inserting(appendingText, at: range.lowerBound)
                    
@@ -590,7 +619,7 @@ extension ChangeIntroduceVC : UITextViewDelegate {
                        textView.selectedRange = NSMakeRange(movingCursorPosition, 0)
                    }
                } else {
-                   /// 카운트 값을 넘었을때 중간 커서에서 붙여넣기 > 커서가 문자열만큼 뒤로 가는 버그 > 다시 커서 제자리로 위치시키는 코드
+
                    DispatchQueue.main.async {
                        textView.selectedRange = NSMakeRange(range.lowerBound, 0)
                    }
@@ -614,6 +643,56 @@ extension ChangeIntroduceVC : UITextViewDelegate {
            return originalString
        }
    }
+
+
+
+extension ChangeIntroduceVC {
+    
+    func setupKeyboardEvent() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
+    }
+    
+    @objc func keyboardWillShow(_ sender: Notification) {
+        
+        print(sender)
+        
+        // keyboardFrame: 현재 동작하고 있는 이벤트에서 키보드의 frame을 받아옴
+        // currentTextField: 현재 응답을 받고있는 UITextField를 알아냅니다.
+        guard let keyboardFrame = sender.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
+              let currentTextField = UIResponder.currentResponder as? UITextView else { return }
+        
+        // Y축으로 키보드의 상단 위치
+        let keyboardTopY = keyboardFrame.cgRectValue.origin.y
+        // 현재 선택한 텍스트 필드의 Frame 값
+        let convertedTextFieldFrame = view.convert(currentTextField.frame,
+                                                  from: currentTextField.superview)
+        // Y축으로 현재 텍스트 필드의 하단 위치
+        let textFieldBottomY = convertedTextFieldFrame.origin.y + convertedTextFieldFrame.size.height
+    
+        print("\(textFieldBottomY) btm \(keyboardTopY) topy")
+        
+        // Y축으로 텍스트필드 하단 위치가 키보드 상단 위치보다 클 때 (즉, 텍스트필드가 키보드에 가려질 때가 되겠죠!)
+        if textFieldBottomY > keyboardTopY {
+            let textFieldTopY = convertedTextFieldFrame.origin.y
+            // 노가다를 통해서 모든 기종에 적절한 크기를 설정함.
+            let newFrame = textFieldTopY - keyboardTopY/1.6
+            view.frame.origin.y -= newFrame
+        }
+    }
+
+    @objc func keyboardWillHide(_ sender: Notification) {
+        if view.frame.origin.y != 0 {
+            view.frame.origin.y = 0
+        }
+    }
+}
    
 
 

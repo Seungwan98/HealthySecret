@@ -15,6 +15,7 @@ class ExerciseVM : ViewModel {
     
     var disposeBag = DisposeBag()
     
+    var exercises : [Exercise]?
     
     struct Input {
         let viewWillApearEvent : Observable<Void>
@@ -98,7 +99,8 @@ class ExerciseVM : ViewModel {
         input.cellTapped.subscribe(onNext:{
             model in
             
-            self.coordinator?.pushDetailVC(model : model)
+            
+            self.coordinator?.pushExerciseDetailVC(model : model , exercises : self.exercises ?? [])
             
             
             

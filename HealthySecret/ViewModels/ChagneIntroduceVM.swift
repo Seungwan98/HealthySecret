@@ -72,7 +72,7 @@ class ChangeIntroduceVM : ViewModel {
         let output = Output()
         let backgroundScheduler = ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global())
 
-        input.viewWillApearEvent.subscribe(onNext: {
+   
             print("appear")
             
             output.name.onNext(self.name!)
@@ -80,10 +80,7 @@ class ChangeIntroduceVM : ViewModel {
             output.profileImage.onNext(self.beforeImage)
             
            
-            
-            
-        }).disposed(by: disposeBag)
-        
+
         
         
         input.addButtonTapped.subscribe(onNext: { _ in
@@ -162,3 +159,5 @@ class ChangeIntroduceVM : ViewModel {
    
     
 }
+
+

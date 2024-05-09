@@ -489,7 +489,7 @@ extension LoginViewController : ASAuthorizationControllerDelegate {
             let family = appleIDCredential.fullName?.familyName ?? ""
             
             
-            UserDefaults.standard.set( "\(family)+\(given)"  , forKey: "name")
+            UserDefaults.standard.set( "\(family)\(given)"  , forKey: "name")
             let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString , rawNonce: nonce)
             self.appleLogin.onNext(credential)
         }

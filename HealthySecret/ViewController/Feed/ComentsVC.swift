@@ -20,13 +20,15 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     func report(comentsUid : String) {
        let arr = coments.filter({$0.comentUid == comentsUid})
         guard let coment = arr.first else {return}
-        //self.comentsDelete.onNext(coment)
     }
     
     func delete(comentsUid : String) {
         
         let arr = coments.filter({$0.comentUid == comentsUid})
         guard let coment = arr.first else {return}
+        self.coments = coments.filter({$0.comentUid != comentsUid})
+        self.tableView.reloadData()
+        
         self.comentsDelete.onNext(coment)
 
     }
@@ -109,7 +111,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
 
     
     override func viewDidLoad() {
-        self.hidedKeyboardWhenTappedAround()
+        self.hideKeyboardWhenTappedAround()
         setUI()
         setBindings()
     }
@@ -132,8 +134,9 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     
     
     func setUI(){
-        
+        self.backgroundView.isHidden = true
         self.backgroundView.backgroundLabel.text = "아직 댓글이 없어요."
+        self.backgroundView.translatesAutoresizingMaskIntoConstraints = false
         
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
         tableView.dataSource = nil
@@ -143,8 +146,9 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         textViewDidChange(textView)
 
         self.view.addSubview(self.tableView)
+        self.view.addSubview(self.backgroundView)
+
         self.view.addSubview(self.bottomView)
-        self.view.addSubview(backgroundView)
         
         
         self.bottomView.addSubview(self.textView)
@@ -153,10 +157,10 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         
         NSLayoutConstraint.activate([
             
-            backgroundView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            backgroundView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            backgroundView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            backgroundView.bottomAnchor.constraint(equalTo: bottomView.topAnchor),
+            backgroundView.topAnchor.constraint(equalTo: self.tableView.topAnchor),
+            backgroundView.leadingAnchor.constraint(equalTo: self.tableView.leadingAnchor),
+            backgroundView.trailingAnchor.constraint(equalTo: self.tableView.trailingAnchor),
+            backgroundView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             
             self.tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.tableView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
@@ -190,7 +194,10 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     
     
     func setBindings(){
-        
+        addButton.rx.tap.asObservable().subscribe({ _ in
+            
+            self.textView.text = ""
+        }).disposed(by: disposeBag)
         
         let uid = UserDefaults.standard.string(forKey: "uid")
         var feedUuid = ""
@@ -256,11 +263,11 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
                 cell.mine = false
             }
                 
-            
-            if (!item.profileImage.isEmpty){
+            let profileImage = item.profileImage ?? ""
+            if (!profileImage.isEmpty){
                 
                 
-                let url = URL(string: item.profileImage )
+                let url = URL(string: profileImage )
                 
                 DispatchQueue.main.async {
                     
@@ -354,18 +361,5 @@ extension ComentsVC {
             
             
         }
-    }
-}
-
-extension ComentsVC {
-    
-    func hidedKeyboardWhenTappedAround() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(self.dissmissKeyboard))
-        tap.cancelsTouchesInView = false
-        self.tableView.addGestureRecognizer(tap)
-    }
-    
-    @objc func dissmissKeyboard() {
-        view.endEditing(true)
     }
 }

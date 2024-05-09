@@ -30,7 +30,6 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
         
         button.setTitle("추가", for: .normal)
         button.tintColor = .white
-        button.titleLabel?.font = .boldSystemFont(ofSize: 20)
         button.layer.cornerRadius = 30
         button.backgroundColor = .systemBlue.withAlphaComponent(0.8)
         return button
@@ -41,7 +40,6 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
         
         
         button.setTitle("기록하기", for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 20)
 
         button.backgroundColor = .black
         button.layer.cornerRadius = 30
@@ -108,7 +106,7 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
         
     }()
     
-    let totalTodayExerciseLabel : UILabel = {
+    let todayTotalIngredientsLabel : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .systemBlue.withAlphaComponent(0.8)
@@ -180,7 +178,7 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
         output.ingredientsArr.bind(to: self.ingredientsArr).disposed(by: disposeBag)
         
         self.ingredientsArr.subscribe(onNext: { arr in
-            self.totalTodayExerciseLabel.text = String(arr.count)
+            self.todayTotalIngredientsLabel.text = String(arr.count)
             
             
             
@@ -222,19 +220,22 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
 
     }
-    
+    let mainView = UIView()
     
     func addSubView(){
         
         self.addButton.translatesAutoresizingMaskIntoConstraints = false
         self.edmitButton.translatesAutoresizingMaskIntoConstraints = false
         
+    
+        mainView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.view.addSubview(topView)
-        self.view.addSubview(tableView)
-        self.view.addSubview(todayIngredientsLabel)
-        self.view.addSubview(totalTodayExerciseLabel)
-        self.view.addSubview(bottomView)
+        self.view.addSubview(mainView)
+        self.mainView.addSubview(topView)
+        self.mainView.addSubview(tableView)
+        self.mainView.addSubview(todayIngredientsLabel)
+        self.mainView.addSubview(todayTotalIngredientsLabel)
+        self.mainView.addSubview(bottomView)
         
         topView.addSubview(mealView)
         
@@ -253,16 +254,16 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
             
             
             
-            bottomView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            bottomView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            bottomView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            bottomView.leadingAnchor.constraint(equalTo: self.mainView.leadingAnchor),
+            bottomView.trailingAnchor.constraint(equalTo: self.mainView.trailingAnchor),
+            bottomView.bottomAnchor.constraint(equalTo: self.mainView.bottomAnchor),
             bottomView.heightAnchor.constraint(equalToConstant: 100),
             
             
-            topView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            topView.topAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.topAnchor),
             topView.heightAnchor.constraint(equalToConstant: 300),
-            topView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            topView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            topView.leadingAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.leadingAnchor),
+            topView.trailingAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.trailingAnchor),
             
             
             
@@ -282,17 +283,22 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
             
             
             tableView.topAnchor.constraint(equalTo: topView.bottomAnchor ,constant: 60),
-            tableView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.bottomAnchor),
+            
+            mainView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
+            mainView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            mainView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            mainView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             
             todayIngredientsLabel.topAnchor.constraint(equalTo: topView.bottomAnchor),
             todayIngredientsLabel.bottomAnchor.constraint(equalTo: tableView.topAnchor),
             todayIngredientsLabel.leadingAnchor.constraint(equalTo: topView.leadingAnchor , constant: 20),
             
-            totalTodayExerciseLabel.topAnchor.constraint(equalTo: topView.bottomAnchor),
-            totalTodayExerciseLabel.bottomAnchor.constraint(equalTo: tableView.topAnchor),
-            totalTodayExerciseLabel.leadingAnchor.constraint(equalTo: todayIngredientsLabel.trailingAnchor , constant: 0),
+            todayTotalIngredientsLabel.topAnchor.constraint(equalTo: topView.bottomAnchor),
+            todayTotalIngredientsLabel.bottomAnchor.constraint(equalTo: tableView.topAnchor),
+            todayTotalIngredientsLabel.leadingAnchor.constraint(equalTo: todayIngredientsLabel.trailingAnchor , constant: 0),
             
         ])
     }

@@ -1539,26 +1539,72 @@ extension FirebaseService {
             
             
             
-            self.listener = self.db.collection("HealthySecretFeed").whereField("feedUid", isEqualTo: feedUid).addSnapshotListener{  querySnapshot, error in
+            self.listener = self.db.collection("HealthySecretFeed").whereField("feedUid", isEqualTo: feedUid).addSnapshotListener{  [weak self]  querySnapshot, error in
+                guard let self = self else  {return}
                 guard let snapshot = querySnapshot else {
                     print("Error fetching snapshots: \(error!)")
                     return
                 }
                 
                 
-                print("listenr")
+                print("listenr \(coment) \(feedUid)")
                 snapshot.documentChanges.forEach { diff in
                     
                     
-                    
+                    print("\(diff) diff")
+                    var idx = 0
                     if (diff.type == .modified) {
                         //document 안에있는 Arr 안의 데이터를 삭제하므로 modified 를 찾는다.
                         
                         do{
                             let jsonData = try JSONSerialization.data(withJSONObject: diff.document.data(), options: [])
                             let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
-                            single(.success(feed.coments ?? []))
                             
+                            if let coments = feed.coments{
+                                
+                               var outputComents = coments
+                                
+                                for i in 0..<coments.count{
+                                    
+                                    
+                                    
+                                    
+                                    self.getDocument(key: outputComents[i].uid).subscribe({ event in
+                                        print("getDoc")
+                                        switch(event){
+                                        case.success(let user):
+                                            
+                                            outputComents[i].profileImage = user.profileImage
+                                            outputComents[i].nickname = user.name
+                                            
+                                            
+                                            if( idx+1 >= outputComents.count){
+                                                
+                                                
+                                                single(.success(outputComents))
+                                                
+                                                
+                                            }else{
+                                                idx += 1
+                                            }
+                                            
+                                            
+                                            
+                                        case .failure(let err):
+                                            print(err)
+                                        }
+                                        
+                                        
+                                    }).disposed(by: self.disposeBag )
+                                    
+                                    
+                                    
+                                    
+                                }
+                            }else{
+                                
+                                single(.success([]))
+                            }
                             
                             
                         }
@@ -1568,7 +1614,7 @@ extension FirebaseService {
                         }
                         
                     } else {
-                        
+                        print("else")
                         
                         if let coment = coment.dictionary {
                             diff.document .reference.updateData([
@@ -1711,34 +1757,40 @@ extension FirebaseService {
                         var coments = feed.coments ?? []
                         var index = 0
                         
-                        for i in 0..<coments.count {
+                        if(coments.isEmpty){
+                            single(.success(coments))
+
+                        }else{
                             
-                            self.getDocument(key: coments[i].uid ).subscribe({ event in
+                            for i in 0..<coments.count {
                                 
-                                switch(event){
-                                case.success(let user):
+                                self.getDocument(key: coments[i].uid ).subscribe({ event in
                                     
-                                    
-                                    coments[i].profileImage = user.profileImage ?? ""
-                                    coments[i].nickname = user.name
-                                    
-                                    if(index + 1 >= coments.count){
-                                        single(.success(coments))
-                                    }else{
-                                        index += 1
+                                    switch(event){
+                                    case.success(let user):
+                                        
+                                        
+                                        coments[i].profileImage = user.profileImage ?? ""
+                                        coments[i].nickname = user.name
+                                        
+                                        if(index + 1 >= coments.count){
+                                            single(.success(coments))
+                                        }else{
+                                            index += 1
+                                        }
+                                        
+                                        
+                                        
+                                        
+                                    case .failure(_):
+                                        single(.failure(CustomError.isNil))
                                     }
                                     
                                     
                                     
-                                    
-                                case .failure(_):
-                                    single(.failure(CustomError.isNil))
-                                }
+                                }).disposed(by: self.disposeBag)
                                 
-                                
-                                
-                            }).disposed(by: self.disposeBag)
-                            
+                            }
                         }
                         
                         

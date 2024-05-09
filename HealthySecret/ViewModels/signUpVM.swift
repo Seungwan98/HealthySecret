@@ -84,6 +84,7 @@ class SignUpVM : ViewModel {
         
         
         isValid.subscribe(onNext: { event in
+            
             output.nextButtonEnable.onNext(event)
             
         }).disposed(by: disposeBag)

@@ -120,7 +120,7 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
         self.navigationController?.navigationBar.backgroundColor = UIColor(red: 0.09, green: 0.18, blue: 0.03, alpha: 1)
         
        
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         
         
         if #available(iOS 13.0, *) {
@@ -128,7 +128,7 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
         }
     }
     override func viewWillDisappear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         
     }
     

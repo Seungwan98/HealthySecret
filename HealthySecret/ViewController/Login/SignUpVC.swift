@@ -92,7 +92,6 @@ class SignUpVC : UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("완료", for: .normal)
         button.tintColor = .white
-        button.titleLabel?.font = .boldSystemFont(ofSize: 20)
         button.layer.cornerRadius = 30
         button.backgroundColor =  .black
         
@@ -117,6 +116,14 @@ class SignUpVC : UIViewController {
         
         output.nextButtonEnable.subscribe(onNext: { event in
             self.nextButton.isEnabled = event
+            if(event){
+                
+                self.nextButton.backgroundColor = .black
+                
+            }else{
+                self.nextButton.backgroundColor = .lightGray
+
+            }
             
             
         }).disposed(by: disposeBag)
@@ -178,6 +185,7 @@ class SignUpVC : UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: true)
+        self.view.backgroundColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
 
         
         
@@ -189,7 +197,8 @@ class SignUpVC : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
+        self.hideKeyboardWhenTappedAround()
+
         addSubView()
         setInformationStack()
         setBindings()
@@ -288,6 +297,8 @@ class SignUpVC : UIViewController {
             textField.leftViewMode = .always
             textField.rightView = rightView
             textField.leftView = leftView
+           textField.keyboardType = .numberPad
+           textField.delegate = self
             
         }
         index = 0
@@ -553,8 +564,8 @@ class SignUpVC : UIViewController {
             
             
             nextButton.heightAnchor.constraint(equalToConstant: 60),
-            nextButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor , constant: -15),
-            nextButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor , constant: 15),
+            nextButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor , constant: -20),
+            nextButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor , constant: 20),
             nextButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
             
             
@@ -576,3 +587,12 @@ class SignUpVC : UIViewController {
     
 }
 
+extension SignUpVC : UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+
+            if let pasteboardString = UIPasteboard.general.string, string == pasteboardString {
+                return false
+            }
+            return true
+        }
+}

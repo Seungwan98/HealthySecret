@@ -82,7 +82,6 @@ class LoginVM : ViewModel {
 
 
                 
-                print(authUser.uid)
                 
                 self.firebaseService?.getDocument(key: authUser.uid).subscribe({ event in
                     switch(event){
