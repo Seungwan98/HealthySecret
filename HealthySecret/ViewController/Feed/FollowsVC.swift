@@ -186,6 +186,7 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
     
     
     func setUI(){
+     
         
         self.view.backgroundColor = .white
         

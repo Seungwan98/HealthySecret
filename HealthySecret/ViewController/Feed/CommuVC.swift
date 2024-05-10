@@ -358,7 +358,46 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         
     }()
     
+
     
+  
+    private lazy var segmentControl: UISegmentedControl = {
+        
+        let segment = UnderlineSegmentedControl(items: [ "전체" , "팔로잉"])
+        
+        
+        segment.translatesAutoresizingMaskIntoConstraints = false
+        
+       
+        segment.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.gray], for: .normal)
+        segment.setTitleTextAttributes(
+             [
+               NSAttributedString.Key.foregroundColor: UIColor.black,
+               .font: UIFont.systemFont(ofSize: 13, weight: .semibold)
+             ],
+             for: .selected
+           )
+        
+        segment.selectedSegmentIndex = 0
+        
+        return segment
+    }()
+    
+    
+    
+    
+    let containerView = UIView()
+    
+    var segmentChanged = PublishSubject<Bool>()
+    
+    
+    
+    @objc private func didChangeValue(segment: UISegmentedControl) {
+        print(segment.selectedSegmentIndex)
+            
+            self.segmentChanged.onNext(segmentControl.selectedSegmentIndex == 0)
+
+    }
     
     init(viewModel : CommuVM){
         self.viewModel = viewModel
@@ -399,7 +438,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
         
         
@@ -420,8 +459,19 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     
     func setUI(){
         
+        
+        
+        self.segmentControl.addTarget(self, action: #selector(didChangeValue(segment: )), for: .valueChanged )
+
+        
+        self.view.backgroundColor = .white
         backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.translatesAutoresizingMaskIntoConstraints = false
         backgroundView.backgroundLabel.text = "아직 피드가 없어요"
+        
+        
+        self.view.addSubview(self.containerView)
+        self.containerView.addSubview(segmentControl)
         
         self.view.addSubview(tableView)
         self.view.addSubview(addButton)
@@ -442,17 +492,30 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         
         NSLayoutConstraint.activate([
             
+            
+            
+            self.containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            self.containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            self.containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            self.containerView.heightAnchor.constraint(equalToConstant: 40),
+            
+            self.segmentControl.topAnchor.constraint(equalTo: containerView.topAnchor),
+            self.segmentControl.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            self.segmentControl.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            self.segmentControl.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+          
+            
             self.addButton.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor , constant: -20 ),
             self.addButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor , constant: -20 ),
             self.addButton.widthAnchor.constraint(equalToConstant: 50 ),
             self.addButton.heightAnchor.constraint(equalToConstant: 50),
           
-            self.backgroundView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.backgroundView.topAnchor.constraint(equalTo: self.containerView.bottomAnchor),
             self.backgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.backgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.backgroundView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
             
-            self.tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.tableView.topAnchor.constraint(equalTo: self.containerView.bottomAnchor),
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
@@ -474,7 +537,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         
         
         
-        let input = CommuVM.Input( viewWillAppearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), likesButtonTapped: likesButtonTapped, comentsTapped: self.comentsTapped.asObservable() , addButtonTapped: self.addButton.rx.tap.asObservable() , deleteFeed: deleteFeed , reportFeed : reportFeed , updateFeed: updateFeed , paging : paging.asObservable() , profileTapped : profileTapped.asObservable(), refreshControl: self.refreshControl.rx.controlEvent(.valueChanged).asObservable() )
+        let input = CommuVM.Input( viewWillAppearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), likesButtonTapped: likesButtonTapped, comentsTapped: self.comentsTapped.asObservable() , addButtonTapped: self.addButton.rx.tap.asObservable() , deleteFeed: deleteFeed , reportFeed : reportFeed , updateFeed: updateFeed , paging : paging.asObservable() , profileTapped : profileTapped.asObservable(), refreshControl: self.refreshControl.rx.controlEvent(.valueChanged).asObservable()  , segmentChanged : segmentChanged.asObservable())
         
         
         guard let output = viewModel?.transform(input: input, disposeBag: disposeBag) else {return}
@@ -511,6 +574,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             guard let self = self else {return}
             self.feeds = feeds
             self.backgroundView.isHidden = !(feeds.count <= 0 )
+            
             self.tableView.reloadData()
             
             

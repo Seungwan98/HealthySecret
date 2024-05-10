@@ -357,9 +357,8 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
             header.introduceLabel.text = $4
             
             
-            self.navigationController?.navigationBar.topItem?.title = $3
-            
-            
+            self.navigationItem.title = $3
+
             
             let weight = (Double($1) ?? 0.0) - (Double($2) ?? 0.0)
             

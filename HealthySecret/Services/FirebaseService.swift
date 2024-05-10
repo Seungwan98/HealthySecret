@@ -1270,16 +1270,25 @@ extension FirebaseService {
             var outputFeeds : [FeedModel] = []
             var newFeeds : [FeedModel] = feeds
             
-            print("getFeedPagination")
+            
+            
+            print("getFeedPagination block \(block)")
             if let query = self?.query {
                 //There is last query
                 self?.requestQuery = query
             } else {
                 
-                //It's First query request
-                self?.requestQuery = self?.db.collection("HealthySecretFeed").whereField("uuid", isNotEqualTo: block )
-                    .order(by: "date" , descending: true )
-                    .limit(to: pagesCount)
+                if(true){
+                    //follow
+                    self?.requestQuery = self?.db.collection("HealthySecretFeed").whereField("uuid", isEqualTo: block )
+                        .order(by: "date" , descending: true )
+                        .limit(to: pagesCount)
+                }else{
+                    self?.requestQuery = self?.db.collection("HealthySecretFeed").order(by: "date" , descending: true )
+                        .limit(to: pagesCount)
+                }
+                
+               
             }
             
             self?.requestQuery?.getDocuments{ [weak self] (snapshot, error) in
@@ -1291,11 +1300,20 @@ extension FirebaseService {
                     return
                 }
                 
+                var next : Query?
                 
-                let next = self.db.collection("HealthySecretFeed").whereField("uuid", isNotEqualTo: block )
-                    .order(by: "date" , descending: true)
-                    .limit(to: pagesCount)
-                    .start(afterDocument: lastDocument)
+                if(true){
+                    let next = self.db.collection("HealthySecretFeed").whereField("uuid", isNotEqualTo: block )
+                        .order(by: "date" , descending: true)
+                        .limit(to: pagesCount)
+                        .start(afterDocument: lastDocument)
+                }else{
+                    let next = self.db.collection("HealthySecretFeed").order(by: "date" , descending: true)
+                        .limit(to: pagesCount)
+                        .start(afterDocument: lastDocument)
+                    
+                }
+        
                 
                 //Set next query
                 self.query = next

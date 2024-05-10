@@ -121,6 +121,7 @@
 		60C289AD2BECACE100213AAD /* UIResponder+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C289AC2BECACE100213AAD /* UIResponder+.swift */; };
 		60C289B12BED212C00213AAD /* DummyCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C289B02BED212C00213AAD /* DummyCollectionCell.swift */; };
 		60C289B32BEDC56400213AAD /* PrivacyChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C289B22BEDC56400213AAD /* PrivacyChecker.swift */; };
+		60C289B52BEE086500213AAD /* UnderlinieSegmentControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C289B42BEE086500213AAD /* UnderlinieSegmentControl.swift */; };
 		60D9878E2AE8BBA20049CE05 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D9878D2AE8BBA20049CE05 /* Coordinator.swift */; };
 		60D987902AEA731C0049CE05 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D9878F2AEA731C0049CE05 /* LoginVC.swift */; };
 		60D987922AEA781D0049CE05 /* TabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D987912AEA781D0049CE05 /* TabBarCoordinator.swift */; };
@@ -267,6 +268,7 @@
 		60C289AC2BECACE100213AAD /* UIResponder+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIResponder+.swift"; sourceTree = "<group>"; };
 		60C289B02BED212C00213AAD /* DummyCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DummyCollectionCell.swift; path = ../../../../../Desktop/DummyCollectionCell.swift; sourceTree = "<group>"; };
 		60C289B22BEDC56400213AAD /* PrivacyChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyChecker.swift; sourceTree = "<group>"; };
+		60C289B42BEE086500213AAD /* UnderlinieSegmentControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnderlinieSegmentControl.swift; sourceTree = "<group>"; };
 		60D9878D2AE8BBA20049CE05 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		60D9878F2AEA731C0049CE05 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		60D987912AEA781D0049CE05 /* TabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarCoordinator.swift; sourceTree = "<group>"; };
@@ -450,6 +452,7 @@
 			isa = PBXGroup;
 			children = (
 				60A380042B6A37D800C9A2E6 /* Custom.swift */,
+				60C289B42BEE086500213AAD /* UnderlinieSegmentControl.swift */,
 				607ABE4F2B9824B400C3FCCF /* ViewController+.swift */,
 				609C063E2BAAD7A400D61F53 /* UILabel+.swift */,
 				609C06402BAAEA7400D61F53 /* TapGesture+.swift */,
@@ -845,6 +848,7 @@
 				60A380162B6D27D400C9A2E6 /* EditIngredientsVM.swift in Sources */,
 				60A380182B6D2DA600C9A2E6 /* EditIngredientsCell.swift in Sources */,
 				60BC98EA2B0B501E0013FAD9 /* ExerciseDetailVC.swift in Sources */,
+				60C289B52BEE086500213AAD /* UnderlinieSegmentControl.swift in Sources */,
 				60EAFE0C2BC4357600D3EE73 /* UpdateFeedVC.swift in Sources */,
 				60C289B12BED212C00213AAD /* DummyCollectionCell.swift in Sources */,
 				609C06372BA9A0B700D61F53 /* CommuVC.swift in Sources */,

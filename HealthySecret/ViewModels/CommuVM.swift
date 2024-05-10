@@ -29,6 +29,7 @@ class CommuVM : ViewModel {
         let paging : Observable<Bool>
         let profileTapped : Observable<String>
         let refreshControl : Observable<Void>
+        let segmentChanged : Observable<Bool>
         
         
     }
@@ -70,6 +71,30 @@ class CommuVM : ViewModel {
         
         
         let output = Output()
+        
+        input.segmentChanged.subscribe(onNext: {[weak self]  event in
+            var count = 4
+        
+            if let cnt = self?.feedModels.count {
+                if(cnt != 0 ){
+                    count = cnt
+                }
+            }
+            
+            self?.resetFirebaseValue()
+
+            if(event) {
+                
+                self?.reload.onNext(count)
+                
+            }else{
+                
+                self?.reload.onNext(count)
+                
+            }
+            
+            
+        }).disposed(by: disposeBag)
         
         input.refreshControl.subscribe(onNext: { [weak self] _  in
             
@@ -224,7 +249,7 @@ class CommuVM : ViewModel {
             
            // guard let block : [String] = UserDefaults.standard.stringArray(forKey: "block") else { return }
             
-            self.firebaseService.getFeedPagination(feeds: self.feedModels, pagesCount: count , block: [] ).subscribe({ event in
+            self.firebaseService.getFeedPagination(feeds: self.feedModels, pagesCount: count , block: ["MYiAxabIoKZyawAd7owfN247FV23" , "kLKq98RHJbRgJMbAzZa5CKFlVSa2"] ).subscribe({ event in
                 switch(event){
                     
                     

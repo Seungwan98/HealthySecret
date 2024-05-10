@@ -41,7 +41,7 @@ class ChangeIntroduceVC : UIViewController {
     private let profileImageView : UIImageView = {
        let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 60
+        view.layer.cornerRadius = 50
         view.layer.masksToBounds = true
 
         view.tintColor = .white
@@ -406,17 +406,15 @@ class ChangeIntroduceVC : UIViewController {
                         
                     }
                     
-                    self.profileImageView.layer.cornerRadius = 50
 
+                }else{
+                    
+                    
+                    
+                    self.profileImageView.image = UIImage(named: "일반적.png")
                 }
-
-
-                self.profileImageView.layer.cornerRadius = 0
-
-                self.profileImageView.image = UIImage(named: "일반적.png")
                 
             }else{
-                self.profileImageView.layer.cornerRadius = 0
 
                 self.profileImageView.image = UIImage(named: "일반적.png")
                 
