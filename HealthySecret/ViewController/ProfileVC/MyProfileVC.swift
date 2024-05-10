@@ -256,6 +256,10 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     
     func setUI(){
         
+        self.view.backgroundColor = .white
+
+        
+        
         self.backgroundView.translatesAutoresizingMaskIntoConstraints = false
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         self.leftBarImage.translatesAutoresizingMaskIntoConstraints = false

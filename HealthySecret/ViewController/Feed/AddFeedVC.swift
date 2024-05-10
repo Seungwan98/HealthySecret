@@ -303,17 +303,21 @@ class AddFeedVC : UIViewController {
     }
 
     
-    
+    let mainView = UIView()
+
     func setUI(){
         
-        
+        self.view.backgroundColor = .white
+
         
         
         imageScrollView.translatesAutoresizingMaskIntoConstraints = false
-        
+        mainView.translatesAutoresizingMaskIntoConstraints = false
+        mainView.backgroundColor = .white
 
-        self.view.addSubview(contentScrollView)
-        self.view.addSubview(bottomView)
+        self.view.addSubview(mainView)
+        self.mainView.addSubview(contentScrollView)
+        self.mainView.addSubview(bottomView)
         
         self.contentScrollView.addSubview(contentView)
         
@@ -339,9 +343,14 @@ class AddFeedVC : UIViewController {
         
         NSLayoutConstraint.activate([
             
-            bottomView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            bottomView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            bottomView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            mainView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            mainView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            mainView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            mainView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            
+            bottomView.leadingAnchor.constraint(equalTo: self.mainView.leadingAnchor),
+            bottomView.trailingAnchor.constraint(equalTo: self.mainView.trailingAnchor),
+            bottomView.bottomAnchor.constraint(equalTo: self.mainView.bottomAnchor),
             bottomView.heightAnchor.constraint(equalToConstant: 100),
             
             
@@ -352,10 +361,10 @@ class AddFeedVC : UIViewController {
             addButton.heightAnchor.constraint(equalToConstant: 60),
             addButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
         
-            contentScrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            contentScrollView.topAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.topAnchor),
             contentScrollView.bottomAnchor.constraint(equalTo: bottomView.topAnchor),
-            contentScrollView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            contentScrollView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            contentScrollView.leadingAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.leadingAnchor),
+            contentScrollView.trailingAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.trailingAnchor),
             
             
             contentView.topAnchor.constraint(equalTo: self.contentScrollView.topAnchor),
@@ -451,21 +460,17 @@ extension AddFeedVC : UIImagePickerControllerDelegate , UINavigationControllerDe
     
     func actionSheetAlert(){
         
+        let privacyChecker = PrivacyChecker(viewController: self)
+        
         let alert = UIAlertController(title: "선택", message: "", preferredStyle: .actionSheet)
         
         let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-//        let replaceImage = UIAlertAction(title: "삭제" , style: .default ){
-//            [weak self] _ in
-//            self?.profileImageView.image = self?.profileImage
-//            self?.profileImageView.layer.cornerRadius = 0
-//            self?.imageOutput.onNext(nil)
-//
-//        }
+
         let camera = UIAlertAction(title: "카메라", style: .default) { [weak self] (_) in
-            self?.presentCamera()
+            privacyChecker.requestCameraPermission()
         }
         let album = UIAlertAction(title: "앨범", style: .default) { [weak self] (_) in
-            self?.presentAlbum()
+            privacyChecker.requestAlbumPermission()
         }
         
         alert.addAction(cancel)
@@ -477,29 +482,7 @@ extension AddFeedVC : UIImagePickerControllerDelegate , UINavigationControllerDe
         
     }
     
-    func presentCamera(){
-        
-        let vc = UIImagePickerController()
-        vc.sourceType = .camera
-        vc.delegate = self
-        vc.allowsEditing = true
-        vc.cameraFlashMode = .on
-        
-        present(vc, animated: true, completion: nil)
-    }
-    
-    func presentAlbum(){
-        
-        
-        let vc = UIImagePickerController()
-        vc.sourceType = .photoLibrary
-        vc.delegate = self
-        vc.allowsEditing = true
-        
-        present(vc, animated: true, completion: nil)
-    }
-    
-    
+   
    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         print("picker -> \(String(describing: info[UIImagePickerController.InfoKey.imageURL]))")

@@ -10,6 +10,8 @@ import RxCocoa
 import RxSwift
 import RxGesture
 import Kingfisher
+import AVFoundation
+import Photos
 
 class UpdateFeedVC : UIViewController {
     
@@ -321,8 +323,7 @@ class UpdateFeedVC : UIViewController {
     func setUI(){
         
         
-        
-        
+        self.view.backgroundColor = .white
         imageScrollView.translatesAutoresizingMaskIntoConstraints = false
         
 
@@ -506,17 +507,24 @@ class UpdateFeedVC : UIViewController {
 
 extension UpdateFeedVC : UIImagePickerControllerDelegate , UINavigationControllerDelegate{
     
+  
+    
+ 
+  
+    
     func actionSheetAlert(){
+        var PrivacyChecker = PrivacyChecker(viewController: self)
+
         
         let alert = UIAlertController(title: "선택", message: "", preferredStyle: .actionSheet)
         
         let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
 
         let camera = UIAlertAction(title: "카메라", style: .default) { [weak self] (_) in
-            self?.presentCamera()
+            PrivacyChecker.requestCameraPermission()
         }
         let album = UIAlertAction(title: "앨범", style: .default) { [weak self] (_) in
-            self?.presentAlbum()
+            PrivacyChecker.requestAlbumPermission()
         }
         
         alert.addAction(cancel)
@@ -528,65 +536,44 @@ extension UpdateFeedVC : UIImagePickerControllerDelegate , UINavigationControlle
         
     }
     
-    func presentCamera(){
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]){
+         
+         
+         
+         var newImage: UIImage? = nil // update 할 이미지
+                
+                if let possibleImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
+                    newImage = possibleImage // 수정된 이미지가 있을 경우
+                } else if let possibleImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+                    newImage = possibleImage // 원본 이미지가 있을 경우
+                }
+         
         
-        let vc = UIImagePickerController()
-        vc.sourceType = .camera
-        vc.delegate = self
-        vc.allowsEditing = true
-        vc.cameraFlashMode = .on
-        
-        present(vc, animated: true, completion: nil)
-    }
-    
-    func presentAlbum(){
-        
-        
-        let vc = UIImagePickerController()
-        vc.sourceType = .photoLibrary
-        vc.delegate = self
-        vc.allowsEditing = true
-        
-        present(vc, animated: true, completion: nil)
-    }
-    
-    
-   
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        print("picker -> \(String(describing: info[UIImagePickerController.InfoKey.imageURL]))")
-        
-        
-        
-        var newImage: UIImage? = nil // update 할 이미지
-               
-               if let possibleImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
-                   newImage = possibleImage // 수정된 이미지가 있을 경우
-               } else if let possibleImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-                   newImage = possibleImage // 원본 이미지가 있을 경우
-               }
-        
-       
 
-        guard let newImage = newImage else {return}
-        
-        
-        
-        
- 
-        
-        
-        self.beforeArr.append(nil)
-        self.imagesArr.append(newImage)
-        
-        self.settingStackView()
-        
-        dismiss(animated: true, completion: nil)
+         guard let newImage = newImage else {return}
+         
 
-    }
+         
+  
+         
+
+         self.beforeArr.append(nil)
+         self.imagesArr.append(newImage)
+
+         self.settingStackView()
+        
+        self.dismiss(animated: true, completion: nil)
+
+         
+
+     }
+     
+     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+         dismiss(animated: true, completion: nil)
+     }
+  
     
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
-    }
+  
     
 }
 

@@ -174,7 +174,7 @@ class ExerciseDetailVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
 
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
 
         self.navigationController?.view.backgroundColor = .white
         
@@ -243,6 +243,7 @@ class ExerciseDetailVC: UIViewController {
     
     func addSubView(){
         
+        self.view.backgroundColor = .white
         
         self.view.addSubview(contentScrollView)
         self.view.addSubview(bottomView)

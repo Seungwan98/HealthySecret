@@ -59,6 +59,9 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
    
     
     func start() {
+        
+       
+        
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         

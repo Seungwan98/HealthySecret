@@ -128,7 +128,7 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addSubView()
+        setUI()
         
         setBinds()
     }
@@ -222,7 +222,9 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
     }
     let mainView = UIView()
     
-    func addSubView(){
+    func setUI(){
+        
+        self.view.backgroundColor = .white
         
         self.addButton.translatesAutoresizingMaskIntoConstraints = false
         self.edmitButton.translatesAutoresizingMaskIntoConstraints = false

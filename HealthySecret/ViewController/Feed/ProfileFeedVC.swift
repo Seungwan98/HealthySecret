@@ -536,7 +536,7 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
     private func setUI() {
         
         
-        
+        self.view.backgroundColor = .white
         
         likesButton.addTarget(self, action: #selector(didPressedHeart), for: .touchUpInside)
    

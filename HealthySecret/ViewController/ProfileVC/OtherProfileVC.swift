@@ -178,6 +178,8 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     }
     
     func setUI(){
+        
+        self.view.backgroundColor = .white
         self.loadingView.translatesAutoresizingMaskIntoConstraints = false
         
         

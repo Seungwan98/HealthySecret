@@ -158,6 +158,8 @@ class SettingVC : UIViewController {
     
     func setUI(){
         
+        self.view.backgroundColor = .white
+        
         self.view.addSubview(contentScrollView)
 
         self.contentScrollView.addSubview(contentView)

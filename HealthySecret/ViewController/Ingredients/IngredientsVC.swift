@@ -107,7 +107,7 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
     override func viewDidLoad(){
         super.viewDidLoad()
         
-        self.makeView()
+        self.setUI()
         self.setupSearchController()
         self.setBind()
 
@@ -177,7 +177,7 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
     
     
     let mainView = UIView()
-    func makeView(){
+    func setUI(){
         
         self.tableView.backgroundView = backgroundView
         

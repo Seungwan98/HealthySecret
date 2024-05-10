@@ -2,16 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSMotionUsageDescription</key>
-	<string>걸음 수 데이터 측정을 위해 데이터 접근 권한이 필요합니다.</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string>&apos;Healthy Secret&apos; (이)가 사용자의 건강 데이터에 접근하여 업데이트하려고 합니다.</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>&apos;Healthy Secret&apos; (이)가 사용자의 건강 데이터에 접근하여 업데이트하려고 합니다.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Please allow access to select a photo</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Please allow to use Camera</string>
+	<string>A message that tells the user why the app is requesting access to the device’s camera.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>A message that tells the user why the app is requesting access to the device’s photo Library.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

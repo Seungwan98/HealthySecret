@@ -71,7 +71,6 @@
 		609C063D2BAA9D0700D61F53 /* FeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609C063C2BAA9D0700D61F53 /* FeedModel.swift */; };
 		609C063F2BAAD7A400D61F53 /* UILabel+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609C063E2BAAD7A400D61F53 /* UILabel+.swift */; };
 		609C06412BAAEA7400D61F53 /* TapGesture+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609C06402BAAEA7400D61F53 /* TapGesture+.swift */; };
-		609C06432BBA8C5200D61F53 /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609C06422BBA8C5200D61F53 /* FeedVC.swift */; };
 		609C06452BBA9E8500D61F53 /* AddFeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609C06442BBA9E8500D61F53 /* AddFeedVC.swift */; };
 		609C06472BBB33AB00D61F53 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609C06462BBB33AB00D61F53 /* LoadingIndicator.swift */; };
 		609C06492BBD733500D61F53 /* AddFeedVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609C06482BBD733500D61F53 /* AddFeedVM.swift */; };
@@ -121,6 +120,7 @@
 		60C289AB2BEC8AF000213AAD /* 일반적.png in Resources */ = {isa = PBXBuildFile; fileRef = 60C289AA2BEC8AEF00213AAD /* 일반적.png */; };
 		60C289AD2BECACE100213AAD /* UIResponder+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C289AC2BECACE100213AAD /* UIResponder+.swift */; };
 		60C289B12BED212C00213AAD /* DummyCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C289B02BED212C00213AAD /* DummyCollectionCell.swift */; };
+		60C289B32BEDC56400213AAD /* PrivacyChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C289B22BEDC56400213AAD /* PrivacyChecker.swift */; };
 		60D9878E2AE8BBA20049CE05 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D9878D2AE8BBA20049CE05 /* Coordinator.swift */; };
 		60D987902AEA731C0049CE05 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D9878F2AEA731C0049CE05 /* LoginVC.swift */; };
 		60D987922AEA781D0049CE05 /* TabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D987912AEA781D0049CE05 /* TabBarCoordinator.swift */; };
@@ -220,7 +220,6 @@
 		609C063C2BAA9D0700D61F53 /* FeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedModel.swift; sourceTree = "<group>"; };
 		609C063E2BAAD7A400D61F53 /* UILabel+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+.swift"; sourceTree = "<group>"; };
 		609C06402BAAEA7400D61F53 /* TapGesture+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TapGesture+.swift"; sourceTree = "<group>"; };
-		609C06422BBA8C5200D61F53 /* FeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVC.swift; sourceTree = "<group>"; };
 		609C06442BBA9E8500D61F53 /* AddFeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFeedVC.swift; sourceTree = "<group>"; };
 		609C06462BBB33AB00D61F53 /* LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
 		609C06482BBD733500D61F53 /* AddFeedVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFeedVM.swift; sourceTree = "<group>"; };
@@ -267,6 +266,7 @@
 		60C289AA2BEC8AEF00213AAD /* 일반적.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "일반적.png"; path = "../../../../../../Downloads/일반적.png"; sourceTree = "<group>"; };
 		60C289AC2BECACE100213AAD /* UIResponder+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIResponder+.swift"; sourceTree = "<group>"; };
 		60C289B02BED212C00213AAD /* DummyCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DummyCollectionCell.swift; path = ../../../../../Desktop/DummyCollectionCell.swift; sourceTree = "<group>"; };
+		60C289B22BEDC56400213AAD /* PrivacyChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyChecker.swift; sourceTree = "<group>"; };
 		60D9878D2AE8BBA20049CE05 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		60D9878F2AEA731C0049CE05 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		60D987912AEA781D0049CE05 /* TabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarCoordinator.swift; sourceTree = "<group>"; };
@@ -458,6 +458,7 @@
 				60EAFE0F2BC5544D00D3EE73 /* DispatchQueue+.swift */,
 				60EF3C9E2BEA2BD10007862F /* CustomBackgroundView.swift */,
 				60C289AC2BECACE100213AAD /* UIResponder+.swift */,
+				60C289B22BEDC56400213AAD /* PrivacyChecker.swift */,
 			);
 			path = Customs;
 			sourceTree = "<group>";
@@ -600,7 +601,6 @@
 			children = (
 				609C06362BA9A0B700D61F53 /* CommuVC.swift */,
 				6093BC0A2BD823EB00D3BE3C /* ProfileFeedVC.swift */,
-				609C06422BBA8C5200D61F53 /* FeedVC.swift */,
 				60EF3C922BE0C7220007862F /* FollowsVC.swift */,
 				60EAFE0B2BC4357600D3EE73 /* UpdateFeedVC.swift */,
 				609C064A2BBE9C2400D61F53 /* ComentsVC.swift */,
@@ -873,7 +873,6 @@
 				609C062F2B9ABC0D00D61F53 /* RunCoordinator.swift in Sources */,
 				60BC98F92B2728C40013FAD9 /* DiaryVC.swift in Sources */,
 				60A380052B6A37D800C9A2E6 /* Custom.swift in Sources */,
-				609C06432BBA8C5200D61F53 /* FeedVC.swift in Sources */,
 				606343C72B8E34CD0084E2CC /* ChangeIntroduceVC.swift in Sources */,
 				6052D5C52BEBF1410085B826 /* DiaryCoordinator.swift in Sources */,
 				600DE9782B62A12000D5D797 /* ExerciseCoordinator.swift in Sources */,
@@ -886,6 +885,7 @@
 				60BC98E52B0361950013FAD9 /* IngredientsCoordinator.swift in Sources */,
 				60BC98F32B1867BB0013FAD9 /* ViewModel.swift in Sources */,
 				6094C54D2ACEBDF300D62B0A /* IngredientsVC.swift in Sources */,
+				60C289B32BEDC56400213AAD /* PrivacyChecker.swift in Sources */,
 				600DE9332B55802A00D5D797 /* SignUpVM.swift in Sources */,
 				606343C12B8CCB290084E2CC /* MyProfileVM.swift in Sources */,
 				60BC98E12B0284810013FAD9 /* SceneDelegate.swift in Sources */,

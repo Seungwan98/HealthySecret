@@ -187,7 +187,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
 
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .systemBlue.withAlphaComponent(0.5)
         
 
@@ -205,6 +205,8 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     
     
     func addSubView(){
+        
+        self.view.backgroundColor = .white
         
         self.addButton.translatesAutoresizingMaskIntoConstraints = false
         self.edmitButton.translatesAutoresizingMaskIntoConstraints = false

@@ -187,6 +187,8 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
     
     func setUI(){
         
+        self.view.backgroundColor = .white
+        
         self.loadingView.translatesAutoresizingMaskIntoConstraints = false
         
         self.segmentControl.addTarget(self, action: #selector(didChangeValue(segment: )), for: .valueChanged )

@@ -353,7 +353,7 @@ class IngredientsDetailVC: UIViewController {
 
         self.navigationController?.navigationBar.backgroundColor = UIColor.brown.withAlphaComponent(0.5)
         
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         
         
         

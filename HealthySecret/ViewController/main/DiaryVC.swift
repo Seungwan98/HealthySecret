@@ -11,7 +11,8 @@ import RxSwift
 import SwiftUI
 import RxCocoa
 import RxGesture
-
+import AVFoundation
+import Photos
 class DiaryViewController : UIViewController {
     
     let viewModel : DiaryVM?
@@ -572,15 +573,9 @@ class DiaryViewController : UIViewController {
         
     }()
     
-    
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
+  
         
         addSubView()
         
@@ -607,7 +602,7 @@ class DiaryViewController : UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         
         self.navigationController?.navigationBar.backgroundColor = .clear
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         
         
         
