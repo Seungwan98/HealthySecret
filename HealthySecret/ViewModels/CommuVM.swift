@@ -45,11 +45,13 @@ class CommuVM : ViewModel {
         
     }
     
-    private let paginationCount = 4
+    var getFollow : Bool = false
     
     var likesCount : [ String : [ String ] ] = [:]
     
     var feedModels = [FeedModel]()
+    
+    var follow : [String] = []
     
     weak var coordinator : CommuCoordinator?
     
@@ -72,7 +74,7 @@ class CommuVM : ViewModel {
         
         let output = Output()
         
-        input.segmentChanged.subscribe(onNext: {[weak self]  event in
+        input.segmentChanged.subscribe(onNext: { [weak self]  event in
             var count = 4
         
             if let cnt = self?.feedModels.count {
@@ -82,16 +84,10 @@ class CommuVM : ViewModel {
             }
             
             self?.resetFirebaseValue()
+            
+            self?.getFollow = !event
 
-            if(event) {
-                
-                self?.reload.onNext(count)
-                
-            }else{
-                
-                self?.reload.onNext(count)
-                
-            }
+            self?.reload.onNext(count)
             
             
         }).disposed(by: disposeBag)
@@ -228,17 +224,32 @@ class CommuVM : ViewModel {
         
         
         input.viewWillAppearEvent.subscribe(onNext: { [weak self] _ in
-            var count = 4
-        
-            if let cnt = self?.feedModels.count {
-                if(cnt != 0 ){
-                    count = cnt
+            
+            self?.firebaseService.getDocument(key: authUid).subscribe({ event in
+                switch(event){
+                case.success(let user):
+                    self?.follow = user.followings ?? []
+                    var count = 4
+                
+                    if let cnt = self?.feedModels.count {
+                        if(cnt != 0 ){
+                            count = cnt
+                        }
+                    }
+                    
+                    self?.resetFirebaseValue()
+                    
+                    self?.reload.onNext(count)
+                case .failure(let err):
+                    print("err \(err)")
                 }
-            }
+                
+                
+            }).disposed(by: disposeBag)
             
-            self?.resetFirebaseValue()
             
-            self?.reload.onNext(count)
+            
+           
             
             
             
@@ -247,59 +258,112 @@ class CommuVM : ViewModel {
         
         self.reload.subscribe(onNext: { [self] count in
             
-           // guard let block : [String] = UserDefaults.standard.stringArray(forKey: "block") else { return }
             
-            self.firebaseService.getFeedPagination(feeds: self.feedModels, pagesCount: count , block: ["MYiAxabIoKZyawAd7owfN247FV23" , "kLKq98RHJbRgJMbAzZa5CKFlVSa2"] ).subscribe({ event in
-                switch(event){
+                
+            self.firebaseService.getFeedPagination(feeds: self.feedModels, pagesCount: count , follow: self.follow , getFollow : getFollow , followCount: 0 ).subscribe({ event in
                     
-                    
-                case(.success(let feeds)):
-                    
-                    
-                    self.feedModels = feeds
-                    
-                    for i in feeds{
-                        print("nickname \(i.nickname)")
-                    }
-                    
-
-
-                    for i in 0..<feeds.count {
+                    switch(event){
                         
-                        self.likesCount[feeds[i].feedUid ] = feeds[i].likes
-                    }
-                    
-                    if(feeds.count < 2){
+                    case.success(let feeds):
                         
+                        
+                        
+                        self.feedModels = feeds
+                        
+                        for i in 0..<feeds.count {
+                            
+                            self.likesCount[feeds[i].feedUid ] = feeds[i].likes
+                            
+                        }
+                        
+                       // if(feeds.count < 2){
+                            
+                        //    output.isLastPage.onNext(true)
+                            
+                      //  }else{
+                            
+                            output.isLastPage.onNext(false)
+                            
+                       // }
+                        
+                        
+                        
+                        
+                        output.feedModel.onNext(self.feedModels)
+                        output.likesCount.onNext(self.likesCount)
+                        output.isPaging.onNext(false)
+                        output.endRefreshing.onNext(true)
+                        
+                        
+                    case .failure(let err):
+                        print("fail")
+                        output.isPaging.onNext(false)
                         output.isLastPage.onNext(true)
-                        
-                    }else{
-                        
-                        output.isLastPage.onNext(false)
+                        output.feedModel.onNext(self.feedModels)
+                        output.likesCount.onNext(self.likesCount)
+                        output.endRefreshing.onNext(true)
+
 
                     }
                     
                     
                     
-                    output.feedModel.onNext(self.feedModels)
-                    output.likesCount.onNext(self.likesCount)
-                    output.isPaging.onNext(false)
-                    output.endRefreshing.onNext(true)
-                    
-                        
-                case .failure(_):
-                    break
-                }
+                }).disposed(by: disposeBag)
                 
-                
-                
-            }).disposed(by: disposeBag)
+            
+        
+            
+            
+//            self.firebaseService.getFeedPagination(feeds: self.feedModels, pagesCount: count , block: [] ).subscribe({ event in
+//                switch(event){
+//                    
+//                    
+//                case(.success(let feeds)):
+//                    
+//                    
+//                    self.feedModels = feeds
+//                    
+//               
+//                    
+//
+//
+//                    for i in 0..<feeds.count {
+//                        
+//                        self.likesCount[feeds[i].feedUid ] = feeds[i].likes
+//                    }
+//                    
+//                    if(feeds.count < 2){
+//                        
+//                        output.isLastPage.onNext(true)
+//                        
+//                    }else{
+//                        
+//                        output.isLastPage.onNext(false)
+//
+//                    }
+//                    
+//                    
+//                    
+//                    output.feedModel.onNext(self.feedModels)
+//                    output.likesCount.onNext(self.likesCount)
+//                    output.isPaging.onNext(false)
+//                    output.endRefreshing.onNext(true)
+//                    
+//                        
+//                case .failure(_):
+//                    break
+//                }
+//                
+//                
+//                
+//            }).disposed(by: disposeBag)
             
             
             
         }).disposed(by: disposeBag)
         
         input.paging.subscribe(onNext:{ [weak self] event in
+            
             
             if(event){
 
@@ -411,6 +475,7 @@ class CommuVM : ViewModel {
     
     
     func resetFirebaseValue(){
+        
         self.feedModels = []
         self.firebaseService.query = nil
     }

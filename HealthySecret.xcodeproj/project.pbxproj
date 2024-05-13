@@ -364,7 +364,7 @@
 			path = ProfileVC;
 			sourceTree = "<group>";
 		};
-		608DF9702AD567C500DD27DB /* ViewController */ = {
+		608DF9702AD567C500DD27DB /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
 				6052D5C32BEBEDFC0085B826 /* main */,
@@ -374,7 +374,7 @@
 				606343CA2B8F344E0084E2CC /* ProfileVC */,
 				606343BC2B84E7DD0084E2CC /* Login */,
 			);
-			path = ViewController;
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		608DF9712AD575F100DD27DB /* Model */ = {
@@ -438,7 +438,7 @@
 				608DF9712AD575F100DD27DB /* Model */,
 				60D9878C2AE8B2540049CE05 /* Coordinator */,
 				60BC98EB2B0B68140013FAD9 /* ViewModels */,
-				608DF9702AD567C500DD27DB /* ViewController */,
+				608DF9702AD567C500DD27DB /* ViewControllers */,
 				6094C5412ACD915300D62B0A /* Assets.xcassets */,
 				6094C5432ACD915300D62B0A /* LaunchScreen.storyboard */,
 				60050C6E2AF8E399000FAAA4 /* GoogleService-Info.plist */,

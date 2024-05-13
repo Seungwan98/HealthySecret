@@ -393,7 +393,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     
     
     @objc private func didChangeValue(segment: UISegmentedControl) {
-        print(segment.selectedSegmentIndex)
+        print("didchangeValue")
             
             self.segmentChanged.onNext(segmentControl.selectedSegmentIndex == 0)
 

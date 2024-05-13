@@ -1222,6 +1222,7 @@ extension FirebaseService {
     }
     
     
+    
     func getAllFeeds() -> Single<[FeedModel]>{
         return Single.create{ single in
             
@@ -1230,19 +1231,22 @@ extension FirebaseService {
             
             self.db.collection("HealthySecretFeed").order(by: "date" , descending: true ).getDocuments() { (querySnapshot, err) in
                 if let err = err {
+                    
                     print("Error getting documents: \(err)")
                     single(.failure(err))
+                    
                 } else {
                     
                     for doc in querySnapshot!.documents {
                         
                         
-                        
                         do {
+                            
                             let jsonData = try JSONSerialization.data(withJSONObject: doc.data(), options: [])
                             let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
                             
                             feedModels.append(feed)
+                            
                             
                         } catch let error {
                             print("Error json parsing \(error)")
@@ -1265,30 +1269,27 @@ extension FirebaseService {
     
     
     
-    func getFeedPagination(feeds:[FeedModel] , pagesCount : Int , block : [String]) -> Single<[FeedModel]> {
+    
+  
+    
+    
+    func getFeedPagination(feeds:[FeedModel] , pagesCount : Int , follow : [String] , getFollow : Bool , followCount : Int) -> Single<[FeedModel]> {
         return Single<[FeedModel]>.create { [weak self] single in
-            var outputFeeds : [FeedModel] = []
-            var newFeeds : [FeedModel] = feeds
             
+            var newFeeds : [FeedModel] = []
+            let lastFeeds : [FeedModel] = feeds
+            var followCount = followCount
             
-            
-            print("getFeedPagination block \(block)")
+            print("getFeedPagination")
             if let query = self?.query {
                 //There is last query
                 self?.requestQuery = query
             } else {
                 
-                if(true){
-                    //follow
-                    self?.requestQuery = self?.db.collection("HealthySecretFeed").whereField("uuid", isEqualTo: block )
-                        .order(by: "date" , descending: true )
-                        .limit(to: pagesCount)
-                }else{
-                    self?.requestQuery = self?.db.collection("HealthySecretFeed").order(by: "date" , descending: true )
-                        .limit(to: pagesCount)
-                }
-                
-               
+                //It's First query request
+                self?.requestQuery = self?.db.collection("HealthySecretFeed")
+                    .order(by: "date" , descending: true )
+                    .limit(to: pagesCount)
             }
             
             self?.requestQuery?.getDocuments{ [weak self] (snapshot, error) in
@@ -1296,116 +1297,149 @@ extension FirebaseService {
                 
                 guard let snapshot = snapshot,
                       let lastDocument = snapshot.documents.last else {
-                    //return
+                    
+                    single(.failure(CustomError.isNil))
+
                     return
                 }
                 
-                var next : Query?
-                
-                if(true){
-                    let next = self.db.collection("HealthySecretFeed").whereField("uuid", isNotEqualTo: block )
-                        .order(by: "date" , descending: true)
-                        .limit(to: pagesCount)
-                        .start(afterDocument: lastDocument)
-                }else{
-                    let next = self.db.collection("HealthySecretFeed").order(by: "date" , descending: true)
-                        .limit(to: pagesCount)
-                        .start(afterDocument: lastDocument)
-                    
-                }
-        
+                let next = self.db.collection("HealthySecretFeed")
+                    .order(by: "date" , descending: true)
+                    .limit(to: pagesCount)
+                    .start(afterDocument: lastDocument)
                 
                 //Set next query
                 self.query = next
                 
-                var arr : [Observable<UserModel>] = []
+                
+                
                 
                 _ = snapshot.documents.map({ document in
                     
                     do {
                         let feedModel = try document.data(as: FeedModel.self)
                         
-                        outputFeeds.append(feedModel)
-                        
+                        if(getFollow){
+                            
+                            if(follow.contains(feedModel.uuid)) {
+                                newFeeds.append(feedModel)
+                                followCount += 1
+                            }
+                        }else{
+                            newFeeds.append(feedModel)
+                        }
                         
                     } catch {
+                        
                         single(.failure(CustomError.isNil))
                     }
                 })
                 
-                
-                
-                
-                
                 var idx = 0
+                var totalFeeds = lastFeeds + newFeeds
                 
                 
-                
-                
-                
-                
-                
-                //                Observable.concat(arr)
-                //                    .flatMap { value -> Observable<Int> in
-                //                        // 결과를 배열에 저장
-                //
-                //                        print("\(i)  index")
-                //                        outputFeeds[i].profileImage = value.profileImage
-                //                        outputFeeds[i].nickname = value.name
-                //
-                //                        newFeeds.append(outputFeeds[idx])
-                //
-                //                        idx += 1
-                //                        // Observable.empty()를 반환하여 값을 무시하고 계속 진행
-                //                        return Observable.empty()
-                //                    }
-                //                    .subscribe(onCompleted: {
-                //
-                //                        single(.success(newFeeds))
-                //
-                //                    })
-                //                    .disposed(by: disposeBag)
-                //
-                
-                
-                
-                for i in 0..<outputFeeds.count{
-                    
-                    
-                    
-                    
-                    self.getDocument(key: outputFeeds[i].uuid).subscribe({ event in
-                        print("getDoc")
+                if(followCount < 4 && getFollow ) {
+                    getFeedPagination(feeds: totalFeeds , pagesCount: 4, follow: follow , getFollow: getFollow , followCount: followCount ).subscribe({ event in
                         switch(event){
-                        case.success(let user):
                             
-                            outputFeeds[i].profileImage = user.profileImage
-                            outputFeeds[i].nickname = user.name
+                        case.success(let feeds):
                             
-                            
-                            if( idx+1 >= outputFeeds.count){
+                            print("success")
+
+                            single(.success(feeds))
+                        case.failure(let err):
+                            if(err as! CustomError == CustomError.isNil){
                                 
-                                for i in outputFeeds {
-                                    newFeeds.append(i)
+                                if(totalFeeds.count == 0 ){
+                                    single(.failure(CustomError.isNil))
                                 }
-                                single(.success(newFeeds))
                                 
+                                for i in 0..<totalFeeds.count{
+                                    
+                                    
+                                    
+                                    
+                                    self.getDocument(key: totalFeeds[i].uuid).subscribe({ event in
+                                        print("getDoc")
+                                        switch(event){
+                                        case.success(let user):
+                                            
+                                            totalFeeds[i].profileImage = user.profileImage
+                                            totalFeeds[i].nickname = user.name
+                                            
+                                            
+                                            if( idx+1 >= totalFeeds.count){
+                                                
+                                               
+                                                single(.success(totalFeeds))
+                                                
+                                                
+                                            }else{
+                                                idx += 1
+                                            }
+                                            
+                                            
+                                            
+                                        case .failure(let err):
+                                            print(err)
+                                        }
+                                        
+                                        
+                                    }).disposed(by: self.disposeBag )
+                                    
+                                    
+                                }
                                 
-                            }else{
-                                idx += 1
                             }
-                            
-                            
-                            
-                        case .failure(let err):
-                            print(err)
                         }
                         
                         
-                    }).disposed(by: disposeBag )
+                    }).disposed(by: disposeBag)
                     
+                }else{
+                    
+                    print("else")
+                    
+                    for i in 0..<totalFeeds.count{
+                        
+                        
+                        
+                        
+                        self.getDocument(key: totalFeeds[i].uuid).subscribe({ event in
+                            print("getDoc")
+                            switch(event){
+                            case.success(let user):
+                                
+                                totalFeeds[i].profileImage = user.profileImage
+                                totalFeeds[i].nickname = user.name
+                                
+                                
+                                if( idx+1 >= totalFeeds.count){
+                                    
+                                   
+                                    single(.success(totalFeeds))
+                                    
+                                    
+                                }else{
+                                    idx += 1
+                                }
+                                
+                                
+                                
+                            case .failure(let err):
+                                print(err)
+                            }
+                            
+                            
+                        }).disposed(by: disposeBag )
+                        
+                        
+                    }
                     
                 }
+                
+                
                 
                 
                 
@@ -1418,6 +1452,10 @@ extension FirebaseService {
         }
         
     }
+    
+    
+    
+    
     
     func getFeedFeedUid(feedUid : String) -> Single<FeedModel>{
         return Single.create { single in

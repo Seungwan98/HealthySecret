@@ -49,7 +49,7 @@ struct CustomFormatter {
     
     var formatterForFeed : DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         return formatter
         
     }()
