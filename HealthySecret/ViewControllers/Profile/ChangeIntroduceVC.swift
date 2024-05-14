@@ -641,8 +641,22 @@ extension ChangeIntroduceVC : UITextViewDelegate {
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-       
+        
+        if textView.text.count <= 0 {
+            
+            textView.textColor = .lightGray
+            textView.text = "내 소개를 입력하여 주세요."
+
+            
+        }else if(textView.text == "내 소개를 입력하여 주세요." && textView.textColor == .lightGray){
+            textView.text = ""
             textView.textColor = .black
+            
+        }else{
+            textView.textColor = .black
+
+        }
+       
 
         
     }

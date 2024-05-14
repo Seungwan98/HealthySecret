@@ -164,7 +164,13 @@ class ProfileCoordinator : Coordinator {
         coordinator.startPush(follow: follow , uid : uid, name: name  )
         
     }
-   
+    
+    func refreshChild() {
+        
+        self.childCoordinator = []
+
+    }
+    
     
     
     

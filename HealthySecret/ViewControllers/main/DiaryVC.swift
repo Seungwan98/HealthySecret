@@ -576,8 +576,8 @@ class DiaryViewController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
   
-        
-        addSubView()
+            
+        setUI()
         
         setBinds()
         
@@ -600,6 +600,8 @@ class DiaryViewController : UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        
         
         self.navigationController?.navigationBar.backgroundColor = .clear
         self.navigationController?.setNavigationBarHidden(false, animated: false)
@@ -720,14 +722,8 @@ class DiaryViewController : UIViewController {
         
         return view
     }()
+ 
     
-    lazy var testView : UIView = {
-        let view = UIView()
-        
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red: 0.686, green: 0.776, blue: 0.627, alpha: 1)
-        return view
-    }()
     
     
     
@@ -794,7 +790,7 @@ class DiaryViewController : UIViewController {
     }
     
     
-    func addSubView(){
+    func setUI(){
         self.navigationItem.titleView = calendarLabel
         self.view.backgroundColor = .white
 
@@ -812,8 +808,6 @@ class DiaryViewController : UIViewController {
         self.contentView.addSubview(buttonView)
         self.contentView.addSubview(exerciseView)
         self.contentView.addSubview(detailButton)
-     //   self.contentView.addSubview(line)
-        self.contentView.addSubview(testView)
         self.contentView.addSubview(ingredientsStackView)
         
         self.buttonView.addSubview(buttonStackView)

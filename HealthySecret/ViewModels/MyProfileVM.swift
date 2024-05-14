@@ -243,7 +243,7 @@ class MyProfileVM : ViewModel {
         
         input.viewWillApearEvent.subscribe(onNext: { event in
             
-           
+            self.coordinator?.refreshChild()
             
 
                 if let uid = UserDefaults.standard.string(forKey: "uid"){
@@ -414,13 +414,31 @@ class MyProfileVM : ViewModel {
                 
                 self.kakaoService.kakaoLogout().subscribe{ event in
                 switch(event){
-                case.completed:   self.coordinator?.logout()
+                case.completed:   
+                    print("completedkakao")
+                    
 
-                case.error(let err):
-                    print(err)
+                case.error(let err): 
+                    print("kako err")
+                    
+                    
+                    
                     
                     
                 }
+                    
+                    self.firebaseService.signOut().subscribe({ [weak self] event in
+                        switch(event){
+                        case.completed:
+                            self?.coordinator?.logout()
+                        case.error(let err):
+                            print("signOut err")
+
+                        }
+                    
+                        
+                        
+                    }).disposed(by: disposeBag)
                 
                 
             }.disposed(by: disposeBag)

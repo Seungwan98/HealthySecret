@@ -225,6 +225,8 @@ class CommuVM : ViewModel {
         
         input.viewWillAppearEvent.subscribe(onNext: { [weak self] _ in
             
+            self?.coordinator?.refreshChild()
+            
             self?.firebaseService.getDocument(key: authUid).subscribe({ event in
                 switch(event){
                 case.success(let user):

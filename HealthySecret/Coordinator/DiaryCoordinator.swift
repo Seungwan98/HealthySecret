@@ -52,9 +52,7 @@ class DiaryCoordinator : Coordinator  {
         
     }
     
-    func pushExerciseVC() {
-       
-    }
+ 
   
     
     
@@ -64,7 +62,7 @@ class DiaryCoordinator : Coordinator  {
         let viewController = DiaryViewController(viewModel : DiaryVM ( coordinator : self , firebaseService: firebaseService ))
         
         self.navigationController.hidesBottomBarWhenPushed = false
-        self.navigationController.pushViewController( viewController , animated: true )
+        self.navigationController.pushViewController( viewController , animated: false )
     
     }
     
@@ -104,6 +102,10 @@ class DiaryCoordinator : Coordinator  {
         print("popnavigation")
         self.navigationController.popViewController(animated: false)
         
+    }
+    
+    func refreshChild(){
+        self.childCoordinator = []
     }
     
     

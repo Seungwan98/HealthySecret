@@ -110,7 +110,6 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
                     
                         
                    
-                        print("success \(uid)")
 
                         
                         

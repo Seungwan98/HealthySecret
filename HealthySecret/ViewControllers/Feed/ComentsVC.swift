@@ -139,7 +139,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
 
         
         self.backgroundView.isHidden = true
-        self.backgroundView.backgroundLabel.text = "아직 댓글이 없어요."
+        self.backgroundView.backgroundLabel.text = "아직 댓글이 없어요"
         self.backgroundView.translatesAutoresizingMaskIntoConstraints = false
         
         tableView.rx.setDelegate(self).disposed(by: disposeBag)

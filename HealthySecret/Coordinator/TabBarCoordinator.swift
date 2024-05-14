@@ -312,9 +312,15 @@ class CommuCoordinator : Coordinator  {
         
         self.navigationController.pushViewController(viewController , animated: false)
     }
+    
+   
 
   
-    
+    func refreshChild() {
+        
+        self.childCoordinator = []
+
+    }
     
     
     

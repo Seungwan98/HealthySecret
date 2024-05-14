@@ -18,6 +18,22 @@ class AddFeedVC : UIViewController {
 
     var imagesArr : [UIImage] = []
     
+    private let maxCount = 100
+    
+       private var textCount = 0 {
+           didSet { self.writeContentLabel.text = "\(textCount)/\(maxCount)" }
+       }
+    
+    lazy var writeContentLabel : UILabel = {
+        let label = UILabel()
+        label.textColor = .lightGray
+        label.text = "0/\(self.maxCount)"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+        
+        
+    }()
+    
     private let contentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -35,9 +51,10 @@ class AddFeedVC : UIViewController {
     
    
     
-    let addFeedTextView : UITextView = {
+    lazy var addFeedTextView : UITextView = {
         // Create a TextView.
         let textView: UITextView = UITextView()
+        
 
         textView.translatesAutoresizingMaskIntoConstraints = false
         // Round the corners.
@@ -66,6 +83,7 @@ class AddFeedVC : UIViewController {
 
         
         textView.tintColor = .black
+        
         return textView
     }()
 
@@ -309,7 +327,12 @@ class AddFeedVC : UIViewController {
         
         self.view.backgroundColor = .white
 
+        addFeedTextView.delegate = self
+        addFeedTextView.text = "내용을 입력하여 주세요."
+        addFeedTextView.textColor = .lightGray
         
+        
+
         
         imageScrollView.translatesAutoresizingMaskIntoConstraints = false
         mainView.translatesAutoresizingMaskIntoConstraints = false
@@ -329,6 +352,7 @@ class AddFeedVC : UIViewController {
         contentView.addSubview(firstLabel)
         contentView.addSubview(informationLabel)
         contentView.addSubview(imageLabel)
+        contentView.addSubview(writeContentLabel)
         
     
         imageScrollView.addSubview(imageStackView)
@@ -407,7 +431,8 @@ class AddFeedVC : UIViewController {
             addFeedTextView.heightAnchor.constraint(equalToConstant: 260 ),
             
             
-
+            writeContentLabel.trailingAnchor.constraint(equalTo: addFeedTextView.trailingAnchor , constant: -5),
+            writeContentLabel.bottomAnchor.constraint(equalTo: addFeedTextView.bottomAnchor , constant: -5),
          
             
             
@@ -420,14 +445,27 @@ class AddFeedVC : UIViewController {
     }
    
     
-    
+    let feedTextChanged = BehaviorSubject<Int>(value: 0)
     
     
     func setBindings(){
 
         
+        let imagesDataChanged = self.imagesDatas.map({ !$0.isEmpty }).distinctUntilChanged()
+
+        Observable.combineLatest( feedTextChanged.map({  $0 != 0  }).distinctUntilChanged() , imagesDataChanged ){$0 && $1}.subscribe(onNext: { event in
+            if(event){
+                self.addButton.backgroundColor = .black
+            }else{
+                self.addButton.backgroundColor = .lightGray
+            }
+            self.addButton.isEnabled = event
+            
+            
+        }).disposed(by: disposeBag)
         
-        let input = AddFeedVM.Input(addButtonTapped: self.addButton.rx.tap.asObservable() , feedText: self.addFeedTextView.rx.text.orEmpty.asObservable() , imagesDatas : imagesDatas.asObservable() )
+        
+        let input = AddFeedVM.Input(addButtonTapped: self.addButton.rx.tap.asObservable() , feedText : self.addFeedTextView.rx.text.orEmpty.asObservable()  , imagesDatas : self.imagesDatas.asObservable() )
         
         guard let output = self.viewModel?.transform(input: input, disposeBag: disposeBag) else {return}
 
@@ -520,6 +558,85 @@ extension AddFeedVC : UIImagePickerControllerDelegate , UINavigationControllerDe
     }
     
 }
+
+extension AddFeedVC : UITextViewDelegate {
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+   
+        if textView.text.count <= 0 {
+            
+            textView.textColor = .lightGray
+            textView.text = "내용을 입력하여 주세요."
+
+            
+        }
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        
+        if textView.text.count <= 0 {
+            
+            textView.textColor = .lightGray
+            textView.text = "내용을 입력하여 주세요."
+
+            
+        }else if(textView.text == "내용을 입력하여 주세요." && textView.textColor == .lightGray){
+            textView.text = ""
+            textView.textColor = .black
+            
+        }else{
+            textView.textColor = .black
+
+        }
+       
+
+        
+    }
+    
+    func textView(
+           _ textView: UITextView,
+           shouldChangeTextIn range: NSRange,
+           replacementText text: String
+       ) -> Bool {
+           
+           
+           let lastText = textView.text as NSString
+           let allText = lastText.replacingCharacters(in: range, with: text)
+
+           let canUseInput = allText.count <= maxCount
+
+           defer {
+               if canUseInput {
+                   textCount = allText.count
+               } else {
+                   textCount = textView.text.count
+               }
+               self.feedTextChanged.onNext(textCount)
+           }
+           
+           guard !canUseInput else { return canUseInput }
+           
+               if textView.text.count < maxCount {
+                 
+                   
+                   let appendingText = text.substring(from: 0, to: maxCount - textView.text.count - 1)
+                   textView.text = textView.text.inserting(appendingText, at: range.lowerBound)
+                   
+                   let isLastCursor = range.lowerBound >= textView.text.count
+                   let movingCursorPosition = isLastCursor ? maxCount : (range.lowerBound + appendingText.count)
+                   DispatchQueue.main.async {
+                       textView.selectedRange = NSMakeRange(movingCursorPosition, 0)
+                   }
+               } else {
+
+                   DispatchQueue.main.async {
+                       textView.selectedRange = NSMakeRange(range.lowerBound, 0)
+                   }
+               }
+
+           return canUseInput
+       }
+   }
 
 
 

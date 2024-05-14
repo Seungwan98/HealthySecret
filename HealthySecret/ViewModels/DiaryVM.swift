@@ -171,6 +171,8 @@ class DiaryVM : ViewModel {
         
         input.viewWillApearEvent.subscribe(onNext: { _ in
             
+            self.coordinator?.refreshChild()
+            
             
             
             var morning : [Row] = []

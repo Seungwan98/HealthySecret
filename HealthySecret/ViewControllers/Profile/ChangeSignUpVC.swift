@@ -435,7 +435,6 @@ class ChangeSignUpVC : UIViewController {
             button.tag = index
             button.addTarget(self, action: #selector(exerciseButtonAction), for: .touchUpInside)
             
-            button.backgroundColor = .red
             if(index == 2){
                 button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -3)
             }

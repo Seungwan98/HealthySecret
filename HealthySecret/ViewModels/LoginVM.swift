@@ -26,11 +26,8 @@ class LoginVM : ViewModel {
     
     struct Input {
         
-        let emailText : Observable<String>?
-        let passwordText : Observable<String>?
-        let loginButtonTapped : Observable<Void>
-        let signUpButtonTapped : Observable<Void>
-        let kakaoLoginButtonTapped : Observable<Void>
+
+        let kakaoLoginButtonTapped : Observable<UITapGestureRecognizer>
         let appleLogin : Observable<OAuthCredential>
 
 
@@ -53,12 +50,7 @@ class LoginVM : ViewModel {
     func transform(input: Input , disposeBag : DisposeBag ) -> Output {
         let output = Output()
         
-        input.signUpButtonTapped.subscribe(onNext: {
-            _ in
-            print("signUp")
-            self.loginCoordinator?.pushSignUpVC()
-            
-        }).disposed(by: disposeBag)
+       
         
         input.appleLogin.subscribe(onNext: { credential in
             
@@ -106,26 +98,7 @@ class LoginVM : ViewModel {
         }).disposed(by: disposeBag)
         
             
-        input.loginButtonTapped.subscribe(onNext: {
-            
-            Observable.zip( input.emailText! , input.passwordText! ).subscribe(onNext: {
-                
-                
-                self.firebaseService?.signIn(email: $0 , pw: $1 ).subscribe(
-                 onCompleted: {
-                 self.loginCoordinator?.login()
-
-
-                },
-                 onError: { error in
-                     print("error")
-
-
-                 }).disposed(by: disposeBag)
- 
-            }).disposed(by: disposeBag)
- 
-        }).disposed(by: disposeBag)
+      
         
         input.kakaoLoginButtonTapped.subscribe(onNext : {
             _ in

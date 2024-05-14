@@ -23,6 +23,23 @@ class UpdateFeedVC : UIViewController {
 
     var imagesArr : [UIImage] = []
     
+    private let maxCount = 100
+    
+       private var textCount = 0 {
+           didSet { self.writeContentLabel.text = "\(textCount)/\(maxCount)" }
+       }
+    
+    
+    lazy var writeContentLabel : UILabel = {
+        let label = UILabel()
+        label.textColor = .lightGray
+        label.text = "0/\(self.maxCount)"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+        
+        
+    }()
+    
     private let contentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -326,6 +343,7 @@ class UpdateFeedVC : UIViewController {
         self.view.backgroundColor = .white
         imageScrollView.translatesAutoresizingMaskIntoConstraints = false
         
+        addFeedTextView.delegate = self
 
         self.view.addSubview(contentScrollView)
         self.view.addSubview(bottomView)
@@ -340,6 +358,8 @@ class UpdateFeedVC : UIViewController {
         contentView.addSubview(firstLabel)
         contentView.addSubview(informationLabel)
         contentView.addSubview(imageLabel)
+        contentView.addSubview(addFeedTextView)
+        contentView.addSubview(writeContentLabel)
         
     
         imageScrollView.addSubview(imageStackView)
@@ -413,6 +433,8 @@ class UpdateFeedVC : UIViewController {
             addFeedTextView.heightAnchor.constraint(equalToConstant: 260 ),
             
             
+            writeContentLabel.trailingAnchor.constraint(equalTo: addFeedTextView.trailingAnchor , constant: -5),
+            writeContentLabel.bottomAnchor.constraint(equalTo: addFeedTextView.bottomAnchor , constant: -5),
 
          
             
@@ -427,11 +449,31 @@ class UpdateFeedVC : UIViewController {
    
     
     
-    
+    let feedTextChanged = BehaviorSubject<Int>(value: 0)
+
     
     func setBindings(){
+        
+
+       
 
         let imagesDatas = Observable.zip(self.beforeDatas.asObservable() , self.afterDatas.asObservable() )
+        
+        
+        let imagesDataChanged = self.afterDatas.map({ !$0.isEmpty }).distinctUntilChanged()
+
+        Observable.combineLatest( feedTextChanged.map({  $0 != 0  }).distinctUntilChanged() , imagesDataChanged ){$0 && $1}.subscribe(onNext: { event in
+            if(event){
+                self.addButton.backgroundColor = .black
+            }else{
+                self.addButton.backgroundColor = .lightGray
+            }
+            self.addButton.isEnabled = event
+            
+            
+        }).disposed(by: disposeBag)
+        
+        
         
         let input = UpdateFeedVM.Input(addButtonTapped: self.addButton.rx.tap.asObservable() , feedText: self.addFeedTextView.rx.text.orEmpty.asObservable() , imagesDatas : imagesDatas.asObservable() )
         
@@ -450,7 +492,16 @@ class UpdateFeedVC : UIViewController {
         
        
         output.feedText.subscribe(onNext: { text in
-            self.addFeedTextView.text = text
+            
+            
+            
+            if(!text.isEmpty){
+                self.addFeedTextView.text = text
+
+            }else{
+                self.addFeedTextView.text = "내용을 입력하여 주세요."
+                self.addFeedTextView.textColor = .lightGray
+            }
             
         }).disposed(by: disposeBag)
        
@@ -577,7 +628,83 @@ extension UpdateFeedVC : UIImagePickerControllerDelegate , UINavigationControlle
     
 }
 
+extension UpdateFeedVC : UITextViewDelegate {
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+   
+        if textView.text.count <= 0 {
+            
+            textView.textColor = .lightGray
+            textView.text = "내용을 입력하여 주세요."
 
+            
+        }
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        
+        if textView.text.count <= 0 {
+            
+            textView.textColor = .lightGray
+            textView.text = "내용을 입력하여 주세요."
+
+            
+        }else if(textView.text == "내용을 입력하여 주세요." && textView.textColor == .lightGray){
+            textView.text = ""
+            textView.textColor = .black
+            
+        }else{
+            textView.textColor = .black
+
+        }
+       
+
+        
+    }
+    
+    func textView(
+           _ textView: UITextView,
+           shouldChangeTextIn range: NSRange,
+           replacementText text: String
+       ) -> Bool {
+           
+           
+           let lastText = textView.text as NSString
+           let allText = lastText.replacingCharacters(in: range, with: text)
+
+           let canUseInput = allText.count <= maxCount
+
+           defer {
+               if canUseInput {
+                   textCount = allText.count
+               } else {
+                   textCount = textView.text.count
+               }
+           }
+           
+           guard !canUseInput else { return canUseInput }
+           
+               if textView.text.count < maxCount {
+                 
+                   
+                   let appendingText = text.substring(from: 0, to: maxCount - textView.text.count - 1)
+                   textView.text = textView.text.inserting(appendingText, at: range.lowerBound)
+                   
+                   let isLastCursor = range.lowerBound >= textView.text.count
+                   let movingCursorPosition = isLastCursor ? maxCount : (range.lowerBound + appendingText.count)
+                   DispatchQueue.main.async {
+                       textView.selectedRange = NSMakeRange(movingCursorPosition, 0)
+                   }
+               } else {
+
+                   DispatchQueue.main.async {
+                       textView.selectedRange = NSMakeRange(range.lowerBound, 0)
+                   }
+               }
+
+           return canUseInput
+       }
+   }
 
 
 
