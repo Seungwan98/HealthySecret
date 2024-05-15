@@ -216,8 +216,21 @@ class SettingVC : UIViewController {
         
         let values = Observable.zip(self.codeString.asObservable() , self.userId.asObservable() )
 
+        let scessionTapped = PublishSubject<Bool>()
         
-        let input = MyProfileVM.SettingInput(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , logoutTapped: logoutButton.rx.tapGesture().when(.recognized).asObservable(), secessionTapped: secessionButton.rx.tapGesture().when(.recognized).asObservable() , values : values ,
+        secessionButton.rx.tapGesture().when(.recognized).subscribe({ [weak self] _ in
+            guard let self = self else {return}
+            
+            AlertHelper.shared.showRevoke(title: "회원을 탈퇴 하시겠습니까?", message: "탈퇴한 회원의 정보는 되돌릴 수 없습니다", onConfirm: {
+                
+                scessionTapped.onNext(true)
+
+                
+            } , over: self)
+            
+        }).disposed(by: disposeBag)
+        
+        let input = MyProfileVM.SettingInput(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , logoutTapped: logoutButton.rx.tapGesture().when(.recognized).asObservable(), secessionTapped: scessionTapped , values : values ,
                                              OAuthCredential: self.OAuthCredential.asObservable())
 
         
@@ -226,10 +239,15 @@ class SettingVC : UIViewController {
         guard let output = viewModel?.settingTransform(input: input, disposeBag: self.disposeBag) else { return }
         
         output.appleSecession.subscribe(onNext: { event in
-            if(event){
-                self.startSignInWithAppleFlow()
-            }
+          
             
+            AlertHelper.shared.showRevoke(title: "재 로그인 하시겠습니까?", message: "회원 탈퇴를 위해 Apple 재 로그인을 진행합니다", onConfirm: {
+                
+                self.startSignInWithAppleFlow()
+
+                
+            } , over: self)
+
             
         }).disposed(by: disposeBag)
     }

@@ -66,7 +66,7 @@ class SignUpVM : ViewModel {
         
         print("signUp uuid exist? \(uuid)")
         
-        var userModel = UserModel( uuid: uuid , name: name ,  tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, ingredients: [], exercise: [] , diarys: [] )
+        var userModel = UserModel( uuid: uuid , name: name ,  tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, ingredients: [], exercise: [] , diarys: [] , loginMethod: loginMethod )
         
         
         let output = Output()

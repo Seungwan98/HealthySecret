@@ -129,6 +129,7 @@
 		60FC85DD2BF33B5F00471983 /* 활동많음.png in Resources */ = {isa = PBXBuildFile; fileRef = 60FC85D72BF33B5F00471983 /* 활동많음.png */; };
 		60FC85DE2BF33B5F00471983 /* 활동적음_fill.png in Resources */ = {isa = PBXBuildFile; fileRef = 60FC85D82BF33B5F00471983 /* 활동적음_fill.png */; };
 		60FC85DF2BF33B5F00471983 /* 활동적음.png in Resources */ = {isa = PBXBuildFile; fileRef = 60FC85D92BF33B5F00471983 /* 활동적음.png */; };
+		60FC85E12BF468CE00471983 /* AlertHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC85E02BF468CE00471983 /* AlertHelper.swift */; };
 		CB62F41F787B287CE4FA2161 /* Pods_HealthySecret.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */; };
 /* End PBXBuildFile section */
 
@@ -263,6 +264,7 @@
 		60FC85D72BF33B5F00471983 /* 활동많음.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "활동많음.png"; path = "../../../../../../../Downloads/활동많음.png"; sourceTree = "<group>"; };
 		60FC85D82BF33B5F00471983 /* 활동적음_fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "활동적음_fill.png"; path = "../../../../../../../Downloads/활동적음_fill.png"; sourceTree = "<group>"; };
 		60FC85D92BF33B5F00471983 /* 활동적음.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "활동적음.png"; path = "../../../../../../../Downloads/활동적음.png"; sourceTree = "<group>"; };
+		60FC85E02BF468CE00471983 /* AlertHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertHelper.swift; sourceTree = "<group>"; };
 		DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthySecret.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -403,7 +405,6 @@
 				606343D32B9810DA0084E2CC /* HealthySecret.entitlements */,
 				60A3800E2B6A818B00C9A2E6 /* Cells */,
 				60A380032B6A37C700C9A2E6 /* Customs */,
-				60BC98FC2B29A79C0013FAD9 /* View */,
 				60BC98DD2AFF781C0013FAD9 /* Services */,
 				60D987932AEA82C10049CE05 /* Source */,
 				608DF9732AD5762F00DD27DB /* API */,
@@ -435,6 +436,7 @@
 				60EF3C9E2BEA2BD10007862F /* CustomBackgroundView.swift */,
 				60C289AC2BECACE100213AAD /* UIResponder+.swift */,
 				60C289B22BEDC56400213AAD /* PrivacyChecker.swift */,
+				60FC85E02BF468CE00471983 /* AlertHelper.swift */,
 			);
 			path = Customs;
 			sourceTree = "<group>";
@@ -490,13 +492,6 @@
 				60EF3C942BE0C7AD0007862F /* FollowsVM.swift */,
 			);
 			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		60BC98FC2B29A79C0013FAD9 /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
 			sourceTree = "<group>";
 		};
 		60D9878C2AE8B2540049CE05 /* Coordinator */ = {
@@ -797,6 +792,7 @@
 				609C06452BBA9E8500D61F53 /* AddFeedVC.swift in Sources */,
 				60A3801A2B72143800C9A2E6 /* IngredientsDetailVM.swift in Sources */,
 				609C06412BAAEA7400D61F53 /* TapGesture+.swift in Sources */,
+				60FC85E12BF468CE00471983 /* AlertHelper.swift in Sources */,
 				60EF3C9D2BE9E4CB0007862F /* ProfileCoordinator.swift in Sources */,
 				606343D52B9818F10084E2CC /* CoreMotionService.swift in Sources */,
 				60EAFE122BC83CF400D3EE73 /* OtherProfileVM.swift in Sources */,

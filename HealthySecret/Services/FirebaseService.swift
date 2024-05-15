@@ -162,7 +162,7 @@ final class FirebaseService {
                         
                     }
                     print("completed")
-                  //  completable(.completed)
+                    completable(.completed)
                     
                     lock.unlock()
                     
@@ -196,6 +196,8 @@ final class FirebaseService {
                                     self?.deleteDatas(user: user).subscribe({ event in
                                         switch(event){
                                         case.completed:
+                                            print("complted")
+                                            print("complted")
                                             print("complted")
                                             
                                             completable(.completed)

@@ -564,7 +564,7 @@ extension UpdateFeedVC : UIImagePickerControllerDelegate , UINavigationControlle
   
     
     func actionSheetAlert(){
-        var PrivacyChecker = PrivacyChecker(viewController: self)
+        let PrivacyChecker = PrivacyChecker(viewController: self)
 
         
         let alert = UIAlertController(title: "선택", message: "", preferredStyle: .actionSheet)

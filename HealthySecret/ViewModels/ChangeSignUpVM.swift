@@ -53,7 +53,7 @@ class ChangeSignUpVM : ViewModel {
     }
 
     
-    var userModel = UserModel(uuid: "", name: "" ,  tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, ingredients: [], exercise: [] , diarys: [] )
+    var userModel = UserModel(uuid: "", name: "" ,  tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, ingredients: [], exercise: [] , diarys: [], loginMethod: UserDefaults.standard.string(forKey: "loginMethod") ?? "" )
 
     
     weak var coordinator : ProfileCoordinator?

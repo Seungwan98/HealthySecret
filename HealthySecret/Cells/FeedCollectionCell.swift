@@ -531,7 +531,11 @@ extension FeedCollectionCell :  UINavigationControllerDelegate {
 
         if(self.own!){
             let declaration = UIAlertAction(title: "삭제하기", style: .default) { [weak self] _ in
-                self?.delete()
+                AlertHelper.shared.showDeleteConfirmation(title: "피드를 삭제하시겠습니까?", message: "삭제한 피드는 되돌릴 수 없습니다", onConfirm: {
+                    self?.delete()
+                }, over: self?.commuVC ?? UIViewController())
+                
+                
             }
             let update = UIAlertAction(title: "수정하기", style: .default) { [weak self] _ in
                 self?.update()

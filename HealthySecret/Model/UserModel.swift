@@ -27,6 +27,7 @@ struct UserModel : Codable {
     var feeds : [String]?
     var followings : [String]?
     var followers : [String]?
+    var loginMethod : String
 
     }
 

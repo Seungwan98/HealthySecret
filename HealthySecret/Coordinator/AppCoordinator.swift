@@ -109,16 +109,15 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
                     case .success(let firUser):
                     
                         
-                   
-
-                        
-                        
                         UserDefaults.standard.set( email , forKey: "email")
-
                         UserDefaults.standard.set( uid , forKey: "uid")
+                        
+                        
                         UserDefaults.standard.set( firUser.name  , forKey: "name")
-                       
+                        UserDefaults.standard.set( firUser.loginMethod , forKey: "loginMethod")
                         UserDefaults.standard.set( firUser.profileImage  , forKey: "profileImage")
+                        
+                        
                         self.showMainViewController()
                        
                     case .failure(_):
@@ -167,7 +166,6 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
     
     
     func showLoginViewController() {
-        print("showLoginVC")
         
         let coordinator = LoginCoordinator(self.navigationController)
         
@@ -179,7 +177,6 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
         
     } 
     func showSignUpVC() {
-        print("showLoginVC")
         
         let coordinator = LoginCoordinator(self.navigationController)
         

@@ -392,7 +392,7 @@ class MyProfileVM : ViewModel {
     struct SettingInput {
         let viewWillApearEvent : Observable<Void>
         let logoutTapped : Observable<UITapGestureRecognizer>
-        let secessionTapped : Observable<UITapGestureRecognizer>
+        let secessionTapped : Observable<Bool>
         let values : Observable<(String, String)>
         let OAuthCredential : Observable<OAuthCredential>
         
@@ -484,14 +484,15 @@ class MyProfileVM : ViewModel {
                     case.success(let password):
                         
                         let credential = EmailAuthProvider.credential(withEmail: email, password: password)
-                        print(credential)
+                        print("\(credential)  credential")
                         self.firebaseService.deleteAccount(auth: credential ).subscribe{ completable in
                             switch(completable){
                             case.completed:
-                                print("success")
+                                print("successsssDeleteAcount")
                                 self.kakaoService.kakaoSessionOut().subscribe{ event in
                                     switch(event){
                                     case.completed:
+                                        print("successsssDeleteSessionOut")
                                         self.coordinator?.logout()
                                     case.error(let error):
                                         print(error)
@@ -527,6 +528,9 @@ class MyProfileVM : ViewModel {
         
         
         input.values.subscribe(onNext: { codeString , userId in
+            
+            LoadingIndicator.showLoading()
+            
             input.OAuthCredential.subscribe(onNext: { auth in
                 
                 
@@ -536,24 +540,28 @@ class MyProfileVM : ViewModel {
                 if let data = data {
                     let refreshToken = String(data: data, encoding: .utf8) ?? ""
                     
+                    self.firebaseService.deleteAccount(auth: auth).subscribe({ event in
+                        switch(event){
+                        case.completed:
+                            self.coordinator?.logout()
+                            LoadingIndicator.hideLoading()
+
+
+                            
+                        case.error(_):
+                            print("error")
+                            
+                        }
+                        
+                        
+                        
+                    }).disposed(by: disposeBag)
+                    
                     
                     AppleService().removeAccount(refreshToken : refreshToken, userId: userId).subscribe({ event in
                         switch(event){
-                        case.completed:
-                            self.firebaseService.deleteAccount(auth: auth).subscribe({ event in
-                                switch(event){
-                                case.completed:
-                                    self.coordinator?.logout()
-
-                                    
-                                case.error(_):
-                                    print("error")
-                                    
-                                }
-                                
-                                
-                                
-                            }).disposed(by: disposeBag)
+                        case.completed: break
+                           
                             
                         case.error(let err):
                             print(err)

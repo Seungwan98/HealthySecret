@@ -18,13 +18,12 @@ final class AppleService {
              guard let data = data else { return }
                  
                  let message = String(data: data, encoding: .utf8) ?? ""
-                 print("\(message) message")
                  print("\(String(describing: response)) message")
                  
                  
         
                          
-                         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                         DispatchQueue.main.asyncAfter(deadline: .now() + 0) {
                              let appleIDProvider = ASAuthorizationAppleIDProvider()
 
                              appleIDProvider.getCredentialState(forUserID: userId ?? "") { (credentialState, error) in
