@@ -335,8 +335,8 @@
 				606343BE2B8CCAFD0084E2CC /* MyProfileVC.swift */,
 				60EAFE132BC852C800D3EE73 /* OtherProfileVC.swift */,
 				606343C62B8E34CD0084E2CC /* ChangeIntroduceVC.swift */,
-				606343CB2B9051440084E2CC /* SettingVC.swift */,
 				606343D12B9637A40084E2CC /* ChangeSignUpVC.swift */,
+				606343CB2B9051440084E2CC /* SettingVC.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";

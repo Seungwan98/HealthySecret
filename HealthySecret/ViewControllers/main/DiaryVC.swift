@@ -118,6 +118,8 @@ class DiaryViewController : UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.axis = .horizontal
         view.distribution = .fillEqually
+        view.spacing = 10
+
         return view
         
     }()
@@ -127,6 +129,7 @@ class DiaryViewController : UIViewController {
       //  view.backgroundColor = UIColor(red: 0.686, green: 0.776, blue: 0.627, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.axis = .horizontal
+        view.spacing = 10
         view.distribution = .fillEqually
         return view
         
@@ -250,14 +253,15 @@ class DiaryViewController : UIViewController {
     lazy var breakfastButtonView : UIView = {
         
         let buttonView = UIView()
-        let backgroundImageView = UIImageView(image:UIImage(named:"breakFast.png"))
+        let backgroundImageView = UIImageView()
         let bottomImageView = UIImageView()
         let label = UILabel()
         
-        
+        backgroundImageView.image = UIImage(named:"breakFast.png")?.withAlignmentRectInsets(UIEdgeInsets(top: 10 , left: 10, bottom: 10, right: 10))
+
         
         label.text = "아침"
-        label.font = .boldSystemFont(ofSize: 18)
+        label.font = .boldSystemFont(ofSize: 20)
 
     
         
@@ -271,8 +275,8 @@ class DiaryViewController : UIViewController {
         buttonView.addSubview(breakfastLabel)
         
         
-        label.topAnchor.constraint(equalTo: buttonView.topAnchor, constant: 24).isActive = true
-        label.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor, constant: 24).isActive = true
+        label.topAnchor.constraint(equalTo: buttonView.topAnchor, constant: 22 ).isActive = true
+        label.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor, constant: 22 ).isActive = true
         
         breakfastLabel.topAnchor.constraint(equalTo: label.topAnchor).isActive = true
         breakfastLabel.trailingAnchor.constraint(equalTo: buttonView.trailingAnchor ,  constant: -22).isActive = true
@@ -286,13 +290,15 @@ class DiaryViewController : UIViewController {
     }()
     lazy var lunchButtonView : UIView = {
         let buttonView = UIView()
-        let backgroundImageView = UIImageView(image:UIImage(named:"lunch.png"))
+        let backgroundImageView = UIImageView()
         let bottomImageView = UIImageView()
         let label = UILabel()
         
+        backgroundImageView.image = UIImage(named:"lunch.png")?.withAlignmentRectInsets(UIEdgeInsets(top: 10 , left: 10, bottom: 10, right: 10))
+
         
         label.text = "점심"
-        label.font = .boldSystemFont(ofSize: 18)
+        label.font = .boldSystemFont(ofSize: 20)
         
         label.translatesAutoresizingMaskIntoConstraints = false
         buttonView.translatesAutoresizingMaskIntoConstraints = false
@@ -302,8 +308,8 @@ class DiaryViewController : UIViewController {
         buttonView.addSubview(backgroundImageView)
         buttonView.addSubview(label)
         
-        label.topAnchor.constraint(equalTo: buttonView.topAnchor, constant: 24).isActive = true
-        label.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor, constant: 24).isActive = true
+        label.topAnchor.constraint(equalTo: buttonView.topAnchor, constant: 22).isActive = true
+        label.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor, constant: 22).isActive = true
         
         
         backgroundImageView.widthAnchor.constraint(equalTo: buttonView.widthAnchor).isActive = true
@@ -313,13 +319,15 @@ class DiaryViewController : UIViewController {
     }()
     lazy var dinnerButtonView : UIView = {
         let buttonView = UIView()
-        let backgroundImageView = UIImageView(image:UIImage(named:"dinner.png"))
+        let backgroundImageView = UIImageView()
         let bottomImageView = UIImageView()
         let label = UILabel()
         
+        backgroundImageView.image = UIImage(named:"dinner.png")?.withAlignmentRectInsets(UIEdgeInsets(top: 10 , left: 10, bottom: 10, right: 10))
+
         
         label.text = "저녁"
-        label.font = .boldSystemFont(ofSize: 18)
+        label.font = .boldSystemFont(ofSize: 20)
         
         label.translatesAutoresizingMaskIntoConstraints = false
         buttonView.translatesAutoresizingMaskIntoConstraints = false
@@ -329,8 +337,8 @@ class DiaryViewController : UIViewController {
         buttonView.addSubview(backgroundImageView)
         buttonView.addSubview(label)
         
-        label.topAnchor.constraint(equalTo: buttonView.topAnchor, constant: 24).isActive = true
-        label.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor, constant: 24).isActive = true
+        label.topAnchor.constraint(equalTo: buttonView.topAnchor, constant: 22).isActive = true
+        label.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor, constant: 22).isActive = true
         
         
         backgroundImageView.widthAnchor.constraint(equalTo: buttonView.widthAnchor).isActive = true
@@ -343,14 +351,15 @@ class DiaryViewController : UIViewController {
     lazy var snackButtonView : UIView = {
         
         let buttonView = UIView()
-        let backgroundImageView = UIImageView(image:UIImage(named:"snack.png"))
+        let backgroundImageView = UIImageView()
         let bottomImageView = UIImageView()
         let label = UILabel()
         
-        
+        backgroundImageView.image = UIImage(named:"snack.png")?.withAlignmentRectInsets(UIEdgeInsets(top: 10 , left: 10, bottom: 10, right: 10))
+
         
         label.text = "간식"
-        label.font = .boldSystemFont(ofSize: 18)
+        label.font = .boldSystemFont(ofSize: 20)
 
     
         
@@ -364,8 +373,8 @@ class DiaryViewController : UIViewController {
         buttonView.addSubview(snackLabel)
         
         
-        label.topAnchor.constraint(equalTo: buttonView.topAnchor, constant: 24).isActive = true
-        label.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor, constant: 24).isActive = true
+        label.topAnchor.constraint(equalTo: buttonView.topAnchor, constant: 22).isActive = true
+        label.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor, constant: 22).isActive = true
         
         snackLabel.topAnchor.constraint(equalTo: label.topAnchor).isActive = true
         snackLabel.trailingAnchor.constraint(equalTo: buttonView.trailingAnchor ,  constant: -22).isActive = true
@@ -635,7 +644,7 @@ class DiaryViewController : UIViewController {
         view.backgroundColor = UIColor(red: 0.09, green: 0.18, blue: 0.03, alpha: 1)
         
         let leftLabel = UILabel()
-        leftLabel.font = .systemFont(ofSize: 22, weight: .heavy)
+        leftLabel.font = .systemFont(ofSize: 24, weight: .heavy)
         leftLabel.text = "나의 식사"
         leftLabel.textColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
         
@@ -650,8 +659,8 @@ class DiaryViewController : UIViewController {
         view.addSubview(leftLabel)
         
         
-        leftLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 30).isActive = true
-        leftLabel.topAnchor.constraint(equalTo: view.topAnchor , constant: 30).isActive = true
+        leftLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 20).isActive = true
+        leftLabel.topAnchor.constraint(equalTo: view.topAnchor , constant: 20).isActive = true
         
         return view
         
@@ -726,8 +735,8 @@ class DiaryViewController : UIViewController {
         image.heightAnchor.constraint(equalToConstant: 180).isActive = true
         image.widthAnchor.constraint(equalToConstant: 180 ).isActive = true
         
-        leftLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 30).isActive = true
-        leftLabel.topAnchor.constraint(equalTo: view.topAnchor , constant: 30).isActive = true
+        leftLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 20).isActive = true
+        leftLabel.topAnchor.constraint(equalTo: view.topAnchor , constant: 20).isActive = true
         
         self.exCalorieLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         self.exCalorieLabel.topAnchor.constraint(equalTo: image.bottomAnchor , constant: 30).isActive = true
@@ -788,10 +797,10 @@ class DiaryViewController : UIViewController {
             image.translatesAutoresizingMaskIntoConstraints = false
             
             
-            image.bottomAnchor.constraint(equalTo: view.bottomAnchor , constant: -20).isActive = true
-            image.trailingAnchor.constraint(equalTo: view.trailingAnchor , constant: -20).isActive = true
-            image.heightAnchor.constraint(equalToConstant: 20).isActive = true
-            image.widthAnchor.constraint(equalToConstant: 20).isActive = true
+            image.bottomAnchor.constraint(equalTo: view.bottomAnchor , constant: -10).isActive = true
+            image.trailingAnchor.constraint(equalTo: view.trailingAnchor , constant: -10).isActive = true
+            image.heightAnchor.constraint(equalToConstant: 22).isActive = true
+            image.widthAnchor.constraint(equalToConstant: 22).isActive = true
             
             
             view.heightAnchor.constraint(equalTo: mealButtons[i].heightAnchor).isActive = true
@@ -992,15 +1001,15 @@ class DiaryViewController : UIViewController {
             self.informationView.topAnchor.constraint(equalTo: majorView.bottomAnchor , constant: 20),
             self.informationView.bottomAnchor.constraint(equalTo: detailButton.topAnchor , constant: -30),
             
-            self.buttonStackView.topAnchor.constraint(equalTo: self.buttonView.topAnchor , constant: 100),
-            self.buttonStackView.leadingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.leadingAnchor  ,constant: 15 ),
-            self.buttonStackView.trailingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.trailingAnchor , constant: -15 ),
+            self.buttonStackView.bottomAnchor.constraint(equalTo: self.buttonView.centerYAnchor , constant: -5),
+            self.buttonStackView.leadingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.leadingAnchor  ,constant: 10 ),
+            self.buttonStackView.trailingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.trailingAnchor , constant: -10 ),
             self.buttonStackView.heightAnchor.constraint(equalToConstant: 170),
             
             
-            self.buttonStackView2.topAnchor.constraint(equalTo: self.buttonStackView.bottomAnchor , constant: 0),
-            self.buttonStackView2.leadingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.leadingAnchor  ,constant: 15 ),
-            self.buttonStackView2.trailingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.trailingAnchor , constant: -15 ),
+            self.buttonStackView2.topAnchor.constraint(equalTo: self.buttonView.centerYAnchor , constant: 5),
+            self.buttonStackView2.leadingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.leadingAnchor  ,constant: 10 ),
+            self.buttonStackView2.trailingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.trailingAnchor , constant: -10 ),
             self.buttonStackView2.heightAnchor.constraint(equalToConstant: 170),
             
             
@@ -1008,14 +1017,14 @@ class DiaryViewController : UIViewController {
             self.buttonView.topAnchor.constraint(equalTo: self.chartView.bottomAnchor ),
             self.buttonView.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor  ),
             self.buttonView.trailingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.trailingAnchor ),
-            self.buttonView.heightAnchor.constraint(equalTo:self.contentScrollView.heightAnchor),
+            self.buttonView.heightAnchor.constraint(equalTo:self.contentScrollView.heightAnchor , constant: -50 ),
             
             
             self.exerciseView.topAnchor.constraint(equalTo: buttonView.bottomAnchor , constant: 0),
             self.exerciseView.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor ,constant: 0 ),
             self.exerciseView.trailingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.trailingAnchor ,constant: 0),
             self.exerciseView.heightAnchor.constraint(equalTo:self.contentScrollView.heightAnchor),
-            self.exerciseView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+            self.exerciseView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor ),
             
             
          

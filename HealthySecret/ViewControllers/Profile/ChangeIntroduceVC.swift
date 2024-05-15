@@ -192,6 +192,7 @@ class ChangeIntroduceVC : UIViewController {
     let text = ["닉네임" , "내 소개"]
     
     let topImage = UIImageView(image:UIImage(named: "camera.png"))
+    let smileImage = UIImage(named: "일반적.png")
 
    
   
@@ -390,7 +391,7 @@ class ChangeIntroduceVC : UIViewController {
                         self.profileImageView.kf.indicatorType = .activity  // indicator 활성화
                         self.profileImageView.kf.setImage(
                             with: url,  // 이미지 불러올 url
-                            placeholder: UIImage(named: "일반적.png"),  // 이미지 없을 때의 이미지 설정
+                            placeholder: self.smileImage,  // 이미지 없을 때의 이미지 설정
                             options: [
                                 .processor(processor),
                                 .scaleFactor(UIScreen.main.scale),
@@ -411,12 +412,12 @@ class ChangeIntroduceVC : UIViewController {
                     
                     
                     
-                    self.profileImageView.image = UIImage(named: "일반적.png")
+                    self.profileImageView.image = self.smileImage
                 }
                 
             }else{
 
-                self.profileImageView.image = UIImage(named: "일반적.png")
+                self.profileImageView.image = self.smileImage
                 
 
             }
@@ -540,7 +541,7 @@ extension ChangeIntroduceVC : UIImagePickerControllerDelegate , UINavigationCont
         let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
         let replaceImage = UIAlertAction(title: "삭제" , style: .default ){
             [weak self] _ in
-            self?.profileImageView.image = self?.topImage.image
+            self?.profileImageView.image = self?.smileImage
             self?.profileImageView.layer.cornerRadius = 0
             self?.imageOutput.onNext(nil)
             self?.imageChanging.onNext(true)
