@@ -56,7 +56,6 @@ class ComentsVM : ViewModel {
         var coment : String = ""
 
         if let feedUid = self.feedUid {
-            print("nil")
 
             firebaseService.getComents(feedUid: feedUid ).subscribe({ [weak self] event in
                 guard self != nil else {return}
@@ -77,23 +76,20 @@ class ComentsVM : ViewModel {
                 
             }).disposed(by: disposeBag)
                 
-                
-            
         }
         
         
         
         
         if let feedUuid = self.feedUuid {
+            
             output.feedUuid.onNext(feedUuid)
             
         }
         
         input.profileTapped.subscribe(onNext: { uuid in
+            
             self.coordinator?.pushProfileVC(uuid: uuid)
-            
-            
-            
             
         }).disposed(by: disposeBag)
         

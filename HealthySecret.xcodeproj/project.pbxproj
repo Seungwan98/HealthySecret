@@ -130,6 +130,7 @@
 		60FC85DE2BF33B5F00471983 /* 활동적음_fill.png in Resources */ = {isa = PBXBuildFile; fileRef = 60FC85D82BF33B5F00471983 /* 활동적음_fill.png */; };
 		60FC85DF2BF33B5F00471983 /* 활동적음.png in Resources */ = {isa = PBXBuildFile; fileRef = 60FC85D92BF33B5F00471983 /* 활동적음.png */; };
 		60FC85E12BF468CE00471983 /* AlertHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC85E02BF468CE00471983 /* AlertHelper.swift */; };
+		60FC85E32BF5062500471983 /* ic_health.png in Resources */ = {isa = PBXBuildFile; fileRef = 60FC85E22BF5062500471983 /* ic_health.png */; };
 		CB62F41F787B287CE4FA2161 /* Pods_HealthySecret.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */; };
 /* End PBXBuildFile section */
 
@@ -265,6 +266,7 @@
 		60FC85D82BF33B5F00471983 /* 활동적음_fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "활동적음_fill.png"; path = "../../../../../../../Downloads/활동적음_fill.png"; sourceTree = "<group>"; };
 		60FC85D92BF33B5F00471983 /* 활동적음.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "활동적음.png"; path = "../../../../../../../Downloads/활동적음.png"; sourceTree = "<group>"; };
 		60FC85E02BF468CE00471983 /* AlertHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertHelper.swift; sourceTree = "<group>"; };
+		60FC85E22BF5062500471983 /* ic_health.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_health.png; path = ../../../../../../../Downloads/ic_health.png; sourceTree = "<group>"; };
 		DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthySecret.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -561,6 +563,7 @@
 				600DE96B2B61081900D5D797 /* lunch.png */,
 				600DE96A2B61081900D5D797 /* dinner.png */,
 				600DE97F2B69424F00D5D797 /* snack.png */,
+				60FC85E22BF5062500471983 /* ic_health.png */,
 				6067B99A2B4D578B00D536FF /* calendarIcon.png */,
 				600DE9692B61081900D5D797 /* breakFast.png */,
 				60FC85D62BF33B5F00471983 /* 일반적_fill.png */,
@@ -690,6 +693,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6067B99B2B4D578B00D536FF /* calendarIcon.png in Resources */,
+				60FC85E32BF5062500471983 /* ic_health.png in Resources */,
 				600DE9682B60E1C000D5D797 /* check.png in Resources */,
 				60BB26AE2B45CD2F00191CB1 /* firstDout.png in Resources */,
 				60FC85DD2BF33B5F00471983 /* 활동많음.png in Resources */,
@@ -941,6 +945,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "헬시크릿";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -995,6 +1000,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "헬시크릿";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;

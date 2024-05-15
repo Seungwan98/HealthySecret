@@ -45,6 +45,7 @@ class DiaryViewController : UIViewController {
     var pieChart : PieChartView = {
         let pieChart = PieChartView()
         
+        
         pieChart.noDataText = ""
         pieChart.noDataFont = .boldSystemFont(ofSize: 20)
         pieChart.noDataTextColor = .white
@@ -56,6 +57,8 @@ class DiaryViewController : UIViewController {
         pieChart.holeRadiusPercent = 0.9
         pieChart.holeColor? =  .clear
         pieChart.legend.enabled = false
+        
+        pieChart.translatesAutoresizingMaskIntoConstraints = false
         
         return pieChart
         
@@ -77,11 +80,13 @@ class DiaryViewController : UIViewController {
     var chartView : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.brown.withAlphaComponent(0.5)
+       // view.backgroundColor = UIColor.brown.withAlphaComponent(0.5)
+        view.backgroundColor = UIColor(red: 150/255, green: 165/255, blue: 255/255, alpha: 1)
+
         view.frame = CGRect(x: 0, y: 0, width: 110, height: 100)
         
         let leftLabel = UILabel()
-        leftLabel.font = .boldSystemFont(ofSize: 22)
+        leftLabel.font = .systemFont(ofSize: 22, weight: .heavy)
         leftLabel.text = "오늘 하루"
         leftLabel.textColor = .white
         
@@ -94,8 +99,8 @@ class DiaryViewController : UIViewController {
         view.addSubview(leftLabel)
         
         
-        leftLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 12).isActive = true
-        leftLabel.topAnchor.constraint(equalTo: view.topAnchor , constant: 12).isActive = true
+        leftLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 20).isActive = true
+        leftLabel.topAnchor.constraint(equalTo: view.topAnchor , constant: 20).isActive = true
         
         //view.layer.cornerRadius = 20
         return view
@@ -112,7 +117,6 @@ class DiaryViewController : UIViewController {
        //
         view.translatesAutoresizingMaskIntoConstraints = false
         view.axis = .horizontal
-        view.spacing = 10
         view.distribution = .fillEqually
         return view
         
@@ -123,7 +127,6 @@ class DiaryViewController : UIViewController {
       //  view.backgroundColor = UIColor(red: 0.686, green: 0.776, blue: 0.627, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.axis = .horizontal
-        view.spacing = 10
         view.distribution = .fillEqually
         return view
         
@@ -131,14 +134,20 @@ class DiaryViewController : UIViewController {
     
     
     
-    lazy var chartStackview : UIStackView = {
-        let view = UIStackView(arrangedSubviews: [ pieChart , majorView ])
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.spacing = 20
-        view.axis = .horizontal
-        view.distribution = .fillEqually
-        return view
-    }()
+//    lazy var chartStackview : UIStackView = {
+//        let view = UIStackView(arrangedSubviews: [ pieChart , majorView ])
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        view.spacing = 20
+//        view.axis = .vertical
+//        
+//        view.distribution = .fillProportionally
+//        view.alignment = .fill
+//        
+//        view.backgroundColor = .blue
+//        
+//        
+//        return view
+//    }()
     
     
     
@@ -148,7 +157,9 @@ class DiaryViewController : UIViewController {
         let view = UIStackView(arrangedSubviews: nutrientsLabelsArr )
         view.translatesAutoresizingMaskIntoConstraints = false
         view.axis = .vertical
+        view.spacing = 20
         view.distribution = .fillEqually
+        
         return view
     }()
     
@@ -164,6 +175,8 @@ class DiaryViewController : UIViewController {
         view.axis = .vertical
         view.alignment = .center
         view.distribution = .fillEqually
+        view.spacing = 20
+        
         return view
         
     }()
@@ -443,12 +456,12 @@ class DiaryViewController : UIViewController {
     
     
     
-    
     var detailButton : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor.brown.withAlphaComponent(0.2)
-        button.setTitle("상세 정보", for: .normal)
+        button.backgroundColor = UIColor(red: 170 / 255, green: 186 / 255, blue: 255 / 255, alpha: 1)
+
+        button.setTitle("상세정보", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 20)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 20
@@ -460,6 +473,8 @@ class DiaryViewController : UIViewController {
     
     var majorView : UIView = {
         let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
         return view
         
     }()
@@ -517,7 +532,7 @@ class DiaryViewController : UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 20)
-        button.layer.cornerRadius = 20
+        button.layer.cornerRadius = 30
         return button
         
     }()
@@ -543,7 +558,7 @@ class DiaryViewController : UIViewController {
         leftCalorieLabel.translatesAutoresizingMaskIntoConstraints = false
         leftCalorieLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         leftCalorieLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor ,constant: -40).isActive = true
-        leftCalorieLabel.font = .boldSystemFont(ofSize: 14)
+        leftCalorieLabel.font = .boldSystemFont(ofSize: 16)
         leftCalorieLabel.textColor = .white
         leftCalorieLabel.text = "120kcal 초과됐습니다"
         
@@ -562,13 +577,14 @@ class DiaryViewController : UIViewController {
         
         
         
-        
+      
         view.layer.cornerRadius = 20
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .brown.withAlphaComponent(0.2)
+ 
+       // view.backgroundColor = .brown.withAlphaComponent(0.2)
+        view.backgroundColor = UIColor(red: 170 / 255, green: 186 / 255, blue: 255 / 255, alpha: 1)
         
-        
-        
+
         return view
         
     }()
@@ -619,7 +635,7 @@ class DiaryViewController : UIViewController {
         view.backgroundColor = UIColor(red: 0.09, green: 0.18, blue: 0.03, alpha: 1)
         
         let leftLabel = UILabel()
-        leftLabel.font = .boldSystemFont(ofSize: 22)
+        leftLabel.font = .systemFont(ofSize: 22, weight: .heavy)
         leftLabel.text = "나의 식사"
         leftLabel.textColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
         
@@ -634,8 +650,8 @@ class DiaryViewController : UIViewController {
         view.addSubview(leftLabel)
         
         
-        leftLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 12).isActive = true
-        leftLabel.topAnchor.constraint(equalTo: view.topAnchor , constant: 12).isActive = true
+        leftLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 30).isActive = true
+        leftLabel.topAnchor.constraint(equalTo: view.topAnchor , constant: 30).isActive = true
         
         return view
         
@@ -646,7 +662,7 @@ class DiaryViewController : UIViewController {
     var minuteLabel = UILabel()
     var exCalorieLabel = UILabel()
     lazy var exerciseView : UIView = {
-        let image = UIImageView(image: UIImage(named: "dumbbellPic.png"))
+        let image = UIImageView(image: UIImage(named: "ic_health.png"))
         let view = UIView()
         let centerLabel = UILabel()
         
@@ -670,7 +686,7 @@ class DiaryViewController : UIViewController {
         
         
         
-        leftLabel.font = .boldSystemFont(ofSize: 22)
+        leftLabel.font = .systemFont(ofSize: 22, weight: .heavy )
         leftLabel.text = "나의 활동"
         leftLabel.textColor = .white
         
@@ -698,26 +714,28 @@ class DiaryViewController : UIViewController {
         view.addSubview(self.exCalorieLabel)
         
         centerLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        centerLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor , constant: -140).isActive = true
+        centerLabel.bottomAnchor.constraint(equalTo: self.minuteLabel.topAnchor , constant: -16 ).isActive = true
+
         
         self.minuteLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        self.minuteLabel.centerYAnchor.constraint(equalTo: centerLabel.centerYAnchor , constant: 40).isActive = true
+        self.minuteLabel.bottomAnchor.constraint(equalTo: image.topAnchor , constant: -30).isActive = true
+        
         
         image.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         image.centerYAnchor.constraint(equalTo: view.centerYAnchor , constant: 0 ).isActive = true
-        image.heightAnchor.constraint(equalToConstant: 150).isActive = true
-        image.widthAnchor.constraint(equalToConstant: 150 ).isActive = true
+        image.heightAnchor.constraint(equalToConstant: 180).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 180 ).isActive = true
         
-        leftLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 12).isActive = true
-        leftLabel.topAnchor.constraint(equalTo: view.topAnchor , constant: 12).isActive = true
+        leftLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 30).isActive = true
+        leftLabel.topAnchor.constraint(equalTo: view.topAnchor , constant: 30).isActive = true
         
         self.exCalorieLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        self.exCalorieLabel.topAnchor.constraint(equalTo: image.bottomAnchor , constant: 25).isActive = true
+        self.exCalorieLabel.topAnchor.constraint(equalTo: image.bottomAnchor , constant: 30).isActive = true
         
-        self.exerciseButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        self.exerciseButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
         self.exerciseButton.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 60).isActive = true
         self.exerciseButton.trailingAnchor.constraint(equalTo: view.trailingAnchor , constant: -60).isActive = true
-        self.exerciseButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20).isActive = true
+        self.exerciseButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -60).isActive = true
 
         
         return view
@@ -732,7 +750,7 @@ class DiaryViewController : UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         
         label.text = "kcal"
-        label.font = UIFont.boldSystemFont(ofSize: 15)
+        label.font = UIFont.boldSystemFont(ofSize: 22)
         label.textColor = .white
         label.isHidden = true
         return label
@@ -803,8 +821,10 @@ class DiaryViewController : UIViewController {
         
         self.contentView.addSubview(chartView)
         self.chartView.addSubview(informationView)
+        self.chartView.addSubview(pieChart)
+        self.chartView.addSubview(majorView)
         
-        self.contentView.addSubview(chartStackview)
+      
         self.contentView.addSubview(buttonView)
         self.contentView.addSubview(exerciseView)
         self.contentView.addSubview(detailButton)
@@ -874,8 +894,8 @@ class DiaryViewController : UIViewController {
 
             
             
-            nutrientsLabelsArr[i].font =  UIFont.boldSystemFont(ofSize: 15)
-            nutrientsLabelsArr2[i].font =  UIFont.boldSystemFont(ofSize: 15)
+            nutrientsLabelsArr[i].font =  UIFont.boldSystemFont(ofSize: 18)
+            nutrientsLabelsArr2[i].font =  UIFont.boldSystemFont(ofSize: 18)
             nutrientsLabelsArr[i].textColor = .white
             nutrientsLabelsArr2[i].textColor = .white
             
@@ -915,16 +935,19 @@ class DiaryViewController : UIViewController {
             
             
             
-            self.majorLabelsStackView.widthAnchor.constraint(equalToConstant: 80),
-            self.majorLabelsStackView.heightAnchor.constraint(equalToConstant: 73 ),
-            self.majorLabelsStackView.centerYAnchor.constraint(equalTo: majorView.centerYAnchor ) ,
-            self.majorLabelsStackView.leadingAnchor.constraint(equalTo: majorView.leadingAnchor ),
+            self.majorLabelsStackView.bottomAnchor.constraint(equalTo: majorView.bottomAnchor),
+            self.majorLabelsStackView.topAnchor.constraint(equalTo: majorView.topAnchor),
+
+            self.majorLabelsStackView.trailingAnchor.constraint(equalTo: majorView.centerXAnchor , constant: -20) ,
+
+
             
-            self.majorLabelsStackView2.widthAnchor.constraint(equalToConstant: 66),
-            self.majorLabelsStackView2.heightAnchor.constraint(equalToConstant: 73 ),
-            self.majorLabelsStackView2.centerYAnchor.constraint(equalTo: majorView.centerYAnchor ),
-            self.majorLabelsStackView2.leadingAnchor.constraint(equalTo: majorLabelsStackView.trailingAnchor , constant : 0),
-            
+            self.majorLabelsStackView2.topAnchor.constraint(equalTo: majorView.topAnchor),
+            self.majorLabelsStackView2.bottomAnchor.constraint(equalTo: majorView.bottomAnchor),
+            self.majorLabelsStackView2.leadingAnchor.constraint(equalTo: majorView.centerXAnchor , constant : 20),
+
+
+
             
             
             
@@ -932,14 +955,14 @@ class DiaryViewController : UIViewController {
             self.chartView.topAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.topAnchor ),
             self.chartView.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor, constant: 0),
             self.chartView.trailingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.trailingAnchor, constant : 0),
-            self.chartView.heightAnchor.constraint(equalToConstant: 500),
+            self.chartView.heightAnchor.constraint(equalTo:self.contentScrollView.heightAnchor),
             
             
             
             self.detailButton.heightAnchor.constraint(equalToConstant: 40),
             self.detailButton.bottomAnchor.constraint(equalTo: self.chartView.bottomAnchor, constant: -20),
-            self.detailButton.leadingAnchor.constraint(equalTo: self.chartStackview.safeAreaLayoutGuide.leadingAnchor, constant: 60),
-            self.detailButton.trailingAnchor.constraint(equalTo: self.chartStackview.safeAreaLayoutGuide.trailingAnchor, constant: -60),
+            self.detailButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 60),
+            self.detailButton.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -60),
             
             
             self.ingredientsStackView.topAnchor.constraint(equalTo: self.chartView.bottomAnchor ),
@@ -950,43 +973,52 @@ class DiaryViewController : UIViewController {
             
             
             
-            self.chartStackview.centerXAnchor.constraint(equalTo: self.chartView.centerXAnchor ),
-            self.chartStackview.centerYAnchor.constraint(equalTo : self.chartView.centerYAnchor , constant: -100),
-            self.chartStackview.widthAnchor.constraint(equalToConstant: 400  ),
-            self.chartStackview.heightAnchor.constraint(equalToConstant:  200 ),
+            self.pieChart.centerXAnchor.constraint(equalTo: self.chartView.centerXAnchor ),
+            self.pieChart.topAnchor.constraint(equalTo: self.chartView.topAnchor , constant: 40 ),
+            
+            self.pieChart.widthAnchor.constraint(equalToConstant: 360  ),
+            self.pieChart.heightAnchor.constraint(equalToConstant:  300 ),
+            
+            self.majorView.centerXAnchor.constraint(equalTo: self.chartView.centerXAnchor ),
+            self.majorView.topAnchor.constraint(equalTo : self.pieChart.bottomAnchor , constant: 0),
+            self.majorView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20 ),  
+            self.majorView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20 ),
+            self.majorView.heightAnchor.constraint(equalToConstant: 100 ),
             
             
             
-            self.buttonStackView.topAnchor.constraint(equalTo: self.buttonView.topAnchor , constant: 80),
-            self.buttonStackView.leadingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.leadingAnchor  ,constant: 20 ),
-            self.buttonStackView.trailingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.trailingAnchor , constant: -20 ),
-            self.buttonStackView.heightAnchor.constraint(equalToConstant: 150),
+            self.informationView.leadingAnchor.constraint(equalTo: chartView.leadingAnchor , constant: 30),
+            self.informationView.trailingAnchor.constraint(equalTo: chartView.trailingAnchor , constant:  -30),
+            self.informationView.topAnchor.constraint(equalTo: majorView.bottomAnchor , constant: 20),
+            self.informationView.bottomAnchor.constraint(equalTo: detailButton.topAnchor , constant: -30),
+            
+            self.buttonStackView.topAnchor.constraint(equalTo: self.buttonView.topAnchor , constant: 100),
+            self.buttonStackView.leadingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.leadingAnchor  ,constant: 15 ),
+            self.buttonStackView.trailingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.trailingAnchor , constant: -15 ),
+            self.buttonStackView.heightAnchor.constraint(equalToConstant: 170),
             
             
             self.buttonStackView2.topAnchor.constraint(equalTo: self.buttonStackView.bottomAnchor , constant: 0),
-            self.buttonStackView2.leadingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.leadingAnchor  ,constant: 20 ),
-            self.buttonStackView2.trailingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.trailingAnchor , constant: -20 ),
-            self.buttonStackView2.heightAnchor.constraint(equalToConstant: 150),
+            self.buttonStackView2.leadingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.leadingAnchor  ,constant: 15 ),
+            self.buttonStackView2.trailingAnchor.constraint(equalTo: self.buttonView.safeAreaLayoutGuide.trailingAnchor , constant: -15 ),
+            self.buttonStackView2.heightAnchor.constraint(equalToConstant: 170),
             
             
             
             self.buttonView.topAnchor.constraint(equalTo: self.chartView.bottomAnchor ),
             self.buttonView.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor  ),
             self.buttonView.trailingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.trailingAnchor ),
-            self.buttonView.heightAnchor.constraint(equalToConstant: 500),
+            self.buttonView.heightAnchor.constraint(equalTo:self.contentScrollView.heightAnchor),
             
             
             self.exerciseView.topAnchor.constraint(equalTo: buttonView.bottomAnchor , constant: 0),
             self.exerciseView.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor ,constant: 0 ),
             self.exerciseView.trailingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.trailingAnchor ,constant: 0),
-            self.exerciseView.heightAnchor.constraint(equalToConstant: 500),
+            self.exerciseView.heightAnchor.constraint(equalTo:self.contentScrollView.heightAnchor),
             self.exerciseView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             
             
-            self.informationView.leadingAnchor.constraint(equalTo: chartView.leadingAnchor , constant: 30),
-            self.informationView.trailingAnchor.constraint(equalTo: chartView.trailingAnchor , constant:  -30),
-            self.informationView.topAnchor.constraint(equalTo: chartStackview.bottomAnchor , constant: 0),
-            self.informationView.bottomAnchor.constraint(equalTo: detailButton.topAnchor , constant: -30),
+         
   
             
             
@@ -1227,7 +1259,7 @@ class DiaryViewController : UIViewController {
             
             
             
-            let attrString = NSAttributedString(string: $1 + "\n" ,   attributes: [ NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15) , .foregroundColor: UIColor.white as Any ])
+            let attrString = NSAttributedString(string: $1 + "\n" ,   attributes: [ NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 22) , .foregroundColor: UIColor.white as Any ])
             
             
             self.eatLabel.text = $1
