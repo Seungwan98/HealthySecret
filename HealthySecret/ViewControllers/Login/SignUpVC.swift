@@ -587,12 +587,3 @@ class SignUpVC : UIViewController {
     
 }
 
-extension SignUpVC : UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-
-            if let pasteboardString = UIPasteboard.general.string, string == pasteboardString {
-                return false
-            }
-            return true
-        }
-}

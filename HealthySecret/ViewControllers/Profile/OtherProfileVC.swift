@@ -338,7 +338,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         
         input.viewWillApearEvent.subscribe({ [weak self] _ in
             
-            guard let self = self else {return}
+            guard self != nil else {return}
             //will appear
             
             

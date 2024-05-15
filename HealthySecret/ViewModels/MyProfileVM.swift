@@ -418,7 +418,7 @@ class MyProfileVM : ViewModel {
                     print("completedkakao")
                     
 
-                case.error(let err): 
+                case.error(_): 
                     print("kako err")
                     
                     
@@ -431,7 +431,7 @@ class MyProfileVM : ViewModel {
                         switch(event){
                         case.completed:
                             self?.coordinator?.logout()
-                        case.error(let err):
+                        case.error(_):
                             print("signOut err")
 
                         }
@@ -451,7 +451,7 @@ class MyProfileVM : ViewModel {
                     switch(event){
                     case.completed:
                         self.coordinator?.logout()
-                    case.error(let err):
+                    case.error(_):
                         print("logoutErr")
 
                     }

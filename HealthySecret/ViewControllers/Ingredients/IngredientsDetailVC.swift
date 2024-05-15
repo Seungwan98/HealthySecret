@@ -161,6 +161,7 @@ class IngredientsDetailVC: UIViewController {
         textField.tintColor = .white
         textField.textColor = .white
         textField.textAlignment = .center
+        textField.keyboardType = .numberPad
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
 
@@ -195,7 +196,7 @@ class IngredientsDetailVC: UIViewController {
         
         label.font = .boldSystemFont(ofSize: 30)
         label.textColor = .white
-        label.text = "불고기"
+        label.text = ""
         return label
         
         
@@ -228,7 +229,6 @@ class IngredientsDetailVC: UIViewController {
             }
         
         
-            print(sender.tag)
 
 
     }
@@ -239,10 +239,11 @@ class IngredientsDetailVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addSubView()
-        
+        self.hideKeyboardWhenTappedAround()
+        self.setupKeyboardEvent()
+
+        setUI()
         addInformView()
-        
         setStackView()
         setBinds()
     }
@@ -424,6 +425,8 @@ class IngredientsDetailVC: UIViewController {
     
     func setStackView() {
         
+        
+        
         textFieldView.addSubview(selectTextField)
         textFieldView.addSubview(minusButton)
         textFieldView.addSubview(plusButton)
@@ -553,7 +556,9 @@ class IngredientsDetailVC: UIViewController {
 
     }
     
-    func addSubView(){
+    func setUI(){
+        
+        
         leftButton.addTarget(self, action: #selector(buttonsAction( _:)), for: .touchUpInside)
         rightButton.addTarget(self, action: #selector(buttonsAction( _:)), for: .touchUpInside)
 
@@ -635,3 +640,5 @@ class IngredientsDetailVC: UIViewController {
     }
     
 }
+
+

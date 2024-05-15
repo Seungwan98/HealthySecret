@@ -540,12 +540,7 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
         cell.layer.removeAllAnimations()
     }
     
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(self.imagesArr[indexPath.row])
-        
-        
-    }
+  
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
@@ -594,7 +589,6 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(self.imagesArr.count)
         return self.imagesArr.count
     }
     

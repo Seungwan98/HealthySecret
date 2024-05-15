@@ -1065,7 +1065,7 @@ class DiaryViewController : UIViewController {
 
             let formattedDate = CustomFormatter().StringToDate(date : UserDefaults.standard.string(forKey: "date") ?? "")
             
-            var tomorrow = CustomFormatter().DateToString(date: calendar.date(byAdding: .day, value: +1, to: formattedDate)!)
+            let tomorrow = CustomFormatter().DateToString(date: calendar.date(byAdding: .day, value: +1, to: formattedDate)!)
             return tomorrow
         }() , forKey: "date"
         

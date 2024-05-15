@@ -465,8 +465,10 @@ class UpdateFeedVC : UIViewController {
         Observable.combineLatest( feedTextChanged.map({  $0 != 0  }).distinctUntilChanged() , imagesDataChanged ){$0 && $1}.subscribe(onNext: { event in
             if(event){
                 self.addButton.backgroundColor = .black
+                print("black")
             }else{
                 self.addButton.backgroundColor = .lightGray
+                print("lightGray")
             }
             self.addButton.isEnabled = event
             
@@ -491,12 +493,16 @@ class UpdateFeedVC : UIViewController {
         
         
        
-        output.feedText.subscribe(onNext: { text in
+        output.feedText.subscribe(onNext: { [weak self] text in
             
+            guard let self = self else {return}
             
             
             if(!text.isEmpty){
                 self.addFeedTextView.text = text
+                
+                self.textCount = text.count
+                self.feedTextChanged.onNext(text.count)
 
             }else{
                 self.addFeedTextView.text = "내용을 입력하여 주세요."
@@ -517,7 +523,7 @@ class UpdateFeedVC : UIViewController {
                 _ =  images.map({
                     if let thumbnailUrl = URL(string: $0) {
                         
-                        let serialQueue = DispatchQueue(label: "serial")
+                   
                     
                         KingfisherManager.shared.retrieveImage(with: thumbnailUrl, completionHandler: { result in
                             switch(result) {
@@ -680,6 +686,7 @@ extension UpdateFeedVC : UITextViewDelegate {
                } else {
                    textCount = textView.text.count
                }
+               self.feedTextChanged.onNext(textCount)
            }
            
            guard !canUseInput else { return canUseInput }

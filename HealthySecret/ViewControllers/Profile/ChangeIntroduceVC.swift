@@ -317,16 +317,31 @@ class ChangeIntroduceVC : UIViewController {
     }
    
     
-    
-    
-    
+    let introduceTextChanged = BehaviorSubject<Int>(value: 0)
+        
+    var nameText = PublishSubject<String>()
     
     func setBindings(){
         
-  
-       
+   
+      
+        self.nameTextField.rx.text.orEmpty.distinctUntilChanged().bind(to: self.nameText).disposed(by: disposeBag)
 
-        let input = ChangeIntroduceVM.Input(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , addButtonTapped : self.addButton.rx.tap.asObservable()  , nameTextField: nameTextField.rx.text.orEmpty.distinctUntilChanged().asObservable() , introduceTextField: introduceTextView.rx.text.orEmpty.distinctUntilChanged().asObservable() ,
+        
+
+        Observable.combineLatest( self.nameText.map{ !$0.isEmpty }.distinctUntilChanged()  , self.introduceTextChanged.map{ $0 != 0 }.distinctUntilChanged() ){$0 && $1}.subscribe(onNext: { event in
+            if(event){
+                self.addButton.backgroundColor = .black
+            }else{
+                self.addButton.backgroundColor = .lightGray
+            }
+            self.addButton.isEnabled = event
+            
+            
+        }).disposed(by: disposeBag)
+        
+
+        let input = ChangeIntroduceVM.Input(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , addButtonTapped : self.addButton.rx.tap.asObservable()  , nameTextField: self.nameText , introduceTextField: self.introduceTextView.rx.text.orEmpty.distinctUntilChanged(),
                                             profileImageTapped : profileImageView.rx.tapGesture().when(.recognized).asObservable() , profileImageValue : self.imageOutput, profileChange: imageChanging.asObservable())
         
         
@@ -351,6 +366,7 @@ class ChangeIntroduceVC : UIViewController {
             }else{
                 self.introduceTextView.textColor = .black
                 self.writeContentLabel.text = "\($1.count)/\(self.maxCount)"
+                self.introduceTextChanged.onNext($1.count)
 
             }
             
@@ -365,6 +381,8 @@ class ChangeIntroduceVC : UIViewController {
             }
             
             self.nameTextField.text = $0
+            self.nameText.onNext($0)
+            
           
             
             
@@ -680,6 +698,7 @@ extension ChangeIntroduceVC : UITextViewDelegate {
                } else {
                    textCount = textView.text.count
                }
+               introduceTextChanged.onNext(textCount)
            }
            
            guard !canUseInput else { return canUseInput }
@@ -723,53 +742,6 @@ extension ChangeIntroduceVC : UITextViewDelegate {
 
 
 
-extension ChangeIntroduceVC {
-    
-    func setupKeyboardEvent() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillShow),
-                                               name: UIResponder.keyboardWillShowNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillHide),
-                                               name: UIResponder.keyboardWillHideNotification,
-                                               object: nil)
-    }
-    
-    @objc func keyboardWillShow(_ sender: Notification) {
-        
-        print(sender)
-        
-        // keyboardFrame: 현재 동작하고 있는 이벤트에서 키보드의 frame을 받아옴
-        // currentTextField: 현재 응답을 받고있는 UITextField를 알아냅니다.
-        guard let keyboardFrame = sender.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
-              let currentTextField = UIResponder.currentResponder as? UITextView else { return }
-        
-        // Y축으로 키보드의 상단 위치
-        let keyboardTopY = keyboardFrame.cgRectValue.origin.y
-        // 현재 선택한 텍스트 필드의 Frame 값
-        let convertedTextFieldFrame = view.convert(currentTextField.frame,
-                                                  from: currentTextField.superview)
-        // Y축으로 현재 텍스트 필드의 하단 위치
-        let textFieldBottomY = convertedTextFieldFrame.origin.y + convertedTextFieldFrame.size.height
-    
-        print("\(textFieldBottomY) btm \(keyboardTopY) topy")
-        
-        // Y축으로 텍스트필드 하단 위치가 키보드 상단 위치보다 클 때 (즉, 텍스트필드가 키보드에 가려질 때가 되겠죠!)
-        if textFieldBottomY > keyboardTopY {
-            let textFieldTopY = convertedTextFieldFrame.origin.y
-            // 노가다를 통해서 모든 기종에 적절한 크기를 설정함.
-            let newFrame = textFieldTopY - keyboardTopY/1.6
-            view.frame.origin.y -= newFrame
-        }
-    }
-
-    @objc func keyboardWillHide(_ sender: Notification) {
-        if view.frame.origin.y != 0 {
-            view.frame.origin.y = 0
-        }
-    }
-}
    
 
 

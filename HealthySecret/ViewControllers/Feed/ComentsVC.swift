@@ -329,9 +329,9 @@ extension ComentsVC {
     // 노티피케이션을 추가하는 메서드
     func addKeyboardNotifications(){
         // 키보드가 나타날 때 앱에게 알리는 메서드 추가
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification , object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShowComents(_:)), name: UIResponder.keyboardWillShowNotification , object: nil)
         // 키보드가 사라질 때 앱에게 알리는 메서드 추가
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHideComents(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
     // 노티피케이션을 제거하는 메서드
@@ -343,7 +343,7 @@ extension ComentsVC {
     }
     
     // 키보드가 나타났다는 알림을 받으면 실행할 메서드
-    @objc func keyboardWillShow(_ noti: NSNotification){
+    @objc func keyboardWillShowComents(_ noti: NSNotification){
         // 키보드의 높이만큼 화면을 올려준다.
         if let keyboardSize = (noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             self.BOTTOMVIEW_ORIGIN_Y =  self.bottomView.frame.origin.y
@@ -355,7 +355,7 @@ extension ComentsVC {
     }
 
     // 키보드가 사라졌다는 알림을 받으면 실행할 메서드
-    @objc func keyboardWillHide(_ noti: NSNotification){
+    @objc func keyboardWillHideComents(_ noti: NSNotification){
         print("hide")
         if let keyboardSize = (noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if self.bottomView.frame.origin.y != self.BOTTOMVIEW_ORIGIN_Y {

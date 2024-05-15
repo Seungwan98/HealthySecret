@@ -242,6 +242,7 @@ class ChangeSignUpVC : UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
         
+        self.setupKeyboardEvent()
         self.hideKeyboardWhenTappedAround()
 
         addSubView()
@@ -633,13 +634,4 @@ class ChangeSignUpVC : UIViewController {
     }
     
 }
-extension ChangeSignUpVC : UITextFieldDelegate {
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        // 붙여넣기가 발생하면 false를 반환하여 입력을 막습니다.
-        if let pasteboardString = UIPasteboard.general.string, string == pasteboardString {
-            return false
-        }
-        return true
-    }
-}
+

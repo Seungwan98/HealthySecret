@@ -114,7 +114,6 @@
 		60EAFE122BC83CF400D3EE73 /* OtherProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EAFE112BC83CF400D3EE73 /* OtherProfileVM.swift */; };
 		60EAFE142BC852C800D3EE73 /* OtherProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EAFE132BC852C800D3EE73 /* OtherProfileVC.swift */; };
 		60EF3C8B2BDC34560007862F /* .gitattributes in Resources */ = {isa = PBXBuildFile; fileRef = 60EF3C8A2BDC34560007862F /* .gitattributes */; };
-		60EF3C8F2BDE74070007862F /* dumbbellPic.png in Resources */ = {isa = PBXBuildFile; fileRef = 60EF3C8E2BDE74070007862F /* dumbbellPic.png */; };
 		60EF3C912BDF564A0007862F /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60EF3C902BDF564A0007862F /* AdSupport.framework */; };
 		60EF3C932BE0C7220007862F /* FollowsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C922BE0C7220007862F /* FollowsVC.swift */; };
 		60EF3C952BE0C7AD0007862F /* FollowsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C942BE0C7AD0007862F /* FollowsVM.swift */; };
@@ -131,6 +130,7 @@
 		60FC85DF2BF33B5F00471983 /* 활동적음.png in Resources */ = {isa = PBXBuildFile; fileRef = 60FC85D92BF33B5F00471983 /* 활동적음.png */; };
 		60FC85E12BF468CE00471983 /* AlertHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC85E02BF468CE00471983 /* AlertHelper.swift */; };
 		60FC85E32BF5062500471983 /* ic_health.png in Resources */ = {isa = PBXBuildFile; fileRef = 60FC85E22BF5062500471983 /* ic_health.png */; };
+		60FC85E72BF523B900471983 /* mainImage.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 60FC85E62BF523B900471983 /* mainImage.jpeg */; };
 		CB62F41F787B287CE4FA2161 /* Pods_HealthySecret.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */; };
 /* End PBXBuildFile section */
 
@@ -249,7 +249,6 @@
 		60EAFE112BC83CF400D3EE73 /* OtherProfileVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfileVM.swift; sourceTree = "<group>"; };
 		60EAFE132BC852C800D3EE73 /* OtherProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfileVC.swift; sourceTree = "<group>"; };
 		60EF3C8A2BDC34560007862F /* .gitattributes */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitattributes; sourceTree = "<group>"; };
-		60EF3C8E2BDE74070007862F /* dumbbellPic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dumbbellPic.png; sourceTree = "<group>"; };
 		60EF3C902BDF564A0007862F /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		60EF3C922BE0C7220007862F /* FollowsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsVC.swift; sourceTree = "<group>"; };
 		60EF3C942BE0C7AD0007862F /* FollowsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsVM.swift; sourceTree = "<group>"; };
@@ -267,6 +266,8 @@
 		60FC85D92BF33B5F00471983 /* 활동적음.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "활동적음.png"; path = "../../../../../../../Downloads/활동적음.png"; sourceTree = "<group>"; };
 		60FC85E02BF468CE00471983 /* AlertHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertHelper.swift; sourceTree = "<group>"; };
 		60FC85E22BF5062500471983 /* ic_health.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_health.png; path = ../../../../../../../Downloads/ic_health.png; sourceTree = "<group>"; };
+		60FC85E62BF523B900471983 /* mainImage.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = mainImage.jpeg; path = ../../../../../../../Downloads/mainImage.jpeg; sourceTree = "<group>"; };
+		60FC85E82BF523BB00471983 /* mainImage.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mainImage.jpeg; sourceTree = "<group>"; };
 		DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthySecret.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -292,9 +293,9 @@
 		6052D5C22BEBED770085B826 /* Ingredients */ = {
 			isa = PBXGroup;
 			children = (
+				6094C54C2ACEBDF300D62B0A /* IngredientsVC.swift */,
 				60A380112B6CD8B200C9A2E6 /* IngredientsDetailVC.swift */,
 				60A380132B6D245D00C9A2E6 /* EditIngredientsVC.swift */,
-				6094C54C2ACEBDF300D62B0A /* IngredientsVC.swift */,
 			);
 			path = Ingredients;
 			sourceTree = "<group>";
@@ -313,8 +314,8 @@
 		606343B92B84E7600084E2CC /* Exercise */ = {
 			isa = PBXGroup;
 			children = (
-				60BC98E92B0B501E0013FAD9 /* ExerciseDetailVC.swift */,
 				600DE9732B6269BD00D5D797 /* ExerciseVC.swift */,
+				60BC98E92B0B501E0013FAD9 /* ExerciseDetailVC.swift */,
 				60A380062B6A5F6B00C9A2E6 /* EditExerciseVC.swift */,
 			);
 			path = Exercise;
@@ -524,11 +525,11 @@
 		60D987942AEA82CD0049CE05 /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				60FC85E82BF523BB00471983 /* mainImage.jpeg */,
 				60F96ED22BF3393F00C0B4FB /* login */,
 				60F96EC82BF3388900C0B4FB /* signUp */,
 				60F96EC72BF3383000C0B4FB /* diary */,
 				606343C42B8E19830084E2CC /* camera.png */,
-				60EF3C8E2BDE74070007862F /* dumbbellPic.png */,
 				60BC990B2B3583340013FAD9 /* tableBackGround.png */,
 			);
 			path = Image;
@@ -588,6 +589,7 @@
 		60F96ED22BF3393F00C0B4FB /* login */ = {
 			isa = PBXGroup;
 			children = (
+				60FC85E62BF523B900471983 /* mainImage.jpeg */,
 				60FC85D02BF33B0F00471983 /* appleLogin.png */,
 				60FC85D22BF33B1700471983 /* kakaoLogin.png */,
 			);
@@ -702,6 +704,7 @@
 				600DE9702B610C7100D5D797 /* add.png in Resources */,
 				60FC85DC2BF33B5F00471983 /* 일반적_fill.png in Resources */,
 				60BB26B22B45CD3400191CB1 /* thirdDout.png in Resources */,
+				60FC85E72BF523B900471983 /* mainImage.jpeg in Resources */,
 				600DE96C2B61081900D5D797 /* breakFast.png in Resources */,
 				606343B72B84976D0084E2CC /* edmitBreakfast.png in Resources */,
 				6094C5452ACD915300D62B0A /* LaunchScreen.storyboard in Resources */,
@@ -712,7 +715,6 @@
 				60FC85D32BF33B1700471983 /* kakaoLogin.png in Resources */,
 				600DE9802B69424F00D5D797 /* snack.png in Resources */,
 				6094C5422ACD915300D62B0A /* Assets.xcassets in Resources */,
-				60EF3C8F2BDE74070007862F /* dumbbellPic.png in Resources */,
 				60FC85D12BF33B0F00471983 /* appleLogin.png in Resources */,
 				60FC85DE2BF33B5F00471983 /* 활동적음_fill.png in Resources */,
 				600DE96E2B61081900D5D797 /* lunch.png in Resources */,
