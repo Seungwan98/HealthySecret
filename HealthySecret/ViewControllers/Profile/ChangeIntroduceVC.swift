@@ -632,7 +632,7 @@ extension ChangeIntroduceVC : UIImagePickerControllerDelegate , UINavigationCont
             }
             
         }
-        self.profileImageView.layer.cornerRadius = 60
+        self.profileImageView.layer.cornerRadius = 50
 
         
         cnt += 1
