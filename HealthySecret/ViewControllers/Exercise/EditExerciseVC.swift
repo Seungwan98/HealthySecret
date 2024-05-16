@@ -63,7 +63,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     
     
     private let imageView : UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "dumbbellPic.png"))
+        let imageView = UIImageView(image: UIImage(named: "ic_health.png"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         return imageView
@@ -111,6 +111,8 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
         return view
     }()
     
+    var exerciseArr = BehaviorSubject<[Exercise]>(value: [])
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -118,6 +120,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
         
         setBinds()
     }
+    
     
     @objc
     func delCell( _ sender : UIButton){
@@ -139,7 +142,6 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
 
     }
     
-    var exerciseArr = BehaviorSubject<[Exercise]>(value: [])
     
     
     func setBinds(){

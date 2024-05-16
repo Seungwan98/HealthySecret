@@ -319,7 +319,7 @@ class ChangeIntroduceVC : UIViewController {
     
     let introduceTextChanged = BehaviorSubject<Int>(value: 0)
         
-    var nameText = PublishSubject<String>()
+    var nameText = BehaviorSubject<String>(value: "")
     
     func setBindings(){
         
@@ -329,7 +329,7 @@ class ChangeIntroduceVC : UIViewController {
 
         
 
-        Observable.combineLatest( self.nameText.map{ !$0.isEmpty }.distinctUntilChanged()  , self.introduceTextChanged.map{ $0 != 0 }.distinctUntilChanged() ){$0 && $1}.subscribe(onNext: { event in
+        Observable.combineLatest( self.nameText.map{ !$0.isEmpty }.distinctUntilChanged()  , self.introduceTextChanged.map{ $0 != 0 }.distinctUntilChanged() ){ $0 && $1}.subscribe(onNext: { event in
             if(event){
                 self.addButton.backgroundColor = .black
             }else{
@@ -386,10 +386,15 @@ class ChangeIntroduceVC : UIViewController {
           
             
             
-            
-            self.introduceTextView.text = $1
-            
-           
+            if($1.isEmpty){
+                
+                self.introduceTextView.text = "내 소개를 입력하여 주세요."
+                self.introduceTextView.textColor = .lightGray
+                
+            }else{
+                self.introduceTextView.text = "내 소개를 입력하여 주세요."
+
+            }
             
            
             

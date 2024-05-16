@@ -7,6 +7,11 @@
 		<string>GmarketSansLight.otf</string>
 		<string>GmarketSansBold.otf</string>
 		<string>GmarketSansMedium.otf</string>
+		<string>Pretendard-Regular.otf</string>
+		<string>Pretendard-SemiBold.otf</string>
+		<string>Pretendard-ExtraBold.otf</string>
+		<string></string>
+		<string></string>
 	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>A message that tells the user why the app is requesting access to the device’s camera.</string>

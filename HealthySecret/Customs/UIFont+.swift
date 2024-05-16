@@ -10,8 +10,8 @@ import UIKit
 
 
 struct AppFontName {
-    static let regular = "GmarketSansMedium"
-    static let bold = "GmarketSansBold"
+    static let regular = "Pretendard-SemiBold"
+    static let bold = "Pretendard-ExtraBold"
     static let italic = "GmarketSansLight"
 }
 
@@ -22,15 +22,15 @@ extension UIFontDescriptor.AttributeName {
 extension UIFont {
 
     @objc class func mySystemFont(ofSize size: CGFloat) -> UIFont {
-        return UIFont(name: AppFontName.regular, size: size-2)!
+        return UIFont(name: AppFontName.regular, size: size)!
     }
 
     @objc class func myBoldSystemFont(ofSize size: CGFloat) -> UIFont {
-        return UIFont(name: AppFontName.bold, size: size-2)!
+        return UIFont(name: AppFontName.bold, size: size)!
     }
 
     @objc class func myItalicSystemFont(ofSize size: CGFloat) -> UIFont {
-        return UIFont(name: AppFontName.italic, size: size-2)!
+        return UIFont(name: AppFontName.italic, size: size)!
     }
 
     @objc convenience init(myCoder aDecoder: NSCoder) {

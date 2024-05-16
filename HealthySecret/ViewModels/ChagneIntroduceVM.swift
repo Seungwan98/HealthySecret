@@ -85,6 +85,7 @@ class ChangeIntroduceVM : ViewModel {
         
         input.addButtonTapped.subscribe(onNext: { _ in
 
+            print("dadasdasdasd")
    
             input.nameTextField.subscribe(onNext: { name in
                 input.introduceTextField.subscribe(onNext: { introduce in

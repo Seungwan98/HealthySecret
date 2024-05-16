@@ -1178,7 +1178,7 @@ class DiaryViewController : UIViewController {
                 self.ingredientsPercent = self.ingredientsPercent.map({ $0 * 0 })
                 
                 
-                self.ingredientsColor = [.lightGray]
+                self.ingredientsColor = [.white.withAlphaComponent(0.6)]
                 self.setPieData(pieChartView: self.pieChart, pieChartDataEntries: self.entryData(values: [1] , dataPoints: []))
             }
             
