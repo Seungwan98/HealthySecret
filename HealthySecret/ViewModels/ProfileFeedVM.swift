@@ -23,9 +23,9 @@ class ProfileFeedVM : ViewModel {
         let viewWillApearEvent : Observable<Void>
         let likesButtonTapped : Observable<Bool>
         let comentsTapped : Observable<UITapGestureRecognizer>
-        let deleteFeed : Observable<String>
-        let reportFeed : Observable<String>
-        let updateFeed : Observable<String>
+        let deleteFeed : Observable<Bool>
+        let reportFeed : Observable<Bool>
+        let updateFeed : Observable<Bool>
         let profileTapped : Observable<UITapGestureRecognizer>
         let refreshControl : Observable<Void>
         
@@ -62,6 +62,10 @@ class ProfileFeedVM : ViewModel {
     func transform(input : Input , disposeBag: DisposeBag) -> Output {
         let authUid = UserDefaults.standard.string(forKey: "uid") ?? ""
         
+        guard let feedUid = self.feedUid  else {
+                print("nil feedUid")
+            return Output()}
+
         
         
         let output = Output()
@@ -85,19 +89,27 @@ class ProfileFeedVM : ViewModel {
             
         }).disposed(by: disposeBag)
         
-        input.updateFeed.subscribe(onNext :{ feedUid in
+        input.updateFeed.subscribe(onNext :{ [weak self]  _ in
             
+            guard let self = self else {return}
             guard let feedModel = self.feedModel else {return}
-            
+
             self.coordinator?.pushUpdateFeed(feed: feedModel)
             
         }).disposed(by: disposeBag)
         
-        input.deleteFeed.subscribe(onNext: { feedUid in
+        input.deleteFeed.subscribe(onNext: { [weak self] _ in
+            
+            guard let self = self else {return}
+
+            
             self.firebaseService.deleteFeed(feedUid: feedUid).subscribe({ event in
                 switch(event){
                 case.completed:
-                    self.reload.onNext(true)
+                    
+                    print("delete")
+                    self.coordinator?.finish()
+                    
                     
                 case.error(let err):
                     print(err)

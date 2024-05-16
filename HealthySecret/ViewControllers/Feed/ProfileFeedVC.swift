@@ -23,6 +23,7 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
     
     
     var mainScrollView = UIScrollView()
+    
     var mainContentView = UIView()
     
     var mainImage : UIImageView = {
@@ -363,9 +364,6 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
     }
     
     
-    var likesChange = PublishSubject<[String:Int]>()
-    
-    var likes : [String:Bool] = [:]
     
     var likesCounts : [String] = []
     
@@ -373,11 +371,11 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
     
     var likesButtonTapped = PublishSubject<Bool>()
         
-    var updateFeed = PublishSubject<String>()
+    var updateFeed = PublishSubject<Bool>()
     
-    var reportFeed = PublishSubject<String>()
+    var reportFeed = PublishSubject<Bool>()
     
-    var deleteFeed = PublishSubject<String>()
+    var deleteFeed = PublishSubject<Bool>()
         
    
     
@@ -700,10 +698,12 @@ extension ProfileFeedVC : UIImagePickerControllerDelegate , UINavigationControll
         
         if(own){
             let declaration = UIAlertAction(title: "삭제하기", style: .default) { [weak self] _ in
-                //
+                self?.deleteFeed.onNext(true)
             }
             let update = UIAlertAction(title: "수정하기", style: .default) { [weak self] _ in
-               // self?.update()
+                
+            
+                self?.updateFeed.onNext(true)
             }
             
 
@@ -712,12 +712,8 @@ extension ProfileFeedVC : UIImagePickerControllerDelegate , UINavigationControll
             alert.addAction(update)
             alert.addAction(declaration)
         }else{
-            let report = UIAlertAction(title: "신고하기", style: .default) { [weak self] _ in
-               // self?.report()
-            }
-            report.setValue(UIColor.red, forKey: "titleTextColor")
-
-            alert.addAction(report)
+           
+          
 
         }
                 

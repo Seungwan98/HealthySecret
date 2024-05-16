@@ -69,6 +69,7 @@ class ProfileCoordinator : Coordinator {
      
         
         let viewModel = OtherProfileVM(coordinator: self , firebaseService: self.firebaseService , uuid : uuid)
+        
         let viewController = OtherProfileVC(viewModel:viewModel)
         self.navigationController.navigationBar.topItem?.title = ""
         self.navigationController.navigationBar.tintColor = .black
