@@ -136,6 +136,19 @@
 		60FC86072BF60C8100471983 /* GmarketSansLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60FC86032BF60C8100471983 /* GmarketSansLight.otf */; };
 		60FC86082BF60C8100471983 /* GmarketSansMedium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60FC86042BF60C8100471983 /* GmarketSansMedium.otf */; };
 		60FC860A2BF60D8100471983 /* UIFont+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC86092BF60D8100471983 /* UIFont+.swift */; };
+		60FC86142BF6544300471983 /* Pretendard-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60FC860F2BF6523200471983 /* Pretendard-ExtraBold.otf */; };
+		60FC86152BF6544300471983 /* Pretendard-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60FC86132BF6523200471983 /* Pretendard-SemiBold.otf */; };
+		60FC86162BF6544300471983 /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60FC860E2BF6523200471983 /* Pretendard-Regular.otf */; };
+		60FC86172BF6544300471983 /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60FC86102BF6523200471983 /* Pretendard-Medium.otf */; };
+		60FC86182BF6544300471983 /* Pretendard-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60FC86112BF6523200471983 /* Pretendard-Black.otf */; };
+		60FC86192BF6544300471983 /* Pretendard-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60FC86122BF6523200471983 /* Pretendard-Light.otf */; };
+		60FC861A2BF6544300471983 /* Pretendard-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60FC860D2BF6523200471983 /* Pretendard-Thin.otf */; };
+		60FC861B2BF6544300471983 /* Pretendard-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60FC860B2BF6523200471983 /* Pretendard-ExtraLight.otf */; };
+		60FC861C2BF6544300471983 /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60FC860C2BF6523200471983 /* Pretendard-Bold.otf */; };
+		60FC861E2BF6678700471983 /* LikesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC861D2BF6678700471983 /* LikesVC.swift */; };
+		60FC86202BF66CE800471983 /* LikesVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC861F2BF66CE800471983 /* LikesVM.swift */; };
+		60FC86222BF6766F00471983 /* FollowsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC86212BF6766F00471983 /* FollowsCell.swift */; };
+		60FC86242BF6981B00471983 /* thirdIcons.png in Resources */ = {isa = PBXBuildFile; fileRef = 60FC86232BF6981B00471983 /* thirdIcons.png */; };
 		CB62F41F787B287CE4FA2161 /* Pods_HealthySecret.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */; };
 /* End PBXBuildFile section */
 
@@ -278,6 +291,19 @@
 		60FC86032BF60C8100471983 /* GmarketSansLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = GmarketSansLight.otf; sourceTree = "<group>"; };
 		60FC86042BF60C8100471983 /* GmarketSansMedium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = GmarketSansMedium.otf; sourceTree = "<group>"; };
 		60FC86092BF60D8100471983 /* UIFont+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+.swift"; sourceTree = "<group>"; };
+		60FC860B2BF6523200471983 /* Pretendard-ExtraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Pretendard-ExtraLight.otf"; path = "../../../../../../Downloads/Pretendard-1/public/static/Pretendard-ExtraLight.otf"; sourceTree = "<group>"; };
+		60FC860C2BF6523200471983 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Pretendard-Bold.otf"; path = "../../../../../../Downloads/Pretendard-1/public/static/Pretendard-Bold.otf"; sourceTree = "<group>"; };
+		60FC860D2BF6523200471983 /* Pretendard-Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Pretendard-Thin.otf"; path = "../../../../../../Downloads/Pretendard-1/public/static/Pretendard-Thin.otf"; sourceTree = "<group>"; };
+		60FC860E2BF6523200471983 /* Pretendard-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Pretendard-Regular.otf"; path = "../../../../../../Downloads/Pretendard-1/public/static/Pretendard-Regular.otf"; sourceTree = "<group>"; };
+		60FC860F2BF6523200471983 /* Pretendard-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Pretendard-ExtraBold.otf"; path = "../../../../../../Downloads/Pretendard-1/public/static/Pretendard-ExtraBold.otf"; sourceTree = "<group>"; };
+		60FC86102BF6523200471983 /* Pretendard-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Pretendard-Medium.otf"; path = "../../../../../../Downloads/Pretendard-1/public/static/Pretendard-Medium.otf"; sourceTree = "<group>"; };
+		60FC86112BF6523200471983 /* Pretendard-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Pretendard-Black.otf"; path = "../../../../../../Downloads/Pretendard-1/public/static/Pretendard-Black.otf"; sourceTree = "<group>"; };
+		60FC86122BF6523200471983 /* Pretendard-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Pretendard-Light.otf"; path = "../../../../../../Downloads/Pretendard-1/public/static/Pretendard-Light.otf"; sourceTree = "<group>"; };
+		60FC86132BF6523200471983 /* Pretendard-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Pretendard-SemiBold.otf"; path = "../../../../../../Downloads/Pretendard-1/public/static/Pretendard-SemiBold.otf"; sourceTree = "<group>"; };
+		60FC861D2BF6678700471983 /* LikesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesVC.swift; sourceTree = "<group>"; };
+		60FC861F2BF66CE800471983 /* LikesVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesVM.swift; sourceTree = "<group>"; };
+		60FC86212BF6766F00471983 /* FollowsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsCell.swift; sourceTree = "<group>"; };
+		60FC86232BF6981B00471983 /* thirdIcons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = thirdIcons.png; path = ../../../../../../Downloads/thirdIcons.png; sourceTree = "<group>"; };
 		DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthySecret.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -466,6 +492,7 @@
 				60EAFE092BC2DF9400D3EE73 /* ComentsCell.swift */,
 				600399892BDB9C7F0030D9EF /* ProfileHeaderView.swift */,
 				60C289B02BED212C00213AAD /* DummyCollectionCell.swift */,
+				60FC86212BF6766F00471983 /* FollowsCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -505,6 +532,7 @@
 				6093BC0C2BD82C0800D3BE3C /* ProfileFeedVM.swift */,
 				60EAFE112BC83CF400D3EE73 /* OtherProfileVM.swift */,
 				60EF3C942BE0C7AD0007862F /* FollowsVM.swift */,
+				60FC861F2BF66CE800471983 /* LikesVM.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -538,6 +566,7 @@
 		60D987942AEA82CD0049CE05 /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				60FC86232BF6981B00471983 /* thirdIcons.png */,
 				60FC85E82BF523BB00471983 /* mainImage.jpeg */,
 				60F96ED22BF3393F00C0B4FB /* login */,
 				60F96EC82BF3388900C0B4FB /* signUp */,
@@ -557,6 +586,7 @@
 				609C06442BBA9E8500D61F53 /* AddFeedVC.swift */,
 				609C064A2BBE9C2400D61F53 /* ComentsVC.swift */,
 				60EF3C922BE0C7220007862F /* FollowsVC.swift */,
+				60FC861D2BF6678700471983 /* LikesVC.swift */,
 			);
 			path = Feed;
 			sourceTree = "<group>";
@@ -612,6 +642,15 @@
 		60FC86012BF60C6500471983 /* Font */ = {
 			isa = PBXGroup;
 			children = (
+				60FC86112BF6523200471983 /* Pretendard-Black.otf */,
+				60FC860C2BF6523200471983 /* Pretendard-Bold.otf */,
+				60FC860F2BF6523200471983 /* Pretendard-ExtraBold.otf */,
+				60FC860B2BF6523200471983 /* Pretendard-ExtraLight.otf */,
+				60FC86122BF6523200471983 /* Pretendard-Light.otf */,
+				60FC86102BF6523200471983 /* Pretendard-Medium.otf */,
+				60FC860E2BF6523200471983 /* Pretendard-Regular.otf */,
+				60FC86132BF6523200471983 /* Pretendard-SemiBold.otf */,
+				60FC860D2BF6523200471983 /* Pretendard-Thin.otf */,
 				60FC86052BF60C8100471983 /* GmarketSansOTF */,
 			);
 			path = Font;
@@ -748,6 +787,16 @@
 				60FC86082BF60C8100471983 /* GmarketSansMedium.otf in Resources */,
 				60FC85DE2BF33B5F00471983 /* 활동적음_fill.png in Resources */,
 				60050C6F2AF8E399000FAAA4 /* GoogleService-Info.plist in Resources */,
+				60FC86142BF6544300471983 /* Pretendard-ExtraBold.otf in Resources */,
+				60FC86152BF6544300471983 /* Pretendard-SemiBold.otf in Resources */,
+				60FC86162BF6544300471983 /* Pretendard-Regular.otf in Resources */,
+				60FC86172BF6544300471983 /* Pretendard-Medium.otf in Resources */,
+				60FC86182BF6544300471983 /* Pretendard-Black.otf in Resources */,
+				60FC86192BF6544300471983 /* Pretendard-Light.otf in Resources */,
+				60FC861A2BF6544300471983 /* Pretendard-Thin.otf in Resources */,
+				60FC861B2BF6544300471983 /* Pretendard-ExtraLight.otf in Resources */,
+				60FC86242BF6981B00471983 /* thirdIcons.png in Resources */,
+				60FC861C2BF6544300471983 /* Pretendard-Bold.otf in Resources */,
 				60FC85FF2BF604BC00471983 /* firstDout.png in Resources */,
 				60BC990C2B3583340013FAD9 /* tableBackGround.png in Resources */,
 				60FC86062BF60C8100471983 /* GmarketSansBold.otf in Resources */,
@@ -831,6 +880,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				609C06452BBA9E8500D61F53 /* AddFeedVC.swift in Sources */,
+				60FC861E2BF6678700471983 /* LikesVC.swift in Sources */,
 				60A3801A2B72143800C9A2E6 /* IngredientsDetailVM.swift in Sources */,
 				609C06412BAAEA7400D61F53 /* TapGesture+.swift in Sources */,
 				60FC85E12BF468CE00471983 /* AlertHelper.swift in Sources */,
@@ -853,6 +903,7 @@
 				60D987902AEA731C0049CE05 /* LoginVC.swift in Sources */,
 				600DE9722B624CDF00D5D797 /* ExerciseDTO.swift in Sources */,
 				60A380162B6D27D400C9A2E6 /* EditIngredientsVM.swift in Sources */,
+				60FC86222BF6766F00471983 /* FollowsCell.swift in Sources */,
 				60A380182B6D2DA600C9A2E6 /* EditIngredientsCell.swift in Sources */,
 				60BC98EA2B0B501E0013FAD9 /* ExerciseDetailVC.swift in Sources */,
 				60C289B52BEE086500213AAD /* UnderlinieSegmentControl.swift in Sources */,
@@ -884,6 +935,7 @@
 				60EAFE0A2BC2DF9400D3EE73 /* ComentsCell.swift in Sources */,
 				607ABE502B9824B400C3FCCF /* ViewController+.swift in Sources */,
 				609C062F2B9ABC0D00D61F53 /* RunCoordinator.swift in Sources */,
+				60FC86202BF66CE800471983 /* LikesVM.swift in Sources */,
 				60BC98F92B2728C40013FAD9 /* DiaryVC.swift in Sources */,
 				60A380052B6A37D800C9A2E6 /* Custom.swift in Sources */,
 				606343C72B8E34CD0084E2CC /* ChangeIntroduceVC.swift in Sources */,

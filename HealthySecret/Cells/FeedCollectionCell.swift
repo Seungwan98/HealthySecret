@@ -12,6 +12,8 @@ protocol FeedCollectionCellDelegate {
     func update(for index: String)
     
     func didPressedProfile(for index: String)
+    
+    func didPressedLikes(for index: String)
 }
 
 class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
@@ -130,6 +132,8 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .boldSystemFont(ofSize: 16)
         label.text = "좋아요 0개"
+        label.isUserInteractionEnabled = true
+
         return label
         
         
@@ -323,6 +327,14 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         delegate?.didPressComents(for: feedUid!)
         print("dd")
         
+    } 
+    
+    @objc
+    func didpressedLikes(_ sender : UITapGestureRecognizer ){
+        
+        delegate?.didPressedLikes(for: feedUid!)
+        print("dd")
+        
     }
     
     
@@ -389,6 +401,9 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         
         let profileGesture = UITapGestureRecognizer(target: self, action: #selector(didpressedProfile))
         profileImage.addGestureRecognizer(profileGesture)
+        
+        let likesGesture = UITapGestureRecognizer(target: self , action: #selector(didpressedLikes))
+        likesLabel.addGestureRecognizer(likesGesture)
 
         ellipsis.addTarget(self, action: #selector(actionSheetAlert), for: .touchUpInside)
         

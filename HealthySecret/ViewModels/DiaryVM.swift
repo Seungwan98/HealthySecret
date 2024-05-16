@@ -308,6 +308,15 @@ class DiaryVM : ViewModel {
                                 
                                 
                             }
+                            
+                            for i in self.dic {
+                                
+                                self.dic[i.key] = CustomMath().getDecimalSecond(data: i.value)
+                                
+                            }
+                            
+                            
+                            
                             self.finalDic = self.dic
                             self.finalDic["kcal"] = ingTotalCal
                             

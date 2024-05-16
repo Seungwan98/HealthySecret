@@ -1878,7 +1878,7 @@ extension FirebaseService {
     
     
     
-    func getFollows(uid:[String] ) -> Single<[UserModel]>{
+    func getFollowsLikes(uid:[String] ) -> Single<[UserModel]>{
         return Single.create{ single in
             
             var usersArr : [UserModel] = []

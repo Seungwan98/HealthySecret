@@ -271,6 +271,32 @@ class CommuCoordinator : Coordinator  {
         self.navigationController.pushViewController(viewController , animated: false)
         
         
+    } 
+    
+    func pushLikes( uid : String , feedUid : String){
+        
+        
+        let firebaseService = FirebaseService()
+        let viewModel = LikesVM(coordinator: self, firebaseService: firebaseService)
+      
+        viewModel.uid = uid
+        viewModel.feedUid = feedUid
+        
+        
+        let viewController = LikesVC(viewModel:viewModel)
+        
+        self.navigationController.navigationBar.topItem?.title = ""
+        self.navigationController.navigationBar.tintColor = .black
+        
+        viewController.hidesBottomBarWhenPushed = true
+
+        self.navigationController.pushViewController(viewController , animated: false)
+        
+        
+        
+        
+        
+        
     }
     
     

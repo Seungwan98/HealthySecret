@@ -392,7 +392,7 @@ class ChangeIntroduceVC : UIViewController {
                 self.introduceTextView.textColor = .lightGray
                 
             }else{
-                self.introduceTextView.text = "내 소개를 입력하여 주세요."
+                self.introduceTextView.text = $1
 
             }
             

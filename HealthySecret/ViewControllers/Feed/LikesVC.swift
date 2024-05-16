@@ -1,5 +1,5 @@
 //
-//  FollowsVC.swift
+//  likesVC.swift
 //  MovieProject
 //
 //  Created by 양승완 on 2023/10/05.
@@ -9,11 +9,9 @@ import RxSwift
 import Kingfisher
 
 
-class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , FollowsCellDelegate   {
+class LikesVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , FollowsCellDelegate   {
     func didPressProfile(for index: String) {
         self.pressedProfile.onNext(index)
-        
-
     }
     
     
@@ -31,52 +29,17 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
     private var segmentChanged = PublishSubject<Bool>()
     private var pressedFollows = PublishSubject<[String:Bool]>()
     private var pressedProfile = PublishSubject<String>()
+
     
     
     let disposeBag = DisposeBag()
     
-    private var viewModel : FollowsVM?
-  
-        
+    private var viewModel : LikesVM?
     
-    private lazy var containerView: UIView = {
-        let container = UIView()
-        container.backgroundColor = .clear
-        container.translatesAutoresizingMaskIntoConstraints = false
-        return container
-    }()
     
-    private lazy var segmentControl: UISegmentedControl = {
-        
-        let segment = UISegmentedControl()
-        
-        segment.selectedSegmentTintColor = .clear
-        
-        segment.setBackgroundImage(UIImage(), for: .normal, barMetrics: .default)
-
-        segment.setDividerImage(UIImage(), forLeftSegmentState: .normal, rightSegmentState: .normal, barMetrics: .default)
-        
-        segment.insertSegment(withTitle: "팔로워", at: 0, animated: false)
-        segment.insertSegment(withTitle: "팔로잉", at: 1, animated: false)
-        
-        
-        // 선택 되어 있지 않을때 폰트 및 폰트컬러
-        segment.setTitleTextAttributes([
-            NSAttributedString.Key.foregroundColor: UIColor.lightGray,
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .regular)
-        ], for: .normal)
-        
-        // 선택 되었을때 폰트 및 폰트컬러
-        segment.setTitleTextAttributes([
-            NSAttributedString.Key.foregroundColor: UIColor.black,
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .bold)
-        ], for: .selected)
-        
-        
-        segment.translatesAutoresizingMaskIntoConstraints = false
-        
-        return segment
-    }()
+ 
+    
+   
     
     
     
@@ -102,7 +65,7 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
     
     
     
-    init(viewModel : FollowsVM){
+    init(viewModel : LikesVM){
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         
@@ -120,6 +83,7 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
     override func viewDidLoad(){
         super.viewDidLoad()
         
+        
         self.setUI()
         self.setBindings()
         
@@ -133,7 +97,8 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
     
     override func viewWillAppear(_ animated: Bool) {
         
-        
+        self.navigationItem.title = "좋아요"
+
         
         backBarButtonItem.tintColor = .black
         backBarButtonItem.image = UIImage(systemName: "chevron.backward")
@@ -163,41 +128,28 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
     let mainView = UIView()
     
     
-    @objc private func didChangeValue(segment: UISegmentedControl) {
-        print(segment.selectedSegmentIndex)
-        if(segmentControl.selectedSegmentIndex == 0){
-            
-            self.segmentChanged.onNext(true)
-            self.backgroundView.backgroundLabel.text = "아직 팔로우한 상대가 없어요"
-
-
-        }else{
-            self.segmentChanged.onNext(false)
-            self.backgroundView.backgroundLabel.text = "아직 팔로잉한 상대가 없어요"
-
-
-        }
-        
-    }
+  
     
     
     
     func setUI(){
-     
         
-        self.view.backgroundColor = .white
-        
-        self.loadingView.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.segmentControl.addTarget(self, action: #selector(didChangeValue(segment: )), for: .valueChanged )
         
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
         tableView.dataSource = nil
         tableView.register(FollowsCell.self, forCellReuseIdentifier: "FollowsCell")
         
+        self.view.backgroundColor = .white
+        
+        self.backgroundView.backgroundLabel.text = "아직 좋아요가 없어요"
+        
+        self.loadingView.translatesAutoresizingMaskIntoConstraints = false
         self.mainView.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundView.translatesAutoresizingMaskIntoConstraints = false
 
+
+        
+      
         
         
         
@@ -212,9 +164,7 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
         
         
         
-        view.addSubview(containerView)
         view.addSubview(self.loadingView)
-        containerView.addSubview(segmentControl)
         
         
         
@@ -230,21 +180,14 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
             
             
             
+       
             
-            containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            containerView.heightAnchor.constraint(equalToConstant: 40),
-            
-            segmentControl.topAnchor.constraint(equalTo: containerView.topAnchor),
-            segmentControl.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            segmentControl.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            segmentControl.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+
             
             
             
             
-            mainView.topAnchor.constraint(equalTo: containerView.bottomAnchor ),
+            mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor ),
             mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             mainView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             mainView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
@@ -295,8 +238,9 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
             return  }
         
         
-        let input = FollowsVM.Input( viewWillApearEvent : self.rx.methodInvoked(#selector(viewWillAppear(_:)))
-            .map( { _ in }).asObservable() , backButtonTapped : self.backBarButtonItem.rx.tap.asObservable() , segmentChanged: self.segmentChanged.asObservable(), pressedFollows: self.pressedFollows.asObservable()  , pressedProfile : self.pressedProfile.asObservable()
+        let input = LikesVM.Input( viewWillApearEvent : self.rx.methodInvoked(#selector(viewWillAppear(_:)))
+            .map( { _ in }).asObservable() , pressedFollows: self.pressedFollows.asObservable() ,
+                                   pressedProfile : self.pressedProfile.asObservable()
                                      
                                      
         )
@@ -315,22 +259,7 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
         }).disposed(by: disposeBag)
         
         output.backgroundViewHidden.bind(to: self.backgroundView.rx.isHidden).disposed(by: disposeBag)
-        
-        output.follow.subscribe(onNext: { [weak self] follow in
-            guard let follow = follow  , let self = self else {return}
-            
-            if(follow){
-                self.segmentControl.selectedSegmentIndex = 0
-                
-                self.backgroundView.backgroundLabel.text = "아직 팔로우한 상대가 없어요"
-            }else{
-                self.segmentControl.selectedSegmentIndex = 1
-                self.backgroundView.backgroundLabel.text = "아직 팔로잉한 상대가 없어요"
-            }
-         
-
-            
-        }).disposed(by: disposeBag)
+    
         
         
         
@@ -421,6 +350,8 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
     
     
 }
+
+
 
 
 

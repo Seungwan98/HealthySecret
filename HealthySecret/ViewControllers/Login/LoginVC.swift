@@ -142,6 +142,7 @@ class LoginViewController : UIViewController {
     let mainView : UIView = {
         let view = UIView()
         view.backgroundColor = .systemBlue.withAlphaComponent(0.5)
+        view.layer.cornerRadius = 8
         
         
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -224,10 +225,11 @@ class LoginViewController : UIViewController {
             mainView.leadingAnchor.constraint(equalTo:  self.view.leadingAnchor ),
             
             
-            mainLoginImage.topAnchor.constraint(equalTo: self.view.topAnchor),
-            mainLoginImage.bottomAnchor.constraint(equalTo:  self.loginStackView.topAnchor ),
-            mainLoginImage.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            mainLoginImage.leadingAnchor.constraint(equalTo:  self.view.leadingAnchor ),
+           
+            mainLoginImage.widthAnchor.constraint(equalToConstant: 240),
+            mainLoginImage.heightAnchor.constraint(equalToConstant: 240),
+            mainLoginImage.centerXAnchor.constraint(equalTo:  self.view.centerXAnchor ),
+            mainLoginImage.centerYAnchor.constraint(equalTo:  self.view.centerYAnchor ),
         
         
       

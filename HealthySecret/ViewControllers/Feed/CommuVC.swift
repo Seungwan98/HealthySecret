@@ -262,6 +262,11 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         deleteFeed.onNext(index)
         
     }
+    func didPressedLikes(for index : String) {
+        
+        likesTapped.onNext(index)
+        
+    }
     
     var likesChange = PublishSubject<[String:Int]>()
     
@@ -282,6 +287,8 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     var deleteFeed = PublishSubject<String>()
     
     var profileTapped = PublishSubject<String>()
+    
+    var likesTapped = PublishSubject<String>()
     
     var isPaging = false
     
@@ -537,7 +544,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         
         
         
-        let input = CommuVM.Input( viewWillAppearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), likesButtonTapped: likesButtonTapped, comentsTapped: self.comentsTapped.asObservable() , addButtonTapped: self.addButton.rx.tap.asObservable() , deleteFeed: deleteFeed , reportFeed : reportFeed , updateFeed: updateFeed , paging : paging.asObservable() , profileTapped : profileTapped.asObservable(), refreshControl: self.refreshControl.rx.controlEvent(.valueChanged).asObservable()  , segmentChanged : segmentChanged.asObservable())
+        let input = CommuVM.Input( viewWillAppearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), likesButtonTapped: likesButtonTapped, comentsTapped: self.comentsTapped.asObservable() , addButtonTapped: self.addButton.rx.tap.asObservable() , deleteFeed: deleteFeed , reportFeed : reportFeed , updateFeed: updateFeed , paging : paging.asObservable() , profileTapped : profileTapped.asObservable(), likesTapped : self.likesTapped.asObservable() , refreshControl: self.refreshControl.rx.controlEvent(.valueChanged).asObservable()  , segmentChanged : segmentChanged.asObservable())
         
         
         guard let output = viewModel?.transform(input: input, disposeBag: disposeBag) else {return}

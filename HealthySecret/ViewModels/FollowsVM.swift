@@ -27,6 +27,7 @@ class FollowsVM : ViewModel {
         let backButtonTapped : Observable<Void>
         let segmentChanged : Observable<Bool>
         let pressedFollows : Observable<[String:Bool]>
+        let pressedProfile : Observable<String>
 
     }
     
@@ -133,6 +134,17 @@ class FollowsVM : ViewModel {
             
         }).disposed(by: disposeBag)
         
+        input.pressedProfile.subscribe(onNext: { [weak self] idx in
+            
+            guard let self = self else {return}
+            
+            self.coordinator?.pushProfileVC(uuid: idx)
+           
+            
+            
+            
+        }).disposed(by: disposeBag)
+        
         
         
         input.viewWillApearEvent.subscribe({ [weak self] _ in
@@ -159,12 +171,12 @@ class FollowsVM : ViewModel {
                     switch(event){
                     case.success(let user):
                         
-                        self.firebaseService.getFollows(uid: user.followers ?? [] ).subscribe({ event in
+                        self.firebaseService.getFollowsLikes(uid: user.followers ?? [] ).subscribe({ event in
                             switch(event){
                             case.success(let followers):
                                 self.followers = followers
                                 
-                                self.firebaseService.getFollows(uid: user.followings ?? [] ).subscribe({ event in
+                                self.firebaseService.getFollowsLikes(uid: user.followings ?? [] ).subscribe({ event in
                                     
                                     switch(event){
                                     case.success(let followings):

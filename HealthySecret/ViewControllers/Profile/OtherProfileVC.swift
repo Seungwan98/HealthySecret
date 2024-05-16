@@ -645,13 +645,7 @@ extension OtherProfileVC : UINavigationControllerDelegate {
         alert.view.tintColor = .black
         
         
-        let report = UIAlertAction(title: "신고하기", style: .default) { [weak self] _ in
-            
-            //
-        }
-        report.setValue(UIColor.red, forKey: "titleTextColor")
-        
-        alert.addAction(report)
+      
         
         
         

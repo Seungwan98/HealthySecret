@@ -61,6 +61,8 @@ class FollowsCoordinator : Coordinator  {
         
     }
     
+  
+    
     
     func finish() {
         print("finish")
@@ -71,7 +73,16 @@ class FollowsCoordinator : Coordinator  {
 
     
    
-  
+    func pushProfileVC(uuid:String){
+        
+        let profileCoordinator =  ProfileCoordinator( self.navigationController )
+        childCoordinator.append(profileCoordinator)
+        profileCoordinator.finishDelegate = self
+        profileCoordinator.PushOtherProfileVC(uuid: uuid)
+        
+        
+    }
+
     
  
     

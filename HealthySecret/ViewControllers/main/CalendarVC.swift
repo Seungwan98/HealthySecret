@@ -79,7 +79,7 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         
         button.setTitle("일기 쓰기", for: .normal)
         button.tintColor = .white
-        button.titleLabel?.font = .boldSystemFont(ofSize: 20)
+     
         button.layer.cornerRadius = 30
         button.backgroundColor = .systemBlue.withAlphaComponent(0.8)
         return button
@@ -90,7 +90,7 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         
         
         button.setTitle("날짜로 이동", for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 20)
+   
         
         button.backgroundColor = .black
         button.layer.cornerRadius = 30

@@ -28,6 +28,7 @@ class CommuVM : ViewModel {
         let updateFeed : Observable<String>
         let paging : Observable<Bool>
         let profileTapped : Observable<String>
+        let likesTapped : Observable<String>
         let refreshControl : Observable<Void>
         let segmentChanged : Observable<Bool>
         
@@ -179,6 +180,20 @@ class CommuVM : ViewModel {
             guard let feed = feed else { return }
             
             self?.coordinator?.pushComents(coments: feed.coments ?? [] , feedUid : feedUid , feedUuid: feed.uuid )
+            
+            
+        }).disposed(by: disposeBag)
+        
+        
+        input.likesTapped.subscribe(onNext: { [weak self] feedUid in
+
+            var feed : FeedModel?
+            
+            _ = self?.feedModels.map({  if($0.feedUid == feedUid){ feed = $0}  })
+            
+            guard let feed = feed else { return }
+            
+            self?.coordinator?.pushLikes(uid: feed.uuid , feedUid : feed.feedUid )
             
             
         }).disposed(by: disposeBag)
