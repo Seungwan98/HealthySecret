@@ -79,14 +79,13 @@ class LoginVM : ViewModel {
                     switch(event){
                     case.success(let user):
                     
-                        print("getDoc success")
                         UserDefaults.standard.set( user.profileImage , forKey: "profileImage")
                         self.loginCoordinator?.login()
                         
                     case.failure(_):
                         
-                        self.loginCoordinator?.pushSignUpVC()
-                        
+                        self.loginCoordinator?.presentModal()
+
                     }
                     
                     
@@ -111,8 +110,8 @@ class LoginVM : ViewModel {
                 switch event{
                 case .success( let inform ):
                     
-          
-                    print(inform)
+                    UserDefaults.standard.set(inform["email"], forKey: "email")
+
                 
                         self.firebaseService?.signIn(email:inform["email"] ?? "" ,
                                                      pw:inform["pw"] ?? "" ).subscribe({ event in
@@ -127,7 +126,7 @@ class LoginVM : ViewModel {
                                 UserDefaults.standard.set(inform["pw"], forKey: "password")
                                 
                                 
-                                self.loginCoordinator?.pushSignUpVC()
+                                self.loginCoordinator?.presentModal()
                             }
                             
                             

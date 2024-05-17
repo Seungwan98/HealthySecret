@@ -105,6 +105,7 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
         
     }
     
+  
     
    
   
@@ -209,6 +210,17 @@ class LoginCoordinator : Coordinator  {
         self.delegate?.didLoggedIn(self)
         
             
+        
+        
+    }
+    
+    func presentModal(){
+        let viewController = AssignModalVC()
+            
+        viewController.view.backgroundColor = .white
+        self.navigationController.present(viewController, animated: true)
+        
+        
         
         
     }

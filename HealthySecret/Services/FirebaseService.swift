@@ -169,7 +169,7 @@ final class FirebaseService {
                 }
                 
                 
-                //completable(.completed)
+                completable(.completed)
                 
             }
             return Disposables.create()
@@ -180,10 +180,10 @@ final class FirebaseService {
         return Completable.create{ completable in
             print("in")
             if  let user = Auth.auth().currentUser {
-                print("in1")
                 
-                
+                print("auth \(auth)")
                 user.reauthenticate(with: auth){ result ,err in
+                    print("user  \(result)")
                     self.signOut().subscribe{ event in
                         switch(event){
                         case.completed:
@@ -193,12 +193,11 @@ final class FirebaseService {
                                     
                                     
                                 } else {
+                                    print("user \(user)")
                                     self?.deleteDatas(user: user).subscribe({ event in
                                         switch(event){
                                         case.completed:
-                                            print("complted")
-                                            print("complted")
-                                            print("complted")
+                             
                                             
                                             completable(.completed)
                                         case .error(_):

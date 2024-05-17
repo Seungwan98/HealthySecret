@@ -483,16 +483,14 @@ class MyProfileVM : ViewModel {
                     switch(single){
                     case.success(let password):
                         
+                        
                         let credential = EmailAuthProvider.credential(withEmail: email, password: password)
-                        print("\(credential)  credential")
                         self.firebaseService.deleteAccount(auth: credential ).subscribe{ completable in
                             switch(completable){
                             case.completed:
-                                print("successsssDeleteAcount")
                                 self.kakaoService.kakaoSessionOut().subscribe{ event in
                                     switch(event){
                                     case.completed:
-                                        print("successsssDeleteSessionOut")
                                         self.coordinator?.logout()
                                     case.error(let error):
                                         print(error)

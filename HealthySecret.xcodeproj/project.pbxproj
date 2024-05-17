@@ -76,6 +76,7 @@
 		60A3801C2B7F22E400C9A2E6 /* DetailModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A3801B2B7F22E400C9A2E6 /* DetailModalVC.swift */; };
 		60B36B0B2BF6EB8B00E01335 /* SplashVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B36B0A2BF6EB8B00E01335 /* SplashVC.swift */; };
 		60B36B0D2BF6EBBE00E01335 /* SplashVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B36B0C2BF6EBBE00E01335 /* SplashVM.swift */; };
+		60B36B152BF6FF8A00E01335 /* AssignModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B36B142BF6FF8A00E01335 /* AssignModalVC.swift */; };
 		60BC98D22AF919B40013FAD9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 60BC98D12AF919B40013FAD9 /* FirebaseAnalytics */; };
 		60BC98D42AF919B40013FAD9 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 60BC98D32AF919B40013FAD9 /* FirebaseFirestore */; };
 		60BC98D62AF919B40013FAD9 /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 60BC98D52AF919B40013FAD9 /* FirebaseFirestoreCombine-Community */; };
@@ -237,6 +238,7 @@
 		60A3801B2B7F22E400C9A2E6 /* DetailModalVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailModalVC.swift; sourceTree = "<group>"; };
 		60B36B0A2BF6EB8B00E01335 /* SplashVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashVC.swift; sourceTree = "<group>"; };
 		60B36B0C2BF6EBBE00E01335 /* SplashVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashVM.swift; sourceTree = "<group>"; };
+		60B36B142BF6FF8A00E01335 /* AssignModalVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignModalVC.swift; sourceTree = "<group>"; };
 		60BC98DE2AFF78300013FAD9 /* FirebaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
 		60BC98E02B0284810013FAD9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		60BC98E22B02A0590013FAD9 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
@@ -343,6 +345,7 @@
 		6052D5C32BEBEDFC0085B826 /* main */ = {
 			isa = PBXGroup;
 			children = (
+				60B36B0A2BF6EB8B00E01335 /* SplashVC.swift */,
 				60BC98F82B2728C40013FAD9 /* DiaryVC.swift */,
 				60A3801B2B7F22E400C9A2E6 /* DetailModalVC.swift */,
 				606343C82B8F34430084E2CC /* AddDiaryVC.swift */,
@@ -366,6 +369,7 @@
 			children = (
 				600DE9302B557EC400D5D797 /* SignUpVC.swift */,
 				60D9878F2AEA731C0049CE05 /* LoginVC.swift */,
+				60B36B142BF6FF8A00E01335 /* AssignModalVC.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -391,7 +395,6 @@
 				60EF3CA02BEA84660007862F /* Feed */,
 				606343CA2B8F344E0084E2CC /* Profile */,
 				606343BC2B84E7DD0084E2CC /* Login */,
-				60B36B0A2BF6EB8B00E01335 /* SplashVC.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -502,6 +505,70 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		60B36B0E2BF6F69300E01335 /* main */ = {
+			isa = PBXGroup;
+			children = (
+				60B36B0C2BF6EBBE00E01335 /* SplashVM.swift */,
+				60BC98FA2B27297F0013FAD9 /* DiaryVM.swift */,
+				600DE92E2B511E9D00D5D797 /* CalendarVM.swift */,
+			);
+			path = main;
+			sourceTree = "<group>";
+		};
+		60B36B0F2BF6F6BC00E01335 /* Ingredients */ = {
+			isa = PBXGroup;
+			children = (
+				60BC98F42B1DC71F0013FAD9 /* IngredientsVM.swift */,
+				60A380192B72143800C9A2E6 /* IngredientsDetailVM.swift */,
+				60A380152B6D27D400C9A2E6 /* EditIngredientsVM.swift */,
+			);
+			path = Ingredients;
+			sourceTree = "<group>";
+		};
+		60B36B102BF6F6F200E01335 /* Exercise */ = {
+			isa = PBXGroup;
+			children = (
+				600DE9752B62A00A00D5D797 /* ExerciseVM.swift */,
+				600DE97B2B67A23E00D5D797 /* ExerciseDetialVM.swift */,
+				60A380082B6A663E00C9A2E6 /* EditExerciseVM.swift */,
+			);
+			path = Exercise;
+			sourceTree = "<group>";
+		};
+		60B36B112BF6F7B400E01335 /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				609C06382BA9A25000D61F53 /* CommuVM.swift */,
+				6093BC0C2BD82C0800D3BE3C /* ProfileFeedVM.swift */,
+				60EAFE0D2BC4361200D3EE73 /* UpdateFeedVM.swift */,
+				609C06482BBD733500D61F53 /* AddFeedVM.swift */,
+				60EAFE052BC125BD00D3EE73 /* ComentsVM.swift */,
+				60EF3C942BE0C7AD0007862F /* FollowsVM.swift */,
+				60FC861F2BF66CE800471983 /* LikesVM.swift */,
+			);
+			path = Feed;
+			sourceTree = "<group>";
+		};
+		60B36B122BF6F81A00E01335 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				606343C02B8CCB290084E2CC /* MyProfileVM.swift */,
+				60EAFE112BC83CF400D3EE73 /* OtherProfileVM.swift */,
+				609C06322B9F0FF600D61F53 /* ChagneIntroduceVM.swift */,
+				606343CF2B9622280084E2CC /* ChangeSignUpVM.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		60B36B132BF6F88700E01335 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				60BC98EC2B0B68650013FAD9 /* LoginVM.swift */,
+				600DE9322B55802A00D5D797 /* SignUpVM.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
 		60BC98DD2AFF781C0013FAD9 /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -517,28 +584,12 @@
 			isa = PBXGroup;
 			children = (
 				60BC98F22B1867BB0013FAD9 /* ViewModel.swift */,
-				60BC98EC2B0B68650013FAD9 /* LoginVM.swift */,
-				600DE9322B55802A00D5D797 /* SignUpVM.swift */,
-				60BC98FA2B27297F0013FAD9 /* DiaryVM.swift */,
-				600DE92E2B511E9D00D5D797 /* CalendarVM.swift */,
-				60BC98F42B1DC71F0013FAD9 /* IngredientsVM.swift */,
-				60A380192B72143800C9A2E6 /* IngredientsDetailVM.swift */,
-				60A380152B6D27D400C9A2E6 /* EditIngredientsVM.swift */,
-				600DE9752B62A00A00D5D797 /* ExerciseVM.swift */,
-				600DE97B2B67A23E00D5D797 /* ExerciseDetialVM.swift */,
-				60A380082B6A663E00C9A2E6 /* EditExerciseVM.swift */,
-				609C06382BA9A25000D61F53 /* CommuVM.swift */,
-				60EAFE0D2BC4361200D3EE73 /* UpdateFeedVM.swift */,
-				60EAFE052BC125BD00D3EE73 /* ComentsVM.swift */,
-				606343C02B8CCB290084E2CC /* MyProfileVM.swift */,
-				609C06482BBD733500D61F53 /* AddFeedVM.swift */,
-				609C06322B9F0FF600D61F53 /* ChagneIntroduceVM.swift */,
-				606343CF2B9622280084E2CC /* ChangeSignUpVM.swift */,
-				6093BC0C2BD82C0800D3BE3C /* ProfileFeedVM.swift */,
-				60EAFE112BC83CF400D3EE73 /* OtherProfileVM.swift */,
-				60EF3C942BE0C7AD0007862F /* FollowsVM.swift */,
-				60FC861F2BF66CE800471983 /* LikesVM.swift */,
-				60B36B0C2BF6EBBE00E01335 /* SplashVM.swift */,
+				60B36B0E2BF6F69300E01335 /* main */,
+				60B36B0F2BF6F6BC00E01335 /* Ingredients */,
+				60B36B102BF6F6F200E01335 /* Exercise */,
+				60B36B112BF6F7B400E01335 /* Feed */,
+				60B36B122BF6F81A00E01335 /* Profile */,
+				60B36B132BF6F88700E01335 /* Login */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -928,6 +979,7 @@
 				606343D02B9622280084E2CC /* ChangeSignUpVM.swift in Sources */,
 				60D9878E2AE8BBA20049CE05 /* Coordinator.swift in Sources */,
 				600DE95C2B5935F400D5D797 /* KakaoService.swift in Sources */,
+				60B36B152BF6FF8A00E01335 /* AssignModalVC.swift in Sources */,
 				600DE92F2B511E9D00D5D797 /* CalendarVM.swift in Sources */,
 				60A380102B6A81A400C9A2E6 /* ExerciseCell.swift in Sources */,
 				60C289AD2BECACE100213AAD /* UIResponder+.swift in Sources */,

@@ -24,15 +24,6 @@ class DetailModalVC : UIViewController {
     }
     
 
-//orie = "NUTR_CONT1"
-//case carbohydrates = "NUTR_CONT2" //탄수화물
-//case protein = "NUTR_CONT3" //단백질
-//case province = "NUTR_CONT4" //지방
-//case sugars = "NUTR_CONT5" //당류
-//case sodium = "NUTR_CONT6" //나트륨
-//case cholesterol = "NUTR_CONT7" //콜레스테롤
-//case fattyAcid = "NUTR_CONT8" //포화지방산
-//case transFat = "NUTR_CONT9" //트랜스지방
     
     let textLabels = [UILabel(),UILabel(),UILabel(),UILabel(),UILabel(),UILabel(),UILabel(),UILabel(),UILabel()]
     var contentLabels = [UILabel(),UILabel(),UILabel(),UILabel(),UILabel(),UILabel(),UILabel(),UILabel(),UILabel()]
