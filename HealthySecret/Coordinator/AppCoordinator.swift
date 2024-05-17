@@ -61,92 +61,9 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
     func start() {
         
        
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        
-        UserDefaults.standard.set(formatter.string(from: Date()), forKey: "date")
-        
-        
-        
-        self.firebaseService.getCurrentUser().subscribe { event in
-            switch event {
-                
-            case .success(let user):
-                print("success")
-                var email : String?
-                var uid : String?
-                
-                if user.uid.isEmpty {
-                    
-                    print("sign Out")
-                    
-                    self.firebaseService.signOut().subscribe({ event in
-                        switch(event) {
-                        case.completed:
-                            self.didLoggedOut(self)
-                        case.error(let err):
-                            print(err)
-                        }
-                        
-                        
-                    }).disposed(by: self.disposeBag)
-                    
-
-                }else{
-                    email = user.email
-                    uid = user.uid
-                    
-                }
-                
-             
-               
-                
-                self.firebaseService.getDocument(key: uid ?? "").subscribe{ event in
-                    switch event{
-     
-                        
-                    case .success(let firUser):
-                    
-                        
-                        UserDefaults.standard.set( email , forKey: "email")
-                        UserDefaults.standard.set( uid , forKey: "uid")
-                        
-                        
-                        UserDefaults.standard.set( firUser.name  , forKey: "name")
-                        UserDefaults.standard.set( firUser.loginMethod , forKey: "loginMethod")
-                        UserDefaults.standard.set( firUser.profileImage  , forKey: "profileImage")
-                        
-                        
-                        self.showMainViewController()
-                       
-                    case .failure(_):
-                        print("fail lets sign Out")
-
-                        self.firebaseService.signOut().subscribe({ event in
-                            switch(event){
-                            case.completed:
-                                self.showSignUpVC()
-                            case.error(_):
-                                print("err")
-                            }
-                            
-                        }).disposed(by: self.disposeBag)
-                       
-                        
-                    }
-                    
-                        
-                }.disposed(by: self.disposeBag)
-                
-                
-            case .failure(let error):
-                print("fail lets Login \(error)")
-                self.showLoginViewController()
-
-            
-            }
-        }.disposed(by: disposeBag)
+        let viewController = SplashVC(viewModel: SplashVM(coordinator: self, firebaseService: self.firebaseService))
+        self.navigationController.setViewControllers([viewController], animated: false)
+       
     }
     
     func showMainViewController(){
