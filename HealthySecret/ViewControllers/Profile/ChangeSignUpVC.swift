@@ -324,7 +324,7 @@ class ChangeSignUpVC : UIViewController {
             let rightView = UIView(frame: CGRect(x: 0, y: 0, width: 35, height: 50))
             let leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 50))
             
-            let rightLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 26, height: 50))
+            let rightLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 28, height: 50))
             rightLabel.text = rightTexts[index]
             rightLabel.font = .boldSystemFont(ofSize: 18)
             

@@ -77,6 +77,7 @@
 		60B36B0B2BF6EB8B00E01335 /* SplashVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B36B0A2BF6EB8B00E01335 /* SplashVC.swift */; };
 		60B36B0D2BF6EBBE00E01335 /* SplashVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B36B0C2BF6EBBE00E01335 /* SplashVM.swift */; };
 		60B36B152BF6FF8A00E01335 /* AssignModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B36B142BF6FF8A00E01335 /* AssignModalVC.swift */; };
+		60B36B172BF7203A00E01335 /* edmitLunch.png in Resources */ = {isa = PBXBuildFile; fileRef = 60B36B162BF7203A00E01335 /* edmitLunch.png */; };
 		60BC98D22AF919B40013FAD9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 60BC98D12AF919B40013FAD9 /* FirebaseAnalytics */; };
 		60BC98D42AF919B40013FAD9 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 60BC98D32AF919B40013FAD9 /* FirebaseFirestore */; };
 		60BC98D62AF919B40013FAD9 /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 60BC98D52AF919B40013FAD9 /* FirebaseFirestoreCombine-Community */; };
@@ -239,6 +240,7 @@
 		60B36B0A2BF6EB8B00E01335 /* SplashVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashVC.swift; sourceTree = "<group>"; };
 		60B36B0C2BF6EBBE00E01335 /* SplashVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashVM.swift; sourceTree = "<group>"; };
 		60B36B142BF6FF8A00E01335 /* AssignModalVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignModalVC.swift; sourceTree = "<group>"; };
+		60B36B162BF7203A00E01335 /* edmitLunch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = edmitLunch.png; path = ../../../../../../../Downloads/edmitLunch.png; sourceTree = "<group>"; };
 		60BC98DE2AFF78300013FAD9 /* FirebaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
 		60BC98E02B0284810013FAD9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		60BC98E22B02A0590013FAD9 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
@@ -272,7 +274,6 @@
 		60EF3C962BE8B04D0007862F /* FollowsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsCoordinator.swift; sourceTree = "<group>"; };
 		60EF3C9C2BE9E4CB0007862F /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
 		60EF3C9E2BEA2BD10007862F /* CustomBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBackgroundView.swift; sourceTree = "<group>"; };
-		60F96ED12BF3393200C0B4FB /* edmitLunch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edmitLunch.png; sourceTree = "<group>"; };
 		60FC85D02BF33B0F00471983 /* appleLogin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appleLogin.png; path = ../../../../../../../Downloads/appleLogin.png; sourceTree = "<group>"; };
 		60FC85D22BF33B1700471983 /* kakaoLogin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = kakaoLogin.png; path = ../../../../../../../Downloads/kakaoLogin.png; sourceTree = "<group>"; };
 		60FC85D42BF33B5F00471983 /* 활동많음_fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "활동많음_fill.png"; path = "../../../../../../../Downloads/활동많음_fill.png"; sourceTree = "<group>"; };
@@ -652,7 +653,7 @@
 			isa = PBXGroup;
 			children = (
 				606343B42B84976D0084E2CC /* edmitBreakfast.png */,
-				60F96ED12BF3393200C0B4FB /* edmitLunch.png */,
+				60B36B162BF7203A00E01335 /* edmitLunch.png */,
 				60FC85EB2BF5FBE200471983 /* breakfast.png */,
 				60FC85EE2BF5FBE200471983 /* dinner.png */,
 				60FC85EC2BF5FBE200471983 /* lunch.png */,
@@ -850,6 +851,7 @@
 				60FC86172BF6544300471983 /* Pretendard-Medium.otf in Resources */,
 				60FC86182BF6544300471983 /* Pretendard-Black.otf in Resources */,
 				60FC86192BF6544300471983 /* Pretendard-Light.otf in Resources */,
+				60B36B172BF7203A00E01335 /* edmitLunch.png in Resources */,
 				60FC861A2BF6544300471983 /* Pretendard-Thin.otf in Resources */,
 				60FC861B2BF6544300471983 /* Pretendard-ExtraLight.otf in Resources */,
 				60FC86242BF6981B00471983 /* thirdIcons.png in Resources */,

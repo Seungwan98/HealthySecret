@@ -40,7 +40,7 @@ final class SplashVM {
                         self.coordinator?.showSignUpVC()
                         
                     case("main"):
-                        self.coordinator?.showLoginViewController()
+                        self.coordinator?.showMainViewController()
                         
                         
                         
