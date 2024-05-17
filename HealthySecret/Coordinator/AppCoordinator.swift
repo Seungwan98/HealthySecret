@@ -105,8 +105,6 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
         
     }
     
-  
-    
    
   
     
@@ -185,7 +183,30 @@ class LoginCoordinator : Coordinator  {
         
     }
     
+    func presentModal(){
+        let viewController = AssignModalVC()
+            
+        viewController.view.backgroundColor = .white
+        if let sheet = viewController.sheetPresentationController {
+                    
+                    //지원할 크기 지정
+            sheet.detents = [.medium()]
+            
+                   
+                    //시트 상단에 그래버 표시 (기본 값은 false)
+                    sheet.prefersGrabberVisible = true
+                    
+             
+                }
+        viewController.coordinator = self
+        self.navigationController.present(viewController, animated: true)
+        
+        
+        
+        
+    }
     
+   
     
     func start() {
         print("startLoginVC")
@@ -210,17 +231,6 @@ class LoginCoordinator : Coordinator  {
         self.delegate?.didLoggedIn(self)
         
             
-        
-        
-    }
-    
-    func presentModal(){
-        let viewController = AssignModalVC()
-            
-        viewController.view.backgroundColor = .white
-        self.navigationController.present(viewController, animated: true)
-        
-        
         
         
     }

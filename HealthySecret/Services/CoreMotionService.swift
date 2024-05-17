@@ -40,7 +40,6 @@ final class CoreMotionService {
             
             if let steps = data?.numberOfSteps {
                 DispatchQueue.main.async {
-                    print("steps = \(steps)")
                     CoreMotionService.getSteps.onNext(String(describing: steps))
                 }
             }
