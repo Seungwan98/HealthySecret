@@ -561,12 +561,12 @@ extension FeedCollectionCell :  UINavigationControllerDelegate {
             alert.addAction(update)
             alert.addAction(declaration)
         }else{
-            let report = UIAlertAction(title: "신고하기", style: .default) { [weak self] _ in
-                self?.report()
-            }
-            report.setValue(UIColor.red, forKey: "titleTextColor")
-
-            alert.addAction(report)
+//            let report = UIAlertAction(title: "신고하기", style: .default) { [weak self] _ in
+//                self?.report()
+//            }
+//            report.setValue(UIColor.red, forKey: "titleTextColor")
+//
+//            alert.addAction(report)
 
         }
                 
