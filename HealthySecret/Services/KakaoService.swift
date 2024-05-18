@@ -23,7 +23,6 @@ final class KakaoService {
                             com(.error(error))
                         }
                         else {
-                            print("unlink() success.")
                             com(.completed)
                         }
                     }
@@ -41,7 +40,6 @@ final class KakaoService {
                             com(.error(error))
                         }
                         else {
-                            print("logout() success.")
                             com(.completed)
                         }
                     }
