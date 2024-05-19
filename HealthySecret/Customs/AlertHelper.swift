@@ -45,6 +45,22 @@ class AlertHelper{
     }
     
     
+    func showResult(title: String, message: String?, over viewController: UIViewController) {
+        let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
+
+        
+
+        let cancel = UIAlertAction(title: "확인", style: .cancel, handler: nil)
+        cancel.setValue( UIColor.black , forKey: "titleTextColor")
+       
+        
+        ac.addAction(cancel)
+
+
+        viewController.present(ac, animated: true)
+    }
+    
+    
     
 }
 

@@ -34,6 +34,7 @@ class LoginVM : ViewModel {
     }
     
     struct Output {
+        var alert = PublishSubject<Bool>()
         
     }
 
@@ -57,41 +58,24 @@ class LoginVM : ViewModel {
             
             UserDefaults.standard.set("apple",forKey: "loginMethod")
             
-            
-
-            Auth.auth().signIn(with: credential) { authResult, error in
-                if let error = error {
-                    print("Error Apple sign in: \(error.localizedDescription)")
+            self.firebaseService?.signInCredential(credential: credential).subscribe({ event in
+                switch(event){
                     
-                    return
-                }
-            
-                
-                guard let authUser = authResult?.user else { return }
-       
-                UserDefaults.standard.set(authUser.email, forKey: "email")
-                UserDefaults.standard.set( authUser.uid  , forKey: "uid")
-
-
-                
-                
-                self.firebaseService?.getDocument(key: authUser.uid).subscribe({ event in
-                    switch(event){
-                    case.success(let user):
+                case.completed:
+                    self.loginCoordinator?.login()
                     
-                        UserDefaults.standard.set( user.profileImage , forKey: "profileImage")
-                        self.loginCoordinator?.login()
-                        
-                    case.failure(_):
-                        
-                        self.loginCoordinator?.presentModal()
-
+                    
+                case.error(let err):
+                    if(err as? CustomError == CustomError.freeze){
+                        output.alert.onNext(true)
+                    }else{
+                        self.loginCoordinator?.pushSignUpVC()
                     }
-                    
-                    
-                    
-                }).disposed(by: disposeBag)
-            }
+                }
+                
+                
+            }).disposed(by: disposeBag)
+            
             
             
         }).disposed(by: disposeBag)
@@ -116,17 +100,27 @@ class LoginVM : ViewModel {
                         self.firebaseService?.signIn(email:inform["email"] ?? "" ,
                                                      pw:inform["pw"] ?? "" ).subscribe({ event in
                             switch event{
-                            case .completed:
+                            case .completed: 
                                 self.loginCoordinator?.login()
                                 
-                            case .error(_):
-                                UserDefaults.standard.set("kakao",forKey: "loginMethod")
-                                UserDefaults.standard.set(inform["email"], forKey: "email")
-                                UserDefaults.standard.set(inform["name"], forKey: "name")
-                                UserDefaults.standard.set(inform["pw"], forKey: "password")
                                 
+                            case .error(let err):
                                 
-                                self.loginCoordinator?.presentModal()
+                                if(err as! CustomError == CustomError.freeze){
+                                    
+                                    output.alert.onNext(true)
+                                    
+                                }else{
+                                    
+                                    
+                                    UserDefaults.standard.set("kakao",forKey: "loginMethod")
+                                    UserDefaults.standard.set(inform["email"], forKey: "email")
+                                    UserDefaults.standard.set(inform["name"], forKey: "name")
+                                    UserDefaults.standard.set(inform["pw"], forKey: "password")
+                                    
+                                    
+                                    self.loginCoordinator?.presentModal()
+                                }
                             }
                             
                             

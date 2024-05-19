@@ -15,6 +15,8 @@ import RxCocoa
 
 enum CustomError: Error {
     case isNil
+    case freeze
+    case delete
 }
 
 public enum FireStoreError: Error, LocalizedError {
@@ -58,6 +60,40 @@ final class FirebaseService {
         
         
     }
+    
+    func getMessage(uid : String) -> Single<String>{
+        return Single.create(){ single in
+            print(uid)
+            self.db.collection("HealthySecretStartMessages").document(uid).getDocument(completion: { doc,err in
+                
+                if let err = err {
+                    
+                    single(.failure(err))
+                    
+                }else{
+                    
+                    if let data = doc?.data(){
+                        let outputData : String = data["report"] as! String
+                        doc?.reference.delete()
+                        single(.success(outputData))
+                        
+                        
+                        
+                    }else{
+                        single(.failure(CustomError.isNil))
+
+                    }
+                    
+                    
+                }
+                
+                
+            })
+            
+            return Disposables.create()
+        }
+        
+    }
     func deleteDatas(user : User) -> Completable {
         
         
@@ -83,7 +119,10 @@ final class FirebaseService {
                     doc.reference.updateData([
                         
                         "followings" : FieldValue.arrayRemove([uid]),
-                        "followers" : FieldValue.arrayRemove([uid])
+                        "followers" : FieldValue.arrayRemove([uid]),
+                        "blocking" : FieldValue.arrayRemove([uid]),
+                        "blocked" : FieldValue.arrayRemove([uid]),
+                        
                         
                     ])
                     
@@ -292,14 +331,39 @@ final class FirebaseService {
         return Completable.create { completable in
             Auth.auth()
                 .signIn(withEmail: email, password: pw){ [weak self] res, error in
-                    guard self != nil else { return }
+                    guard let self = self else { return }
                     if let error = error {
                         // 에러가 났다면 여기서 처리
                         completable(.error(error))
                         return
                     } else {
+                        guard let uid = res?.user.uid else {return completable(.error(CustomError.isNil))}
                         print("로그인 성공")
-                        UserDefaults.standard.setValue( res?.user.uid, forKey: "uid")
+                        UserDefaults.standard.setValue(uid , forKey: "uid")
+                        
+                        self.getDocument(key: uid).subscribe({ event in
+                            switch(event){
+                            case(.success(let user)):
+                                if( CustomFormatter.shared.dateCompare(targetString: user.freezeDate ?? "")  ) {
+                                    completable(.completed)
+                                   
+
+                                }else{
+                                    completable(.error(CustomError.freeze))
+                                }
+                            case(.failure(let err)):
+                                completable(.error(err))
+
+                                
+                                
+                                
+                            }
+                            
+                            
+                        }).disposed(by: self.disposeBag)
+                        
+                        
+                        
                         completable(.completed)
                     }
                 }
@@ -312,10 +376,56 @@ final class FirebaseService {
         
     }
     
+    func signInCredential(credential :AuthCredential) -> Completable{
+        
+        return Completable.create { completable in
+            
+            
+            
+            Auth.auth().signIn(with: credential) { authResult, error in
+                if let error = error {
+                    print("Error Apple sign in: \(error.localizedDescription)")
+                    
+                    return
+                }
+                
+                
+                guard let authUser = authResult?.user else { return }
+                
+                UserDefaults.standard.set(authUser.email, forKey: "email")
+                UserDefaults.standard.set( authUser.uid  , forKey: "uid")
+                
+                
+                
+                
+                self.getDocument(key: authUser.uid ).subscribe({ event in
+                    switch(event){
+                    case(.success(let user)):
+                        if( CustomFormatter.shared.dateCompare(targetString: user.freezeDate ?? "")  ) {
+                            completable(.completed)
+                            
+                            
+                        }else{
+                            completable(.error(CustomError.freeze))
+                        }
+                    case(.failure(let err)):
+                        completable(.error(err))
+                        
+                        
+                        
+                        
+                    }
+                    
+                    
+                }).disposed(by: self.disposeBag)
+            }
+            return Disposables.create()
+        }
+    }
+    
     func getDocument( key : String ) -> Single<UserModel> {
         return Single.create { [weak self] single in
             
-            print("getDoc")
             
             
             self?.db.collection("HealthySecretUsers").document(key).getDocument{ doc , err in
@@ -327,11 +437,9 @@ final class FirebaseService {
                 
                 if let data = doc?.data() {
                     do {
-                        print("getDo2")
                         
                         let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
                         let creditCard = try JSONDecoder().decode(UserModel.self, from: jsonData)
-                        print("\(creditCard)")
                         
                         single(.success(creditCard))
                         
@@ -965,6 +1073,208 @@ extension FirebaseService {
         
     }
     
+    func report(url : String , uid : String  , uuid : String , event : String) -> Completable{
+        return Completable.create{ completable in
+            
+            self.db.collection(url).document(uid).getDocument{ doc , err in
+                if let err = err {
+                    completable(.error(err))
+                }else{
+                    
+                    if(event == "feed"){
+                        doc?.reference.updateData([
+                            
+                            "report" : FieldValue.arrayUnion([uuid])
+                            
+                        ])
+                        
+                        let report = doc?.get("report") as! [String]
+                        if(report.count >= 5){
+                            
+                            
+                            self.db.collection("HealthySecretStartMessages").document(uuid).setData(["report":"신고 누적으로 피드가 삭제 되었습니다"])
+
+                            
+                            
+                        }
+                        
+                        
+                        completable(.completed)
+                        
+                    }
+                    else if(event == "coment"){
+                        if(doc?.data() != nil){
+                            doc?.reference.updateData([
+                                
+                                "report" : FieldValue.arrayUnion([uuid])
+                                
+                            ])
+                            
+                            let report = doc?.get("report") as! [String]
+                            if(report.count >= 5){
+                                
+                                doc?.reference.delete()
+                                
+                                self.db.collection("HealthySecretStartMessages").document(uuid).setData(["report":"신고 누적으로 댓글이 삭제 되었습니다"])
+
+
+                                completable(.error(CustomError.delete))
+
+                                
+                                
+                            }
+                        }else{
+                            doc?.reference.setData(["report":[uuid]])
+                        }
+                       
+                        
+                        completable(.completed)
+
+                        
+                        
+                    }else if(event == "user"){
+                        
+                        doc?.reference.updateData([
+                            
+                            "report" : FieldValue.arrayUnion([uuid])
+                            
+                        ])
+                        
+                        
+                        
+                        if let report = doc?.get("report") as? [String] {
+                            if(report.count >= 5){
+                                
+                                
+                            
+                                doc?.reference.updateData([
+                                    
+
+                                    "freezeDate" :  CustomFormatter.shared.DateToString(date: Calendar.current.date(byAdding: .month, value: +1, to: Date() )!)
+
+                                    
+                                ])
+                            }
+                            
+                            completable(.completed)
+                            
+                            
+                        }
+                    }
+                    else{
+                        completable(.error(CustomError.isNil))
+
+                    }
+                }
+                    
+                }
+                
+               
+                
+                
+            return Disposables.create()
+
+                
+            }
+            
+            
+            
+        
+        
+    }
+    
+    func blockUser(ownUid : String , opponentUid : String  , block : Bool) -> Completable {
+        return Completable.create{ completable in
+            
+            self.db.collection("HealthySecretUsers").document(ownUid).getDocument{ doc , err in
+                if let err = err {
+                    completable(.error(err))
+                }else{
+                    
+                    if(block){
+                        doc?.reference.updateData([
+                            
+                            "blocking" : FieldValue.arrayUnion([opponentUid]),
+                            "followings" : FieldValue.arrayRemove([opponentUid]),
+                            "followers" : FieldValue.arrayRemove([opponentUid]),
+                            
+                        ])
+                        
+                        
+                        self.db.collection("HealthySecretUsers").document(opponentUid).getDocument{ doc , err in
+                            if let err = err {
+                                completable(.error(err))
+                            }else{
+                                
+                                
+                                doc?.reference.updateData([
+                                    
+                                    "blocked" : FieldValue.arrayUnion([ownUid]),
+                                    "followings" : FieldValue.arrayRemove([ownUid]),
+                                    "followers" : FieldValue.arrayRemove([ownUid]),
+                                ])
+                                
+                                
+                                
+                                
+                                completable(.completed)
+                            }
+                            
+                            
+                            
+                            
+                        }
+                    }else{
+                        
+                        doc?.reference.updateData([
+                            
+                            "blocking" : FieldValue.arrayRemove([opponentUid]),
+                     
+                            
+                        ])
+                        
+                        
+                        self.db.collection("HealthySecretUsers").document(opponentUid).getDocument{ doc , err in
+                            if let err = err {
+                                completable(.error(err))
+                            }else{
+                                
+                                
+                                doc?.reference.updateData([
+                                    
+                                    "blocked" : FieldValue.arrayRemove([ownUid]),
+                                
+                                ])
+                                
+                                
+                                
+                                
+                                completable(.completed)
+                            }
+                            
+                            
+                            
+                            
+                        }
+                        
+                    }
+                    
+                    
+                }
+                
+           
+                
+                
+                
+                
+            }
+            
+            
+            
+            return Disposables.create()
+        }
+        
+    }
     
 }
 
@@ -1274,7 +1584,7 @@ extension FirebaseService {
   
     
     
-    func getFeedPagination(feeds:[FeedModel] , pagesCount : Int , follow : [String] , getFollow : Bool , followCount : Int) -> Single<[FeedModel]> {
+    func getFeedPagination(feeds:[FeedModel] , pagesCount : Int , follow : [String] , getFollow : Bool , followCount : Int , block : [String]) -> Single<[FeedModel]> {
         return Single<[FeedModel]>.create { [weak self] single in
             
             var newFeeds : [FeedModel] = []
@@ -1322,13 +1632,16 @@ extension FirebaseService {
                         
                         if(getFollow){
                             
-                            if(follow.contains(feedModel.uuid)) {
+                            if(follow.contains(feedModel.uuid) && !block.contains(feedModel.uuid)) {
                                 newFeeds.append(feedModel)
                                 followCount += 1
                             }
-                        }else{
+                        }else if(!block.contains(feedModel.uuid)){
+                            
                             newFeeds.append(feedModel)
+                            followCount += 1
                         }
+                        
                         
                     } catch {
                         
@@ -1340,8 +1653,8 @@ extension FirebaseService {
                 var totalFeeds = lastFeeds + newFeeds
                 
                 
-                if(followCount < 4 && getFollow ) {
-                    getFeedPagination(feeds: totalFeeds , pagesCount: 4, follow: follow , getFollow: getFollow , followCount: followCount ).subscribe({ event in
+                if(followCount < 4 || getFollow ) {
+                    getFeedPagination(feeds: totalFeeds , pagesCount: 4, follow: follow , getFollow: getFollow , followCount: followCount, block: block ).subscribe({ event in
                         switch(event){
                             
                         case.success(let feeds):
@@ -1604,7 +1917,6 @@ extension FirebaseService {
                 }
                 
                 
-                print("listenr \(coment) \(feedUid)")
                 snapshot.documentChanges.forEach { diff in
                     
                     
@@ -1618,7 +1930,9 @@ extension FirebaseService {
                             let feed = try JSONDecoder().decode(FeedModel.self, from: jsonData)
                             
                             if let coments = feed.coments{
-                                
+                                if(coments.isEmpty){
+                                    single(.success([]))
+                                }
                                var outputComents = coments
                                 
                                 for i in 0..<coments.count{

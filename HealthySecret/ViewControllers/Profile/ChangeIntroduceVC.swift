@@ -321,6 +321,8 @@ class ChangeIntroduceVC : UIViewController {
         
     var nameText = BehaviorSubject<String>(value: "")
     
+    let addButtonTapped = PublishSubject<Bool>()
+    
     func setBindings(){
         
    
@@ -340,8 +342,13 @@ class ChangeIntroduceVC : UIViewController {
             
         }).disposed(by: disposeBag)
         
+         self.addButton.rx.tap.asObservable().subscribe({ _ in
+             self.addButtonTapped.onNext(self.introduceTextView.textColor == UIColor.lightGray)
+            
+            
+         }).disposed(by: disposeBag)
 
-        let input = ChangeIntroduceVM.Input(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , addButtonTapped : self.addButton.rx.tap.asObservable()  , nameTextField: self.nameText , introduceTextField: self.introduceTextView.rx.text.orEmpty.distinctUntilChanged(),
+        let input = ChangeIntroduceVM.Input(viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , addButtonTapped : addButtonTapped  , nameTextField: self.nameText , introduceTextField: self.introduceTextView.rx.text.orEmpty.distinctUntilChanged(),
                                             profileImageTapped : profileImageView.rx.tapGesture().when(.recognized).asObservable() , profileImageValue : self.imageOutput, profileChange: imageChanging.asObservable())
         
         
@@ -359,7 +366,6 @@ class ChangeIntroduceVC : UIViewController {
             if  $1.count <= 0 {
          
                 
-                    print("empty")
                     self.introduceTextView.textColor = .lightGray
                     self.introduceTextView.text = "내 소개를 입력하여 주세요."
             

@@ -52,6 +52,15 @@ class SettingVC : UIViewController {
 
         return view
         
+    }() 
+    
+    private let blockListButton : UIView = {
+        let view = UIView()
+        view.frame = CGRect(x: 0, y: 0, width: 0, height: 80)
+
+
+        return view
+        
     }()
     private let sample2 : UIView = {
         let view = UIView()
@@ -65,7 +74,7 @@ class SettingVC : UIViewController {
     }()
 
     
-    private lazy var stackViewValues : [UIView] = [logoutButton , secessionButton ]
+    private lazy var stackViewValues : [UIView] = [logoutButton , secessionButton , blockListButton ]
     
     private lazy var informationView : UIStackView = {
         let view = UIStackView(arrangedSubviews: stackViewValues)
@@ -114,7 +123,7 @@ class SettingVC : UIViewController {
         
     }
     
-    let texts = ["로그아웃" , "회원탈퇴"]
+    let texts = ["로그아웃" , "회원탈퇴" , "차단목록"]
     var idx = 0
     func setStackView(){
        _ = stackViewValues.map{
@@ -193,7 +202,7 @@ class SettingVC : UIViewController {
             informationView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 20),
             informationView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor , constant: -20),
             informationView.topAnchor.constraint(equalTo: contentView.topAnchor , constant: 10),
-            informationView.heightAnchor.constraint(equalToConstant: 100),
+            informationView.heightAnchor.constraint(equalToConstant: 150),
             
 
          
@@ -231,7 +240,7 @@ class SettingVC : UIViewController {
         }).disposed(by: disposeBag)
         
         let input = MyProfileVM.SettingInput(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , logoutTapped: logoutButton.rx.tapGesture().when(.recognized).asObservable(), secessionTapped: scessionTapped , values : values ,
-                                             OAuthCredential: self.OAuthCredential.asObservable())
+                                             OAuthCredential: self.OAuthCredential.asObservable() , blockListTapped : blockListButton.rx.tapGesture().when(.recognized).asObservable())
 
         
         

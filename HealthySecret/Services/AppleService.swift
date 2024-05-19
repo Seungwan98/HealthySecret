@@ -10,16 +10,12 @@ final class AppleService {
     func removeAccount(refreshToken : String? , userId : String?) -> Completable {
         return Completable.create{ completable in
             
-             print("token \(refreshToken)  token \(userId) userId  " )
              
              if let token = refreshToken {
              let url = URL(string: "https://us-central1-healthysecrets-f1b20.cloudfunctions.net/revokeToken?refresh_token=\(token)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "https://apple.com")!
              let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
              guard let data = data else { return }
-                 
-                 let message = String(data: data, encoding: .utf8) ?? ""
-                 print("\(String(describing: response)) message")
-                 
+               
                  
         
                          

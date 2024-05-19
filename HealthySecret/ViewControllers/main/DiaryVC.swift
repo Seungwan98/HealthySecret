@@ -1279,6 +1279,12 @@ class DiaryViewController : UIViewController {
             
         }    ).disposed(by: disposeBag)
         
+        output.alert.subscribe(onNext:{ text in
+            
+            AlertHelper.shared.showResult(title: "알림", message: text , over: self)
+            
+        }).disposed(by: disposeBag)
+        
         
     }
     

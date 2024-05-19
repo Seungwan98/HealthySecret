@@ -14,6 +14,8 @@ import RxSwift
 import Kingfisher
 
 class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
+
+    
     
     func imageTapped(feedUid: String) {
         
@@ -27,6 +29,8 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     var firstBind = true
     
     var loadControll = false
+    
+    var own : String?
     
     private var viewModel : OtherProfileVM?
     
@@ -447,19 +451,21 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
             print("enable \(enable)")
             
             self?.followButton.isHidden = enable
+            
             if(!enable){
                 self?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "", image: UIImage(systemName: "ellipsis"), target: self, action: #selector(self?.actionSheetAlert))
             }else{
                 self?.navigationItem.rightBarButtonItem = nil
             }
             
-            
         }).disposed(by: header.disposeBag)
         
         
         
-        
     }
+    
+    
+    var blockAndReport = PublishSubject<String>()
     
     
     func setBindings() {
@@ -467,13 +473,21 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         
         
         
-        let input = OtherProfileVM.Input(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable()  , outputProfileImage : outputProfileImage.asObservable(), imageTapped: self.imageTapped.asObservable() , addButtonTapped : addButtonTapped.asObservable()
+        
+        
+        let input = OtherProfileVM.Input(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable()  , outputProfileImage : outputProfileImage.asObservable(), imageTapped: self.imageTapped.asObservable() , addButtonTapped : addButtonTapped.asObservable() , blockAndReport: self.blockAndReport.asObservable()
                                          
         )
         
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else { return }
         
-        
+        output.alert.subscribe(onNext: { [weak self] event in
+            guard let self = self else { return }
+
+            AlertHelper.shared.showResult(title: "신고가 접수되었습니다", message: "신고는 24시간 이내 검토 후 반영됩니다", over: self)
+            
+            
+        }).disposed(by: disposeBag)
         
         
         
@@ -496,10 +510,11 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         
         output.feedUid.subscribe( onNext: { [weak self] uidsArr in
             guard let uidsArr = uidsArr else { return }
-            
+
             self?.uidsArr = uidsArr
             
         }).disposed(by: disposeBag)
+        
         
         
         
@@ -650,6 +665,26 @@ extension OtherProfileVC : UINavigationControllerDelegate {
         
         
         self.present(alert, animated: true, completion: nil)
+        
+        let report = UIAlertAction(title: "신고하기", style: .default) { [weak self] _ in
+            guard let self = self else {return}
+
+            self.blockAndReport.onNext("report")
+        }
+        report.setValue(UIColor.red, forKey: "titleTextColor")
+
+        alert.addAction(report)
+        
+        let block = UIAlertAction(title: "차단하기", style: .default) { [weak self] _ in
+            guard let self = self else {return}
+
+            AlertHelper.shared.showResult(title: "차단이 완료되었습니다", message: "차단 목록에서 차단을 해제할 수 있습니다", over: self)
+
+            self.blockAndReport.onNext("block")
+        }
+        block.setValue(UIColor.red, forKey: "titleTextColor")
+
+        alert.addAction(block)
         
     }
     

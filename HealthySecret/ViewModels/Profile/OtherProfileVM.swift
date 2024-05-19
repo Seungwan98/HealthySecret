@@ -29,6 +29,7 @@ class OtherProfileVM : ViewModel {
         let outputProfileImage : Observable<Data?>
         let imageTapped : Observable<String>
         let addButtonTapped : Observable<Bool>
+        let blockAndReport : Observable<String>
 
     }
     
@@ -36,7 +37,8 @@ class OtherProfileVM : ViewModel {
         
         var feedImage = BehaviorSubject<[[String]]?>(value: nil)
         var feedUid = BehaviorSubject<[String]?>(value: nil)
-        
+        var alert = PublishSubject<Bool>()
+
     }
     
     struct HeaderInput {
@@ -183,12 +185,50 @@ class OtherProfileVM : ViewModel {
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         
         
-        
         let uid = self.uuid
+        
         
         let output = Output()
         
         guard let ownUid = UserDefaults.standard.string(forKey: "uid") else { return output  }
+        
+        input.blockAndReport.subscribe(onNext: { event in
+            
+            if(event == "block"){
+                
+                self.firebaseService.blockUser(ownUid: ownUid, opponentUid: uid, block: true).subscribe({ event in
+                    switch(event){
+                    case.completed:
+                        self.coordinator?.finish()
+                        
+                    case.error(let err):
+                        
+                        print(err)
+                        
+                        
+                    }
+                    
+                    
+                }).disposed(by: disposeBag)
+            }else{
+                
+                self.firebaseService.report(url: "HealthySecretUsers", uid: uid , uuid: uid , event: "user").subscribe({ event in
+                    
+                    switch(event){
+                        
+                    case.completed:
+                        output.alert.onNext(true)
+                    case.error(let err):
+                        print("식패")
+                    }
+                    
+                    
+                }).disposed(by: disposeBag)
+                
+                
+            }
+            
+        }).disposed(by: disposeBag)
         
         input.addButtonTapped.throttle(.seconds(1),  scheduler: MainScheduler.instance).subscribe(onNext:{ selected in
             
@@ -223,7 +263,6 @@ class OtherProfileVM : ViewModel {
         input.viewWillApearEvent.subscribe(onNext: { event in
             
                 
-            print("view")
         
                     self.firebaseService.getFeedsUid(uid: uid).subscribe({ event in
                     switch(event){

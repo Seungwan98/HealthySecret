@@ -42,6 +42,7 @@ class CommuVM : ViewModel {
         var isLastPage = BehaviorSubject<Bool>(value:false)
         var isPaging = BehaviorSubject<Bool>(value: false)
         var endRefreshing = BehaviorSubject<Bool>(value: false)
+        var alert = PublishSubject<Bool>()
         
         
     }
@@ -53,6 +54,8 @@ class CommuVM : ViewModel {
     var feedModels = [FeedModel]()
     
     var follow : [String] = []
+    
+    var block : [String] = []
     
     weak var coordinator : CommuCoordinator?
     
@@ -246,6 +249,7 @@ class CommuVM : ViewModel {
                 switch(event){
                 case.success(let user):
                     self?.follow = user.followings ?? []
+                    self?.block = user.blocking + user.blocked
                     var count = 4
                 
                     if let cnt = self?.feedModels.count {
@@ -273,11 +277,13 @@ class CommuVM : ViewModel {
         }).disposed(by: disposeBag)
         
         
-        self.reload.subscribe(onNext: { [self] count in
+        self.reload.subscribe(onNext: { [weak self] count in
             
+            
+            guard let self = self else {return}
             
                 
-            self.firebaseService.getFeedPagination(feeds: self.feedModels, pagesCount: count , follow: self.follow , getFollow : getFollow , followCount: 0 ).subscribe({ event in
+            self.firebaseService.getFeedPagination(feeds: self.feedModels, pagesCount: count , follow: self.follow , getFollow : getFollow , followCount: 0 , block : block ).subscribe({ event in
                     
                     switch(event){
                         
@@ -293,15 +299,10 @@ class CommuVM : ViewModel {
                             
                         }
                         
-                       // if(feeds.count < 2){
-                            
-                        //    output.isLastPage.onNext(true)
-                            
-                      //  }else{
+              
                             
                             output.isLastPage.onNext(false)
-                            
-                       // }
+                 
                         
                         
                         
@@ -326,54 +327,9 @@ class CommuVM : ViewModel {
                     
                     
                 }).disposed(by: disposeBag)
-                
-            
-        
+   
             
             
-//            self.firebaseService.getFeedPagination(feeds: self.feedModels, pagesCount: count , block: [] ).subscribe({ event in
-//                switch(event){
-//                    
-//                    
-//                case(.success(let feeds)):
-//                    
-//                    
-//                    self.feedModels = feeds
-//                    
-//               
-//                    
-//
-//
-//                    for i in 0..<feeds.count {
-//                        
-//                        self.likesCount[feeds[i].feedUid ] = feeds[i].likes
-//                    }
-//                    
-//                    if(feeds.count < 2){
-//                        
-//                        output.isLastPage.onNext(true)
-//                        
-//                    }else{
-//                        
-//                        output.isLastPage.onNext(false)
-//
-//                    }
-//                    
-//                    
-//                    
-//                    output.feedModel.onNext(self.feedModels)
-//                    output.likesCount.onNext(self.likesCount)
-//                    output.isPaging.onNext(false)
-//                    output.endRefreshing.onNext(true)
-//                    
-//                        
-//                case .failure(_):
-//                    break
-//                }
-//                
-//                
-//                
-//            }).disposed(by: disposeBag)
             
             
             
@@ -390,7 +346,28 @@ class CommuVM : ViewModel {
             
         }).disposed(by: disposeBag)
         
-        
+        input.reportFeed.subscribe(onNext : { [weak self] feedUid in
+            guard let self = self else {return}
+            
+            
+            self.firebaseService.report(url: "HealthySecretFeed", uid: feedUid , uuid: authUid, event: "feed" ).subscribe({ event in
+                
+                switch(event){
+                case.completed:
+                    output.alert.onNext(true)
+                case.error(let err):
+                    print(err)
+                    
+                }
+                
+                
+                
+            }).disposed(by: disposeBag)
+            
+            
+            
+            
+        }).disposed(by: disposeBag)
         
         
         return output
@@ -443,7 +420,7 @@ class CommuVM : ViewModel {
                             }
                             
                             if(urlArr.count == arr.count){
-                                let feed = FeedModel(uuid: uuid , feedUid: UUID().uuidString, date: date, nickname: name , contents: text, mainImgUrl: urlArr , likes: [] )
+                                let feed = FeedModel(uuid: uuid , feedUid: UUID().uuidString, date: date, nickname: name , contents: text, mainImgUrl: urlArr , likes: [], report: [] )
                                 self.firebaseService.addFeed(feed: feed).subscribe({ event in
                                     switch(event){
                                     case.completed:

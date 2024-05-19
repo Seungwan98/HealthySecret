@@ -3,6 +3,7 @@ import UIKit
 protocol CustomCollectionCellDelegate {
   
     func imageTapped(feedUid:String)
+
 }
 
 class CustomCollectionViewCell: UICollectionViewCell {

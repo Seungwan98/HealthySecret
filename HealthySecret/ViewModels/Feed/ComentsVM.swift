@@ -25,6 +25,7 @@ class ComentsVM : ViewModel {
         let coments : Observable<String>
         let comentsDelete : Observable<Coment>
         let profileTapped : Observable<String>
+        let reportTapped : Observable<Coment>
    
         
     }
@@ -34,6 +35,8 @@ class ComentsVM : ViewModel {
         var coments = BehaviorSubject<[Coment]>(value: [])
         var feedUuid = BehaviorSubject<String>(value: "")
         var backgroundHidden = PublishSubject<Bool>()
+        var alert = PublishSubject<Bool>()
+        
 
         
     }
@@ -54,8 +57,9 @@ class ComentsVM : ViewModel {
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         let output = Output()
         var coment : String = ""
+        guard let nickname = UserDefaults.standard.string(forKey: "name") , let uid = UserDefaults.standard.string(forKey: "uid") , let feedUid = self.feedUid  else {return Output()}
+ 
 
-        if let feedUid = self.feedUid {
 
             firebaseService.getComents(feedUid: feedUid ).subscribe({ [weak self] event in
                 guard self != nil else {return}
@@ -76,9 +80,62 @@ class ComentsVM : ViewModel {
                 
             }).disposed(by: disposeBag)
                 
-        }
         
         
+        
+        
+        input.reportTapped.subscribe(onNext: { [weak self] coment  in
+            guard let self = self else {return}
+            self.firebaseService.report(url: "HealthySecretComentsReports", uid: coment.comentUid , uuid: uid, event: "coment").subscribe({ event in
+                switch(event){
+                case.completed:
+                    self.firebaseService.getComents(feedUid: feedUid ).subscribe({ [weak self] event in
+                        guard self != nil else {return}
+                        
+                        switch(event){
+                            
+                        case.success(let coments):
+                            output.coments.onNext(coments)
+                            
+                            output.backgroundHidden.onNext( !coments.isEmpty )
+                            output.alert.onNext(true)
+
+                        case.failure(let err):
+                         
+                            break
+                        }
+                            
+                        
+                        
+                        
+                    }).disposed(by: disposeBag)
+                    
+                case.error(let err): if(err as! CustomError == CustomError.delete){
+                    
+                    self.firebaseService.deleteComents(coment: coment, feedUid: feedUid).subscribe({ event in
+                        switch(event){
+                        case.success(let coments):
+                            print("coments \(coments)")
+                            output.coments.onNext(coments)
+                            
+                            output.backgroundHidden.onNext( !coments.isEmpty )
+                            output.alert.onNext(true)
+
+                        case .failure(_):
+                            break
+                        }
+                        
+                        
+                        
+                    }).disposed(by: disposeBag)
+                    
+                }
+                    
+                }
+                
+            }).disposed(by: disposeBag)
+            
+        }).disposed(by: disposeBag)
         
         
         if let feedUuid = self.feedUuid {
@@ -104,7 +161,6 @@ class ComentsVM : ViewModel {
                     output.coments.onNext(coments)
                     output.backgroundHidden.onNext( !coments.isEmpty )
 
-                    
                     self.firebaseService.listener?.remove()
 
                     
@@ -138,15 +194,11 @@ class ComentsVM : ViewModel {
 
             print("tapped")
             
-
-            print("add")
             let profileImage = UserDefaults.standard.string(forKey: "profileImage") ?? ""
-            guard let nickname = UserDefaults.standard.string(forKey: "name") else {return}
-            guard let uid = UserDefaults.standard.string(forKey: "uid") else {return}
-            guard let feedUid = self.feedUid else {return}
+          
             let date = CustomFormatter.shared.DateToStringForFeed(date: Date())
             
-            let coment = Coment(coment: coment, date: date, nickname: nickname, profileImage: profileImage , uid: uid, comentUid:  UUID().uuidString+date, feedUid: feedUid)
+            let coment = Coment(coment: coment, date: date, nickname: nickname, profileImage: profileImage , uid: uid, comentUid:  UUID().uuidString+date, feedUid: feedUid )
                 
 
             

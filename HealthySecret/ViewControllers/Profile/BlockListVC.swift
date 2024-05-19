@@ -9,25 +9,25 @@ import RxSwift
 import Kingfisher
 
 
-class LikesVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , FollowsBlocksCellDelegate   {
+class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , FollowsBlocksCellDelegate   {
     func didPressbutton(for index: String, like: Bool) {
-        self.pressedFollows.onNext([index:like])
+        self.pressedBlock.onNext([index:like])
 
     }
     
     func didPressProfile(for index: String) {
-        self.pressedProfile.onNext(index)
+        //
     }
-
-
-    private var pressedFollows = PublishSubject<[String:Bool]>()
-    private var pressedProfile = PublishSubject<String>()
+    
+  
+    
+    private var pressedBlock = PublishSubject<[String:Bool]>()
 
     
     
     let disposeBag = DisposeBag()
     
-    private var viewModel : LikesVM?
+    private var viewModel : BlockListVM?
     
     
  
@@ -58,7 +58,7 @@ class LikesVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , F
     
     
     
-    init(viewModel : LikesVM){
+    init(viewModel : BlockListVM){
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         
@@ -90,7 +90,7 @@ class LikesVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , F
     
     override func viewWillAppear(_ animated: Bool) {
         
-        self.navigationItem.title = "좋아요"
+        self.navigationItem.title = "차단목록"
 
         
         backBarButtonItem.tintColor = .black
@@ -134,7 +134,7 @@ class LikesVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , F
         
         self.view.backgroundColor = .white
         
-        self.backgroundView.backgroundLabel.text = "아직 좋아요가 없어요"
+        self.backgroundView.backgroundLabel.text = "아직 차단한 유저가 없어요"
         
         self.loadingView.translatesAutoresizingMaskIntoConstraints = false
         self.mainView.translatesAutoresizingMaskIntoConstraints = false
@@ -231,9 +231,9 @@ class LikesVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , F
             return  }
         
         
-        let input = LikesVM.Input( viewWillApearEvent : self.rx.methodInvoked(#selector(viewWillAppear(_:)))
-            .map( { _ in }).asObservable() , pressedFollows: self.pressedFollows.asObservable() ,
-                                   pressedProfile : self.pressedProfile.asObservable()
+        let input = BlockListVM.Input( viewWillApearEvent : self.rx.methodInvoked(#selector(viewWillAppear(_:)))
+            .map( { _ in }).asObservable() ,
+                                       pressedBlock : self.pressedBlock.asObservable()
                                      
                                      
         )
@@ -253,30 +253,36 @@ class LikesVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , F
         
         output.backgroundViewHidden.bind(to: self.backgroundView.rx.isHidden).disposed(by: disposeBag)
     
-        
+        output.alert.subscribe(onNext: { [weak self] _ in
+            
+            guard let self = self else {return}
+            
+            AlertHelper.shared.showResult(title: "차단이 해제되었습니다", message: "상대방의 프로필에서 차단 할 수 있습니다", over: self)
+            
+            
+        }).disposed(by: disposeBag)
         
         
         output.userModels.bind(to: tableView.rx.items(cellIdentifier: "FollowsBlocksCell" , cellType: FollowsBlocksCell.self )){
             [weak self] index , item , cell in
             guard let self = self else {return}
             
-            cell.setFollowButton()
-            if ownUid == item.uuid {
-                cell.button.isHidden = true
-                
-            }else{
-                if let followers = item.followers {
-                    if(followers.contains(ownUid)){
-                        cell.followIsTouched = true
+
+            cell.setBlockButton()
+               
+                    if(item.blocked.contains(ownUid)){
+                        cell.blockIsTouched = true
+                        
                         cell.button.isSelected = true
                     }else{
-                        cell.followIsTouched = false
+
+                        cell.blockIsTouched = false
                         cell.button.isSelected = false
                     }
-                }
                 
                 
-            }
+                
+            
             cell.index = item.uuid
             cell.nickname.text = item.name
             

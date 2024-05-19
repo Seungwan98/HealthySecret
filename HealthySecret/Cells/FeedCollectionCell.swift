@@ -10,7 +10,7 @@ protocol FeedCollectionCellDelegate {
     func report(for index: String)
     
     func update(for index: String)
-    
+        
     func didPressedProfile(for index: String)
     
     func didPressedLikes(for index: String)
@@ -561,12 +561,14 @@ extension FeedCollectionCell :  UINavigationControllerDelegate {
             alert.addAction(update)
             alert.addAction(declaration)
         }else{
-//            let report = UIAlertAction(title: "신고하기", style: .default) { [weak self] _ in
-//                self?.report()
-//            }
-//            report.setValue(UIColor.red, forKey: "titleTextColor")
-//
-//            alert.addAction(report)
+            let report = UIAlertAction(title: "신고하기", style: .default) { [weak self] _ in
+                self?.report()
+            }
+            report.setValue(UIColor.red, forKey: "titleTextColor")
+
+            alert.addAction(report) 
+            
+           
 
         }
                 

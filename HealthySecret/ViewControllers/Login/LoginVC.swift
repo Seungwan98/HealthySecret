@@ -262,6 +262,12 @@ class LoginViewController : UIViewController {
         let input = LoginVM.Input( kakaoLoginButtonTapped: kakaoButton.rx.tapGesture().when(.recognized) , appleLogin : appleLogin.asObservable())
         
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else {return}
+        
+        output.alert.subscribe(onNext: { event in
+            
+            AlertHelper.shared.showResult(title: "계정 정지", message: "신고 누적으로 계정이 정지되었습니다" , over: self)
+
+        }).disposed(by: disposeBag)
     }
     
     

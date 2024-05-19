@@ -127,14 +127,12 @@ extension AppCoordinator: CoordinatorFinishDelegate {
     
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         
-        print("AppCoordinatorDidFinish \(childCoordinator.type) \(self.childCoordinator)")
 
         
         self.childCoordinator = self.childCoordinator.filter({ $0.type != childCoordinator.type })
         self.navigationController.view.backgroundColor = .systemBackground
         self.navigationController.viewControllers.removeAll()
         
-        print("AppCoordinatorDidFinish \(childCoordinator.type) \(self.childCoordinator)")
 
         
         switch childCoordinator.type {

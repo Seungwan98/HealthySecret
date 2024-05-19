@@ -85,7 +85,7 @@ class AddFeedVM : ViewModel {
                                 }
                                 
                                 if(urlArr.count == arr.count){
-                                    var feed = FeedModel(uuid: uuid , feedUid: UUID().uuidString+CustomFormatter.shared.getToday(), date: date, nickname: name , contents: text, mainImgUrl: urlArr , likes: [] )
+                                    var feed = FeedModel(uuid: uuid , feedUid: UUID().uuidString+CustomFormatter.shared.getToday(), date: date, nickname: name , contents: text, mainImgUrl: urlArr , likes: [], report: [] )
                                     if let profileImage = UserDefaults.standard.string(forKey: "profileImage"){
                                         
                                         feed.profileImage = profileImage

@@ -560,6 +560,8 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             
         }).disposed(by: disposeBag)
         
+    
+        
         
         output.likesCount.subscribe(onNext: { likesCount in
             _ = likesCount.map({ value in
@@ -625,6 +627,15 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             
             
         }).disposed(by: self.disposeBag)
+        
+        
+        
+        output.alert.subscribe(onNext: { _ in 
+            
+            AlertHelper.shared.showResult(title: "신고가 접수되었습니다", message: "신고는 24시간 이내 검토 후 반영됩니다", over: self)
+
+        }).disposed(by: disposeBag)
+        
     }
     
     

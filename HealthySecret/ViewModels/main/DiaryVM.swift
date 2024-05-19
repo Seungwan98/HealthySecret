@@ -70,6 +70,7 @@ class DiaryVM : ViewModel {
         let leftCalorieLabel = BehaviorRelay<String>(value: "0")
         
         let IngTotalCalorie = BehaviorRelay<String>(value: "0")
+        let alert = PublishSubject<String>()
         
         
         
@@ -84,6 +85,8 @@ class DiaryVM : ViewModel {
         let getExercises = BehaviorSubject<[Exercise]>(value: [])
         
         let output = Output()
+        
+        
         
         input.execiseButtonTapped.subscribe(onNext: { [weak self] _ in
             getExercises.subscribe(onNext: { exercises in
@@ -223,6 +226,25 @@ class DiaryVM : ViewModel {
             
             
             if let uid = UserDefaults.standard.string(forKey: "uid") {
+                
+                self.firebaseService.getMessage(uid: uid).subscribe({ event in
+                    
+                    switch(event){
+                    case.success(let text):
+                        if(!text.isEmpty){
+                            output.alert.onNext(text)
+
+                        }
+                    
+                    case.failure(let err):
+                        print(err)
+
+                    }
+                    
+                    
+                    
+                }).disposed(by: disposeBag)
+
                 
                 
                 var exTotalCal : Int = 0

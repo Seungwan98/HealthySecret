@@ -14,14 +14,14 @@ struct FeedModel : Codable {
     var mainImgUrl : [String]
     var coments : [Coment]?
     var profileImage : String?
-    
     var realImages : [UIImage]?
     
+    var report : [String]
  
     
     
     
-    init(uuid:String , feedUid : String , date:String , nickname : String , contents : String , mainImgUrl : [String]  , likes : [String] ){
+    init(uuid:String , feedUid : String , date:String , nickname : String , contents : String , mainImgUrl : [String]  , likes : [String] , report : [String]){
         self.uuid = uuid
         self.feedUid = feedUid
         self.date = date
@@ -29,6 +29,7 @@ struct FeedModel : Codable {
         self.contents = contents
         self.mainImgUrl = mainImgUrl
         self.likes = likes
+        self.report = report
     }
     
     
@@ -44,6 +45,7 @@ struct FeedModel : Codable {
         case mainImgUrl = "mainImgUrl"
         case coments = "coments"
         case profileImage = "profileImage"
+        case report = "report"
         
         
         
@@ -61,6 +63,7 @@ struct Coment : Codable {
     var uid : String
     var comentUid : String
     var feedUid : String
+    
     
     enum CodingKeys: String, CodingKey {
         case coment = "coment"

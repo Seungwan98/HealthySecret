@@ -9,19 +9,18 @@ import RxSwift
 import Kingfisher
 
 
-class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , FollowsCellDelegate   {
+class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , FollowsBlocksCellDelegate   {
+    func didPressbutton(for index: String, like: Bool) {
+        self.pressedFollows.onNext([index:like])
+
+    }
+    
     func didPressProfile(for index: String) {
         self.pressedProfile.onNext(index)
         
 
     }
-    
-    
-    //cell delegate
-    func didPressFollows(for index: String, like: Bool) {
-        self.pressedFollows.onNext([index:like])
-        
-    }
+ 
     
     
     private var cellTouchToSearch = PublishSubject<String>()
@@ -193,7 +192,7 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
         
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
         tableView.dataSource = nil
-        tableView.register(FollowsCell.self, forCellReuseIdentifier: "FollowsCell")
+        tableView.register(FollowsBlocksCell.self, forCellReuseIdentifier: "FollowsBlocksCell")
         
         self.mainView.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundView.translatesAutoresizingMaskIntoConstraints = false
@@ -334,22 +333,22 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
         
         
         
-        output.userModels.bind(to: tableView.rx.items(cellIdentifier: "FollowsCell" , cellType: FollowsCell.self )){
+        output.userModels.bind(to: tableView.rx.items(cellIdentifier: "FollowsBlocksCell" , cellType: FollowsBlocksCell.self )){
             [weak self] index , item , cell in
             guard let self = self else {return}
             
-            
+            cell.setFollowButton()
             if ownUid == item.uuid {
-                cell.followButton.isHidden = true
+                cell.button.isHidden = true
                 
             }else{
                 if let followers = item.followers {
                     if(followers.contains(ownUid)){
-                        cell.isTouched = true
-                        cell.followButton.isSelected = true
+                        cell.followIsTouched  = true
+                        cell.button.isSelected = true
                     }else{
-                        cell.isTouched = false
-                        cell.followButton.isSelected = false
+                        cell.followIsTouched = false
+                        cell.button.isSelected = false
                     }
                 }
                 

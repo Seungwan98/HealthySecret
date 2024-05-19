@@ -117,6 +117,45 @@ struct CustomFormatter {
         
     }
     
+    func dateCompare(targetString : String) -> Bool{
+        
+        print("targetSring \(targetString)")
+        if(targetString.isEmpty){
+            return true
+        }else{
+            let targetDate: Date = formatter.date(from: targetString) ?? Date()
+            
+            
+            
+            
+            
+            
+            switch targetDate.compare( Date.now ){
+                
+            case.orderedDescending: 
+                print("des")
+                return false
+                
+                
+                
+            case .orderedAscending:
+                print("asc")
+                return true
+                
+                
+                
+            case .orderedSame:
+                print("same")
+                return true
+                
+                
+                
+            }
+        }
+                  
+    }
+    
+    
     func getDifferDate(date : String) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy년 MM월 dd일"

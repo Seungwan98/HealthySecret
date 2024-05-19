@@ -24,6 +24,9 @@ final class SplashVM {
         self.firebaseService = firebaseService
     }
     
+    var freeze = PublishSubject<Bool>()
+   
+    
     func selectStart(){
         
         
@@ -114,25 +117,41 @@ final class SplashVM {
                             
                         case .success(let firUser):
                         
-                            
-                            UserDefaults.standard.set( email , forKey: "email")
-                            UserDefaults.standard.set( uid , forKey: "uid")
-                            
-                            
-                            UserDefaults.standard.set( firUser.name  , forKey: "name")
-                            UserDefaults.standard.set( firUser.loginMethod , forKey: "loginMethod")
-                            UserDefaults.standard.set( firUser.profileImage  , forKey: "profileImage")
-                            
-                            
-                            single(.success("main"))
+                        
+                            if( !CustomFormatter.shared.dateCompare(targetString: firUser.freezeDate ?? "")  ) {
+                                self.freeze.onNext(true)
+                                single(.success("login"))
+
+                               
+
+                            }else{
+                                
+                                print("getFure")
+                                
+                                UserDefaults.standard.set( email , forKey: "email")
+                                UserDefaults.standard.set( uid , forKey: "uid")
+                                
+                                
+                                UserDefaults.standard.set( firUser.name  , forKey: "name")
+                                UserDefaults.standard.set( firUser.loginMethod , forKey: "loginMethod")
+                                UserDefaults.standard.set( firUser.profileImage  , forKey: "profileImage")
+                                
+                                
+                                single(.success("main"))
+                            }
                            
                         case .failure(_):
                             print("fail lets sign Out")
+                          
+                            
+                           
 
                             self.firebaseService.signOut().subscribe({ event in
                                 switch(event){
                                 case.completed:
-                                    single(.success("singUp"))
+                                    
+                                        single(.success("signUp"))
+                                    
                                 case.error(_):
                                     print("err")
                                 }

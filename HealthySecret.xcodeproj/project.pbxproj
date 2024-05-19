@@ -78,6 +78,9 @@
 		60B36B0D2BF6EBBE00E01335 /* SplashVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B36B0C2BF6EBBE00E01335 /* SplashVM.swift */; };
 		60B36B152BF6FF8A00E01335 /* AssignModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B36B142BF6FF8A00E01335 /* AssignModalVC.swift */; };
 		60B36B172BF7203A00E01335 /* edmitLunch.png in Resources */ = {isa = PBXBuildFile; fileRef = 60B36B162BF7203A00E01335 /* edmitLunch.png */; };
+		60B36B182BF8A2C400E01335 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60EF3C902BDF564A0007862F /* AdSupport.framework */; };
+		60B36B1C2BFA6D6900E01335 /* BlockListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B36B1B2BFA6D6900E01335 /* BlockListVC.swift */; };
+		60B36B1E2BFA6FA900E01335 /* BlockListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B36B1D2BFA6FA900E01335 /* BlockListVM.swift */; };
 		60BC98D22AF919B40013FAD9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 60BC98D12AF919B40013FAD9 /* FirebaseAnalytics */; };
 		60BC98D42AF919B40013FAD9 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 60BC98D32AF919B40013FAD9 /* FirebaseFirestore */; };
 		60BC98D62AF919B40013FAD9 /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 60BC98D52AF919B40013FAD9 /* FirebaseFirestoreCombine-Community */; };
@@ -111,7 +114,6 @@
 		60EAFE122BC83CF400D3EE73 /* OtherProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EAFE112BC83CF400D3EE73 /* OtherProfileVM.swift */; };
 		60EAFE142BC852C800D3EE73 /* OtherProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EAFE132BC852C800D3EE73 /* OtherProfileVC.swift */; };
 		60EF3C8B2BDC34560007862F /* .gitattributes in Resources */ = {isa = PBXBuildFile; fileRef = 60EF3C8A2BDC34560007862F /* .gitattributes */; };
-		60EF3C912BDF564A0007862F /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60EF3C902BDF564A0007862F /* AdSupport.framework */; };
 		60EF3C932BE0C7220007862F /* FollowsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C922BE0C7220007862F /* FollowsVC.swift */; };
 		60EF3C952BE0C7AD0007862F /* FollowsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C942BE0C7AD0007862F /* FollowsVM.swift */; };
 		60EF3C972BE8B04D0007862F /* FollowsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C962BE8B04D0007862F /* FollowsCoordinator.swift */; };
@@ -151,7 +153,7 @@
 		60FC861C2BF6544300471983 /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60FC860C2BF6523200471983 /* Pretendard-Bold.otf */; };
 		60FC861E2BF6678700471983 /* LikesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC861D2BF6678700471983 /* LikesVC.swift */; };
 		60FC86202BF66CE800471983 /* LikesVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC861F2BF66CE800471983 /* LikesVM.swift */; };
-		60FC86222BF6766F00471983 /* FollowsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC86212BF6766F00471983 /* FollowsCell.swift */; };
+		60FC86222BF6766F00471983 /* FollowsBlocksCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC86212BF6766F00471983 /* FollowsBlocksCell.swift */; };
 		60FC86242BF6981B00471983 /* thirdIcons.png in Resources */ = {isa = PBXBuildFile; fileRef = 60FC86232BF6981B00471983 /* thirdIcons.png */; };
 		CB62F41F787B287CE4FA2161 /* Pods_HealthySecret.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */; };
 /* End PBXBuildFile section */
@@ -241,6 +243,8 @@
 		60B36B0C2BF6EBBE00E01335 /* SplashVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashVM.swift; sourceTree = "<group>"; };
 		60B36B142BF6FF8A00E01335 /* AssignModalVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignModalVC.swift; sourceTree = "<group>"; };
 		60B36B162BF7203A00E01335 /* edmitLunch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = edmitLunch.png; path = ../../../../../../../Downloads/edmitLunch.png; sourceTree = "<group>"; };
+		60B36B1B2BFA6D6900E01335 /* BlockListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockListVC.swift; sourceTree = "<group>"; };
+		60B36B1D2BFA6FA900E01335 /* BlockListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockListVM.swift; sourceTree = "<group>"; };
 		60BC98DE2AFF78300013FAD9 /* FirebaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
 		60BC98E02B0284810013FAD9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		60BC98E22B02A0590013FAD9 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
@@ -309,7 +313,7 @@
 		60FC86132BF6523200471983 /* Pretendard-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Pretendard-SemiBold.otf"; path = "../../../../../../Downloads/Pretendard-1/public/static/Pretendard-SemiBold.otf"; sourceTree = "<group>"; };
 		60FC861D2BF6678700471983 /* LikesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesVC.swift; sourceTree = "<group>"; };
 		60FC861F2BF66CE800471983 /* LikesVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesVM.swift; sourceTree = "<group>"; };
-		60FC86212BF6766F00471983 /* FollowsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsCell.swift; sourceTree = "<group>"; };
+		60FC86212BF6766F00471983 /* FollowsBlocksCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsBlocksCell.swift; sourceTree = "<group>"; };
 		60FC86232BF6981B00471983 /* thirdIcons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = thirdIcons.png; path = ../../../../../../Downloads/thirdIcons.png; sourceTree = "<group>"; };
 		DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthySecret.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -320,7 +324,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				60BC98D82AF919B40013FAD9 /* FirebaseFirestoreSwift in Frameworks */,
-				60EF3C912BDF564A0007862F /* AdSupport.framework in Frameworks */,
+				60B36B182BF8A2C400E01335 /* AdSupport.framework in Frameworks */,
 				60BC98DC2AFA3A890013FAD9 /* FirebaseAuth in Frameworks */,
 				60BC98D22AF919B40013FAD9 /* FirebaseAnalytics in Frameworks */,
 				60BC98D62AF919B40013FAD9 /* FirebaseFirestoreCombine-Community in Frameworks */,
@@ -383,6 +387,7 @@
 				606343C62B8E34CD0084E2CC /* ChangeIntroduceVC.swift */,
 				606343D12B9637A40084E2CC /* ChangeSignUpVC.swift */,
 				606343CB2B9051440084E2CC /* SettingVC.swift */,
+				60B36B1B2BFA6D6900E01335 /* BlockListVC.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -501,7 +506,7 @@
 				60EAFE092BC2DF9400D3EE73 /* ComentsCell.swift */,
 				600399892BDB9C7F0030D9EF /* ProfileHeaderView.swift */,
 				60C289B02BED212C00213AAD /* DummyCollectionCell.swift */,
-				60FC86212BF6766F00471983 /* FollowsCell.swift */,
+				60FC86212BF6766F00471983 /* FollowsBlocksCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -557,6 +562,7 @@
 				60EAFE112BC83CF400D3EE73 /* OtherProfileVM.swift */,
 				609C06322B9F0FF600D61F53 /* ChagneIntroduceVM.swift */,
 				606343CF2B9622280084E2CC /* ChangeSignUpVM.swift */,
+				60B36B1D2BFA6FA900E01335 /* BlockListVM.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -790,7 +796,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1530;
 				TargetAttributes = {
 					6094C5312ACD915300D62B0A = {
 						CreatedOnToolsVersion = 14.3.1;
@@ -951,6 +957,7 @@
 				6067B99F2B502A5E00D536FF /* CalendarVC.swift in Sources */,
 				60BC98F52B1DC71F0013FAD9 /* IngredientsVM.swift in Sources */,
 				60A3801C2B7F22E400C9A2E6 /* DetailModalVC.swift in Sources */,
+				60B36B1E2BFA6FA900E01335 /* BlockListVM.swift in Sources */,
 				609C063D2BAA9D0700D61F53 /* FeedModel.swift in Sources */,
 				60A380122B6CD8B200C9A2E6 /* IngredientsDetailVC.swift in Sources */,
 				609C06312B9AFBA200D61F53 /* CustomCollectionCell.swift in Sources */,
@@ -962,7 +969,7 @@
 				60D987902AEA731C0049CE05 /* LoginVC.swift in Sources */,
 				600DE9722B624CDF00D5D797 /* ExerciseDTO.swift in Sources */,
 				60A380162B6D27D400C9A2E6 /* EditIngredientsVM.swift in Sources */,
-				60FC86222BF6766F00471983 /* FollowsCell.swift in Sources */,
+				60FC86222BF6766F00471983 /* FollowsBlocksCell.swift in Sources */,
 				60A380182B6D2DA600C9A2E6 /* EditIngredientsCell.swift in Sources */,
 				60BC98EA2B0B501E0013FAD9 /* ExerciseDetailVC.swift in Sources */,
 				60C289B52BEE086500213AAD /* UnderlinieSegmentControl.swift in Sources */,
@@ -990,6 +997,7 @@
 				609C064D2BBEE3B500D61F53 /* AppleService.swift in Sources */,
 				60FC860A2BF60D8100471983 /* UIFont+.swift in Sources */,
 				600DE97C2B67A23E00D5D797 /* ExerciseDetialVM.swift in Sources */,
+				60B36B1C2BFA6D6900E01335 /* BlockListVC.swift in Sources */,
 				60EF3C932BE0C7220007862F /* FollowsVC.swift in Sources */,
 				600DE9742B6269BD00D5D797 /* ExerciseVC.swift in Sources */,
 				60EF3C952BE0C7AD0007862F /* FollowsVM.swift in Sources */,
@@ -1084,6 +1092,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1145,6 +1154,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1174,12 +1184,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YH4A87H8M4;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HealthySecret/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "헬시크릿";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
-				INFOPLIST_KEY_NSCameraUsageDescription = "사진 및 동영상 촬영을 위한 카메라 사용 권한을 허용합니다.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진 및 동영상 첨부를 위한 앨범 사용 권한을 허용합니다.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "프로필 사진 첨부, 게시글 사진 첨부 기능 사용을 위해 카메라 접근권한 동의가 필요합니다. 설정에서 이를 변경할 수 있습니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "프로필 사진 첨부, 게시글 사진 첨부 기능 사용을 위해 카메라 접근권한 동의가 필요합니다. 설정에서 이를 변경할 수 있습니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -1261,13 +1272,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YH4A87H8M4;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HealthySecret/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "헬시크릿";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
-				INFOPLIST_KEY_NSCameraUsageDescription = "사진 및 동영상 촬영을 위한 카메라 사용 권한을 허용합니다.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진 및 동영상 첨부를 위한 앨범 사용 권한을 허용합니다.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "프로필 사진 첨부, 게시글 사진 첨부 기능 사용을 위해 카메라 접근권한 동의가 필요합니다. 설정에서 이를 변경할 수 있습니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "프로필 사진 첨부, 게시글 사진 첨부 기능 사용을 위해 카메라 접근권한 동의가 필요합니다. 설정에서 이를 변경할 수 있습니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -1350,7 +1362,7 @@
 				6094C5482ACD915300D62B0A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		6094C5492ACD915300D62B0A /* Build configuration list for PBXNativeTarget "HealthySecret" */ = {
 			isa = XCConfigurationList;
@@ -1359,7 +1371,7 @@
 				6094C54B2ACD915300D62B0A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 

@@ -28,6 +28,11 @@ struct UserModel : Codable {
     var followings : [String]?
     var followers : [String]?
     var loginMethod : String
+    var blocked : [String]
+    var blocking : [String]
+    var report : [String]
+
+    var freezeDate : String?
 
     }
 

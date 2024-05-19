@@ -114,6 +114,19 @@ class ProfileCoordinator : Coordinator {
         self.navigationController.pushViewController(viewController, animated: false)
         
     }
+    
+    
+    func pushBlockList(){
+       
+
+        let viewController = BlockListVC(viewModel: BlockListVM(coordinator: self, firebaseService: self.firebaseService))
+        
+   
+
+        self.navigationController.pushViewController(viewController, animated: false)
+        
+    }
+ 
  
     
     func logout() {

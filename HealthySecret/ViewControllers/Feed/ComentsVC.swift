@@ -20,6 +20,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     func report(comentsUid : String) {
        let arr = coments.filter({$0.comentUid == comentsUid})
         guard let coment = arr.first else {return}
+        self.reportTapped.onNext(coment)
     }
     
     func delete(comentsUid : String) {
@@ -196,6 +197,8 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     
     var profileTapped = PublishSubject<String>()
     
+    var reportTapped = PublishSubject<Coment>()
+    
     
     func setBindings(){
         addButton.rx.tap.asObservable().subscribe({ _ in
@@ -207,7 +210,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         var feedUuid = ""
 
         
-        let input = ComentsVM.Input(addButtonTapped : addButton.rx.tap.asObservable(), coments: self.textView.rx.text.orEmpty.distinctUntilChanged().asObservable() , comentsDelete : comentsDelete.asObservable() , profileTapped : self.profileTapped.asObservable()  )
+        let input = ComentsVM.Input(addButtonTapped : addButton.rx.tap.asObservable(), coments: self.textView.rx.text.orEmpty.distinctUntilChanged().asObservable() , comentsDelete : comentsDelete.asObservable() , profileTapped : self.profileTapped.asObservable() , reportTapped : self.reportTapped.asObservable() )
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else {return}
         
         output.backgroundHidden.bind(to: self.backgroundView.rx.isHidden ).disposed(by: disposeBag)
@@ -298,6 +301,15 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
             }
             
         }.disposed(by: disposeBag)
+        
+        
+        
+        output.alert.subscribe(onNext : { _ in 
+            
+            AlertHelper.shared.showResult(title: "신고가 접수되었습니다", message: "신고는 24시간 이내 검토 후 반영됩니다", over: self)
+
+            
+        }).disposed(by: disposeBag)
     }
     
     

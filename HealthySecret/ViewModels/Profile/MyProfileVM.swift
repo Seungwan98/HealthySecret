@@ -395,6 +395,7 @@ class MyProfileVM : ViewModel {
         let secessionTapped : Observable<Bool>
         let values : Observable<(String, String)>
         let OAuthCredential : Observable<OAuthCredential>
+        let blockListTapped : Observable<UITapGestureRecognizer>
         
     }
     
@@ -579,6 +580,15 @@ class MyProfileVM : ViewModel {
             task.resume()
             
             }).disposed(by: disposeBag)
+        }).disposed(by: disposeBag)
+        
+        
+        input.blockListTapped.subscribe(onNext:{ _ in
+            
+            self.coordinator?.pushBlockList()
+            
+            
+            
         }).disposed(by: disposeBag)
         
         

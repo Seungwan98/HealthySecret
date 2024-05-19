@@ -105,7 +105,7 @@ class ExerciseDetailVM : ViewModel {
         let weight = Double(weight)
         let min = Double(text) ?? 0
         let met = Double(model!.exerciseGram ) ?? 0
-        let result =  lroundl(( ( met * (3.5 *  weight * min  )) / 1000 ) * 5 )
+       let result =  lroundl(( ( met * (3.5 *  weight * min  )) / 1000 ) * 5 )
         return String(result)
         
         

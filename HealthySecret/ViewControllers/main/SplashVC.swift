@@ -12,6 +12,8 @@ final class SplashVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    let disposeBag = DisposeBag()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.view.backgroundColor = .white
@@ -19,6 +21,15 @@ final class SplashVC: UIViewController {
         startAnimation()
         
         viewModel.selectStart()
+        
+       
+        
+        viewModel.freeze.subscribe(onNext: { _ in
+            print("feeze")
+            AlertHelper.shared.showResult(title: "계정 정지", message: "신고 누적으로 계정이 정지되었습니다" , over: self)
+            
+        }).disposed(by: disposeBag)
+        
     }
     
     private lazy var logoImageView: UIImageView = {

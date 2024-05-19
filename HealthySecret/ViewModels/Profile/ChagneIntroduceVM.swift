@@ -48,7 +48,7 @@ class ChangeIntroduceVM : ViewModel {
     
     struct Input {
         let viewWillApearEvent : Observable<Void>
-        let addButtonTapped : Observable<Void>
+        let addButtonTapped : Observable<Bool>
         let nameTextField : Observable<String>
         let introduceTextField : Observable<String>
         let profileImageTapped : Observable<UITapGestureRecognizer>
@@ -83,15 +83,18 @@ class ChangeIntroduceVM : ViewModel {
 
         
         
-        input.addButtonTapped.subscribe(onNext: { _ in
+        input.addButtonTapped.subscribe(onNext: { event in
 
-            print("dadasdasdasd")
+            
    
             input.nameTextField.subscribe(onNext: { name in
                 input.introduceTextField.subscribe(onNext: { introduce in
-                    
-
-                   
+                    var introduce = introduce
+                    if(event){
+                        introduce = ""
+                        
+                        
+                    }
                     
                     input.profileImageValue.subscribe(onNext: { image in
                         
