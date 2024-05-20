@@ -98,7 +98,7 @@
 ## ➜ Coordinator 패턴
 
 ### 도입 이유
-- StoryBoard를 사용하지 않고 코드 베이스로 UI를 
+- StoryBoard를 사용하지 않은 UI 개발에서 흐름을 쉽게 파악하기 위해 적용하였습니다.
 - ViewController의 화면 전환 및 의존성을 주입하는 역할을 분리하고, 한눈에 보기 위해 적용했습니다.
 ### 성과
 - ViewController들의 강한 결합 문제를 해결할 수 있었습니다.
