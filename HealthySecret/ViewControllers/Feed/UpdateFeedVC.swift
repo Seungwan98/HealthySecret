@@ -505,7 +505,7 @@ class UpdateFeedVC : UIViewController {
                 self.feedTextChanged.onNext(text.count)
 
             }else{
-                self.addFeedTextView.text = "내용을 입력하여 주세요."
+                self.addFeedTextView.text = "부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다."
                 self.addFeedTextView.textColor = .lightGray
             }
             
@@ -641,7 +641,7 @@ extension UpdateFeedVC : UITextViewDelegate {
         if textView.text.count <= 0 {
             
             textView.textColor = .lightGray
-            textView.text = "내용을 입력하여 주세요."
+            textView.text = "부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다."
 
             
         }
@@ -652,10 +652,10 @@ extension UpdateFeedVC : UITextViewDelegate {
         if textView.text.count <= 0 {
             
             textView.textColor = .lightGray
-            textView.text = "내용을 입력하여 주세요."
+            textView.text = "부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다."
 
             
-        }else if(textView.text == "내용을 입력하여 주세요." && textView.textColor == .lightGray){
+        }else if(textView.text == "부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다." && textView.textColor == .lightGray){
             textView.text = ""
             textView.textColor = .black
             
