@@ -1,4 +1,5 @@
 # 헬시크릿 - 칼로리 , 활동 계산 및 SNS(*iOS 17.0)
+# AppStore = https://apps.apple.com/kr/app/헬시크릿/id6502818116
 
  **건강한 비밀 , 헬시크릿**
 
