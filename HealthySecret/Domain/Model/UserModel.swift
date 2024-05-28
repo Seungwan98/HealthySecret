@@ -19,7 +19,7 @@ struct UserModel : Codable {
     var nowWeight : Int
     var goalWeight : Int
     var ingredients : [Ingredients]
-    var exercise : [Exercise]
+    var exercise : [ExerciseModel]
     var diarys : [Diary]
     var introduce : String?
     var profileImage : String?
@@ -38,10 +38,10 @@ struct UserModel : Codable {
 
 struct Ingredients : Codable {
     var date : String?
-    var morning : [Row]?
-    var lunch : [Row]?
-    var dinner : [Row]?
-    var snack : [Row]?
+    var morning : [IngredientsModel]?
+    var lunch : [IngredientsModel]?
+    var dinner : [IngredientsModel]?
+    var snack : [IngredientsModel]?
     
 
 
@@ -52,7 +52,7 @@ struct Ingredients : Codable {
         
     }
     
-    init(date: String?, morning: [Row]? , lunch : [Row]? , dinner : [Row]? , snack : [Row]? ) {
+    init(date: String?, morning: [IngredientsModel]? , lunch : [IngredientsModel]? , dinner : [IngredientsModel]? , snack : [IngredientsModel]? ) {
         self.date = date
         self.morning = morning
         self.dinner = dinner
@@ -80,33 +80,5 @@ struct Diary : Codable {
     
 }
 
-struct Exercise : Codable {
-    var key : String
-    var date : String
-    var name : String
-    var time : String
-    var finalCalorie : String
-    var memo : String
-    var exerciseGram : String
 
-
-    
-    enum Codingkeys : String , CodingKey {
-        case date , name , time , finalCalorie , memo , key , exerciseGram
-        
-        
-        
-    }
-    
-    init(date : String , name : String , time : String , finalCalorie : String , memo : String , key : String , exerciseGram : String){
-        self.date = date
-        self.name = name
-        self.time = time
-        self.finalCalorie = finalCalorie
-        self.memo = memo
-        self.key = key
-        self.exerciseGram = exerciseGram
-    }
-    
-}
 

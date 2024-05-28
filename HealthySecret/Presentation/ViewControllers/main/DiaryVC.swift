@@ -1153,15 +1153,15 @@ class DiaryViewController : UIViewController {
             total in
             
             print("come IN")
-            let totalValues = (total["carbohydrates"]! * 4) + (total["protein"]! * 4) + (total["province"]! * 9)
+            let totalValues = (total.carbohydrates * 4) + (total.protein * 4) + (total.protein * 9)
             
             
             
             if(totalValues != 0.0){
                 
-                let carbohydratesPer = total["carbohydrates"]!  * 4 / totalValues * 100
-                let proteinPer =  total["protein"]!  * 4 / totalValues * 100
-                let provincePer =  total["province"]!  * 9 / totalValues * 100
+                let carbohydratesPer = total.carbohydrates  * 4 / totalValues * 100
+                let proteinPer =  total.protein  * 4 / totalValues * 100
+                let provincePer =  total.province  * 9 / totalValues * 100
                 self.ingredientsPercent[0] = (carbohydratesPer)
                 self.ingredientsPercent[1] = (proteinPer)
                 self.ingredientsPercent[2] = (provincePer)
@@ -1205,14 +1205,14 @@ class DiaryViewController : UIViewController {
             
             
             
-            self.carbohydratesLabel.text = " 탄수화물: " + String(total["carbohydrates"]!) + "g"
-            self.proteinLabel.text = " 단백질: " + String(total["protein"]!) + "g"
-            self.provinceLabel.text = " 지방: " + String(total["province"]!) + "g"
-            self.sugarsLabel.text = " 당류: " + String(total["sugars"]!) + "g"
-            self.sodiumLabel.text = " 나트륨: " + String(total["sodium"]!) + "mg"
-            self.cholesterolLabel.text = " 콜레스테롤: " + String(total["cholesterol"]!) + "mg"
-            self.fattyAcidLabel.text = " 포화지방: " + String(total["fattyAcid"]!) + "mg"
-            self.transFatLabel.text = " 트랜스지방: " + String(total["transFat"]!) + "mg"
+            self.carbohydratesLabel.text = " 탄수화물: " + String(total.carbohydrates) + "g"
+            self.proteinLabel.text = " 단백질: " + String(total.protein) + "g"
+            self.provinceLabel.text = " 지방: " + String(total.province) + "g"
+            self.sugarsLabel.text = " 당류: " + String(total.sugars) + "g"
+            self.sodiumLabel.text = " 나트륨: " + String(total.sodium) + "mg"
+            self.cholesterolLabel.text = " 콜레스테롤: " + String(total.cholesterol) + "mg"
+            self.fattyAcidLabel.text = " 포화지방: " + String(total.fattyAcid) + "mg"
+            self.transFatLabel.text = " 트랜스지방: " + String(total.transFat) + "mg"
             
             self.piechartCenterLabel.isHidden = false
             
@@ -1238,17 +1238,20 @@ class DiaryViewController : UIViewController {
      
        
         let a = output.goalLabel
-        let b = output.IngTotalCalorie
+        let b = output.ingTotalCalorie
         let c = output.exCalorieLabel
         
         
-        Observable.zip( a, b , c ).subscribe( onNext : {
+        Observable.combineLatest( a, b , c ).subscribe( onNext : { [weak self] in guard let self = self else {return}
             
+            print("\($0)\($1)\($2) abc")
             
             
             self.goalLabel.text = $0
             
             self.exCalorieLabel.text = "소모량  \($2)kcal"
+            
+            print("\($2) 222")
             self.consumeLabel.text = $2
 
             

@@ -17,11 +17,11 @@ class IngredientsVM : ViewModel {
     
     var firebaseService : FirebaseService
     
-    var ingredientsArr : [Row] = []
+    var ingredientsArr : [IngredientsModel] = []
     
-    var searchArr : [Row] = []
+    var searchArr : [IngredientsModel] = []
     
-    var filteredArr : [Row] = []
+    var filteredArr : [IngredientsModel] = []
     
     var likes: [String:Int] = [:]
     
@@ -29,23 +29,23 @@ class IngredientsVM : ViewModel {
     
     var filteredNumbersArr : [String] = []
     
-    var filteredIngredientsArr : [Row] = []
+    var filteredIngredientsArr : [IngredientsModel] = []
     
     var realIndex : String?
     
-    var lastArr : [Row] = []
+    var lastArr : [IngredientsModel] = []
     
     
-    
+    private let ingredientsUseCase : IngredientsUseCase
     
     private let searchText = BehaviorRelay<Bool>(value: false)
     private let touchedArr = BehaviorRelay<[String:Int]>(value: [:])
     
     
-    init( coordinator : IngredientsCoordinator , firebaseService : FirebaseService ){
+    init( coordinator : IngredientsCoordinator , firebaseService : FirebaseService , ingredientsUseCase : IngredientsUseCase ){
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
-        
+        self.ingredientsUseCase = ingredientsUseCase
     }
     
     let outputPushedCheck = PublishSubject<Bool>()
@@ -60,54 +60,31 @@ class IngredientsVM : ViewModel {
        
         
         input.viewWillAppear.subscribe(onNext: { [self] in
-                //  print("appear")
             
-            self.firebaseService.getAllFromStore { [self]
-                parsed in self.ingredientsArr = parsed
+            self.ingredientsUseCase.getIngredientsList().subscribe({ [weak self] event in
                 
-               
+                switch(event){
+                    
+                case.success(let arr):
+                    self?.ingredientsArr = arr
+                case.failure(let err):
+                    print(err)
+                }
                 
-            }
-            
-            
-            
-            
-            
-     
+                
+            }).disposed(by: disposeBag)
 
             
             
-            
-//
-//            if let userEmail = UserDefaults.standard.string(forKey: "email") {
-//                self.firebaseService.getDocument(key: userEmail).subscribe( { event in
-//
-//                    switch event{
-//                    case .success(let user):
-//                        self.recentSearchArr = user.recentSearch ?? []
-//                        output.recentsearchArr.onNext(self.recentSearchArr)
-//
-//
-//
-//
-//
-//
-//                    case .failure(_):
-//                        print("fail")
-//
-//                    }
-//
-//
-//                }).disposed(by: disposeBag)
-//
-//            }
+ 
             
         }).disposed(by: disposeBag)
         
         
         
-        input.cellTouchToDetail.subscribe(onNext : { row in
-            self.coordinator?.pushIngredientsDetail(row: row)
+        input.cellTouchToDetail.subscribe(onNext : { model in
+            
+            self.coordinator?.pushIngredientsDetail(model : model)
             
             
         }).disposed(by: disposeBag)
@@ -115,7 +92,7 @@ class IngredientsVM : ViewModel {
         
         
         input.searchText.map({ [self] text in
-          //  print("\(text) text")
+            print("\(text) text")
             var check : Bool = false
             if text.isEmpty{
                 check = false
@@ -141,10 +118,6 @@ class IngredientsVM : ViewModel {
         
         input.rightButtonTapped.subscribe(onNext: {
             
-         
-//            let meal = UserDefaults.standard.string(forKey: "meal")
-//            let date = UserDefaults.standard.string(forKey: "date")
-//            let key = UserDefaults.standard.string(forKey: "email")
 
 
                     
@@ -167,21 +140,7 @@ class IngredientsVM : ViewModel {
             self.coordinator?.finish()
             self.coordinator?.pushIngredientsVC(arr: self.filteredArr)
 
-//
-//
-//            self.firebaseService.addIngredients(meal: meal ?? "" , date: date ?? "" , key: key ?? "" , mealArr : self.filteredArr ).subscribe({
-//                event in
-//                switch event{
-//                case.completed:
-//                    self.coordinator?.backToDiaryVC()
-//
-//                case .error(_):
-//                    print("error")
-//                }
-//
-//
-//
-//            }).disposed(by: disposeBag)
+
 
                 
             
@@ -201,7 +160,7 @@ class IngredientsVM : ViewModel {
         let rightButtonTapped : Observable<Void>
         let searchText : Observable<String>
         let likesInputArr : Observable<[String:Int]>
-        let cellTouchToDetail : Observable<Row>
+        let cellTouchToDetail : Observable<IngredientsModel>
         
         
         
@@ -212,7 +171,7 @@ class IngredientsVM : ViewModel {
     
     struct Output {
         var recentsearchArr = PublishSubject<[String]>()
-        var ingredientsArr = PublishSubject<[Row]>()
+        var ingredientsArr = PublishSubject<[IngredientsModel]>()
         var rightButtonEnable = PublishSubject<Bool>()
         var checkController =  PublishSubject<Bool>()
         var likesOutput = PublishSubject<[String:Int]>()
@@ -263,21 +222,6 @@ class IngredientsVM : ViewModel {
             }).disposed(by: disposeBag)
 
 
-//
-//            self.outputPushedCheck.onNext(true)
-            
-            
-//            if( self.likes.isEmpty == false ){
-//                
-//                self.rightButtonEvent.accept(true)
-//                
-//            }
-//            else{
-//                self.rightButtonEvent.accept(false)
-//            }
-//            
-//            
-//            print(self.likes)
             
             
         }).disposed(by: disposeBag)

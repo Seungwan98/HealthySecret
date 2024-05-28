@@ -111,7 +111,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
         return view
     }()
     
-    var exerciseArr = BehaviorSubject<[Exercise]>(value: [])
+    var exerciseArr = BehaviorSubject<[ExerciseModel]>(value: [])
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -127,7 +127,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
 
         let contentView = sender.superview
                let cell = contentView?.superview as! UITableViewCell
-        var value : [Exercise] = []
+        var value : [ExerciseModel] = []
         if let indexPath = self.tableView.indexPath(for: cell) {
             exerciseArr.subscribe(onNext: { arr in
                 value = arr

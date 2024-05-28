@@ -11,6 +11,8 @@ import RxSwift
 protocol UserRepository {
     
     func setUser(userModel : UserModel) -> Completable 
+    func getUser() -> Single<UserModel>
+    func updateUsersIngredients(ingredients : [Ingredients]) -> Completable
     
     
 }

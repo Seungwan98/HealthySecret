@@ -24,5 +24,11 @@ struct ExerciseDtoData: Codable {
         case name = "운동명"
     }
     
+    func toDomain() -> ExerciseModel {
+        
+        return ExerciseModel(date: "" , name: self.name , time: "0" , finalCalorie: "0" , memo: "" , key: "" , exerciseGram: self.exerciseGram )
+        
+    }
+    
    
 }

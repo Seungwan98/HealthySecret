@@ -523,85 +523,6 @@ final class FirebaseService {
     
     
     
-    func addIngredients( meal : String , date : String , key : String  , mealArr : [Row] ) -> Completable {
-        return Completable.create { completable in
-            self.getDocument(key: key).subscribe( { event in
-                
-                switch event{
-                    
-                    
-                    
-                case .success(let user):
-                    
-                    var userIngredients  = user.ingredients
-                    var userIngredient = Ingredients(date: date, morning: [], lunch: [], dinner: [] , snack: [])
-                    
-                    var count = 0
-                    userIngredients.forEach({
-                        if($0.date == date){
-                            
-                            
-                            userIngredient = $0
-                            userIngredients.remove(at: count)
-                            
-                        }
-                        count += 1
-                        
-                        
-                        
-                    })
-                    
-                    
-                    
-                    switch meal{
-                    case "아침식사":
-                        
-                        userIngredient.morning! = mealArr
-                    case "점심식사":
-                        userIngredient.lunch! = mealArr
-                        
-                    case "저녁식사":
-                        userIngredient.dinner! = mealArr
-                    case "간식":
-                        userIngredient.snack! = mealArr
-                        
-                    default:
-                        return
-                    }
-                    userIngredients.append(userIngredient)
-                    
-                    print("userIngredients")
-                    self.updateIngredients(ingredients: userIngredients , key: key).subscribe(
-                        onCompleted: {
-                            completable(.completed)
-                        }
-                    ).disposed(by: self.disposeBag)
-                    
-                    
-                    
-                    
-                    
-                case .failure(_):
-                    print("fail")
-                    
-                }
-                
-                
-            }).disposed(by: self.disposeBag)
-            
-            
-            return Disposables.create()
-            
-            
-            
-            
-        }
-        
-        
-        
-        
-        
-    }
     
     
     
@@ -610,7 +531,6 @@ final class FirebaseService {
     
     func getUsersIngredients( key : [String] ) -> Single<[Row]> {
         return Single.create { [weak self] single in
-            // guard let self = self else { return Disposables.create() }
             
             self?.db.collection("HealthySecret").getDocuments{ snapshot , error in
                 
@@ -678,36 +598,43 @@ extension FirebaseService {
     
     
     
-    func getAllFromStore(completionHandler: @escaping([Row]) -> () ) {
-        db.collection("HealthySecret").getDocuments() { (querySnapshot , err) in
-            var parsed : [Row] = []
-            
-            if let err = err {
-                print("error : \(err)")
+    func getIngredientsList() -> Single<[Row]> {
+        Single.create{ [weak self] single in guard let self = self else {return Disposables.create()}
+            self.db.collection("HealthySecret").getDocuments() { (querySnapshot , err) in
+                var list : [Row] = []
                 
-            } else {
-                for document in querySnapshot!.documents{
-                    do{
-                        let jsonData = try JSONSerialization.data(withJSONObject: document.data() , options: [])
-                        
-                        
-                        
-                        let responseFile  = try JSONDecoder().decode(IngredientsDTO.self, from: jsonData)
-                        
-                        parsed = responseFile.row
+                if let err = err {
+                    single(.failure(err))
+
+                    
+                } else {
+                    for document in querySnapshot!.documents{
+                        do{
+                            let jsonData = try JSONSerialization.data(withJSONObject: document.data() , options: [])
+                            
+                            
+                            
+                            let responseFile  = try JSONDecoder().decode(IngredientsDTO.self, from: jsonData)
+                            
+                            list = responseFile.row
+                            single(.success(list))
+                            
+                        }
+                        catch let err {
+                            print("Error \(err)")
+                            single(.failure(err))
+
+                            return
+                        }
                         
                     }
-                    catch let err {
-                        print("Error \(err)")
-                        return
-                    }
+                    
                     
                 }
                 
-                
             }
             
-            completionHandler(parsed)
+            return Disposables.create()
         }
         
     }
@@ -716,7 +643,7 @@ extension FirebaseService {
 
 extension FirebaseService {
     
-    func addExercise(exercise : Exercise , key : String) -> Completable {
+    func addExercise(exercise : ExerciseModel , key : String) -> Completable {
         return Completable.create{ completable in
             
             completable(.completed)
@@ -779,7 +706,7 @@ extension FirebaseService {
         
     }
     
-    func updateExercise(exercise : [Exercise] , key : String) -> Completable {
+    func updateExercise(exercise : [ExerciseModel] , key : String) -> Completable {
         return Completable.create{ completable in
             
             let exercise = exercise.map({

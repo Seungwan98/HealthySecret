@@ -17,13 +17,13 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
     
     private var viewModel : IngredientsVM?
     
-    private var ingredientsArr : [Row] = []
+    private var ingredientsArr : [IngredientsModel] = []
     
     private var recentsearchArr : [String] = []
     
-    private var filteredArr : [Row] = []
+    private var filteredArr : [IngredientsModel] = []
     
-    private var pushArr : [Row] = []
+    private var pushArr : [IngredientsModel] = []
     
     private var cellController : Bool = false
     
@@ -241,7 +241,7 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
     
     var likesInputArr = PublishSubject<[String:Int]>()
     var getBool = PublishSubject<Bool>()
-    var cellTouchToDetail = PublishSubject<Row>()
+    var cellTouchToDetail = PublishSubject<IngredientsModel>()
     
     
     
@@ -255,7 +255,7 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
             .map( { _ in }).asObservable(),
                                          rightButtonTapped: rightButton.rx.tap.asObservable(),
                                          searchText: Observable.merge( searchController.searchBar.rx.text.orEmpty.distinctUntilChanged().asObservable()),
-                                         likesInputArr: self.likesInputArr.asObservable() , cellTouchToDetail:  tableView.rx.modelSelected(Row.self).asObservable()
+                                         likesInputArr: self.likesInputArr.asObservable() , cellTouchToDetail:  tableView.rx.modelSelected(IngredientsModel.self).asObservable()
                                          
         )
         
@@ -291,7 +291,7 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
 
             cell.title.text = item.descKor
             cell.index = item.num
-            cell.kcal.text = "( " + item.servingSize + "g )" + " " + item.calorie + " kcal"
+            cell.kcal.text = "( " + String(item.servingSize) + "g )" + " " + String(item.calorie) + " kcal"
             cell.delegate = self
             
             if self.likes[index] == 1 {

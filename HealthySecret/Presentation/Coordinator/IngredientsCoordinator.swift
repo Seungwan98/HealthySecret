@@ -26,7 +26,7 @@ class IngredientsCoordinator : Coordinator {
     
     var type : CoordinatorType = .ingredients
     
-    var filteredArr : [Row] = []
+    var filteredArr : [IngredientsModel] = []
     
     required init(_ navigationController : UINavigationController){
         self.navigationController = navigationController
@@ -34,10 +34,10 @@ class IngredientsCoordinator : Coordinator {
         self.navigationController.navigationBar.topItem?.title = ""
     }
     
-    func pushIngredientsSelecting(arr:[Row]){
+    func pushIngredientsSelecting(arr:[IngredientsModel]){
         self.filteredArr = arr
         let firebaseService = FirebaseService()
-        let ingredientsVM =  IngredientsVM(coordinator: self, firebaseService: firebaseService)
+        let ingredientsVM =  IngredientsVM(coordinator: self, firebaseService: firebaseService, ingredientsUseCase: IngredientsUseCase(ingredientsRepository: DefaultIngredientsRepository(firebaseService: firebaseService), userRepository: DefaultUserRepository(firebaseService: firebaseService)))
         
         ingredientsVM.lastArr = arr
         let viewController = IngredientsViewController(viewModel : ingredientsVM )
@@ -54,9 +54,9 @@ class IngredientsCoordinator : Coordinator {
     }
     
     
-    func pushIngredientsEdmit(arr:[Row]){
+    func pushIngredientsEdmit(arr:[IngredientsModel]){
         let firebaseService = FirebaseService()
-        let EditIngredientsVM =  EditIngredientsVM(coordinator: self, firebaseService: firebaseService, Ingredients: arr)
+        let EditIngredientsVM =  EditIngredientsVM(coordinator: self, firebaseService: firebaseService, Ingredients: arr, ingredientsUseCase: IngredientsUseCase(ingredientsRepository: DefaultIngredientsRepository(firebaseService: firebaseService) , userRepository: DefaultUserRepository(firebaseService: firebaseService)) )
         let viewController = EditIngredientsVC(viewModel: EditIngredientsVM )
         viewController.hidesBottomBarWhenPushed = true
 
@@ -67,7 +67,7 @@ class IngredientsCoordinator : Coordinator {
     }
     
     
-    func pushIngredientsVC(arr : [Row]) {
+    func pushIngredientsVC(arr : [IngredientsModel]) {
         
         if(arr.isEmpty){
 
@@ -89,10 +89,10 @@ class IngredientsCoordinator : Coordinator {
         
         
     }
-    func pushIngredientsDetail(row : Row){
+    func pushIngredientsDetail(model : IngredientsModel){
         
         let firebaseService = FirebaseService()
-        let ingredientsDetailVM =  IngredientsDetailVM(coordinator: self, firebaseService: firebaseService, row: row)
+        let ingredientsDetailVM =  IngredientsDetailVM(coordinator: self, firebaseService: firebaseService, model: model)
         let viewController = IngredientsDetailVC(viewModel: ingredientsDetailVM )
         viewController.hidesBottomBarWhenPushed = true
 

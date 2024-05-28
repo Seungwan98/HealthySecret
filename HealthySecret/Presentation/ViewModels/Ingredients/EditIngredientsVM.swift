@@ -15,31 +15,36 @@ class EditIngredientsVM : ViewModel {
     
     var disposeBag = DisposeBag()
     
-    var Ingredients : [Row]
+    var Ingredients : [IngredientsModel]
+    
+    
     
     struct Input {
         let viewWillApearEvent : Observable<Void>
         let edmitButtonTapped : Observable<Void>
-        let inputArr : Observable<[Row]>
+        let inputArr : Observable<[IngredientsModel]>
         let addButtonTapped : Observable<Void>
     }
     
     struct Output {
-        var ingredientsArr = BehaviorSubject<[Row]>(value: [])
+        var ingredientsArr = BehaviorSubject<[IngredientsModel]>(value: [])
         var imagePicker = BehaviorSubject<Int>(value: 0)
         
 
     }
     
+
+    
     
     weak var coordinator : IngredientsCoordinator?
+    private let ingredientsUseCase : IngredientsUseCase
+    private let firebaseService : FirebaseService
     
-    private var firebaseService : FirebaseService
-    
-    init( coordinator : IngredientsCoordinator , firebaseService : FirebaseService , Ingredients : [Row]){
+    init( coordinator : IngredientsCoordinator , firebaseService : FirebaseService , Ingredients : [IngredientsModel] , ingredientsUseCase : IngredientsUseCase){
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
         self.Ingredients =  Ingredients
+        self.ingredientsUseCase = ingredientsUseCase
         
     }
     
@@ -75,21 +80,14 @@ class EditIngredientsVM : ViewModel {
         output.ingredientsArr.onNext(self.Ingredients)
 
         input.edmitButtonTapped.subscribe(onNext: { [weak self] _ in
+            
             guard let self = self else {return}
             input.inputArr.subscribe(onNext: { arr in
-                self.firebaseService.addIngredients(meal: UserDefaults.standard.string(forKey: "meal") ?? "", date:  UserDefaults.standard.string(forKey: "date") ?? "", key:  UserDefaults.standard.string(forKey: "uid") ?? "", mealArr: arr).subscribe({ event in
-                    switch event{
-                    case.completed:
-                        print("completed")
-                        self.coordinator?.backToDiaryVC()
-                    case.error(_):
-                        print("error")
-                    }
-
-
-
-
-
+                
+                self.ingredientsUseCase.updateUsersIngredients(models: arr).subscribe({ event in
+                    
+                    self.coordinator?.backToDiaryVC()
+                    
                 }).disposed(by: disposeBag)
                 
                 

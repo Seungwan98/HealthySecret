@@ -109,7 +109,7 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
     
     
     func setBinds(){
-        let input = ExerciseVM.Input(viewWillApearEvent :  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable(), cellTapped: tableView.rx.modelSelected(ExerciseDtoData.self).asObservable() , searchText: searchController.searchBar.rx.text.orEmpty.asObservable())
+        let input = ExerciseVM.Input(viewWillApearEvent :  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable(), cellTapped: tableView.rx.modelSelected(ExerciseModel.self).asObservable() , searchText: searchController.searchBar.rx.text.orEmpty.asObservable())
         
         
         
@@ -228,29 +228,6 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
 }
 
 
-//
-//extension ExerciseViewController : UITableViewDelegate , UITableViewDataSource  {
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//
-//
-//
-//        return 10
-//    }
-//
-//
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ExerciseCell", for: indexPath) as? ExerciseCell else { return .init() }
-//        cell.title.text = "test"
-//            return cell
-//    }
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 80
-//    }
-//
-//
-//
-    
    
     
     

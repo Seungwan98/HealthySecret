@@ -12,9 +12,9 @@ import RxSwift
 
 class ExerciseDetailVM : ViewModel {
     
-    var model : ExerciseDtoData?
+    var model : ExerciseModel?
     
-    var exercises : [Exercise]?
+    var exercises : [ExerciseModel]?
     
     var disposeBag = DisposeBag()
     
@@ -84,7 +84,7 @@ class ExerciseDetailVM : ViewModel {
         
         input.addBtnTapped.subscribe(onNext: { _ in
             
-            let exercise = Exercise(date: UserDefaults.standard.string(forKey: "date") ?? "", name: name , time: time  , finalCalorie : finalCalorie , memo : memo  , key: UUID().uuidString , exerciseGram: exerciseGram)
+            let exercise = ExerciseModel(date: UserDefaults.standard.string(forKey: "date") ?? "", name: name , time: time  , finalCalorie : finalCalorie , memo : memo  , key: UUID().uuidString , exerciseGram: exerciseGram)
 
             var exercises = self.exercises ?? []
             exercises.append(exercise)

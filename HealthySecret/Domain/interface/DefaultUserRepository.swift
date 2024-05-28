@@ -11,6 +11,9 @@ import Firebase
 
 
 class DefaultUserRepository : UserRepository{
+    
+  
+    
  
     
     
@@ -36,6 +39,32 @@ class DefaultUserRepository : UserRepository{
 
     }
     
+    func getUser() -> Single<UserModel> {
+        
+        guard let uid = UserDefaults.standard.string(forKey: "uid") else { return Single.create{ single in single(.failure(CustomError.isNil)) as! any Disposable   } }
+        
+        
+        
+        return self.firebaseService.getDocument(key: uid)
+    }
+    
+    
+    func getMessage() -> Single<String> {
+        
+        guard let uid = UserDefaults.standard.string(forKey: "uid") else { return Single.create{ single in single(.failure(CustomError.isNil)) as! any Disposable   } }
+
+        
+        return self.firebaseService.getMessage(uid: uid)
+        
+    }
+    
+    
+    
+    func updateUsersIngredients(ingredients : [Ingredients]) -> Completable {
+        guard let uid = UserDefaults.standard.string(forKey: "uid") else { return Completable.create{ completable in completable(.error(CustomError.isNil)) as! any Disposable   } }
+
+        return firebaseService.updateIngredients(ingredients: ingredients, key: uid)
+    }
     
     
     

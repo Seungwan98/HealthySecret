@@ -8,9 +8,10 @@
 import Foundation
 
 struct IngredientsModel : Codable {
+    var num : String
     var descKor: String
     var carbohydrates: Double
-    var calorie: Double
+    var calorie: Int
     var protein: Double
     var province: Double
     var sugars: Double
@@ -19,8 +20,9 @@ struct IngredientsModel : Codable {
     var fattyAcid: Double
     var transFat: Double
     let servingSize: Double
-    var addServingSize : Double
+    var addServingSize : Double?
     
+
     
     
 }

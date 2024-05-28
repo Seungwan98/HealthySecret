@@ -35,7 +35,7 @@ class DiaryCoordinator : Coordinator  {
  
     
     
-    func pushEditIngredientsVC(arr : [Row]) {
+    func pushEditIngredientsVC(arr : [IngredientsModel]) {
         let ingredientsCoordinator =  IngredientsCoordinator( self.navigationController )
         ingredientsCoordinator.finishDelegate = self
         childCoordinator.append(ingredientsCoordinator)
@@ -58,15 +58,14 @@ class DiaryCoordinator : Coordinator  {
     
     func pushDiaryVC() {
         
-        let firebaseService = self.firebaseService
-        let viewController = DiaryViewController(viewModel : DiaryVM ( coordinator : self , firebaseService: firebaseService ))
+        let viewController = DiaryViewController(viewModel : DiaryVM ( coordinator : self , diaryUseCase: DiaryUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService )     )))
         
         self.navigationController.hidesBottomBarWhenPushed = false
         self.navigationController.pushViewController( viewController , animated: false )
     
     }
     
-    func startExerciseCoordinator(exercises : [Exercise]) {
+    func startExerciseCoordinator(exercises : [ExerciseModel]) {
         let exerciseCoordinator =  ExerciseCoordinator( self.navigationController )
         exerciseCoordinator.finishDelegate = self
         exerciseCoordinator.parentCoordinator = self
@@ -86,9 +85,9 @@ class DiaryCoordinator : Coordinator  {
         
     }
     
-    func presentDetailView(arr : [String:Any] ){
+    func presentDetailView(models : IngredientsModel ){
         print("pushDetailView")
-        let viewController = DetailModalVC(dic:arr)
+        let viewController = DetailModalVC(models:models)
             
         viewController.view.backgroundColor = .white
         self.navigationController.present(viewController, animated: true)

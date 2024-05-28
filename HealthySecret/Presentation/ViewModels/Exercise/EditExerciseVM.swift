@@ -14,17 +14,17 @@ class EditExerciseVM : ViewModel {
         
     var disposeBag = DisposeBag()
     
-    var exercises : [Exercise]
+    var exercises : [ExerciseModel]
     
     struct Input {
         let viewWillApearEvent : Observable<Void>
         let edmitButtonTapped : Observable<Void>
-        let inputArr : Observable<[Exercise]>
+        let inputArr : Observable<[ExerciseModel]>
         let addButtonTapped : Observable<Void>
     }
     
     struct Output {
-        var exerciseArr = BehaviorSubject<[Exercise]>(value: [])
+        var exerciseArr = BehaviorSubject<[ExerciseModel]>(value: [])
         
 
     }
@@ -34,7 +34,7 @@ class EditExerciseVM : ViewModel {
     
     private var firebaseService : FirebaseService
     
-    init( coordinator : ExerciseCoordinator , firebaseService : FirebaseService , exercises : [Exercise]){
+    init( coordinator : ExerciseCoordinator , firebaseService : FirebaseService , exercises : [ExerciseModel]){
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
         self.exercises =  exercises

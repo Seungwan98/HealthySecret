@@ -15,31 +15,29 @@ class ExerciseVM : ViewModel {
     
     var disposeBag = DisposeBag()
     
-    var exercises : [Exercise]?
+    var exercises : [ExerciseModel]?
     
     struct Input {
         let viewWillApearEvent : Observable<Void>
-        let cellTapped : Observable<ExerciseDtoData>
+        let cellTapped : Observable<ExerciseModel>
         let searchText : Observable<String>
         
     }
     
     struct Output {
-        let exerciseArr = BehaviorSubject<[ExerciseDtoData]>(value: [] )
+        let exerciseArr = BehaviorSubject<[ExerciseModel]>(value: [] )
         let checkController = BehaviorSubject<Bool>(value: false)
         let titleLabelText = BehaviorSubject<String>(value: "")
-
+        
     }
     
     
     weak var coordinator : ExerciseCoordinator?
+    private let exerciseUseCase : ExerciseUseCase
     
-    private var firebaseService : FirebaseService
-    
-    init( coordinator : ExerciseCoordinator , firebaseService : FirebaseService ){
+    init( coordinator : ExerciseCoordinator , exerciseUseCase : ExerciseUseCase ){
         self.coordinator =  coordinator
-        self.firebaseService =  firebaseService
-        
+        self.exerciseUseCase = exerciseUseCase
     }
     
     
@@ -48,49 +46,36 @@ class ExerciseVM : ViewModel {
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         
         let output = Output()
-
+        
         input.viewWillApearEvent.subscribe(onNext: {
             
-            self.firebaseService.getExercise().subscribe({
-                        single in
+            self.exerciseUseCase.getExerciseList().subscribe({ event in
+                switch(event){
+                case.success(let models):
+                    input.searchText.subscribe(onNext:{ [weak self] text in
+                        guard let self = self else {return}
+                        var arr = models
                         
-                        switch single{
-                        case.success(let exercise):
-
+                        print("\(text) text")
+                        if text.isEmpty{
+                            output.exerciseArr.onNext(arr)
                             
+                        }else{
+                            arr = arr.filter{ $0.name.localizedCaseInsensitiveContains(text) }
+                            print(arr)
+                            output.exerciseArr.onNext(arr)
                             
-                            input.searchText.map({ [weak self] text in
-                                var arr = exercise.data
-
-                                print("\(text) text")
-                                var check : Bool = false
-                                if text.isEmpty{
-                                    check = false
-                                    output.exerciseArr.onNext(arr)
-
-                                }else{
-                                    arr = arr.filter{ $0.name.localizedCaseInsensitiveContains(text) }
-                                    print(arr)
-                                    output.exerciseArr.onNext(arr)
-                                    check = true
-                                    
-                                }
-                                
-                                
-                                
-                                return check
-                            }).bind(to: output.checkController).disposed(by: disposeBag)
-                            
-                            
-                        case.failure(_):
-                            print("exercise fail")
                         }
                         
-                
-                
-                        
                     }).disposed(by: disposeBag)
-            
+                    
+                    
+                case .failure(let err):
+                    print(err)
+                }
+                
+                
+            }).disposed(by: disposeBag)
             
             
             
@@ -99,18 +84,18 @@ class ExerciseVM : ViewModel {
         input.cellTapped.subscribe(onNext:{
             model in
             
-            
+            print("model \(model)")
             self.coordinator?.pushExerciseDetailVC(model : model , exercises : self.exercises ?? [])
             
             
             
         }).disposed(by: disposeBag)
-     
+        
         
         output.titleLabelText.onNext(UserDefaults.standard.string(forKey: "date") ?? "")
-
-    
-     
+        
+        
+        
         
         
         return output

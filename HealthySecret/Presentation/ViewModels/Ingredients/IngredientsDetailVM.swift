@@ -36,7 +36,7 @@ class IngredientsDetailVM  : ViewModel {
         let proteinLabel = BehaviorSubject<String>(value: "0")
         let provinceLabel = BehaviorSubject<String>(value: "0")
         let buttonEnable = BehaviorSubject<Bool>(value: false)
-        let firstTextToField = BehaviorSubject<String>(value: "0")
+        let firstTextToField = BehaviorSubject<String>(value: "0" )
     
     }
     
@@ -45,13 +45,13 @@ class IngredientsDetailVM  : ViewModel {
     
     private var firebaseService : FirebaseService
     
-    private var row : Row
+    private var model : IngredientsModel
     
     
-    init( coordinator : IngredientsCoordinator , firebaseService : FirebaseService , row : Row){
+    init( coordinator : IngredientsCoordinator , firebaseService : FirebaseService , model : IngredientsModel){
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
-        self.row = row
+        self.model = model
         
 
     }
@@ -62,28 +62,20 @@ class IngredientsDetailVM  : ViewModel {
         
         let output = Output()
         
-        let serveSize = row.addServingSize ?? row.servingSize
+        let serveSize = model.addServingSize ?? model.servingSize
 
 
 
         
         input.viewWillApearEvent.subscribe(onNext: { _ in
-            
-              
-                
-                
-            
-       
-            
-            
-        input.selectButton.subscribe(onNext: { tag in
+            input.selectButton.subscribe(onNext: { tag in
            
             var tag = tag
             
 
             input.selectTextField.subscribe(onNext: { text in
-                var selectText = ""
-                selectText = text
+                var selectText = Double(text)
+               
                 
                 
 
@@ -92,58 +84,58 @@ class IngredientsDetailVM  : ViewModel {
                   
                     
                     if(tag == 2){
-                        selectText = "0"
-                        output.firstTextToField.onNext(selectText)
+                        selectText = 0
+                        output.firstTextToField.onNext("0")
                         tag = 0
                         
                     }else if(tag == 3){
                         selectText = serveSize
-                        output.firstTextToField.onNext(selectText)
+                        output.firstTextToField.onNext(String(selectText ?? 0))
                         tag = 1
                     }
                 
                 
                 
-                let newRow : Row
+                let newRow : IngredientsModel
                 
                 
                 if(tag == 0){
                     if text.isEmpty {
                         print("empty")
                         
-                       newRow = self.getServingOnce(selectText: "0" , row : self.row)
+                        newRow = self.getServingOnce(selectText: 0 , model : self.model)
 
                     }else{
-                        newRow = self.getServingOnce(selectText: selectText, row : self.row)
+                        newRow = self.getServingOnce(selectText: selectText ?? 0, model : self.model)
                     }
                 }else{
                     if text.isEmpty {
                         print("empty")
                         
-                        newRow = self.getGram(selectText: "0" , row : self.row)
+                        newRow = self.getGram(selectText: 0 , model : self.model)
 
                     }else{
-                        newRow = self.getGram(selectText: selectText, row : self.row)
+                        newRow = self.getGram(selectText: selectText ?? 0, model : self.model)
                     }
                     
                 }
                 
                 
              
-               
                 
-                output.calorieLabel.onNext(newRow.calorie+"kcal")
-                output.nameLabel.onNext(newRow.descKor)
-                output.proteinLabel.onNext(newRow.protein+"g")
-                output.provinceLabel.onNext(newRow.province+"g")
-                output.carbohydratesLabel.onNext(newRow.carbohydrates+"g")
+                output.calorieLabel.onNext(String(newRow.calorie)+"kcal")
+                output.nameLabel.onNext(String(newRow.descKor))
+                output.proteinLabel.onNext(String(newRow.protein)+"g")
+                output.provinceLabel.onNext(String(newRow.province)+"g")
+                output.carbohydratesLabel.onNext(String(newRow.carbohydrates)+"g")
                 
                 
                 input.addBtnTapped.subscribe(onNext: { _ in
                    
                         
                     var filteredArr = self.coordinator?.filteredArr
-                    filteredArr?.append(newRow)
+                   
+                     filteredArr?.append(newRow)
 
                     self.coordinator?.navigationController.popViewController(animated: false)
                     self.coordinator?.pushIngredientsEdmit(arr: filteredArr ?? [])
@@ -162,33 +154,32 @@ class IngredientsDetailVM  : ViewModel {
 
         }).disposed(by: disposeBag)
 
-        output.firstTextToField.onNext(serveSize)
+        output.firstTextToField.onNext(String(Int(serveSize)))
         
         return output
     }
     
-    func getGram(selectText : String , row : Row ) -> Row {
-        var newRow = row
-        let text = (Double(selectText) ?? 1)
-        let size = (Double(row.addServingSize ?? row.servingSize )! )
+    func getGram(selectText : Double , model : IngredientsModel ) -> IngredientsModel {
+        var newRow = model
+        let size = model.addServingSize ?? model.servingSize
         
-        newRow.calorie = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.calorie) ?? 0)! / size))))
+        newRow.calorie = Int(CustomMath().getDecimalSecond(data: (selectText * (   Double(model.calorie) / size))))
         
-        newRow.carbohydrates = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.carbohydrates) ?? 0)! / size))))
+        newRow.carbohydrates = CustomMath().getDecimalSecond(data: (selectText * (  model.carbohydrates / size)))
         
-        newRow.protein = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.protein) ?? 0)! / size))))
+        newRow.protein = CustomMath().getDecimalSecond(data: (selectText * (   model.protein / size)))
         
-        newRow.province = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.province) ?? 0)! / size))))
+        newRow.province = CustomMath().getDecimalSecond(data: (selectText * (   model.province / size)))
         
-        newRow.sugars = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.sugars) ?? 0)! / size))))
+        newRow.sugars = CustomMath().getDecimalSecond(data: (selectText * (   model.sugars / size)))
         
-        newRow.sodium = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.sodium) ?? 0)! / size))))
+        newRow.sodium = CustomMath().getDecimalSecond(data: (selectText * (  model.sodium / size)))
         
-        newRow.cholesterol = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.cholesterol) ?? 0)! / size))))
+        newRow.cholesterol = CustomMath().getDecimalSecond(data: (selectText * (   model.cholesterol / size)))
         
-        newRow.fattyAcid = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.fattyAcid) ?? 0)! / size))))
+        newRow.fattyAcid = CustomMath().getDecimalSecond(data: (selectText * (  model.fattyAcid  / size)))
         
-        newRow.transFat = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.transFat) ?? 0)! / size))))
+        newRow.transFat = CustomMath().getDecimalSecond(data: (selectText * (   model.transFat / size)))
      
         newRow.addServingSize = selectText
         
@@ -196,33 +187,32 @@ class IngredientsDetailVM  : ViewModel {
         
         
     }
-    func getServingOnce(selectText : String , row : Row ) -> Row {
-        var newRow = row
-        let text = (Double(selectText) ?? 1)
-        let addServingSize = (Double(row.addServingSize ?? row.servingSize ))!
-        let servingSize = Double(row.servingSize) ?? 1
+    func getServingOnce(selectText : Double , model : IngredientsModel ) -> IngredientsModel {
+        var newRow = model
+        let addServingSize = model.addServingSize ?? model.servingSize
+        let servingSize = model.servingSize
         
         
         
-        newRow.calorie = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.calorie) ?? 0)! / addServingSize * servingSize))))
+        newRow.calorie = Int(CustomMath().getDecimalSecond(data: (selectText * (   Double(model.calorie) / addServingSize * servingSize))))
         
-        newRow.carbohydrates = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.carbohydrates) ?? 0)! / addServingSize * servingSize))))
+        newRow.carbohydrates = CustomMath().getDecimalSecond(data: (selectText * (   model.carbohydrates / addServingSize * servingSize)))
         
-        newRow.protein = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.protein) ?? 0)! / addServingSize * servingSize))))
+        newRow.protein = CustomMath().getDecimalSecond(data: (selectText * (   model.protein / addServingSize * servingSize)))
         
-        newRow.province = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.province) ?? 0)! / addServingSize * servingSize))))
+        newRow.province = CustomMath().getDecimalSecond(data: (selectText * (   model.province / addServingSize * servingSize)))
         
-        newRow.sugars = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.sugars) ?? 0)! / addServingSize * servingSize))))
+        newRow.sugars = CustomMath().getDecimalSecond(data: (selectText * (   model.sugars / addServingSize * servingSize)))
         
-        newRow.sodium = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.sodium) ?? 0)! / addServingSize * servingSize))))
+        newRow.sodium = CustomMath().getDecimalSecond(data: (selectText * (  model.sodium / addServingSize * servingSize)))
         
-        newRow.cholesterol = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.cholesterol) ?? 0)! / addServingSize * servingSize))))
+        newRow.cholesterol = CustomMath().getDecimalSecond(data: (selectText * (    model.cholesterol / addServingSize * servingSize)))
         
-        newRow.fattyAcid = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.fattyAcid) ?? 0)! / addServingSize * servingSize))))
+        newRow.fattyAcid = CustomMath().getDecimalSecond(data: (selectText * (   model.fattyAcid / addServingSize * servingSize)))
         
-        newRow.transFat = String(CustomMath().getDecimalSecond(data: (text * (   (Double(row.transFat) ?? 0)! / addServingSize * servingSize))))
+        newRow.transFat = CustomMath().getDecimalSecond(data: (selectText * (   model.transFat / addServingSize * servingSize)))
         
-        newRow.addServingSize = String(Double(selectText)! * Double(servingSize))
+        newRow.addServingSize =  selectText * servingSize
 
         
         

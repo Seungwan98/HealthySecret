@@ -16,6 +16,7 @@ struct IngredientsDTO: Codable {
 
 // MARK: - Row
 struct Row: Codable {
+
     
     
     
@@ -42,19 +43,20 @@ struct Row: Codable {
     let servingSize: String
     let subRefName: SubRefName
     
-    var addServingSize : String
+    var addServingSize : String?
     
     
-//    
-//    
-//    func toDomain() -> IngredientsModel{
-//        
-//        return IngredientsModel(carbohydrates: Double(self.carbohydrates) ?? 0.0 , protein:  Double(self.protein) ?? 0.0 , province:  Double(self.province) ?? 0.0 , sugars: Double(self.sugars) ?? 0.0 , sodium: Double(self.sodium) ?? 0.0 , cholesterol: Double(self.cholesterol) ?? 0.0 , fattyAcid: Double(self.fattyAcid) ?? 0.0 , transFat: Double(self.transFat) ?? 0.0 ,servingSize: Double(servingSize) ?? 0.0 , addServingSize: Double(servingSize) ?? 0.0   )
-//        
-//        
-//    }
-//     
     
+     
+    
+       func toDomain() -> IngredientsModel{
+           
+           return IngredientsModel( num : self.num , descKor : self.descKor  , carbohydrates: Double(self.carbohydrates) ?? 0.0, calorie: Int(Double(calorie) ?? 0) , protein:  Double(self.protein) ?? 0.0 , province:  Double(self.province) ?? 0.0 , sugars: Double(self.sugars) ?? 0.0 , sodium: Double(self.sodium) ?? 0.0 , cholesterol: Double(self.cholesterol) ?? 0.0 , fattyAcid: Double(self.fattyAcid) ?? 0.0 , transFat: Double(self.transFat) ?? 0.0 ,servingSize: Double(servingSize) ?? 0.0   )
+           
+           
+       }
+        
+       
    
    
     enum CodingKeys: String, CodingKey {

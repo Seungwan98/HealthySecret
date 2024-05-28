@@ -11,10 +11,10 @@ class DetailModalVC : UIViewController {
     
 
     
-    let dic : [String:Any]
+    private let models : IngredientsModel
     
-    init(dic : [String:Any]) {
-        self.dic = dic
+    init(models :IngredientsModel) {
+        self.models = models
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -151,15 +151,15 @@ class DetailModalVC : UIViewController {
         
         
         
-        contentLabels[0].text = String(describing: self.dic["kcal"] ?? "-") + " kcal"
-        contentLabels[1].text = String(describing: self.dic["carbohydrates"] ?? "-") + " g"
-        contentLabels[3].text = String(describing: self.dic["protein"] ?? "-") + " g"
-        contentLabels[4].text = String(describing: self.dic["province"] ?? "-") + " g"
-        contentLabels[8].text = String(describing: self.dic["cholesterol"] ?? "-") + " mg"
-        contentLabels[5].text = String(describing: self.dic["fattyAcid"] ?? "-") + " mg"
-        contentLabels[2].text = String(describing: self.dic["sugars"] ?? "-") + " mg"
-        contentLabels[6].text = String(describing: self.dic["transFat"] ?? "-") + " mg"
-        contentLabels[7].text = String(describing: self.dic["sodium"] ?? "-") + " mg"
+        contentLabels[0].text = String(describing: models.calorie) + " kcal"
+        contentLabels[1].text = String(describing: models.carbohydrates) + " g"
+        contentLabels[3].text = String(describing: models.protein) + " g"
+        contentLabels[4].text = String(describing: models.province) + " g"
+        contentLabels[8].text = String(describing: models.cholesterol) + " mg"
+        contentLabels[5].text = String(describing: models.fattyAcid) + " mg"
+        contentLabels[2].text = String(describing: models.sugars) + " mg"
+        contentLabels[6].text = String(describing: models.transFat) + " mg"
+        contentLabels[7].text = String(describing: models.sodium) + " mg"
         
         
 

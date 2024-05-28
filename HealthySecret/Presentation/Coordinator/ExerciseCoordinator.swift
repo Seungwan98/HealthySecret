@@ -38,8 +38,8 @@ class ExerciseCoordinator: Coordinator {
         
     }
     
-    func pushExerciseVC(exercises : [Exercise]) {
-        let viewModel = ExerciseVM(coordinator: self, firebaseService: firebaseService)
+    func pushExerciseVC(exercises : [ExerciseModel]) {
+        let viewModel = ExerciseVM(coordinator: self, exerciseUseCase: ExerciseUseCase(exerciseRepository: DefaultExerciseRepository(firebaseService: self.firebaseService)) )
         viewModel.exercises =  exercises
         let ExerciseViewController = ExerciseViewController(viewModel: viewModel)
 
@@ -52,7 +52,7 @@ class ExerciseCoordinator: Coordinator {
         
     }
     
-    func pushExerciseDetailVC(model : ExerciseDtoData , exercises : [Exercise]){
+    func pushExerciseDetailVC(model : ExerciseModel , exercises : [ExerciseModel]){
         
         let firebaseService = FirebaseService()
         let viewModel = ExerciseDetailVM(coordinator: self, firebaseService: firebaseService)
@@ -66,7 +66,7 @@ class ExerciseCoordinator: Coordinator {
         
     }
     
-    func pushEditExerciseVC(exercises:[Exercise]){
+    func pushEditExerciseVC(exercises:[ExerciseModel]){
         print("pushEdit")
         let firebaseService = self.firebaseService
         let viewController = EditExerciseVC(viewModel: EditExerciseVM(coordinator: self, firebaseService: firebaseService , exercises : exercises))

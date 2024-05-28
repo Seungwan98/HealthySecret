@@ -138,7 +138,7 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
 
         let contentView = sender.superview
                let cell = contentView?.superview as! UITableViewCell
-        var value : [Row] = []
+        var value : [IngredientsModel] = []
         if let indexPath = self.tableView.indexPath(for: cell) {
             ingredientsArr.subscribe(onNext: { arr in
                 value = arr
@@ -155,7 +155,7 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
 
     }
     
-    var ingredientsArr = BehaviorSubject<[Row]>(value: [])
+    var ingredientsArr = BehaviorSubject<[IngredientsModel]>(value: [])
     
     
     func setBinds(){
@@ -185,8 +185,8 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
         }).disposed(by: disposeBag)
         
         ingredientsArr.bind(to: tableView.rx.items(cellIdentifier: "EditIngredientsCell" ,cellType: EditIngredientsCell.self )){index,item,cell in
-            cell.kcal.text = item.calorie + "kcal"
-            cell.gram.text = (item.addServingSize ?? item.servingSize) + "g"
+            cell.kcal.text = String(item.calorie) + "kcal"
+            cell.gram.text = String(item.addServingSize ?? item.servingSize) + "g"
             cell.name.text = item.descKor
             
             cell.deleteButton.addTarget(self, action: #selector(self.delCell), for: .touchUpInside)
