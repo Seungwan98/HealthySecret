@@ -16,23 +16,23 @@ class ComentsVM : ViewModel {
     
     var disposeBag = DisposeBag()
     
-    var coments : [Coment]?
+    var coments : [ComentModel]?
     var feedUid : String?
     var feedUuid : String?
     
     struct Input {
         let addButtonTapped : Observable<Void>
         let coments : Observable<String>
-        let comentsDelete : Observable<Coment>
+        let comentsDelete : Observable<ComentModel>
         let profileTapped : Observable<String>
-        let reportTapped : Observable<Coment>
+        let reportTapped : Observable<ComentModel>
    
         
     }
     
     struct Output {
         
-        var coments = BehaviorSubject<[Coment]>(value: [])
+        var coments = BehaviorSubject<[ComentModel]>(value: [])
         var feedUuid = BehaviorSubject<String>(value: "")
         var backgroundHidden = PublishSubject<Bool>()
         var alert = PublishSubject<Bool>()
@@ -60,25 +60,25 @@ class ComentsVM : ViewModel {
         guard let nickname = UserDefaults.standard.string(forKey: "name") , let uid = UserDefaults.standard.string(forKey: "uid") , let feedUid = self.feedUid  else {return Output()}
  
 
-
-            firebaseService.getComents(feedUid: feedUid ).subscribe({ [weak self] event in
-                guard self != nil else {return}
-                
-                switch(event){
-                    
-                case.success(let coments):
-                    output.coments.onNext(coments)
-                    
-                    output.backgroundHidden.onNext( !coments.isEmpty )
-                case.failure(let err):
-                    print(err)
-                    break
-                }
-                    
-                
-                
-                
-            }).disposed(by: disposeBag)
+//리팩
+//            firebaseService.getComents(feedUid: feedUid ).subscribe({ [weak self] event in
+//                guard self != nil else {return}
+//                
+//                switch(event){
+//                    
+//                case.success(let coments):
+//                    output.coments.onNext(coments)
+//                    
+//                    output.backgroundHidden.onNext( !coments.isEmpty )
+//                case.failure(let err):
+//                    print(err)
+//                    break
+//                }
+//                    
+//                
+//                
+//                
+//            }).disposed(by: disposeBag)
                 
         
         
@@ -89,45 +89,49 @@ class ComentsVM : ViewModel {
             self.firebaseService.report(url: "HealthySecretComentsReports", uid: coment.comentUid , uuid: uid, event: "coment").subscribe({ event in
                 switch(event){
                 case.completed:
-                    self.firebaseService.getComents(feedUid: feedUid ).subscribe({ [weak self] event in
-                        guard self != nil else {return}
-                        
-                        switch(event){
-                            
-                        case.success(let coments):
-                            output.coments.onNext(coments)
-                            
-                            output.backgroundHidden.onNext( !coments.isEmpty )
-                            output.alert.onNext(true)
-
-                        case.failure(let err):
-                         
-                            break
-                        }
-                            
-                        
-                        
-                        
-                    }).disposed(by: disposeBag)
+                    break
+                    //리팩
+//                    self.firebaseService.getComents(feedUid: feedUid ).subscribe({ [weak self] event in
+//                        guard self != nil else {return}
+//                        
+//                        switch(event){
+//                            
+//                        case.success(let coments):
+//                            output.coments.onNext(coments)
+//                            
+//                            output.backgroundHidden.onNext( !coments.isEmpty )
+//                            output.alert.onNext(true)
+//
+//                        case.failure(let err):
+//                         
+//                            break
+//                        }
+//                            
+//                        
+//                        
+//                        
+//                    }).disposed(by: disposeBag)
                     
                 case.error(let err): if(err as! CustomError == CustomError.delete){
                     
-                    self.firebaseService.deleteComents(coment: coment, feedUid: feedUid).subscribe({ event in
-                        switch(event){
-                        case.success(let coments):
-                            print("coments \(coments)")
-                            output.coments.onNext(coments)
-                            
-                            output.backgroundHidden.onNext( !coments.isEmpty )
-                            output.alert.onNext(true)
-
-                        case .failure(_):
-                            break
-                        }
-                        
-                        
-                        
-                    }).disposed(by: disposeBag)
+                    
+                    //리팩
+//                    self.firebaseService.deleteComents(coment: coment, feedUid: feedUid).subscribe({ event in
+//                        switch(event){
+//                        case.success(let coments):
+//                            print("coments \(coments)")
+//                            output.coments.onNext(coments)
+//                            
+//                            output.backgroundHidden.onNext( !coments.isEmpty )
+//                            output.alert.onNext(true)
+//
+//                        case .failure(_):
+//                            break
+//                        }
+//                        
+//                        
+//                        
+//                    }).disposed(by: disposeBag)
                     
                 }
                     
@@ -155,23 +159,25 @@ class ComentsVM : ViewModel {
             
 
             guard let feedUid = self.feedUid else {return}
-            self.firebaseService.deleteComents( coment: coment , feedUid: feedUid ).subscribe({ event in
-                switch(event){
-                case.success(let coments):
-                    output.coments.onNext(coments)
-                    output.backgroundHidden.onNext( !coments.isEmpty )
-
-                    self.firebaseService.listener?.remove()
-
-                    
-                    LoadingIndicator.hideLoading()
-
-                
-                case.failure(let err):
-                    print(err)
-                }
-                
-            }).disposed(by: disposeBag)
+            
+            //리팩
+//            self.firebaseService.deleteComents( coment: coment , feedUid: feedUid ).subscribe({ event in
+//                switch(event){
+//                case.success(let coments):
+//                    output.coments.onNext(coments)
+//                    output.backgroundHidden.onNext( !coments.isEmpty )
+//
+//                    self.firebaseService.listener?.remove()
+//
+//                    
+//                    LoadingIndicator.hideLoading()
+//
+//                
+//                case.failure(let err):
+//                    print(err)
+//                }
+//                
+//            }).disposed(by: disposeBag)
             
             
         }).disposed(by: disposeBag)
@@ -198,29 +204,29 @@ class ComentsVM : ViewModel {
           
             let date = CustomFormatter.shared.DateToStringForFeed(date: Date())
             
-            let coment = Coment(coment: coment, date: date, nickname: nickname, profileImage: profileImage , uid: uid, comentUid:  UUID().uuidString+date, feedUid: feedUid )
+            let coment = ComentModel(coment: coment, date: date, nickname: nickname, profileImage: profileImage , uid: uid, comentUid:  UUID().uuidString+date, feedUid: feedUid )
                 
 
             
             
-            self.firebaseService.updateComents(feedUid: feedUid , coment: coment).subscribe({ event in
-                switch(event){
-                case.success(let coments):
-                    output.coments.onNext(coments)
-                    output.backgroundHidden.onNext( !coments.isEmpty )
-
-                    self.firebaseService.listener?.remove()
-
-
-                    
-                    LoadingIndicator.hideLoading()
-                    
-                case.failure(let err):
-                    print(err)
-                }
-                
-                
-            }).disposed(by: disposeBag)
+//            self.firebaseService.updateComents(feedUid: feedUid , coment: coment).subscribe({ event in
+//                switch(event){
+//                case.success(let coments):
+//                    output.coments.onNext(coments)
+//                    output.backgroundHidden.onNext( !coments.isEmpty )
+//
+//                    self.firebaseService.listener?.remove()
+//
+//
+//                    
+//                    LoadingIndicator.hideLoading()
+//                    
+//                case.failure(let err):
+//                    print(err)
+//                }
+//                
+//                
+//            }).disposed(by: disposeBag)
 
             
             

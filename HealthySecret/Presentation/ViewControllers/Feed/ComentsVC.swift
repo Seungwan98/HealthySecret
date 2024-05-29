@@ -34,7 +34,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
 
     }
     
-    var coments = [Coment]()
+    var coments = [ComentModel]()
     
     
     let disposeBag = DisposeBag()
@@ -193,11 +193,11 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         
     }
     
-    var comentsDelete = PublishSubject<Coment>()
+    var comentsDelete = PublishSubject<ComentModel>()
     
     var profileTapped = PublishSubject<String>()
     
-    var reportTapped = PublishSubject<Coment>()
+    var reportTapped = PublishSubject<ComentModel>()
     
     
     func setBindings(){

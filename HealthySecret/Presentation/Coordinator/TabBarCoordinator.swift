@@ -254,7 +254,7 @@ class CommuCoordinator : Coordinator  {
   
     
    
-    func pushComents(coments : [Coment] , feedUid : String , feedUuid : String){
+    func pushComents(coments : [ComentModel] , feedUid : String , feedUuid : String){
         let firebaseService = FirebaseService()
         let viewModel = ComentsVM(coordinator: self, firebaseService: firebaseService)
         viewModel.coments = coments
@@ -308,7 +308,7 @@ class CommuCoordinator : Coordinator  {
     
     func startPush() {
         
-        let viewController = CommuVC(viewModel : CommuVM(coordinator: self , firebaseService: self.firebaseService ))
+        let viewController = CommuVC(viewModel : CommuVM(coordinator: self , commuUseCase: CommuUseCase(feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService), userRepository: DefaultUserRepository(firebaseService: self.firebaseService)) ))
         
         self.navigationController.pushViewController( viewController , animated: false )
     

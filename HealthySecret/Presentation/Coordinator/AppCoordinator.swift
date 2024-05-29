@@ -30,6 +30,7 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
     var type: CoordinatorType
     var firebaseService: FirebaseService
     var kakaoService : KakaoService
+    var appleService : AppleService
     var disposeBag = DisposeBag()
     
     // MARK: - Initializers
@@ -38,6 +39,7 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
         self.type = CoordinatorType.tab
         self.firebaseService = FirebaseService()
         self.kakaoService = KakaoService()
+        self.appleService = AppleService()
        
     }
     
@@ -61,7 +63,7 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
     func start() {
         
        
-        let viewController = SplashVC(viewModel: SplashVM(coordinator: self, firebaseService: self.firebaseService))
+        let viewController = SplashVC(viewModel: SplashVM(coordinator: self, loginUseCase: LoginUseCase(loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService), userRepository: DefaultUserRepository(firebaseService: self.firebaseService))   )  )
         self.navigationController.setViewControllers([viewController], animated: false)
        
     }
@@ -210,8 +212,7 @@ class LoginCoordinator : Coordinator  {
    
     
     func start() {
-        print("startLoginVC")
-        let viewModel = LoginVM(loginUseCase: LoginUseCase(loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService , kakaoServcie: self.kakaoService)   ), loginCoordinator: self )
+        let viewModel = LoginVM(loginUseCase: LoginUseCase(loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService , kakaoServcie: self.kakaoService), userRepository: DefaultUserRepository(firebaseService: self.firebaseService)   ), loginCoordinator: self )
         let loginViewController = LoginViewController(viewModel: viewModel)
         loginViewController.view.backgroundColor = .white
         
@@ -229,8 +230,6 @@ class LoginCoordinator : Coordinator  {
      
     
     func pushLicenseVC() {
-        
-     
         let viewController = LicenseVC()
         viewController.coordinator = self
         self.navigationController.navigationBar.topItem?.title = ""

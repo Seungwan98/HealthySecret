@@ -16,7 +16,6 @@ class FollowsVM : ViewModel {
     var uid : String?
     var followings : [UserModel] = []
     var followers : [UserModel] = []
-   // var coreMotionService = CoreMotionService.shared
     
     var disposeBag = DisposeBag()
     
@@ -61,9 +60,7 @@ class FollowsVM : ViewModel {
         let output = Output()
 
         
-        guard let ownUid = UserDefaults.standard.string(forKey: "uid") else {
-            print("ownUid nil")
-            return output }
+        guard let ownUid = UserDefaults.standard.string(forKey: "uid") else {  return output }
         
         guard let uid = self.uid else { print("uid nil")
                                 return output }

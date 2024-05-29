@@ -60,8 +60,7 @@ class LikesVM : ViewModel {
             print("ownUid nil")
             return output }
         
-        guard let uid = self.uid else { print("uid nil")
-                                return output }
+        guard let uid = self.uid else { return output }
         
         
         

@@ -18,16 +18,7 @@ class AddFeedVM : ViewModel {
     
     
     var disposeBag = DisposeBag()
-    
-    
-    
-   
-    
-    
-    
-    
-    
-    
+  
     
     weak var coordinator : Coordinator?
     
@@ -85,25 +76,23 @@ class AddFeedVM : ViewModel {
                                 }
                                 
                                 if(urlArr.count == arr.count){
-                                    var feed = FeedModel(uuid: uuid , feedUid: UUID().uuidString+CustomFormatter.shared.getToday(), date: date, nickname: name , contents: text, mainImgUrl: urlArr , likes: [], report: [] )
-                                    if let profileImage = UserDefaults.standard.string(forKey: "profileImage"){
-                                        
-                                        feed.profileImage = profileImage
-                                    }
-                                    
-                                    self.firebaseService.addFeed(feed: feed).subscribe({ event in
-                                        switch(event){
-                                        case.completed:
-                                            DispatchQueue.main.async {
-                                                       LoadingIndicator.hideLoading()
-                                                   }
-                                            self.coordinator?.finish()
-                                            
-                                        case .error(_):
-                                            break
-                                        }
-                                        
-                                    }).disposed(by: disposeBag)
+                                
+                                    var feed = FeedModel(uuid: uuid , feedUid: UUID().uuidString+CustomFormatter.shared.getToday(), date: date, profileImage : "", nickname: name , contents: text, mainImgUrl: urlArr , likes: [], report: [], coments: []  )
+                                  
+//                                    
+//                                    self.firebaseService.addFeed(feed: feed).subscribe({ event in
+//                                        switch(event){
+//                                        case.completed:
+//                                            DispatchQueue.main.async {
+//                                                       LoadingIndicator.hideLoading()
+//                                                   }
+//                                            self.coordinator?.finish()
+//                                            
+//                                        case .error(_):
+//                                            break
+//                                        }
+//                                        
+//                                    }).disposed(by: disposeBag)
                                 }
                                 
                                 

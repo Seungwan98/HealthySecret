@@ -11,17 +11,21 @@ import RxCocoa
 import RxRelay
 import RxSwift
 
+
+
 final class SplashVM {
 
-    private let disposeBag = DisposeBag()
+  
     weak var coordinator: AppCoordinator?
-    private var firebaseService: FirebaseService
+    private let disposeBag = DisposeBag()
+    private let loginUseCase : LoginUseCase
+    
     init(
         coordinator: AppCoordinator,
-        firebaseService: FirebaseService
+        loginUseCase : LoginUseCase
     ) {
         self.coordinator = coordinator
-        self.firebaseService = firebaseService
+        self.loginUseCase = loginUseCase
     }
     
     var freeze = PublishSubject<Bool>()
@@ -37,12 +41,12 @@ final class SplashVM {
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
                     
                     switch(select){
-                    case("login"):
+                    case(.logIn):
                         self.coordinator?.showLoginViewController()
-                    case("signUp"):
+                    case(.signUp):
                         self.coordinator?.showSignUpVC()
                         
-                    case("main"):
+                    case(.main):
                         self.coordinator?.showMainViewController()
                         
                         
@@ -64,118 +68,14 @@ final class SplashVM {
         
     }
     
-    func setStart() -> Single<String>{
+    func setStart() -> Single<LoginStatus>{
         
-        return Single.create{ single in
-            
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd"
-            
-            UserDefaults.standard.set(formatter.string(from: Date()), forKey: "date")
-            
-            
-            
-            self.firebaseService.getCurrentUser().subscribe { event in
-                switch event {
-                    
-                case .success(let user):
-                    print("success")
-                    var email : String?
-                    var uid : String?
-                    
-                    if user.uid.isEmpty {
-                        
-                        print("sign Out")
-                        
-                        self.firebaseService.signOut().subscribe({ event in
-                            switch(event) {
-                            case.completed:
-                                
-                                single(.success("login"))
-                                
-                                
-                            case.error(let err):
-                                print(err)
-                            }
-                            
-                            
-                        }).disposed(by: self.disposeBag)
-                        
-
-                    }else{
-                        email = user.email
-                        uid = user.uid
-                        
-                    }
-                    
-                 
-                   
-                    
-                    self.firebaseService.getDocument(key: uid ?? "").subscribe{ event in
-                        switch event{
-         
-                            
-                        case .success(let firUser):
-                        
-                        
-                            if( !CustomFormatter.shared.dateCompare(targetString: firUser.freezeDate ?? "")  ) {
-                                self.freeze.onNext(true)
-                                single(.success("login"))
-
-                               
-
-                            }else{
-                                
-                                print("getFure")
-                                
-                                UserDefaults.standard.set( email , forKey: "email")
-                                UserDefaults.standard.set( uid , forKey: "uid")
-                                
-                                
-                                UserDefaults.standard.set( firUser.name  , forKey: "name")
-                                UserDefaults.standard.set( firUser.loginMethod , forKey: "loginMethod")
-                                UserDefaults.standard.set( firUser.profileImage  , forKey: "profileImage")
-                                
-                                
-                                single(.success("main"))
-                            }
-                           
-                        case .failure(_):
-                            print("fail lets sign Out")
-                          
-                            
-                           
-
-                            self.firebaseService.signOut().subscribe({ event in
-                                switch(event){
-                                case.completed:
-                                    
-                                        single(.success("signUp"))
-                                    
-                                case.error(_):
-                                    print("err")
-                                }
-                                
-                            }).disposed(by: self.disposeBag)
-                           
-                            
-                        }
-                        
-                            
-                    }.disposed(by: self.disposeBag)
-                    
-                    
-                case .failure(let error):
-                    print("fail lets Login \(error)")
-                    self.coordinator?.showLoginViewController()
-
-                
-                }
-            }.disposed(by: self.disposeBag)
-            
-            return Disposables.create()
-
-        }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        UserDefaults.standard.set(formatter.string(from: Date()), forKey: "date")
+        
+        return self.loginUseCase.loginStatus()
             
         }
         

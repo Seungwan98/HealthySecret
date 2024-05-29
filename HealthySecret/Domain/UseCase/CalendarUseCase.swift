@@ -11,31 +11,34 @@ import FirebaseAuth
 
 
 
-class ExerciseUseCase {
+class CalendarUseCase {
 
     private let disposeBag = DisposeBag()
-    private let exerciseRepository : ExerciseRepository
     private let userRepository : UserRepository
     
     init( exerciseRepository : ExerciseRepository , userRepository : UserRepository ){
-        self.exerciseRepository = exerciseRepository
         self.userRepository = userRepository
         
     }
     
     
-    func getExerciseList() -> Single<[ExerciseModel]> {
+    func getDiarys() -> Single<[Diary]> {
      
-        return self.exerciseRepository.getExerciseList()
+        return userRepository.getUser().map{
+            
+            $0.diarys
+        }
         
         
     }
     
-    
-    func updateUsersExercise(exercises : [ExerciseModel]) -> Completable {
+    func updateDiary(diarys : [Diary] ) -> Completable {
         
-        return self.userRepository.updateUsersExercises(exercises: exercises)
+        return self.userRepository.updateUsersDiays(diarys: diarys)
+     
     }
+    
+   
 
     
     

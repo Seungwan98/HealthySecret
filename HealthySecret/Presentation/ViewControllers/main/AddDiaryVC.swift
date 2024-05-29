@@ -112,8 +112,9 @@ class AddDiaryVC : UIViewController {
     }()
     
     
-    init(viewModel : CalendarVM){
+    init(viewModel : CalendarVM ){
         self.viewModel = viewModel
+  
         super.init(nibName: nil, bundle: nil)
 
     }
@@ -165,7 +166,6 @@ class AddDiaryVC : UIViewController {
         contentView.addSubview(firstLabel)
         contentView.addSubview(secondLabel)
       
-        
         
         
         
@@ -246,6 +246,7 @@ class AddDiaryVC : UIViewController {
         guard let output = self.viewModel?.addTransform(input: input, disposeBag1: disposeBag) else {return}
 
        
+        output.writedText.bind(to: self.addDiaryTextView.rx.text).disposed(by: disposeBag)
 
 
         

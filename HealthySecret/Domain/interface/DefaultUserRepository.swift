@@ -11,10 +11,8 @@ import Firebase
 
 
 class DefaultUserRepository : UserRepository{
-    
-  
-    
- 
+   
+   
     
     
     
@@ -48,6 +46,12 @@ class DefaultUserRepository : UserRepository{
         return self.firebaseService.getDocument(key: uid)
     }
     
+    func getUser(uid: String) -> RxSwift.Single<UserModel> {
+        
+        return self.firebaseService.getDocument(key: uid)
+    }
+    
+    
     
     func getMessage() -> Single<String> {
         
@@ -64,6 +68,21 @@ class DefaultUserRepository : UserRepository{
         guard let uid = UserDefaults.standard.string(forKey: "uid") else { return Completable.create{ completable in completable(.error(CustomError.isNil)) as! any Disposable   } }
 
         return firebaseService.updateIngredients(ingredients: ingredients, key: uid)
+    }
+      
+    
+    func updateUsersExercises(exercises : [ExerciseModel]) -> Completable {
+        guard let uid = UserDefaults.standard.string(forKey: "uid") else { return Completable.create{ completable in completable(.error(CustomError.isNil)) as! any Disposable   } }
+
+        return self.firebaseService.updateExercises(exercise: exercises, key: uid )
+    }
+    
+    
+    func updateUsersDiays(diarys: [Diary]) -> Completable {
+        guard let uid = UserDefaults.standard.string(forKey: "uid") else { return Completable.create{ completable in completable(.error(CustomError.isNil)) as! any Disposable   } }
+        
+        
+        return self.firebaseService.updateDiary(diary: diarys, key: uid)
     }
     
     

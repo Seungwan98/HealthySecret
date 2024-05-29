@@ -25,7 +25,7 @@ class DefaultExerciseRepository : ExerciseRepository {
     func getExerciseList() -> Single<[ExerciseModel]> {
         Single.create{ [weak self] single in guard let self = self else {return single(.failure(CustomError.isNil)) as! Disposable}
             
-            self.firebaseService.getExercise().subscribe({ event in
+            self.firebaseService.getExercisesList().subscribe({ event in
                 switch(event){
                     
                 case.success(let exerciseDTO):

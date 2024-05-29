@@ -31,13 +31,14 @@ class EditExerciseVM : ViewModel {
     
     
     weak var coordinator : ExerciseCoordinator?
+    private let exerciseUseCase : ExerciseUseCase
     
-    private var firebaseService : FirebaseService
+
     
-    init( coordinator : ExerciseCoordinator , firebaseService : FirebaseService , exercises : [ExerciseModel]){
+    init( coordinator : ExerciseCoordinator , exercises : [ExerciseModel] , exerciseUseCase : ExerciseUseCase){
         self.coordinator =  coordinator
-        self.firebaseService =  firebaseService
         self.exercises =  exercises
+        self.exerciseUseCase = exerciseUseCase
         
     }
     
@@ -51,20 +52,16 @@ class EditExerciseVM : ViewModel {
 
         output.exerciseArr.onNext(self.exercises)
 
-        input.edmitButtonTapped.subscribe(onNext: { _ in
-            input.inputArr.subscribe(onNext : { arr in
-                self.firebaseService.updateExercise(exercise: arr, key: UserDefaults.standard.string(forKey: "uid") ?? "").subscribe({ event in
-                    switch event {
-                    case.completed:
-                        
+        input.edmitButtonTapped.subscribe(onNext: { [weak self] _ in guard let self = self else {return}
+            input.inputArr.subscribe(onNext : { exercises in
+                
+                self.exerciseUseCase.updateUsersExercise(exercises: exercises).subscribe({ event in
                         self.coordinator?.finish()
-      
-                    case .error(_):
-                        print("error")
-                    }
-                    
                     
                 }).disposed(by: disposeBag)
+                
+
+                
            
                 
 
@@ -72,7 +69,7 @@ class EditExerciseVM : ViewModel {
             
         }).disposed(by: disposeBag )
         
-        input.addButtonTapped.subscribe(onNext: { _ in
+        input.addButtonTapped.subscribe(onNext: { [weak self]  _ in guard let self = self else {return}
             
             self.coordinator?.pushExerciseVC(exercises: self.exercises)
             

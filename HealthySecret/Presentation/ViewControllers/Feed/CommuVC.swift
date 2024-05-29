@@ -122,7 +122,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
             
             cell.nicknameLabel.text = item.nickname
             
-            cell.comentsLabel.text = "댓글 \(String(describing: item.coments?.count ?? 0))개 보기"
+        cell.comentsLabel.text = "댓글 \(String(describing: item.coments.count ?? 0))개 보기"
             
             cell.dateLabel.text = CustomFormatter.shared.getDifferDate(date: item.date)
 

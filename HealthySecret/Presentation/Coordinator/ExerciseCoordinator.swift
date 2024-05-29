@@ -39,7 +39,7 @@ class ExerciseCoordinator: Coordinator {
     }
     
     func pushExerciseVC(exercises : [ExerciseModel]) {
-        let viewModel = ExerciseVM(coordinator: self, exerciseUseCase: ExerciseUseCase(exerciseRepository: DefaultExerciseRepository(firebaseService: self.firebaseService)) )
+        let viewModel = ExerciseVM(coordinator: self, exerciseUseCase: ExerciseUseCase(exerciseRepository: DefaultExerciseRepository(firebaseService: self.firebaseService), userRepository: DefaultUserRepository(firebaseService: self.firebaseService)) )
         viewModel.exercises =  exercises
         let ExerciseViewController = ExerciseViewController(viewModel: viewModel)
 
@@ -69,12 +69,10 @@ class ExerciseCoordinator: Coordinator {
     func pushEditExerciseVC(exercises:[ExerciseModel]){
         print("pushEdit")
         let firebaseService = self.firebaseService
-        let viewController = EditExerciseVC(viewModel: EditExerciseVM(coordinator: self, firebaseService: firebaseService , exercises : exercises))
+        let viewController = EditExerciseVC(viewModel: EditExerciseVM(coordinator: self, exercises : exercises, exerciseUseCase: ExerciseUseCase(exerciseRepository: DefaultExerciseRepository(firebaseService: self.firebaseService ), userRepository: DefaultUserRepository(firebaseService: self.firebaseService))))
 
         viewController.hidesBottomBarWhenPushed = true
 
-//        self.navigationController.navigationBar.backIndicatorImage = UIImage(systemName: "xmark")
-//        self.navigationController.navigationBar.backIndicatorTransitionMaskImage = UIImage(systemName: "xmark")
         self.navigationController.navigationBar.topItem?.title = ""
         self.navigationController.navigationBar.tintColor = .white
 

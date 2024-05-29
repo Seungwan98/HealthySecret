@@ -103,6 +103,15 @@ class  DefaultLoginRepository : LoginRepository {
         
     }
     
+    func getCurrentUser() -> Single<User> {
+        return self.firebaseService.getCurrentUser()
+    }
+    
+    func signOut() -> Completable {
+        
+        return self.firebaseService.signOut()
+    }
+    
     
     
     

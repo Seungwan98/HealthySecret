@@ -431,7 +431,7 @@ class ProfileFeedVC : UIViewController , UIScrollViewDelegate {
             
             self.beforeContent = feed.contents
             
-            self.comentsLabel.text = "댓글 \(String(describing: feed.coments?.count ?? 0))개 보기"
+            self.comentsLabel.text = "댓글 \(String(describing: feed.coments.count ?? 0))개 보기"
             
             
             

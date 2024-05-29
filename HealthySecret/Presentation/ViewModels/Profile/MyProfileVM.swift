@@ -247,29 +247,29 @@ class MyProfileVM : ViewModel {
             
 
                 if let uid = UserDefaults.standard.string(forKey: "uid"){
-                    self.firebaseService.getFeedsUid(uid: uid).subscribe({ event in
-                    switch(event){
-                    case.success(let feedArr):
-                        self.feeds = feedArr
-                        let imageArr = feedArr.map({
-                            $0.mainImgUrl
-                        })
-                        
-                        let uidArr =  feedArr.map({
-                            $0.feedUid
-                        })
-                        
-                        output.feedImage.onNext(imageArr)
-                        output.feedUid.onNext(uidArr)
-
-                        
-                        
-                    case.failure(let err):
-                        print(err)
-                    }
-                    
-                    
-                }).disposed(by: disposeBag)
+//                    self.firebaseService.getFeedsUid(uid: uid).subscribe({ event in
+//                    switch(event){
+//                    case.success(let feedArr):
+//                        self.feeds = feedArr
+//                        let imageArr = feedArr.map({
+//                            $0.mainImgUrl
+//                        })
+//                        
+//                        let uidArr =  feedArr.map({
+//                            $0.feedUid
+//                        })
+//                        
+//                        output.feedImage.onNext(imageArr)
+//                        output.feedUid.onNext(uidArr)
+//
+//                        
+//                        
+//                    case.failure(let err):
+//                        print(err)
+//                    }
+//                    
+//                    
+//                }).disposed(by: disposeBag)
             }
             
         }).disposed(by: disposeBag)

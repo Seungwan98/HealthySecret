@@ -118,6 +118,13 @@
 		60C391D12C06406200465156 /* ExerciseRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C391D02C06406200465156 /* ExerciseRepository.swift */; };
 		60C391D32C0641A800465156 /* ExerciseUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C391D22C0641A800465156 /* ExerciseUseCase.swift */; };
 		60C391D52C06472800465156 /* ExerciseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C391D42C06472800465156 /* ExerciseModel.swift */; };
+		60C391D72C06DBCF00465156 /* CalendarUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C391D62C06DBCF00465156 /* CalendarUseCase.swift */; };
+		60C391D92C06EE8500465156 /* CommuUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C391D82C06EE8500465156 /* CommuUseCase.swift */; };
+		60C391DB2C06EEAC00465156 /* FeedRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C391DA2C06EEAC00465156 /* FeedRepository.swift */; };
+		60C391DD2C06F0EE00465156 /* DefaultFeedRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C391DC2C06F0EE00465156 /* DefaultFeedRepository.swift */; };
+		60C391DF2C06F1A400465156 /* FeedDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C391DE2C06F1A400465156 /* FeedDTO.swift */; };
+		60C391E12C072B1500465156 /* ProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C391E02C072B1500465156 /* ProfileRepository.swift */; };
+		60C391E32C072B3800465156 /* DefaultProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C391E22C072B3800465156 /* DefaultProfileRepository.swift */; };
 		60D9878E2AE8BBA20049CE05 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D9878D2AE8BBA20049CE05 /* Coordinator.swift */; };
 		60D987902AEA731C0049CE05 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D9878F2AEA731C0049CE05 /* LoginVC.swift */; };
 		60D987922AEA781D0049CE05 /* TabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D987912AEA781D0049CE05 /* TabBarCoordinator.swift */; };
@@ -292,6 +299,13 @@
 		60C391D02C06406200465156 /* ExerciseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseRepository.swift; sourceTree = "<group>"; };
 		60C391D22C0641A800465156 /* ExerciseUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseUseCase.swift; sourceTree = "<group>"; };
 		60C391D42C06472800465156 /* ExerciseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseModel.swift; sourceTree = "<group>"; };
+		60C391D62C06DBCF00465156 /* CalendarUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUseCase.swift; sourceTree = "<group>"; };
+		60C391D82C06EE8500465156 /* CommuUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommuUseCase.swift; sourceTree = "<group>"; };
+		60C391DA2C06EEAC00465156 /* FeedRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedRepository.swift; sourceTree = "<group>"; };
+		60C391DC2C06F0EE00465156 /* DefaultFeedRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultFeedRepository.swift; sourceTree = "<group>"; };
+		60C391DE2C06F1A400465156 /* FeedDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedDTO.swift; sourceTree = "<group>"; };
+		60C391E02C072B1500465156 /* ProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRepository.swift; sourceTree = "<group>"; };
+		60C391E22C072B3800465156 /* DefaultProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultProfileRepository.swift; sourceTree = "<group>"; };
 		60D9878D2AE8BBA20049CE05 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		60D9878F2AEA731C0049CE05 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		60D987912AEA781D0049CE05 /* TabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarCoordinator.swift; sourceTree = "<group>"; };
@@ -445,6 +459,7 @@
 				600DE9712B624CDF00D5D797 /* ExerciseDTO.swift */,
 				60C391D42C06472800465156 /* ExerciseModel.swift */,
 				6091F9D12AF4DA28008C6BD3 /* UserModel.swift */,
+				60C391DE2C06F1A400465156 /* FeedDTO.swift */,
 				609C063C2BAA9D0700D61F53 /* FeedModel.swift */,
 				60C391C22C04965C00465156 /* SignUpModel.swift */,
 			);
@@ -650,6 +665,8 @@
 				60C391C02C048D6900465156 /* UserRepository.swift */,
 				60C391C82C05D4FE00465156 /* IngredientsRepository.swift */,
 				60C391D02C06406200465156 /* ExerciseRepository.swift */,
+				60C391DA2C06EEAC00465156 /* FeedRepository.swift */,
+				60C391E02C072B1500465156 /* ProfileRepository.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -681,6 +698,8 @@
 				60C391BC2C048C5B00465156 /* DefaultUserRepository.swift */,
 				60C391CA2C05D5C100465156 /* DefaultIngredientsRepository.swift */,
 				60C391CE2C06405500465156 /* DefaultExerciseRepository.swift */,
+				60C391DC2C06F0EE00465156 /* DefaultFeedRepository.swift */,
+				60C391E22C072B3800465156 /* DefaultProfileRepository.swift */,
 			);
 			path = interface;
 			sourceTree = "<group>";
@@ -693,6 +712,8 @@
 				60C391C62C05AD5900465156 /* DiaryUseCase.swift */,
 				60C391CC2C05E4CA00465156 /* IngredientsUseCase.swift */,
 				60C391D22C0641A800465156 /* ExerciseUseCase.swift */,
+				60C391D62C06DBCF00465156 /* CalendarUseCase.swift */,
+				60C391D82C06EE8500465156 /* CommuUseCase.swift */,
 			);
 			path = UseCase;
 			sourceTree = "<group>";
@@ -1067,6 +1088,8 @@
 				609C06492BBD733500D61F53 /* AddFeedVM.swift in Sources */,
 				60D987902AEA731C0049CE05 /* LoginVC.swift in Sources */,
 				600DE9722B624CDF00D5D797 /* ExerciseDTO.swift in Sources */,
+				60C391DB2C06EEAC00465156 /* FeedRepository.swift in Sources */,
+				60C391D92C06EE8500465156 /* CommuUseCase.swift in Sources */,
 				60A380162B6D27D400C9A2E6 /* EditIngredientsVM.swift in Sources */,
 				60C391B62C04598B00465156 /* DefaultLoginRepository.swift in Sources */,
 				60FC86222BF6766F00471983 /* FollowsBlocksCell.swift in Sources */,
@@ -1089,8 +1112,10 @@
 				60C391B92C04656300465156 /* LoginUseCase.swift in Sources */,
 				606343C92B8F34430084E2CC /* AddDiaryVC.swift in Sources */,
 				6067B99D2B502A2900D536FF /* CalendarCoordinator.swift in Sources */,
+				60C391E12C072B1500465156 /* ProfileRepository.swift in Sources */,
 				6094C5402ACD915300D62B0A /* HealthySecrets.xcdatamodeld in Sources */,
 				60C391B12C03ABFE00465156 /* LoginRepository.swift in Sources */,
+				60C391D72C06DBCF00465156 /* CalendarUseCase.swift in Sources */,
 				606343D02B9622280084E2CC /* ChangeSignUpVM.swift in Sources */,
 				60D9878E2AE8BBA20049CE05 /* Coordinator.swift in Sources */,
 				600DE95C2B5935F400D5D797 /* KakaoService.swift in Sources */,
@@ -1104,6 +1129,7 @@
 				60FC860A2BF60D8100471983 /* UIFont+.swift in Sources */,
 				600DE97C2B67A23E00D5D797 /* ExerciseDetialVM.swift in Sources */,
 				60B36B1C2BFA6D6900E01335 /* BlockListVC.swift in Sources */,
+				60C391DF2C06F1A400465156 /* FeedDTO.swift in Sources */,
 				60EF3C932BE0C7220007862F /* FollowsVC.swift in Sources */,
 				600DE9742B6269BD00D5D797 /* ExerciseVC.swift in Sources */,
 				60C391C52C04FBC400465156 /* IngredientsModel.swift in Sources */,
@@ -1112,6 +1138,7 @@
 				60EAFE0A2BC2DF9400D3EE73 /* ComentsCell.swift in Sources */,
 				607ABE502B9824B400C3FCCF /* ViewController+.swift in Sources */,
 				609C062F2B9ABC0D00D61F53 /* RunCoordinator.swift in Sources */,
+				60C391E32C072B3800465156 /* DefaultProfileRepository.swift in Sources */,
 				60FC86202BF66CE800471983 /* LikesVM.swift in Sources */,
 				60BC98F92B2728C40013FAD9 /* DiaryVC.swift in Sources */,
 				60A380052B6A37D800C9A2E6 /* Custom.swift in Sources */,
@@ -1147,6 +1174,7 @@
 				60A380072B6A5F6B00C9A2E6 /* EditExerciseVC.swift in Sources */,
 				60EAFE082BC1375400D3EE73 /* CALayer+.swift in Sources */,
 				60BC98DF2AFF78300013FAD9 /* FirebaseService.swift in Sources */,
+				60C391DD2C06F0EE00465156 /* DefaultFeedRepository.swift in Sources */,
 				608DF96D2AD4364B00DD27DB /* RequestFile.swift in Sources */,
 				606343BF2B8CCAFD0084E2CC /* MyProfileVC.swift in Sources */,
 				609C06392BA9A25000D61F53 /* CommuVM.swift in Sources */,
