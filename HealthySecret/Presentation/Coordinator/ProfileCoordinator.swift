@@ -36,7 +36,7 @@ class ProfileCoordinator : Coordinator {
  
    
     func pushAddFeedVC(){
-        let viewController = AddFeedVC(viewModel: AddFeedVM( coordinator: self, firebaseService: self.firebaseService))
+        let viewController = AddFeedVC(viewModel: AddFeedVM( coordinator: self, commuUseCase: CommuUseCase(feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService), userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService)) ))
         
         self.navigationController.navigationBar.topItem?.title = ""
         self.navigationController.navigationBar.tintColor = .black

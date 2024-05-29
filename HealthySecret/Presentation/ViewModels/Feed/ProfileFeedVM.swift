@@ -47,12 +47,11 @@ class ProfileFeedVM : ViewModel {
     
     weak var coordinator : CommuCoordinator?
     
-    private var firebaseService : FirebaseService
+    private let commuUseCase : CommuUseCase
     
-    init( coordinator : CommuCoordinator , firebaseService : FirebaseService ){
+    init( coordinator : CommuCoordinator , commuUseCase : CommuUseCase ){
         self.coordinator =  coordinator
-        self.firebaseService =  firebaseService
-        
+        self.commuUseCase = commuUseCase
     }
     
     
@@ -99,11 +98,10 @@ class ProfileFeedVM : ViewModel {
         }).disposed(by: disposeBag)
         
         input.deleteFeed.subscribe(onNext: { [weak self] _ in
-            
             guard let self = self else {return}
 
             
-            self.firebaseService.deleteFeed(feedUid: feedUid).subscribe({ event in
+            self.commuUseCase.deleteFeed(feedUid: feedUid).subscribe({ event in
                 switch(event){
                 case.completed:
                     
@@ -128,7 +126,7 @@ class ProfileFeedVM : ViewModel {
 
             guard let feed = self.feedModel else {return}
             
-            self.coordinator?.pushComents(coments: feed.coments ?? [] , feedUid : feed.feedUid , feedUuid: feed.uuid )
+            self.coordinator?.pushComents(coments: feed.coments , feedUid : feed.feedUid , feedUuid: feed.uuid )
             
             
         }).disposed(by: disposeBag)
@@ -138,10 +136,7 @@ class ProfileFeedVM : ViewModel {
             guard let feedUid = self.feedUid else {return}
             
             
-            
-            print("\(feedUid)  \(authUid)  \(like)")
-            
-            self.firebaseService.updateFeedLikes(feedUid: feedUid  , uuid: authUid, like: like ).subscribe({ event in
+            self.commuUseCase.updateFeedLikes(feedUid: feedUid  , uuid: authUid, like: like ).subscribe({ event in
                 switch(event){
                 case(.completed):
                     print("좋아요 수정완료")
@@ -177,7 +172,7 @@ class ProfileFeedVM : ViewModel {
             
             if let feedUid = self.feedUid {
                 
-                self.firebaseService.getFeedFeedUid(feedUid: feedUid).subscribe({ event in
+                self.commuUseCase.getFeedFeedUid(feedUid: feedUid).subscribe({ event in
                     switch(event){
                     case.success(let feed):
                         

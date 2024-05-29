@@ -21,14 +21,11 @@ class AddFeedVM : ViewModel {
   
     
     weak var coordinator : Coordinator?
+    private let commuUseCase : CommuUseCase
     
-    
-    private var firebaseService : FirebaseService
-    
-    init( coordinator : Coordinator , firebaseService : FirebaseService ){
+    init( coordinator : Coordinator , commuUseCase : CommuUseCase ){
         self.coordinator =  coordinator
-        self.firebaseService =  firebaseService
-        
+        self.commuUseCase = commuUseCase
     }
     
     
@@ -66,8 +63,9 @@ class AddFeedVM : ViewModel {
                     
                     LoadingIndicator.showLoading()
                         for image in arr {
-                            
-                            self.firebaseService.uploadImage( image: image, pathRoot: uuid ).subscribe({ event in
+                            guard let imageData = image.jpegData(compressionQuality: 0.1) else { return  }
+
+                            self.commuUseCase.uploadImage( imageData: imageData, pathRoot: uuid ).subscribe({ event in
                                 switch(event){
                                 case.success(let url): urlArr.append(url)
                                 case.failure(let err):
@@ -79,20 +77,20 @@ class AddFeedVM : ViewModel {
                                 
                                     var feed = FeedModel(uuid: uuid , feedUid: UUID().uuidString+CustomFormatter.shared.getToday(), date: date, profileImage : "", nickname: name , contents: text, mainImgUrl: urlArr , likes: [], report: [], coments: []  )
                                   
-//                                    
-//                                    self.firebaseService.addFeed(feed: feed).subscribe({ event in
-//                                        switch(event){
-//                                        case.completed:
-//                                            DispatchQueue.main.async {
-//                                                       LoadingIndicator.hideLoading()
-//                                                   }
-//                                            self.coordinator?.finish()
-//                                            
-//                                        case .error(_):
-//                                            break
-//                                        }
-//                                        
-//                                    }).disposed(by: disposeBag)
+                                    
+                                    self.commuUseCase.addFeed(feed: feed).subscribe({ event in
+                                        switch(event){
+                                        case.completed:
+                                            DispatchQueue.main.async {
+                                                       LoadingIndicator.hideLoading()
+                                                   }
+                                            self.coordinator?.finish()
+                                            
+                                        case .error(_):
+                                            break
+                                        }
+                                        
+                                    }).disposed(by: disposeBag)
                                 }
                                 
                                 
@@ -123,116 +121,7 @@ class AddFeedVM : ViewModel {
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    //
-    //    struct ChangeInput {
-    //        let viewWillApearEvent : Observable<Void>
-    //        let addButtonTapped : Observable<Void>
-    //        let nameTextField : Observable<String>
-    //        let introduceTextField : Observable<String>
-    //        let profileImageTapped : Observable<UITapGestureRecognizer>
-    //        let profileImageValue : Observable<UIImage?>
-    //
-    //    }
-    //
-    //    struct ChageOutput {
-    //        var name = BehaviorSubject<String>(value: "")
-    //        var introduce = BehaviorSubject<String>(value: "")
-    //        var profileImage = BehaviorSubject<Data?>(value: nil)
-    //
-    //
-    //    }
-    //
-    //
-    //
-    //    func ChangeTransform(input: ChangeInput, disposeBag: DisposeBag ) -> ChageOutput {
-    //
-    //        let output = ChageOutput()
-    //
-    //        input.viewWillApearEvent.subscribe(onNext: {
-    //
-    //            output.name.onNext(self.name!)
-    //            output.introduce.onNext(self.introduce ?? "")
-    //            output.profileImage.onNext(self.profileImage ?? nil)
-    //
-    //
-    //
-    //        }).disposed(by: disposeBag)
-    //
-    //
-    //
-    //
-    //        input.addButtonTapped.subscribe(onNext: { _ in
-    //            input.nameTextField.subscribe(onNext: { name in
-    //                input.introduceTextField.subscribe(onNext: { introduce in
-    //
-    //
-    //
-    //                    input.profileImageValue.subscribe(onNext: { image in
-    //                        self.firebaseService.updateValues(name: name , introduce: introduce  , key: UserDefaults.standard.string(forKey: "email") ?? "" , image : image , beforeImage: self.beforeImage ?? "" ).subscribe{ event in
-    //                            switch(event){
-    //                            case.completed:
-    //                                print("업데이트완료")
-    //
-    //                            case.error(_):
-    //                                print("error")
-    //                            }
-    //
-    //
-    //                            let imageData = image?.jpegData(compressionQuality: 0.1)
-    //                            UserDefaults.standard.set(imageData, forKey: "profileImage")
-    //
-    //                          //  self.coordinator?.navigationController.popViewController(animated: false)
-    //
-    //
-    //
-    //
-    //                        }.disposed(by: disposeBag)
-    //
-    //
-    //                    }).disposed(by: disposeBag)
-    //
-    //                }).disposed(by: disposeBag)
-    //
-    //
-    //
-    //
-    //            }).disposed(by: disposeBag)
-    //
-    //
-    //
-    //
-    //        }).disposed(by: disposeBag)
-    //
-    //
-    //        return output
-    //    }
-    //
+
     
     
     

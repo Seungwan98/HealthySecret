@@ -774,29 +774,29 @@ extension FirebaseService {
                     
                     
                     if(profileChage){
-                        
-                        self.uploadImage(image: image, pathRoot: UserDefaults.standard.string(forKey: "uid") ?? ""+"profile").subscribe({ event in
-                            switch event{
-                                
-                                
-                            case .success(let url):
-                                
-                                
-                                doc?.reference.updateData([
-                                    
-                                    "profileImage" : url
-                                    
-                                ])
-                                completable(.completed)
-                                
-                                
-                                
-                            case .failure(let err):
-                                completable(.error(err))
-                            }
-                            
-                            
-                        }).disposed(by: self.disposeBag)
+                        //리팩토링
+//                        self.uploadImage(image: image, pathRoot: UserDefaults.standard.string(forKey: "uid") ?? ""+"profile").subscribe({ event in
+//                            switch event{
+//                                
+//                                
+//                            case .success(let url):
+//                                
+//                                
+//                                doc?.reference.updateData([
+//                                    
+//                                    "profileImage" : url
+//                                    
+//                                ])
+//                                completable(.completed)
+//                                
+//                                
+//                                
+//                            case .failure(let err):
+//                                completable(.error(err))
+//                            }
+//                            
+//                            
+//                        }).disposed(by: self.disposeBag)
                         
                         if !((beforeImage ?? "").isEmpty){ self.deleteImage(urlString: beforeImage ?? "").subscribe{ [weak self] event in
                             guard let self = self else {return}
@@ -1117,14 +1117,13 @@ extension FirebaseService {
 
 
 extension FirebaseService {
-    func uploadImage(image: UIImage?, pathRoot: String ) -> Single<String> {
+    func uploadImage(imageData: Data?, pathRoot: String ) -> Single<String> {
         return Single.create { single in
-            guard let image = image else {
+            guard let imageData = imageData else {
                 single(.success(""))
                 return Disposables.create()  }
-            guard let imageData = image.jpegData(compressionQuality: 0.1) else {
-                single(.success(""))
-                return Disposables.create()}
+           
+        
             let metaData = StorageMetadata()
             metaData.contentType = "image/jpeg"
             let imageName = UUID().uuidString + String(Date().timeIntervalSince1970)
@@ -1174,95 +1173,19 @@ extension FirebaseService {
     
     
     
-    func downloadAll(urlString: String) -> BehaviorSubject<[String:Data]?> {
-        
-        
-        //            if urlString.isEmpty {
-        //                single(.success(nil))
-        //
-        //            }
-        
-        
-        let megaByte = Int64(1 * 1024 * 1024)
-        let storageReference = Storage.storage().reference()
-        let ob = BehaviorSubject<[String:Data]?>(value: nil)
-        
-        
-        storageReference.child("\(urlString)/").listAll{ ( result, error ) in
-            
-            var index = 0
-            
-            var items : [StorageReference] = []
-            
-            if let error = error{
-                print("error \(error)")
-                
-            }else{
-                
-                print("아이템 들어간당")
-                
-                items  = result!.items
-                var resultArr:[String:Data] = [:]
-                
-                
-                
-                for i in 0..<items.count {
-                    
-                    items[i].getData(maxSize: megaByte) { data, error in
-                        
-                        guard data != nil else {
-                            
-                            return
-                        }
-                        resultArr.updateValue(data!, forKey: items[i].name)
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        if(result!.items.count-1 == index){
-                            print("onNext")
-                            ob.onNext(resultArr)
-                            
-                            
-                        }
-                        index += 1
-                        
-                        
-                    }
-                }
-            }
-            
-            print("언제?")
-            
-            
-        }
-        print("first")
-        
-        
-        
-        
-        
-        
-        return ob
-        
-        
-    }
     
     
     
-    func updateFeed( feed : FeedModel) -> Completable {
+    func updateFeed( feedDto : FeedDTO) -> Completable {
         return Completable.create{ completable in
-            self.db.collection("HealthySecretFeed").document(feed.feedUid).getDocument{ doc , err in
+            self.db.collection("HealthySecretFeed").document(feedDto.feedUid).getDocument{ doc , err in
                 if let err = err {
                     completable(.error(err))
                 }else{
                     
                     doc?.reference.updateData([
-                        "contents" : feed.contents ,
-                        "mainImgUrl" :  feed.mainImgUrl
+                        "contents" :  feedDto.contents ,
+                        "mainImgUrl" : feedDto.mainImgUrl
                         
                     ])}
                 
@@ -1340,51 +1263,6 @@ extension FirebaseService {
     
     
     
-    func getAllFeeds() -> Single<[FeedDTO]>{
-        return Single.create{ single in
-            
-            
-            var feedModels : [FeedDTO] = []
-            
-            self.db.collection("HealthySecretFeed").order(by: "date" , descending: true ).getDocuments() { (querySnapshot, err) in
-                if let err = err {
-                    
-                    print("Error getting documents: \(err)")
-                    single(.failure(err))
-                    
-                } else {
-                    
-                    for doc in querySnapshot!.documents {
-                        
-                        
-                        do {
-                            
-                            let jsonData = try JSONSerialization.data(withJSONObject: doc.data(), options: [])
-                            let feed = try JSONDecoder().decode(FeedDTO.self, from: jsonData)
-                            
-                            feedModels.append(feed)
-                            
-                            
-                        } catch let error {
-                            print("Error json parsing \(error)")
-                            
-                        }
-                    }
-                    
-                    single(.success(feedModels))
-                    
-                }
-                
-            }
-            
-            return Disposables.create()
-            
-        }
-        
-    }
-    
-    
-    
     
     
     
@@ -1392,16 +1270,15 @@ extension FirebaseService {
     
     func getFeedPagination(feeds:[FeedDTO] , pagesCount : Int , follow : [String] , getFollow : Bool , followCount : Int , block : [String]) -> Single<[FeedDTO]> {
         return Single<[FeedDTO]>.create { [weak self] single in
-            guard let self = self else {return Disposables.create()}
+            
+            guard let self = self else {return single(.failure(FireStoreError.unknown)) as! Disposable}
             var newFeeds : [FeedDTO] = []
             let lastFeeds : [FeedDTO] = feeds
             var followCount = followCount
-            
-            print("getFeedPagination")
             if let query = self.query {
                 //There is last query
                 self.requestQuery = query
-                print("last Q")
+
             } else {
                 //It's First query request
                 self.requestQuery = self.db.collection("HealthySecretFeed")
@@ -1455,8 +1332,9 @@ extension FirebaseService {
                     }
                 })
                 
-                var idx = 0
-                var totalFeeds = lastFeeds + newFeeds
+                let totalFeeds = lastFeeds + newFeeds
+                
+                print("total \(totalFeeds)")
                 
                 
                 if(followCount < 4 || getFollow ) {
@@ -1517,8 +1395,10 @@ extension FirebaseService {
     
     
     
-    func getFeedFeedUid(feedUid : String) -> Single<FeedModel>{
-        return Single.create { single in
+    func getFeedFeedUid(feedUid : String) -> Single<FeedDTO>{
+        return Single.create { [weak self] single in
+            guard let self = self else { single(.failure(FireStoreError.unknown) ) 
+                                            return Disposables.create()}
             
             self.db.collection("HealthySecretFeed").document(feedUid).getDocument{ [weak self] doc,err in
                 if let err = err{
@@ -1528,25 +1408,6 @@ extension FirebaseService {
                         do{
                             let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
                             var feed = try JSONDecoder().decode(FeedDTO.self, from: jsonData)
-                            //리팩
-                            //                            self?.getDocument(key: feed.uuid).subscribe({ event in
-                            //                                print("getDoc")
-                            //                                switch(event){
-                            //                                case.success(let user):
-                            //                                    feed.profileImage = user.profileImage
-                            //                                    feed.nickname = user.name
-                            //
-                            //
-                            //                                    single(.success(feed))
-                            //
-                            //
-                            //
-                            //                                case .failure(let err):
-                            //                                    print(err)
-                            //                                }
-                            //
-                            //
-                            //                            }).disposed(by: self!.disposeBag )
                             
                         }catch{
                             
@@ -1622,9 +1483,6 @@ extension FirebaseService {
                     completable(.completed)
                 }
             }
-            
-            
-            
             
             
             return Disposables.create()

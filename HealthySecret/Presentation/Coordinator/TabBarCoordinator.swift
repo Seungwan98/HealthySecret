@@ -232,7 +232,7 @@ class CommuCoordinator : Coordinator  {
     }
     
     func pushUpdateFeed(feed:FeedModel){
-        let viewModel = UpdateFeedVM(coordinator: self, firebaseService: self.firebaseService)
+        let viewModel = UpdateFeedVM(coordinator: self, commuUseCase: CommuUseCase(feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ) , userRepository: DefaultUserRepository(firebaseService: self.firebaseService ) , fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService)) )
         viewModel.feed = feed
         print(feed)
         let viewController = UpdateFeedVC(viewModel:viewModel)
@@ -256,7 +256,8 @@ class CommuCoordinator : Coordinator  {
    
     func pushComents(coments : [ComentModel] , feedUid : String , feedUuid : String){
         let firebaseService = FirebaseService()
-        let viewModel = ComentsVM(coordinator: self, firebaseService: firebaseService)
+        let viewModel = ComentsVM(coordinator: self , comentsUseCase: ComentsUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService), comentsRepository: DefaultComentsRepository(firebaseService: self.firebaseService) ))
+        
         viewModel.coments = coments
         viewModel.feedUid = feedUid
         viewModel.feedUuid = feedUuid
@@ -308,14 +309,14 @@ class CommuCoordinator : Coordinator  {
     
     func startPush() {
         
-        let viewController = CommuVC(viewModel : CommuVM(coordinator: self , commuUseCase: CommuUseCase(feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService), userRepository: DefaultUserRepository(firebaseService: self.firebaseService)) ))
+        let viewController = CommuVC(viewModel : CommuVM(coordinator: self , commuUseCase: CommuUseCase(feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService), userRepository: DefaultUserRepository(firebaseService: self.firebaseService), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService)) ))
         
         self.navigationController.pushViewController( viewController , animated: false )
     
     }
     
     func pushAddFeedVC(){
-        let viewController = AddFeedVC(viewModel: AddFeedVM(coordinator: self, firebaseService: self.firebaseService))
+        let viewController = AddFeedVC(viewModel: AddFeedVM(coordinator: self, commuUseCase: CommuUseCase(feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService), userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService) )))
         
         self.navigationController.navigationBar.topItem?.title = ""
         self.navigationController.navigationBar.tintColor = .black
@@ -326,7 +327,7 @@ class CommuCoordinator : Coordinator  {
     }
     
     func pushProfileFeed(feedUid:String){
-        let viewModel =  ProfileFeedVM(coordinator: self , firebaseService: self.firebaseService )
+        let viewModel =  ProfileFeedVM(coordinator: self , commuUseCase: CommuUseCase(feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService), userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService)) )
         viewModel.feedUid = feedUid
         let viewController = ProfileFeedVC(viewModel: viewModel )
         

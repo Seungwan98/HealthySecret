@@ -78,12 +78,14 @@ class CommuVM : ViewModel {
         input.segmentChanged.subscribe(onNext: { [weak self]  event in
         
             guard let self = self else {return}
-            
+            var count = self.feedModels.count
+
             self.resetValue()
             
             self.getFollow = !event
 
-            self.reload.onNext(self.feedModels.count == 0 ? 4 : self.feedModels.count )
+
+            self.reload.onNext( count == 0 ? 4 : count )
 
             
             
@@ -195,30 +197,31 @@ class CommuVM : ViewModel {
         input.likesButtonTapped.throttle(.seconds(1),  scheduler: MainScheduler.instance).subscribe(onNext: { dic in
             guard let feedUid = dic.keys.first else {return}
             guard let like = dic.values.first else {return}
-//            self.firebaseService.updateFeedLikes(feedUid: feedUid  , uuid: authUid, like: like ).subscribe({ event in
-//                switch(event){
-//                case(.completed):
-//                    if(like){
-//                        
-//                        if(self.likesCount[feedUid] == nil){
-//                            self.likesCount[feedUid] = [authUid]
-//                        }else{
-//                            self.likesCount[feedUid]?.append(authUid)
-//                        }
-//                        
-//                        
-//                    }else{
-//                        guard let index = self.likesCount[feedUid]?.firstIndex(of: authUid) else {return}
-//                        self.likesCount[feedUid]?.remove(at: index )
-//                    }
-//                case(.error(let err)):
-//                    print("likesUpdate err \(err)")
-//                    
-//                }
-//                
-//                
-//                
-//            }).disposed(by: disposeBag)
+            self.commuUseCase.updateFeedLikes(feedUid: feedUid  , uuid: authUid, like: like ).subscribe({ [weak self] event in
+                guard let self = self else {return}
+                switch(event){
+                case(.completed):
+                    if(like){
+                        
+                        if(self.likesCount[feedUid] == nil){
+                            self.likesCount[feedUid] = [authUid]
+                        }else{
+                            self.likesCount[feedUid]?.append(authUid)
+                        }
+                        
+                        
+                    }else{
+                        guard let index = self.likesCount[feedUid]?.firstIndex(of: authUid) else {return}
+                        self.likesCount[feedUid]?.remove(at: index )
+                    }
+                case(.error(let err)):
+                    print("likesUpdate err \(err)")
+                    
+                }
+                
+                
+                
+            }).disposed(by: disposeBag)
             
             
         }).disposed(by:disposeBag )
@@ -236,14 +239,17 @@ class CommuVM : ViewModel {
             guard let self = self else {return}
             self.coordinator?.refreshChild()
             
-            print("comp")
-
             self.commuUseCase.getUser().subscribe({ event in
                 switch(event){
                 case.completed:
+                    
+                    var count = self.feedModels.count
+                    
                     self.resetValue()
 
-                    self.reload.onNext(self.feedModels.count == 0 ? 4 : self.feedModels.count )
+                    self.reload.onNext(count == 0 ? 4 : count )
+                    
+                    
                     
                 case.error(let err):
                     print(err)
@@ -265,9 +271,8 @@ class CommuVM : ViewModel {
         
         self.reload.subscribe(onNext: { [weak self] count in
             
-            
+            print("\(count) count")
             guard let self = self else {return}
-            
             
             self.commuUseCase.getFeedPagination(feedModels: self.feedModels , getFollow: self.getFollow , count: count, reset: self.reset ).subscribe({ event in
                     
@@ -332,19 +337,19 @@ class CommuVM : ViewModel {
             guard let self = self else {return}
             
             
-//            self.firebaseService.report(url: "HealthySecretFeed", uid: feedUid , uuid: authUid, event: "feed" ).subscribe({ event in
-//                
-//                switch(event){
-//                case.completed:
-//                    output.alert.onNext(true)
-//                case.error(let err):
-//                    print(err)
-//                    
-//                }
-//                
-//                
-//                
-//            }).disposed(by: disposeBag)
+            self.commuUseCase.report(url: "HealthySecretFeed", uid: feedUid , uuid: authUid, event: "feed" ).subscribe({ event in
+                
+                switch(event){
+                case.completed:
+                    output.alert.onNext(true)
+                case.error(let err):
+                    print(err)
+                    
+                }
+                
+                
+                
+            }).disposed(by: disposeBag)
             
             
             
@@ -392,34 +397,38 @@ class CommuVM : ViewModel {
                     LoadingIndicator.showLoading()
                     
                     for image in arr {
-                        
-//                        self.firebaseService.uploadImage(image: image, pathRoot: uuid).subscribe({ event in
-//                            switch(event){
-//                            case.success(let url): urlArr.append(url)
-//                            case.failure(let err):
-//                                print(err)
-//                                break
-//                            }
-//                            
-//                            if(urlArr.count == arr.count){
-//                                let feed = FeedModel(uuid: uuid , feedUid: UUID().uuidString, date: date, nickname: name , contents: text, mainImgUrl: urlArr , likes: [], report: [], coments: [] )
-//                                self.firebaseService.addFeed(feed: feed).subscribe({ event in
-//                                    switch(event){
-//                                    case.completed:
-//                                        DispatchQueue.main.async {
-//                                            LoadingIndicator.hideLoading()
-//                                        }
-//                                        self.coordinator?.navigationController.popViewController(animated: false)
-//                                        
-//                                    case .error(_):
-//                                        break
-//                                    }
-//                                    
-//                                }).disposed(by: disposeBag1)
-//                            }
-//                            
-//                            
-//                        }).disposed(by: disposeBag1)
+                        guard let imageData = image.jpegData(compressionQuality: 0.1) else { return  }
+
+                        self?.commuUseCase.uploadImage(imageData: imageData, pathRoot: uuid).subscribe({ event in
+                            switch(event){
+                            case.success(let url): urlArr.append(url)
+                            case.failure(let err):
+                                print(err)
+                                break
+                            }
+                            
+                            if(urlArr.count == arr.count){
+                                let feed = FeedModel(uuid: uuid , feedUid: UUID().uuidString, date: date, profileImage: "", nickname: name , contents: text, mainImgUrl: urlArr , likes: [], report: [], coments: []  )
+                                
+                                self?.commuUseCase.addFeed(feed: feed).subscribe({ event in
+                                    switch(event){
+                                    case .completed:
+                                        
+                                        DispatchQueue.main.async {
+                                            LoadingIndicator.hideLoading()
+                                        }
+                                        
+                                        self?.coordinator?.navigationController.popViewController(animated: false)
+                                        
+                                    case .error(_):
+                                        break
+                                    }
+                                    
+                                }).disposed(by: disposeBag1)
+                            }
+                            
+                            
+                        }).disposed(by: disposeBag1)
                         
                     }
                     

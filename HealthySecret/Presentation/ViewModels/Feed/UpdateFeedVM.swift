@@ -21,23 +21,15 @@ class UpdateFeedVM : ViewModel {
     
     var beforeArr = [Int?]()
     
-    
-    
-    
-    
-    
-    
-    
+
     
     weak var coordinator : Coordinator?
     
+    private let commuUseCase : CommuUseCase
     
-    private var firebaseService : FirebaseService
-    
-    init( coordinator : Coordinator , firebaseService : FirebaseService ){
+    init( coordinator : Coordinator , commuUseCase : CommuUseCase ){
         self.coordinator =  coordinator
-        self.firebaseService =  firebaseService
-        
+        self.commuUseCase = commuUseCase
     }
     
     
@@ -93,18 +85,19 @@ class UpdateFeedVM : ViewModel {
                     
                     
                     var singleArr = [Observable<String>]()
-                    for i in (0..<before.count).reversed() {
-                        if let index = before[i]{
-                            print(index)
-                            print(mainImgUrlRm)
-                            urlArr.append(mainImgUrl[index])
-                            mainImgUrlRm.remove(at: index)
-                        }else{
-                            singleArr.insert( ( self.firebaseService.uploadImage(image: after[i] , pathRoot: "test").asObservable() ) , at : 0 )
-                        }
-                        
-                        
-                    }
+                    
+//                    for i in (0..<before.count).reversed() {
+//                        if let index = before[i]{
+//                            print(index)
+//                            print(mainImgUrlRm)
+//                            urlArr.append(mainImgUrl[index])
+//                            mainImgUrlRm.remove(at: index)
+//                        }else{
+//                            singleArr.insert( ( self.firebaseService.uploadImage(imageData: after[i] , pathRoot: "test").asObservable() ) , at : 0 )
+//                        }
+//                        
+//                        
+//                    }
                         
                     
                 
@@ -129,7 +122,7 @@ class UpdateFeedVM : ViewModel {
                                 feed.profileImage = profileImage
                             }
                             
-                            self.firebaseService.updateFeed(feed: feed).subscribe({ event in
+                            self.commuUseCase.updateFeed(feed: feed).subscribe({ event in
                                 switch(event){
                                 case.completed:
                                     DispatchQueue.main.async {
@@ -137,7 +130,8 @@ class UpdateFeedVM : ViewModel {
                                     }
                                     
                                         for url in mainImgUrlRm {
-                                            self.firebaseService.deleteImage(urlString: url).subscribe{
+                                        
+                                            self.commuUseCase.deleteImage(urlString: url).subscribe{
                                                 event in
                                                 switch(event){
                                                 case.completed:
@@ -167,37 +161,7 @@ class UpdateFeedVM : ViewModel {
                     
                     
                     ).disposed(by: disposeBag)
-//
-//                        .subscribe{ event in
-//                        
-//                        switch(event){
-//                        case.next(let a):
-//                            print(a)
-//                            
-//                            
-//                        case .error(_): break
-//                            //
-//                        case .completed: break
-//                            //
-//                        }
-//                        
-//                    }.disposed(by: disposeBag)
-//                       
-                    
-                    
-                    
-                    
-                        
-                      
-                        
-                        
-                        
-                        
-                    
-                    
-                    
-                    
-                    
+                     
                     
                     
                     

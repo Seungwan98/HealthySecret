@@ -18,16 +18,17 @@ class CommuUseCase {
     private let disposeBag = DisposeBag()
     private let userRepository : UserRepository
     private let feedRepository : FeedRepository
+    private let fireStorageRepository : FireStorageRepository
     
   
-    private var count = 0
     private var follow : [String] = []
     private var block : [String] = []
     
     
-    init( feedRepository : FeedRepository , userRepository : UserRepository ){
+    init( feedRepository : FeedRepository , userRepository : UserRepository , fireStorageRepository : FireStorageRepository){
         self.userRepository = userRepository
         self.feedRepository = feedRepository
+        self.fireStorageRepository = fireStorageRepository
     }
     
 
@@ -42,6 +43,7 @@ class CommuUseCase {
 
                     self.follow = user.followings ?? []
                     self.block = user.blocking + user.blocked
+                    
                     
                     completable(.completed)
                     
@@ -67,45 +69,42 @@ class CommuUseCase {
     func getFeedPagination(feedModels : [FeedModel] , getFollow : Bool , count : Int , reset : Bool) -> Single<[FeedModel]>{
         return Single.create{ [weak self] single in guard let self = self else { return  Disposables.create()}
             
-            
-            self.feedRepository.getFeedPagination(feeds: feedModels.map{ $0.toData() }, pagesCount: self.count , follow: self.follow , getFollow : getFollow , followCount: 0 , block : self.block , reset : reset ).subscribe({ event in
+            self.feedRepository.getFeedPagination(feeds: feedModels.map{ $0.toData() }, pagesCount: count , follow: self.follow , getFollow : getFollow , followCount: 0 , block : self.block , reset : reset ).subscribe({ event in
+                
+
+                
                 switch(event){
                     
-                case.success(let feeds):
+                case.success(let feedDtos):
+                    
+                    
                     var set : Set<String> = []
-                    var feedDtos : [FeedDTO] = feeds
-                    var users : [UserModel] = []
+                    var feedModels = [FeedModel]()
+                    var singles = [Single<UserModel>]()
                    
                     _ = feedDtos.map{ set.insert( $0.uuid) }
-                    _ = set.compactMap{
+                    singles = set.compactMap{
                         
                        self.userRepository.getUser(uid: $0)
             
                         
-                    }.map{ $0.subscribe({ single in
-                       
-                        switch(single){
-                        case(.success(let user)):
-                            users.append(user)
+                    }
+                    Single.zip(singles).subscribe(onSuccess: { models in
+                        for model in models {
+                        _ = feedDtos.map{
                             
+                                if( $0.uuid == model.uuid ){
+                                    
+                                    feedModels.append( $0.toDomain(nickname: model.name , profileImage: model.profileImage ?? "") )
+                                    
+                                }
                             
-                        case .failure(_):
-                            break
                         }
+                                }
+                        single(.success(feedModels))
                         
-                    }).disposed(by: self.disposeBag)  }
+                    } ).disposed(by: self.disposeBag)
                     
-                    
-                    single(.success(feedDtos.map{
-                        var a : UserModel?
-                        for user in users{
-                            if(user.uuid == $0.uuid){
-                                a = user
-                            }
-                        }
-                        
-                        
-                        return $0.toDomain(nickname: a?.name ?? "" , profileImage: a?.profileImage ?? "")  } ) )
                     
                     
                     
@@ -126,8 +125,83 @@ class CommuUseCase {
 
     func deleteFeed(feedUid:String) -> Completable{
         
-        return feedRepository.deleteFeed(feedUid: feedUid)
+        return self.feedRepository.deleteFeed(feedUid: feedUid)
+    }
+    
+    func updateFeedLikes(feedUid: String  , uuid: String, like: Bool ) -> Completable {
+        
+        
+        
+        return self.feedRepository.updateFeedLikes(feedUid: feedUid  , uuid: uuid, like: like )
+    }
+    
+    func report(url : String , uid : String , uuid : String , event : String) -> Completable {
+
+        return self.feedRepository.report(url : url , uid : uid , uuid : uuid , event : event)
     }
     
     
+  
+    
+    func addFeed(feed : FeedModel) -> Completable {
+        
+        return self.feedRepository.addFeed(feed : feed.toData())
+    }
+    
+    func getFeedFeedUid(feedUid: String) -> Single<FeedModel>{
+        
+        return Single.create{ single in
+            
+            self.feedRepository.getFeedFeedUid(feedUid : feedUid).subscribe({ [weak self] event in
+                guard let self else {return}
+                
+                switch(event){
+                    
+                case .success(let dto):
+                    
+                    self.userRepository.getUser(uid: dto.uuid).subscribe({ event in
+                        switch(event){
+                        case .success(let user): 
+                            single(.success(dto.toDomain(nickname: user.name , profileImage: user.profileImage ?? "")))
+                        case .failure(let err):
+                            single( .failure(err))
+                        }
+                        
+                    }).disposed(by: disposeBag)
+                    
+                    
+                case .failure(let err):
+                    single(.failure(err))
+                }
+                
+                
+            }).disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+        
+    }
+    
+   
+    
+    func updateFeed(feed : FeedModel) -> Completable{
+        
+        let feedDto = feed.toData()
+        return self.feedRepository.updateFeed(feedDto : feedDto)
+    }
+    
+}
+
+
+
+extension CommuUseCase {
+    
+    func deleteImage(urlString: String) -> Completable{
+        
+        
+        return self.fireStorageRepository.deleteImage(urlString : urlString)
+    }
+    
+    func uploadImage(imageData: Data, pathRoot: String) -> Single<String> {
+        return self.fireStorageRepository.uploadImage(imageData: imageData, pathRoot: pathRoot )
+    }
 }

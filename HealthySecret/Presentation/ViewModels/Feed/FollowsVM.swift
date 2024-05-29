@@ -72,16 +72,14 @@ class FollowsVM : ViewModel {
         
         input.segmentChanged.subscribe(onNext:{ [weak self] event in
             
-            guard let self = self else {return}
+            guard let self else {return}
             
         
             if(event){
-                print("changed \(self.followers) " )
                 output.userModels.onNext(self.followers)
                 output.backgroundViewHidden.onNext(!self.followers.isEmpty)
                 
             }else{
-                    print("changed \(self.followings) " )
                 output.userModels.onNext(self.followings)
                 output.backgroundViewHidden.onNext(!self.followings.isEmpty)
 
