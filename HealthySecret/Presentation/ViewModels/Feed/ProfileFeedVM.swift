@@ -166,6 +166,8 @@ class ProfileFeedVM : ViewModel {
         }).disposed(by: disposeBag)
         
         
+        
+        
         self.reload.subscribe(onNext: { _ in
             
             print("reload")

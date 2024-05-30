@@ -61,7 +61,7 @@ class SignUpVM : ViewModel {
 
         let name = UserDefaults.standard.string(forKey: "name") ?? "사용자"
         
-        var SignUpModel = SignUpModel(uuid: "", name: name, tall: "" , age: "" , sex: "" , calorie: 0 , nowWeight: 0 , goalWeight: 0 , loginMethod: "" , activity: 0)
+        var SignUpModel = SignUpModel(uuid: "", name: name, tall: "" , age: "" , sex: "" , calorie: 0 , nowWeight: 0 , goalWeight: 0  , activity: 0)
         
         
         let output = Output()

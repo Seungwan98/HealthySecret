@@ -61,7 +61,7 @@ class ProfileCoordinator : Coordinator {
         
         let firebaseService = self.firebaseService
         let kakaoService = self.kakaoService
-        let viewController =  MyProfileVC(viewModel : MyProfileVM ( coordinator : self , profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService )  , feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ) ) ) )
+        let viewController =  MyProfileVC(viewModel : MyProfileVM ( coordinator : self , profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService )  , feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService) ) ) )
         
 
 
@@ -73,7 +73,7 @@ class ProfileCoordinator : Coordinator {
     func PushOtherProfileVC( uuid: String) {
      
         
-        let viewModel = OtherProfileVM(coordinator: self , profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService , appleService: self.appleService , kakaoServcie: self.kakaoService  ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ))   , commuUseCase: CommuUseCase(feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), userRepository: DefaultUserRepository (firebaseService: self.firebaseService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService )), followUseCase: FollowUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), followsRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService )), uuid: uuid )
+        let viewModel = OtherProfileVM(coordinator: self , profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService , appleService: self.appleService , kakaoServcie: self.kakaoService  ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService ))   , commuUseCase: CommuUseCase(feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), userRepository: DefaultUserRepository (firebaseService: self.firebaseService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService )), followUseCase: FollowUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), followsRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService )), uuid: uuid )
         
         let viewController = OtherProfileVC(viewModel:viewModel)
         self.navigationController.navigationBar.topItem?.title = ""
@@ -88,7 +88,7 @@ class ProfileCoordinator : Coordinator {
     func pushChangeProfileVC(name : String , introduce : String , profileImage : Data? , beforeImageUrl : String){
         let firebaseService = self.firebaseService
         let kakaoService = self.kakaoService
-        let viewModel = ChangeIntroduceVM(coordinator: self, profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService ) , fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService) ) )
+        let viewModel = ChangeIntroduceVM(coordinator: self, profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService ) , fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService ) ) )
         viewModel.introduce = introduce
         viewModel.name = name
         viewModel.beforeImage = beforeImageUrl
@@ -110,7 +110,7 @@ class ProfileCoordinator : Coordinator {
         let firebaseService = self.firebaseService
         let kakaoService = self.kakaoService
 
-        let viewModel = MyProfileVM(coordinator: self , profileUseCase : ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ))  )
+        let viewModel = MyProfileVM(coordinator: self , profileUseCase : ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService ))  )
         let viewController = SettingVC(viewModel: viewModel)
         
         self.navigationController.navigationBar.topItem?.title = ""
@@ -124,7 +124,7 @@ class ProfileCoordinator : Coordinator {
     func pushBlockList(){
        
 
-        let viewController = BlockListVC(viewModel: BlockListVM(coordinator: self, firebaseService: self.firebaseService))
+        let viewController = BlockListVC(viewModel: BlockListVM(coordinator: self, profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService)) ))
         
    
 
@@ -146,9 +146,9 @@ class ProfileCoordinator : Coordinator {
 
     
     func pushChangeSignUpVC(user : UserModel){
-        let firebaseService = self.firebaseService
-        let viewModel = ChangeSignUpVM(coordinator: self, firebaseService: firebaseService)
-        viewModel.userModel = user
+        
+        let viewModel = ChangeSignUpVM(coordinator: self, profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService , kakaoServcie: self.kakaoService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService )))
+        viewModel.signUpModel = user.toSignUpModel()
         let viewController = ChangeSignUpVC(viewModel: viewModel)
         viewController.hidesBottomBarWhenPushed = true
         

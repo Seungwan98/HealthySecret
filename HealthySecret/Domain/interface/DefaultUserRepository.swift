@@ -96,6 +96,11 @@ class DefaultUserRepository : UserRepository{
         return self.firebaseService.updateValues(valuesDic: valuesDic, uuid: uuid)
     }
     
+    func updateSignUpData(signUpModel : SignUpModel ) -> Completable {
+        guard let uid = UserDefaults.standard.string(forKey: "uid") else { return Completable.create{ completable in completable(.error(CustomError.isNil)) as! any Disposable   } }
+
+        return self.firebaseService.updateSignUpData( signUpModel : signUpModel, uuid: uid )
+    }
     
     
 }

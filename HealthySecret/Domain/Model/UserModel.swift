@@ -34,6 +34,12 @@ struct UserModel : Codable {
 
     var freezeDate : String?
 
+    
+    
+    func toSignUpModel() -> SignUpModel {
+        return SignUpModel(uuid: self.uuid , name: self.name , tall: self.tall , age: self.age , sex: self.sex , calorie: self.calorie , nowWeight: self.nowWeight , goalWeight: self.goalWeight , activity: self.activity ?? 2 )
+    }
+    
     }
 
 struct Ingredients : Codable {

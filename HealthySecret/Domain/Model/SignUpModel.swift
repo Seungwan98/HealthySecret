@@ -16,13 +16,12 @@ struct SignUpModel {
     var calorie : Int
     var nowWeight : Int
     var goalWeight : Int
-    var loginMethod : String
     var activity : Int
    
 
-    func toData() -> UserModel {
+    func toData( ) -> UserModel {
         return UserModel(uuid: self.uuid, name: self.name, tall: self.tall, age: self.age, sex: self.sex ,
-                         calorie: self.calorie , nowWeight: self.nowWeight , goalWeight: self.goalWeight , ingredients: [], exercise: [], diarys: [], activity: self.activity, loginMethod: self.loginMethod, blocked: [] , blocking: [] , report: [] )
+                         calorie: self.calorie , nowWeight: self.nowWeight , goalWeight: self.goalWeight , ingredients: [], exercise: [], diarys: [], activity: self.activity, loginMethod: "" , blocked: [] , blocking: [] , report: [] )
         }
 
 

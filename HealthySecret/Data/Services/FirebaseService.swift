@@ -698,10 +698,10 @@ extension FirebaseService {
 
 extension FirebaseService {
     
-    func updateSignUpData( model : UserModel , key : String ) -> Completable {
+    func updateSignUpData( signUpModel : SignUpModel , uuid : String ) -> Completable {
         return Completable.create{ completable in
             
-            self.db.collection("HealthySecretUsers").document(key).getDocument() { (doc, err) in
+            self.db.collection("HealthySecretUsers").document( uuid ).getDocument() { (doc, err) in
                 
                 if let err = err {
                     
@@ -713,13 +713,13 @@ extension FirebaseService {
                 else {
                     
                     doc?.reference.updateData([
-                        "age" : model.age ,
-                        "tall" : model.tall ,
-                        "sex" : model.sex,
-                        "goalWeight" : model.goalWeight,
-                        "nowWeight" : model.nowWeight,
-                        "calorie" : model.calorie,
-                        "activity" : model.activity
+                        "age" : signUpModel.age ,
+                        "tall" : signUpModel.tall ,
+                        "sex" : signUpModel.sex,
+                        "goalWeight" : signUpModel.goalWeight,
+                        "nowWeight" : signUpModel.nowWeight,
+                        "calorie" : signUpModel.calorie,
+                        "activity" : signUpModel.activity
                         
                     ])
                     completable(.completed)

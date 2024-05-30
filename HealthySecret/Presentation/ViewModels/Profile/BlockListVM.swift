@@ -39,11 +39,11 @@ class BlockListVM : ViewModel {
     
     
     
-    private var firebaseService : FirebaseService
+    private let profileUseCase : ProfileUseCase
     
-    init( coordinator : ProfileCoordinator , firebaseService : FirebaseService ){
+    init( coordinator : ProfileCoordinator , profileUseCase : ProfileUseCase ){
         self.coordinator =  coordinator
-        self.firebaseService =  firebaseService
+        self.profileUseCase =  profileUseCase
         
     }
     
@@ -75,7 +75,7 @@ class BlockListVM : ViewModel {
                 
                 guard let block = data.first?.value , let uid = data.first?.key  else {return}
                 
-                self.firebaseService.blockUser(ownUid: ownUid , opponentUid: uid , block: block).subscribe({ event in
+                self.profileUseCase.blockUser( opponentUid: uid , block: block).subscribe({ event in
                     
                     switch(event){
                         
@@ -125,11 +125,11 @@ class BlockListVM : ViewModel {
         
         reload.subscribe(onNext: {[weak self]  _ in
             guard let self = self else {return}
-            self.firebaseService.getDocument(key: ownUid).subscribe({ [weak self] event in
+            self.profileUseCase.getUser().subscribe({ [weak self] event in
                 switch(event){
                 case.success(let user):
                     
-                    self?.firebaseService.getFollowsLikes(uid: user.blocking).subscribe({ event in
+                    self?.profileUseCase.getFollowsLikes(uid: user.blocking).subscribe({ event in
                         switch(event){
                         case.success(let users):
                             if(users.isEmpty){

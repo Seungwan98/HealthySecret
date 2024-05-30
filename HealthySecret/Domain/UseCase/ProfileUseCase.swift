@@ -18,13 +18,15 @@ class ProfileUseCase  {
     private let userRepository : UserRepository
     private let feedRepository : FeedRepository
     private let loginRepository : LoginRepository
+    private let followRepository : FollowsRepository
     private let fireStorageRepository : FireStorageRepository
     
-    init( userRepository : UserRepository , feedRepository : FeedRepository , loginRepository : LoginRepository , fireStorageRepository : FireStorageRepository){
+    init( userRepository : UserRepository , feedRepository : FeedRepository , loginRepository : LoginRepository , fireStorageRepository : FireStorageRepository , followRepository : FollowsRepository ){
         self.userRepository = userRepository
         self.feedRepository = feedRepository
         self.fireStorageRepository = fireStorageRepository
         self.loginRepository = loginRepository
+        self.followRepository = followRepository
     }
     
     
@@ -47,6 +49,7 @@ class ProfileUseCase  {
             
             feedRepository.getFeedsUid(uid: uid).subscribe({ event in
                 switch(event){
+                
                 case .success(let feedDtos):
                     var index = 0
                     var feedModels = feedDtos.map{ $0.toDomain(nickname: "" , profileImage: "" ) }
@@ -56,6 +59,7 @@ class ProfileUseCase  {
                             switch(event){
                             case.success(let user):
                                 
+                                print("feedDtos \(feedDtos)")
                                 
                                 feedModels[i] = feedDtos[i].toDomain(nickname: user.name , profileImage: user.profileImage ?? "")
                                 
@@ -240,7 +244,7 @@ class ProfileUseCase  {
                 self.fireStorageRepository.uploadImage(imageData: imageData, pathRoot: path).subscribe( { event in
                     switch(event){
                     case .success(let url):
-                        self.userRepository.updateValues(valuesDic: [ "name" : name , "introduce" : introduce ], uuid: uuid).subscribe({ event in
+                        self.userRepository.updateValues(valuesDic: [ "profileImage" : url ], uuid: uuid).subscribe({ event in
                             switch(event){
                             case .completed:
                                 print("이미지 업로드 성공")
@@ -280,16 +284,18 @@ class ProfileUseCase  {
             return Disposables.create()
             
         }
+    }
+    
+    func updateSignUpData( signUpModel : SignUpModel  ) -> Completable {
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
+       return self.userRepository.updateSignUpData( signUpModel : signUpModel )
+    }
+    
+    
+    
+    func getFollowsLikes(uid : [String]) -> Single<[UserModel]> {
+    
+        return self.followRepository.getFollowsLikes(uid: uid)
     }
     
 }

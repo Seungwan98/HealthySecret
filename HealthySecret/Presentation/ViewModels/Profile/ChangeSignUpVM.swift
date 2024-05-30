@@ -15,13 +15,13 @@ class ChangeSignUpVM : ViewModel {
     
     var disposeBag = DisposeBag()
     
-   
+    private let profileUseCase : ProfileUseCase
     
-    let exerciseArr = ["활동적음" , "일반적" , "활동많음"]
+    private let exerciseArr = ["활동적음" , "일반적" , "활동많음"]
         
-    let defaultSex = ["남성" ,  "여성"]
+    private let defaultSex = ["남성" ,  "여성"]
     
-    let defaultCalorie = [  [30 , 35 , 40] , [25 , 30 , 35]]
+    private let defaultCalorie = [  [30 , 35 , 40] , [25 , 30 , 35]]
     
     struct Input {
         let sexInput : Observable<Int>
@@ -53,28 +53,30 @@ class ChangeSignUpVM : ViewModel {
     }
 
     
-    var userModel = UserModel(uuid: "", name: "" ,  tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, ingredients: [], exercise: [] , diarys: [], activity: 0, loginMethod: UserDefaults.standard.string(forKey: "loginMethod") ?? "" ,blocked: [] , blocking: [], report: [])
+    var signUpModel = SignUpModel(uuid: "" , name: "" , tall: "", age: "" , sex: "" , calorie: 0, nowWeight: 0, goalWeight: 0,  activity: 0)
+    
+
 
     
     weak var coordinator : ProfileCoordinator?
     
     
-    init( coordinator : ProfileCoordinator  ){
+    init( coordinator : ProfileCoordinator , profileUseCase : ProfileUseCase  ){
         self.coordinator =  coordinator
+        self.profileUseCase = profileUseCase
         
     }
     
     
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
-        //let name : String = UserDefaults.standard.value(forKey: "name") as! String
         
         
         let output = Output()
-        print(userModel.tall)
-        output.ageOutput.onNext(userModel.age)
-        output.exerciseOutput.onNext(userModel.activity ?? 4)
-        output.goalWeight.onNext(String(userModel.goalWeight))
-        switch(userModel.sex){
+
+        output.ageOutput.onNext(signUpModel.age)
+        output.exerciseOutput.onNext(signUpModel.activity)
+        output.goalWeight.onNext(String(signUpModel.goalWeight))
+        switch(signUpModel.sex){
         case "남성":
             output.sexOutput.onNext(0)
         case "여성":
@@ -83,8 +85,8 @@ class ChangeSignUpVM : ViewModel {
         default:
             break
         }
-        output.startWeight.onNext(String(userModel.nowWeight))
-        output.tallOutput.onNext(userModel.tall)
+        output.startWeight.onNext(String(signUpModel.nowWeight))
+        output.tallOutput.onNext(signUpModel.tall)
         
         var isValid: Observable<Bool> {
                return Observable
@@ -111,7 +113,7 @@ class ChangeSignUpVM : ViewModel {
             input.sexInput.subscribe(onNext: {
                 sex in
                 print("sex")
-                self.userModel.sex = self.defaultSex[sex]
+                self.signUpModel.sex = self.defaultSex[sex]
                 input.exerciseInput.subscribe(onNext: {
                     exercise in
                     
@@ -119,44 +121,46 @@ class ChangeSignUpVM : ViewModel {
                         goal in
                         
                         
-                        self.userModel.activity = Int(exercise)
-                        self.userModel.goalWeight = Int(goal) ?? 0
-                        self.userModel.calorie = Int(goal)! * self.defaultCalorie[sex][exercise]
+                        self.signUpModel.activity = Int(exercise)
+                        self.signUpModel.goalWeight = Int(goal) ?? 0
+                        self.signUpModel.calorie = Int(goal)! * self.defaultCalorie[sex][exercise]
                         
                         input.ageInput.subscribe(onNext: {
                             age in
                             print("age")
-                            self.userModel.age = age
+                            self.signUpModel.age = age
                             input.tallInput.subscribe(onNext: {
                                 tall in print("\(tall) tall " )
-                                self.userModel.tall = tall
+                                self.signUpModel.tall = tall
                                 input.startWeight.subscribe(onNext: {
                                     start in print("\(start) startWeight " )
-                                    self.userModel.nowWeight = Int(start) ?? 0
+                                    self.signUpModel.nowWeight = Int(start) ?? 0
                                     
-                                    guard let uuid = UserDefaults.standard.string(forKey: "uid") else {return}
                                     
-                                    self.firebaseService.updateSignUpData(model: self.userModel, key: uuid).subscribe({event in
+                                    self.profileUseCase.updateSignUpData(signUpModel: self.signUpModel).subscribe({event in
                                         print(event)
-                                                switch(event){
-                                                
-                                                case .error(_):
-                                                    print("error")
-                                                case .completed:
-                                                    
-                                                    self.coordinator?.navigationController.popViewController(animated: false)
-                                                }
-                                                
-                                            }
+                                        switch(event){
                                             
+                                        case .error(_):
+                                            print("error")
+                                        case .completed:
                                             
-                                            ).disposed(by: disposeBag)
+                                            self.coordinator?.navigationController.popViewController(animated: false)
+                                        }
+                                        
+                                    }
+                                                                                                                  
+                                                                                                                  
+                                    ).disposed(by: disposeBag)
+                                    
                                     
                                     
                                     
                                     
                                 }).disposed(by: disposeBag)
+                                
                             }).disposed(by: disposeBag)
+                            
                         }).disposed(by: disposeBag)
                         
                         
