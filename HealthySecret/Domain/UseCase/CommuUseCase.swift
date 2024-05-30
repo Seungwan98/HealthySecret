@@ -76,34 +76,22 @@ class CommuUseCase {
                 switch(event){
                     
                 case.success(let feedDtos):
+                  var idx = 0
+                    var feedModels = feedDtos.map{ $0.toDomain(nickname: "", profileImage: "") }
                     
-                    
-                    var set : Set<String> = []
-                    var feedModels = [FeedModel]()
-                    var singles = [Single<UserModel>]()
-                   
-                    _ = feedDtos.map{ set.insert( $0.uuid) }
-                    singles = set.compactMap{
-                        
-                       self.userRepository.getUser(uid: $0)
-            
+                    for i in 0..<feedDtos.count {
+                        self.userRepository.getUser(uid: feedDtos[i].uuid ).subscribe(onSuccess: { user  in
+                            
+                            feedModels[i] = feedDtos[i].toDomain(nickname: user.name , profileImage: user.profileImage ?? "")
+                            idx += 1
+                            if(idx >= feedDtos.count){
+                                single(.success(feedModels))
+                            }
+                            
+                        }).disposed(by: self.disposeBag)
                         
                     }
-                    Single.zip(singles).subscribe(onSuccess: { models in
-                        for model in models {
-                        _ = feedDtos.map{
-                            
-                                if( $0.uuid == model.uuid ){
-                                    
-                                    feedModels.append( $0.toDomain(nickname: model.name , profileImage: model.profileImage ?? "") )
-                                    
-                                }
-                            
-                        }
-                                }
-                        single(.success(feedModels))
-                        
-                    } ).disposed(by: self.disposeBag)
+                    
                     
                     
                     

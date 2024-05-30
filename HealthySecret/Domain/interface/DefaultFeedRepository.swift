@@ -59,7 +59,6 @@ class DefaultFeedRepository : FeedRepository {
     
     func getFeedFeedUid(feedUid : String) -> Single<FeedDTO> {
         
-        
         return self.firebaseService.getFeedFeedUid(feedUid: feedUid )
     }
     

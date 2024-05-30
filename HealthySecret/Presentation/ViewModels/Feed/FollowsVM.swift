@@ -14,10 +14,11 @@ class FollowsVM : ViewModel {
     
     var follow : Bool?
     var uid : String?
-    var followings : [UserModel] = []
-    var followers : [UserModel] = []
+    private var followings : [UserModel] = []
+    private var followers : [UserModel] = []
     
     var disposeBag = DisposeBag()
+    
     
 
     
@@ -42,14 +43,13 @@ class FollowsVM : ViewModel {
     
     weak var coordinator : FollowsCoordinator?
     
+    private let followUseCase : FollowUseCase
+
+
     
-    
-    
-    private var firebaseService : FirebaseService
-    
-    init( coordinator : FollowsCoordinator , firebaseService : FirebaseService ){
+    init( coordinator : FollowsCoordinator , followUseCase : FollowUseCase ){
         self.coordinator =  coordinator
-        self.firebaseService =  firebaseService
+        self.followUseCase =  followUseCase
         
     }
     
@@ -60,10 +60,8 @@ class FollowsVM : ViewModel {
         let output = Output()
 
         
-        guard let ownUid = UserDefaults.standard.string(forKey: "uid") else {  return output }
         
-        guard let uid = self.uid else { print("uid nil")
-                                return output }
+        guard let uid = self.uid  else { return output }
         
         
         
@@ -98,7 +96,7 @@ class FollowsVM : ViewModel {
         
         input.pressedFollows.subscribe(onNext: { [weak self] data in
             
-            guard let self = self else {return}
+            guard let self else {return}
             
             if(data.count > 1 ){
                 return
@@ -107,7 +105,7 @@ class FollowsVM : ViewModel {
 
                 guard let like = data.first?.value , let uid = data.first?.key  else {return}
                 
-                self.firebaseService.updateFollowers(ownUid: ownUid , opponentUid: uid  , follow: like).subscribe({ event in
+                self.followUseCase.updateFollowers(opponentUid: uid  , follow: like).subscribe({ event in
                     
                     switch(event){
                         
@@ -157,62 +155,24 @@ class FollowsVM : ViewModel {
                 
                 
                 
-                self.firebaseService.getDocument(key: uid).subscribe({  event in
-                    
-                    
-                    
-                    
-                    
-                    switch(event){
-                    case.success(let user):
-                        
-                        self.firebaseService.getFollowsLikes(uid: user.followers ?? [] ).subscribe({ event in
-                            switch(event){
-                            case.success(let followers):
-                                self.followers = followers
-                                
-                                self.firebaseService.getFollowsLikes(uid: user.followings ?? [] ).subscribe({ event in
-                                    
-                                    switch(event){
-                                    case.success(let followings):
-                                        
-                                        self.followings = followings
-                                        
-                                        
-                                     
-                                            
-                                            if(follow){
-                                                
-                                                output.userModels.onNext(self.followers)
-                                                output.backgroundViewHidden.onNext(!self.followers.isEmpty)
-                                            }else{
-                                                output.userModels.onNext(self.followings)
-                                                output.backgroundViewHidden.onNext(!self.followings.isEmpty)
-                                            }
-                                            
-                                            
+                self.followUseCase.getFollows(uid: uid).subscribe({ [weak self]  event in
+                    guard let self else { return }
 
-                                        
-                                        
-                                        
-                                    case.failure(let err):
-                                        print(err)
-                                    }
-                                    
-                                    
-                                    
-                                }).disposed(by: disposeBag)
+                    switch(event){
+                    case.success(let dic):
+                        self.followers = dic[ .followers ] ?? []
+                        self.followings = dic[ .followings ] ?? []
+                            
+                            if(follow){
                                 
-                                
-                                
-                                
-                            case.failure(let err):
-                                print(err)
+                                output.userModels.onNext(self.followers)
+                                output.backgroundViewHidden.onNext(!self.followers.isEmpty)
+                            }else{
+                                output.userModels.onNext(self.followings)
+                                output.backgroundViewHidden.onNext(!self.followings.isEmpty)
                             }
                             
-                            
-                            
-                        }).disposed(by: disposeBag)
+                        
                         
                         
                     case.failure(let err):
