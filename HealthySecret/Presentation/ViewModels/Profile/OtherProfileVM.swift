@@ -68,15 +68,19 @@ class OtherProfileVM : ViewModel {
     
     weak var coordinator : ProfileCoordinator?
     
-    private var firebaseService : FirebaseService
+    private let profileUseCase : ProfileUseCase
+    private let commuUseCase : CommuUseCase
+    private let followUseCase : FollowUseCase
     
     var nowUser : UserModel?
 
     
-    init( coordinator : ProfileCoordinator , firebaseService : FirebaseService , uuid : String ){
+    init( coordinator : ProfileCoordinator , profileUseCase : ProfileUseCase , commuUseCase : CommuUseCase , followUseCase : FollowUseCase ,uuid : String ){
         
         self.coordinator =  coordinator
-        self.firebaseService =  firebaseService
+        self.profileUseCase =  profileUseCase
+        self.commuUseCase = commuUseCase
+        self.followUseCase = followUseCase
         self.uuid = uuid
         
     }
@@ -117,7 +121,7 @@ class OtherProfileVM : ViewModel {
         
         input.viewWillApearEvent.subscribe(onNext: { event in
             
-            self.firebaseService.getDocument(key: uid ).subscribe{ [weak self]
+            self.profileUseCase.getUser( uid : uid ).subscribe{ [weak self]
                 event in
                 guard let self = self else {return}
                 switch(event){
@@ -196,7 +200,7 @@ class OtherProfileVM : ViewModel {
             
             if(event == "block"){
                 
-                self.firebaseService.blockUser(ownUid: ownUid, opponentUid: uid, block: true).subscribe({ event in
+                self.profileUseCase.blockUser( opponentUid: uid, block: true).subscribe({ event in
                     switch(event){
                     case.completed:
                         self.coordinator?.finish()
@@ -212,7 +216,7 @@ class OtherProfileVM : ViewModel {
                 }).disposed(by: disposeBag)
             }else{
                 
-                self.firebaseService.report(url: "HealthySecretUsers", uid: uid , uuid: uid , event: "user").subscribe({ event in
+                self.commuUseCase.report(url: "HealthySecretUsers", uid: uid , uuid: uid , event: "user").subscribe({ event in
                     
                     switch(event){
                         
@@ -232,7 +236,7 @@ class OtherProfileVM : ViewModel {
         
         input.addButtonTapped.throttle(.seconds(1),  scheduler: MainScheduler.instance).subscribe(onNext:{ selected in
             
-            self.firebaseService.updateFollowers(ownUid: ownUid , opponentUid: uid, follow: selected).subscribe({ completable in
+            self.followUseCase.updateFollowers( opponentUid: uid, follow: selected).subscribe({ completable in
                 switch(completable){
                     
                 case.completed: print("complete update Followers")
@@ -261,35 +265,33 @@ class OtherProfileVM : ViewModel {
         }).disposed(by: disposeBag)
         
         input.viewWillApearEvent.subscribe(onNext: { event in
-            
-                //리팩
-        
-//                    self.firebaseService.getFeedsUid(uid: uid).subscribe({ event in
-//                    switch(event){
-//                    case.success(let feedArr):
-//                        self.feeds = feedArr
-//                        
-//                        
-//                        let imageArr = feedArr.map({
-//                            $0.mainImgUrl
-//                        })
-//                        
-//                        let uidArr =  feedArr.map({
-//                            $0.feedUid
-//                        })
-//                        
-//                        
-//                        output.feedImage.onNext(imageArr)
-//                        output.feedUid.onNext(uidArr)
-//                        
-//                        
-//                        
-//                    case.failure(let err):
-//                        print(err)
-//                    }
-//                    
-//                    
-//                }).disposed(by: disposeBag)
+
+            self.profileUseCase.getFeeds(uid: uid).subscribe({ event in
+                    switch(event){
+                    case.success(let feedArr):
+                        self.feeds = feedArr
+                        
+                        
+                        let imageArr = feedArr.map({
+                            $0.mainImgUrl
+                        })
+                        
+                        let uidArr =  feedArr.map({
+                            $0.feedUid
+                        })
+                        
+                        
+                        output.feedImage.onNext(imageArr)
+                        output.feedUid.onNext(uidArr)
+                        
+                        
+                        
+                    case.failure(let err):
+                        print(err)
+                    }
+                    
+                    
+                }).disposed(by: disposeBag)
             
             
         }).disposed(by: disposeBag)

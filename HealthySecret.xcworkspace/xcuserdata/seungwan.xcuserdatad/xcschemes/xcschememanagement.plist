@@ -44,18 +44,24 @@
 		</dict>
 		<key>Promises (Playground) 15.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<false/>
 			<key>orderHint</key>
-			<integer>16</integer>
+			<integer>41</integer>
 		</dict>
 		<key>Promises (Playground) 16.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<false/>
 			<key>orderHint</key>
-			<integer>17</integer>
+			<integer>42</integer>
 		</dict>
 		<key>Promises (Playground) 17.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<false/>
 			<key>orderHint</key>
-			<integer>18</integer>
+			<integer>43</integer>
 		</dict>
 		<key>Promises (Playground) 18.xcscheme</key>
 		<dict>

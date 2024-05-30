@@ -17,6 +17,7 @@ enum CustomError: Error {
     case isNil
     case freeze
     case delete
+    
 }
 
 public enum FireStoreError: Error, LocalizedError {
@@ -193,11 +194,11 @@ final class FirebaseService {
         }
     }
     
-    func deleteAccount( auth : AuthCredential ) -> Completable {
+    func deleteAccount( credential : AuthCredential ) -> Completable {
         return Completable.create{ completable in
             if  let user = Auth.auth().currentUser {
                 
-                user.reauthenticate(with: auth){ result ,err in
+                user.reauthenticate(with: credential){ result ,err in
                     self.signOut().subscribe{ event in
                         switch(event){
                         case.completed:
@@ -740,7 +741,7 @@ extension FirebaseService {
     }
     
     
-    func updateValues( name : String , introduce : String , key : String , image : UIImage? , beforeImage : String? , profileChage : Bool) -> Completable {
+    func updateValues( valuesDic : Dictionary<String , String> , uuid : String ) -> Completable {
         
         
         
@@ -752,7 +753,7 @@ extension FirebaseService {
             
             
             
-            self.db.collection("HealthySecretUsers").document(key).getDocument() { (doc, err) in
+            self.db.collection("HealthySecretUsers").document(uuid).getDocument() { (doc, err) in
                 
                 if let err = err {
                     
@@ -761,75 +762,18 @@ extension FirebaseService {
                     completable(.error(err))
                     // Some error occured
                 } else {
+
+                    doc?.reference.updateData(
+                        valuesDic
+                    )
                     
-                    
-                    
-                    doc?.reference.updateData([
-                        "name" : name ,
-                        "introduce" : introduce ,
-                        
-                        
-                    ])
-                    
-                    
-                    
-                    if(profileChage){
-                        //리팩토링
-//                        self.uploadImage(image: image, pathRoot: UserDefaults.standard.string(forKey: "uid") ?? ""+"profile").subscribe({ event in
-//                            switch event{
-//                                
-//                                
-//                            case .success(let url):
-//                                
-//                                
-//                                doc?.reference.updateData([
-//                                    
-//                                    "profileImage" : url
-//                                    
-//                                ])
-//                                completable(.completed)
-//                                
-//                                
-//                                
-//                            case .failure(let err):
-//                                completable(.error(err))
-//                            }
-//                            
-//                            
-//                        }).disposed(by: self.disposeBag)
-                        
-                        if !((beforeImage ?? "").isEmpty){ self.deleteImage(urlString: beforeImage ?? "").subscribe{ [weak self] event in
-                            guard let self = self else {return}
-                            switch(event){
-                                
-                            case .error(_):
-                                print("이미지없음")
-                            case .completed:
-                                print("success")
-                            }
-                            
-                        }.disposed(by: self.disposeBag)
-                            
-                            
-                            
-                            print("fireStore upload")
-                            
-                        }
-                        
-                    }else{
-                        completable(.completed)
-                        
-                    }
-                    
+                  
+                    completable( .completed)
                     
                     
                 }
                 
-                
-                
-                
-                
-                
+
                 
                 
             }

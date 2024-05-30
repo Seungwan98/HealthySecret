@@ -30,15 +30,12 @@ class ChangeIntroduceVM : ViewModel {
     
     weak var coordinator : ProfileCoordinator?
     
-    private var kakaoService : KakaoService
+    private let profileUseCase : ProfileUseCase
+  
     
-    private var firebaseService : FirebaseService
-    
-    init( coordinator : ProfileCoordinator , firebaseService : FirebaseService , kakaoService : KakaoService){
+    init( coordinator : ProfileCoordinator , profileUseCase : ProfileUseCase ){
         self.coordinator =  coordinator
-        self.firebaseService =  firebaseService
-        self.kakaoService =  kakaoService
-        
+        self.profileUseCase = profileUseCase
     }
     
     
@@ -106,7 +103,7 @@ class ChangeIntroduceVM : ViewModel {
                             LoadingIndicator.showLoading()
 
                             
-                            self.firebaseService.updateValues(name: name , introduce: introduce  , key: uuid , image : image , beforeImage: self.beforeImage ?? "" , profileChage: change ).subscribe(on: backgroundScheduler ).subscribe{ event in
+                            self.profileUseCase.updateValues(name: name , introduce: introduce  , uuid : uuid , image : image , beforeImage: self.beforeImage ?? "" , profileChage: change ).subscribe{ event in
                                 switch(event){
                                 case.completed:
                                     

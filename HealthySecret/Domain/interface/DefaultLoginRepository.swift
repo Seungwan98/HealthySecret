@@ -10,7 +10,8 @@ import RxSwift
 import FirebaseAuth
 
 class  DefaultLoginRepository : LoginRepository {
-  
+ 
+   
     
     private let firebaseService : FirebaseService
     private let appleService : AppleService
@@ -99,11 +100,12 @@ class  DefaultLoginRepository : LoginRepository {
     
   
     func signUp(email : String , pw : String) -> Completable {
-        return self.firebaseService.signUp(email: email, pw: pw)
         
+        return self.firebaseService.signUp(email: email, pw: pw)
     }
     
     func getCurrentUser() -> Single<User> {
+        
         return self.firebaseService.getCurrentUser()
     }
     
@@ -113,8 +115,30 @@ class  DefaultLoginRepository : LoginRepository {
     }
     
     func kakaoSignOut() -> Completable {
+        
         return self.kakaoService.kakaoSignOut()
     }
+    
+    func kakaoGetToken() -> Single<String> {
+  
+        return self.kakaoService.kakaoGetToken()
+    }
+    
+
+    func deleteAccount(credential: AuthCredential) -> Completable {
+        return self.firebaseService.deleteAccount(credential: credential)
+    }
+    
+    func kakaoSecession() -> Completable {
+        return self.kakaoService.kakaoSessionOut()
+    }
+    
+    func appleSecession(refreshToken : String , userId : String) -> Completable {
+        return self.appleService.removeAccount(refreshToken: refreshToken , userId: userId )
+    }
+    
+   
+  
     
     
     

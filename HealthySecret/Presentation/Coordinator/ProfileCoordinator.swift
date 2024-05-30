@@ -10,14 +10,17 @@ import UIKit
 
 class ProfileCoordinator : Coordinator {
     
-    let kakaoService = KakaoService()
+    private let kakaoService : KakaoService
 
+    private let firebaseService : FirebaseService
+    
+    private let appleService : AppleService
     
     var parentCoordinator: TabBarCoordinator?
         
     var finishDelegate: CoordinatorFinishDelegate?
             
-    let firebaseService = FirebaseService()
+  
         
     var type: CoordinatorType = .myprofile
             
@@ -28,7 +31,9 @@ class ProfileCoordinator : Coordinator {
     
     required init(_ navigationController: UINavigationController ) {
         self.navigationController = navigationController
-        
+        self.appleService = AppleService()
+        self.kakaoService = KakaoService()
+        self.firebaseService = FirebaseService()
         
     }
     
@@ -56,7 +61,7 @@ class ProfileCoordinator : Coordinator {
         
         let firebaseService = self.firebaseService
         let kakaoService = self.kakaoService
-        let viewController =  MyProfileVC(viewModel : MyProfileVM ( coordinator : self , profileUseCase: ProfileUseCase(profileRepository: def, userRepository: <#T##any UserRepository#>, feedRepository: <#T##any FeedRepository#>), kakaoService: kakaoService ))
+        let viewController =  MyProfileVC(viewModel : MyProfileVM ( coordinator : self , profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService )  , feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ) ) ) )
         
 
 
@@ -68,7 +73,7 @@ class ProfileCoordinator : Coordinator {
     func PushOtherProfileVC( uuid: String) {
      
         
-        let viewModel = OtherProfileVM(coordinator: self , firebaseService: self.firebaseService , uuid : uuid)
+        let viewModel = OtherProfileVM(coordinator: self , profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService , appleService: self.appleService , kakaoServcie: self.kakaoService  ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ))   , commuUseCase: CommuUseCase(feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), userRepository: DefaultUserRepository (firebaseService: self.firebaseService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService )), followUseCase: FollowUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), followsRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService )), uuid: uuid )
         
         let viewController = OtherProfileVC(viewModel:viewModel)
         self.navigationController.navigationBar.topItem?.title = ""
@@ -83,7 +88,7 @@ class ProfileCoordinator : Coordinator {
     func pushChangeProfileVC(name : String , introduce : String , profileImage : Data? , beforeImageUrl : String){
         let firebaseService = self.firebaseService
         let kakaoService = self.kakaoService
-        let viewModel = ChangeIntroduceVM(coordinator: self, firebaseService: firebaseService , kakaoService: kakaoService)
+        let viewModel = ChangeIntroduceVM(coordinator: self, profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService ) , fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService) ) )
         viewModel.introduce = introduce
         viewModel.name = name
         viewModel.beforeImage = beforeImageUrl
@@ -105,7 +110,7 @@ class ProfileCoordinator : Coordinator {
         let firebaseService = self.firebaseService
         let kakaoService = self.kakaoService
 
-        let viewModel = MyProfileVM(coordinator: self , firebaseService : firebaseService , kakaoService: kakaoService)
+        let viewModel = MyProfileVM(coordinator: self , profileUseCase : ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ))  )
         let viewController = SettingVC(viewModel: viewModel)
         
         self.navigationController.navigationBar.topItem?.title = ""

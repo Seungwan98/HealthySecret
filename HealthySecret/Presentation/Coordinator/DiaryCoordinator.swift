@@ -35,11 +35,11 @@ class DiaryCoordinator : Coordinator  {
  
     
     
-    func pushEditIngredientsVC(arr : [IngredientsModel]) {
+    func pushEditIngredientsVC( arr : [IngredientsModel] ) {
         let ingredientsCoordinator =  IngredientsCoordinator( self.navigationController )
         ingredientsCoordinator.finishDelegate = self
         childCoordinator.append(ingredientsCoordinator)
-        ingredientsCoordinator.pushIngredientsVC(arr : arr)
+        ingredientsCoordinator.pushIngredientsVC( arr : arr )
         
     }
      

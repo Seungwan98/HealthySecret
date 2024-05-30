@@ -58,11 +58,9 @@ class ChangeSignUpVM : ViewModel {
     
     weak var coordinator : ProfileCoordinator?
     
-    private var firebaseService : FirebaseService
     
-    init( coordinator : ProfileCoordinator , firebaseService : FirebaseService ){
+    init( coordinator : ProfileCoordinator  ){
         self.coordinator =  coordinator
-        self.firebaseService =  firebaseService
         
     }
     

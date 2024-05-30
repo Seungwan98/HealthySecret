@@ -16,4 +16,8 @@ protocol LoginRepository  {
     func signOut() -> Completable
     func kakaoSignOut() -> Completable
     func getCurrentUser() -> Single<User>
+    func kakaoGetToken() -> Single<String>
+    func deleteAccount(credential : AuthCredential) -> Completable
+    func kakaoSecession() -> Completable
+    func appleSecession(refreshToken : String , userId : String) -> Completable
 }

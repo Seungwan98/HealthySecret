@@ -77,18 +77,12 @@ class ComentsUseCase  {
                 switch(event){
                 case .success(let dtos):
                     
-<<<<<<< HEAD
-                   
-                
-                    
-                    
-=======
+
                     self.getModels(comentsDtos: dtos).subscribe({ event in
 
                         single(event)
                         
                     }).disposed(by: disposeBag)
->>>>>>> staged_Issue
                     
       
                     

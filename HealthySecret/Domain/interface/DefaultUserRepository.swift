@@ -11,6 +11,7 @@ import Firebase
 
 
 class DefaultUserRepository : UserRepository{
+  
    
    
     
@@ -85,6 +86,15 @@ class DefaultUserRepository : UserRepository{
         return self.firebaseService.updateDiary(diary: diarys, key: uid)
     }
     
+    func blockUser( opponentUid : String , block : Bool ) -> Completable {
+        guard let uid = UserDefaults.standard.string(forKey: "uid") else { return Completable.create{ completable in completable(.error(CustomError.isNil)) as! any Disposable   } }
+
+        return self.firebaseService.blockUser(ownUid: uid, opponentUid: opponentUid , block : block)
+    }
+ 
+    func updateValues( valuesDic : Dictionary< String , String > , uuid : String ) -> Completable {
+        return self.firebaseService.updateValues(valuesDic: valuesDic, uuid: uuid)
+    }
     
     
     
