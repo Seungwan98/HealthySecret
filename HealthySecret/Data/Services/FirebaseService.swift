@@ -1399,7 +1399,6 @@ extension FirebaseService {
         return Single.create { [weak self] single in
             guard let self = self else { single(.failure(FireStoreError.unknown) ) 
                                             return Disposables.create()}
-            
             self.db.collection("HealthySecretFeed").document(feedUid).getDocument{ [weak self] doc,err in
                 if let err = err{
                     single(.failure(err))
@@ -1408,7 +1407,7 @@ extension FirebaseService {
                         do{
                             let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
                             var feed = try JSONDecoder().decode(FeedDTO.self, from: jsonData)
-                            
+                            single(.success(feed))
                         }catch{
                             
                             single(.failure(CustomError.isNil))
@@ -1537,45 +1536,8 @@ extension FirebaseService {
                                 if(feed.coments.isEmpty){
                                     single(.success([]))
                                 }
-                            var outputComents = feed.coments
+                            single(.success(feed.coments))
                                 
-                                for i in 0..<feed.coments.count{
-                                    
-                                    
-                                    
-                                    //리팩
-                                    //                                    self.getDocument(key: outputComents[i].uid).subscribe({ event in
-                                    //                                        print("getDoc")
-                                    //                                        switch(event){
-                                    //                                        case.success(let user):
-                                    //
-                                    //                                            outputComents[i].profileImage = user.profileImage
-                                    //                                            outputComents[i].nickname = user.name
-                                    //
-                                    //
-                                    //                                            if( idx+1 >= outputComents.count){
-                                    //
-                                    //
-                                    //                                                single(.success(outputComents))
-                                    //
-                                    //
-                                    //                                            }else{
-                                    //                                                idx += 1
-                                    //                                            }
-                                    //
-                                    //
-                                    //
-                                    //                                        case .failure(let err):
-                                    //                                            print(err)
-                                    //                                        }
-                                    //
-                                    //
-                                    //                                    }).disposed(by: self.disposeBag )
-                                    
-                                    
-                                    
-                                    
-                                }
                           
                             
                             
@@ -1635,43 +1597,11 @@ extension FirebaseService {
                         do{
                             let jsonData = try JSONSerialization.data(withJSONObject: diff.document.data(), options: [])
                             let feed = try JSONDecoder().decode(FeedDTO.self, from: jsonData)
-                            
-                            
-                            
                             var coments = feed.coments
-                            var index = 0
-                            for i in 0..<coments.count {
-                                
-                                //리팩
-                                //                                self.getDocument(key: coments[i].uid ).subscribe({ event in
-                                //
-                                //                                    switch(event){
-                                //                                    case.success(let user):
-                                //
-                                //
-                                //                                        coments[i].profileImage = user.profileImage ?? ""
-                                //                                        coments[i].nickname = user.name
-                                //
-                                //                                        if(index + 1 >= coments.count){
-                                //                                            single(.success(coments))
-                                //                                        }else{
-                                //                                            index += 1
-                                //                                        }
-                                //
-                                //
-                                //
-                                //
-                                //                                    case .failure(_):
-                                //                                        single(.failure(CustomError.isNil))
-                                //                                    }
-                                //
-                                //
-                                //
-                                //                                }).disposed(by: self.disposeBag)
-                                
-                            }
                             
-                            
+                            single(.success(coments))
+                            self.listener?.remove()
+    
                             
                         }
                         catch{
@@ -1726,49 +1656,10 @@ extension FirebaseService {
                         let jsonData = try JSONSerialization.data(withJSONObject: data , options: [])
                         let feed = try JSONDecoder().decode(FeedDTO.self, from: jsonData)
                         
+                    
                         
-                        var coments = feed.coments ?? []
-                        var index = 0
-                        
-                        if(coments.isEmpty){
-                            single(.success(coments))
-                            
-                        }else{
-                            
-                            for i in 0..<coments.count {
-                                
-                                
-                                //리팩
-                                //                                self.getDocument(key: coments[i].uid ).subscribe({ event in
-                                //
-                                //                                    switch(event){
-                                //                                    case.success(let user):
-                                //
-                                //
-                                //                                        coments[i].profileImage = user.profileImage ?? ""
-                                //                                        coments[i].nickname = user.name
-                                //
-                                //                                        if(index + 1 >= coments.count){
-                                //                                            single(.success(coments))
-                                //                                        }else{
-                                //                                            index += 1
-                                //                                        }
-                                //
-                                //
-                                //
-                                //
-                                //                                    case .failure(_):
-                                //                                        single(.failure(CustomError.isNil))
-                                //                                    }
-                                //
-                                //
-                                //
-                                //                                }).disposed(by: self.disposeBag)
-                                
-                            }
-                        }
-                        
-                        
+                        single(.success(feed.coments))
+
                         
                     }
                     catch{

@@ -41,11 +41,11 @@ class LikesVM : ViewModel {
     
     
     
-    private var firebaseService : FirebaseService
+    private let likesUseCase : LikesUseCase
     
-    init( coordinator : CommuCoordinator , firebaseService : FirebaseService ){
+    init( coordinator : CommuCoordinator , likesUseCase : LikesUseCase ){
         self.coordinator =  coordinator
-        self.firebaseService =  firebaseService
+        self.likesUseCase =  likesUseCase
         
     }
     
@@ -60,7 +60,6 @@ class LikesVM : ViewModel {
             print("ownUid nil")
             return output }
         
-        guard let uid = self.uid else { return output }
         
         
         
@@ -89,9 +88,9 @@ class LikesVM : ViewModel {
             }else{
                 
 
-                guard let like = data.first?.value , let uid = data.first?.key  else {return}
+                guard let follow = data.first?.value , let uid = data.first?.key  else {return}
                 
-                self.firebaseService.updateFollowers(ownUid: ownUid , opponentUid: uid  , follow: like).subscribe({ event in
+                self.likesUseCase.updateFollowers( opponentUid: uid  , follow: follow).subscribe({ event in
                     
                     switch(event){
                         
@@ -116,38 +115,20 @@ class LikesVM : ViewModel {
         
         
         input.viewWillApearEvent.subscribe({ [weak self] _ in
-            
-            
-         
             guard let self = self ,let feedUid = self.feedUid else { return }
 
                 
                 
-            self.firebaseService.getFeedFeedUid(feedUid: feedUid).subscribe({ event in
+            self.likesUseCase.getLikes(feedUid: feedUid).subscribe({ event in
                     
 
                     
                     
                     switch(event){
-                    case.success(let feed):
-                        
-                        self.firebaseService.getFollowsLikes(uid: feed.likes ).subscribe({ event in
-                            switch(event){
-                            case.success(let likes):
-                                
-                                output.userModels.onNext( likes)
-                                output.backgroundViewHidden.onNext(!likes.isEmpty)
-                                
-                                
-                                
-                            case.failure(let err):
-                                print(err)
-                                
-                            }
-                            
-                            
-                            
-                        }).disposed(by: disposeBag)
+                    case.success(let likes):
+                        output.userModels.onNext( likes)
+                        output.backgroundViewHidden.onNext(!likes.isEmpty)
+                     
                         
                         
                     case.failure(let err):

@@ -299,7 +299,11 @@ class MyProfileVM : ViewModel {
     
     
     
+<<<<<<< HEAD
    
+=======
+    
+>>>>>>> staged_Issue
     struct SettingInput {
         let viewWillApearEvent : Observable<Void>
         let logoutTapped : Observable<UITapGestureRecognizer>

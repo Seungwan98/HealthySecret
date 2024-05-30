@@ -255,7 +255,6 @@ class CommuCoordinator : Coordinator  {
     
    
     func pushComents(coments : [ComentModel] , feedUid : String , feedUuid : String){
-        let firebaseService = FirebaseService()
         let viewModel = ComentsVM(coordinator: self , comentsUseCase: ComentsUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService), comentsRepository: DefaultComentsRepository(firebaseService: self.firebaseService) ))
         
         viewModel.coments = coments
@@ -277,8 +276,7 @@ class CommuCoordinator : Coordinator  {
     func pushLikes( uid : String , feedUid : String){
         
         
-        let firebaseService = FirebaseService()
-        let viewModel = LikesVM(coordinator: self, firebaseService: firebaseService)
+        let viewModel = LikesVM(coordinator: self, likesUseCase: LikesUseCase(feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService), followsRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService)))
       
         viewModel.uid = uid
         viewModel.feedUid = feedUid

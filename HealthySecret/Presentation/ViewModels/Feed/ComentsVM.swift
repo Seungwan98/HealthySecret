@@ -66,6 +66,7 @@ class ComentsVM : ViewModel {
                     
                 case.success(let coments):
                     output.coments.onNext(coments)
+                    print("comentsCOunt \(coments.count)")
                     
                     output.backgroundHidden.onNext( !coments.isEmpty )
                 case.failure(let err):
@@ -84,58 +85,19 @@ class ComentsVM : ViewModel {
         
         input.reportTapped.subscribe(onNext: { [weak self] coment  in
             guard let self = self else {return}
-//            self.firebaseService.report(url: "HealthySecretComentsReports", uid: coment.comentUid , uuid: uid, event: "coment").subscribe({ event in
-//                switch(event){
-//                case.completed:
-//                    break
-//                    //리팩
-////                    self.firebaseService.getComents(feedUid: feedUid ).subscribe({ [weak self] event in
-////                        guard self != nil else {return}
-////                        
-////                        switch(event){
-////                            
-////                        case.success(let coments):
-////                            output.coments.onNext(coments)
-////                            
-////                            output.backgroundHidden.onNext( !coments.isEmpty )
-////                            output.alert.onNext(true)
-////
-////                        case.failure(let err):
-////                         
-////                            break
-////                        }
-////                            
-////                        
-////                        
-////                        
-////                    }).disposed(by: disposeBag)
-//                    
-//                case.error(let err): if(err as! CustomError == CustomError.delete){
-//                    
-//                    
-//                    //리팩
-////                    self.firebaseService.deleteComents(coment: coment, feedUid: feedUid).subscribe({ event in
-////                        switch(event){
-////                        case.success(let coments):
-////                            print("coments \(coments)")
-////                            output.coments.onNext(coments)
-////                            
-////                            output.backgroundHidden.onNext( !coments.isEmpty )
-////                            output.alert.onNext(true)
-////
-////                        case .failure(_):
-////                            break
-////                        }
-////                        
-////                        
-////                        
-////                    }).disposed(by: disposeBag)
-//                    
-//                }
-//                    
-//                }
-//                
-//            }).disposed(by: disposeBag)
+            self.comentsUseCase.reportComents( uid: coment.comentUid , uuid: uid ,coment: coment , feedUid: feedUid ).subscribe({ event in
+                switch(event){
+                case .success(let coments):
+                    output.coments.onNext(coments)
+                    output.backgroundHidden.onNext( !coments.isEmpty )
+                    output.alert.onNext(true)
+                    
+                    
+                case .failure(let err):
+                    print(err)
+                }
+                
+            }).disposed(by: disposeBag)
             
         }).disposed(by: disposeBag)
         
@@ -158,24 +120,23 @@ class ComentsVM : ViewModel {
 
             guard let feedUid = self.feedUid else {return}
             
-            //리팩
-//            self.firebaseService.deleteComents( coment: coment , feedUid: feedUid ).subscribe({ event in
-//                switch(event){
-//                case.success(let coments):
-//                    output.coments.onNext(coments)
-//                    output.backgroundHidden.onNext( !coments.isEmpty )
-//
-//                    self.firebaseService.listener?.remove()
-//
-//                    
-//                    LoadingIndicator.hideLoading()
-//
-//                
-//                case.failure(let err):
-//                    print(err)
-//                }
-//                
-//            }).disposed(by: disposeBag)
+
+            self.comentsUseCase.deleteComents( coment: coment , feedUid: feedUid ).subscribe({ event in
+                switch(event){
+                case.success(let coments):
+                    output.coments.onNext(coments)
+                    output.backgroundHidden.onNext( !coments.isEmpty )
+
+
+                    
+                    LoadingIndicator.hideLoading()
+
+                
+                case.failure(let err):
+                    print(err)
+                }
+                
+            }).disposed(by: disposeBag)
             
             
         }).disposed(by: disposeBag)
@@ -185,7 +146,6 @@ class ComentsVM : ViewModel {
             
             coment = value
 
-            
             
         }).disposed(by: disposeBag)
         
@@ -207,24 +167,21 @@ class ComentsVM : ViewModel {
 
             
             
-//            self.firebaseService.updateComents(feedUid: feedUid , coment: coment).subscribe({ event in
-//                switch(event){
-//                case.success(let coments):
-//                    output.coments.onNext(coments)
-//                    output.backgroundHidden.onNext( !coments.isEmpty )
-//
-//                    self.firebaseService.listener?.remove()
-//
-//
-//                    
-//                    LoadingIndicator.hideLoading()
-//                    
-//                case.failure(let err):
-//                    print(err)
-//                }
-//                
-//                
-//            }).disposed(by: disposeBag)
+            self.comentsUseCase.updateComents(feedUid: feedUid , coment: coment).subscribe({ event in
+                switch(event){
+                case.success(let coments):
+                    output.coments.onNext(coments)
+                    output.backgroundHidden.onNext( !coments.isEmpty )
+
+                    
+                    LoadingIndicator.hideLoading()
+                    
+                case.failure(let err):
+                    print(err)
+                }
+                
+                
+            }).disposed(by: disposeBag)
 
             
             

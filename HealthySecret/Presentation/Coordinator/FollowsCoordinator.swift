@@ -42,7 +42,7 @@ class FollowsCoordinator : Coordinator  {
     
     func startPush( follow : Bool , uid : String , name : String) {
         
-        let viewModel = FollowsVM(coordinator: self , firebaseService: self.firebaseService)
+        let viewModel = FollowsVM(coordinator: self , followUseCase: FollowUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService), followsRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService)) )
         
         viewModel.follow = follow
         viewModel.uid = uid
