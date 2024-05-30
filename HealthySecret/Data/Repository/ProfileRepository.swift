@@ -10,7 +10,7 @@ import RxSwift
 
 protocol ProfileRepository {
     
-    func getUser() -> Single<UserModel>
+    func getFeed() -> Single<FeedModel>
     
     
     

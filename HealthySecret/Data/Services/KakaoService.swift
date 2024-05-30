@@ -32,7 +32,7 @@ final class KakaoService {
         }
         
     }
-    func kakaoLogout() -> Completable {
+    func kakaoSignOut() -> Completable {
         return Completable.create{ com in
             UserApi.shared.logout {(error) in
                         if let error = error {

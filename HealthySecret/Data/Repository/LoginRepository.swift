@@ -14,5 +14,6 @@ protocol LoginRepository  {
     func login(credential : OAuthCredential) -> Completable
     func signUp( email : String , pw : String ) -> Completable
     func signOut() -> Completable
+    func kakaoSignOut() -> Completable
     func getCurrentUser() -> Single<User>
 }

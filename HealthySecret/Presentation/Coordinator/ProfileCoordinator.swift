@@ -56,7 +56,7 @@ class ProfileCoordinator : Coordinator {
         
         let firebaseService = self.firebaseService
         let kakaoService = self.kakaoService
-        let viewController =  MyProfileVC(viewModel : MyProfileVM ( coordinator : self , firebaseService: firebaseService, kakaoService: kakaoService ))
+        let viewController =  MyProfileVC(viewModel : MyProfileVM ( coordinator : self , profileUseCase: ProfileUseCase(profileRepository: def, userRepository: <#T##any UserRepository#>, feedRepository: <#T##any FeedRepository#>), kakaoService: kakaoService ))
         
 
 

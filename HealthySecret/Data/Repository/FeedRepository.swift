@@ -18,6 +18,7 @@ protocol FeedRepository {
     func addFeed(feed : FeedDTO) -> Completable
     
     func getFeedFeedUid(feedUid : String) -> Single<FeedDTO>
+    func getFeedsUid(uid : String) -> Single<[FeedDTO]>
     func updateFeed(feedDto : FeedDTO ) -> Completable
 
     

@@ -24,7 +24,8 @@ final class SplashVC: UIViewController {
         
        
         
-        viewModel.freeze.subscribe(onNext: { _ in
+        viewModel.freeze.subscribe(onNext: { [weak self] _ in
+            guard let self else {return}
             print("feeze")
             AlertHelper.shared.showResult(title: "계정 정지", message: "신고 누적으로 계정이 정지되었습니다" , over: self)
             

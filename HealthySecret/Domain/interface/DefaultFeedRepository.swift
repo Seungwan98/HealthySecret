@@ -9,10 +9,7 @@ import Foundation
 import RxSwift
 
 class DefaultFeedRepository : FeedRepository {
-   
     
-   
-
     
     private let firebaseService : FirebaseService
 
@@ -69,5 +66,13 @@ class DefaultFeedRepository : FeedRepository {
         return self.firebaseService.updateFeed(feedDto: feedDto)
     }
     
+    
+    
+    func getFeedsUid(uid: String) -> Single<[FeedDTO]> {
+        
+        return firebaseService.getFeedsUid(uid: uid)
+    }
+    
+   
    
 }

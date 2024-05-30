@@ -33,6 +33,8 @@ final class SplashVM {
     
     func selectStart(){
         
+        freeze.bind(to: self.freeze).disposed(by: disposeBag)
+        
         
         self.setStart().subscribe({ event in
             

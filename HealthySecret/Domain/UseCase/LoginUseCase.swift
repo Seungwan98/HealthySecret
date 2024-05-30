@@ -21,7 +21,7 @@ class LoginUseCase {
   
 
     
-    
+    let freeze = PublishSubject<Bool>()
     
     private let disposeBag = DisposeBag()
     private let loginRepository : LoginRepository
@@ -88,7 +88,7 @@ class LoginUseCase {
                         case.success(let user):
                             
                                 if( !CustomFormatter.shared.dateCompare(targetString: user.freezeDate ?? "")  ) {
-                                    //self.freeze.onNext(true)
+                                    self.freeze.onNext(true)
                                     single(.success(.logIn))
 
                                    
@@ -132,7 +132,8 @@ class LoginUseCase {
                     
                     
                 case .failure(let error):
-                    print("fail lets Login \(error)")
+                    single(.success(.logIn))
+
 
                 
                 }

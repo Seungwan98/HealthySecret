@@ -5,10 +5,11 @@ import FirebaseAuth
 
 final class AppleService {
     
-    
+    private var disposeBag = DisposeBag()
     
     func removeAccount(refreshToken : String? , userId : String?) -> Completable {
         return Completable.create{ completable in
+       
             
              
              if let token = refreshToken {
@@ -19,14 +20,25 @@ final class AppleService {
                  
         
                          
-                         DispatchQueue.main.asyncAfter(deadline: .now() + 0) {
+                         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                              let appleIDProvider = ASAuthorizationAppleIDProvider()
 
                              appleIDProvider.getCredentialState(forUserID: userId ?? "") { (credentialState, error) in
                                          switch credentialState {
                                          case .authorized:
                                              print("authorized")                                             
-                                             completable(.error(CustomError.isNil))
+                                             self.removeAccount(refreshToken: refreshToken, userId: userId).subscribe({ event in
+                                                 
+                                                 switch(event){
+                                                 case .completed:
+                                                     completable(.completed)
+                                                 case .error(let err):
+                                                     print(err)
+                                                     
+                                                 }
+                                                 
+                                                 
+                                             }).disposed(by: self.disposeBag)
 
                                              
                                          case .revoked:

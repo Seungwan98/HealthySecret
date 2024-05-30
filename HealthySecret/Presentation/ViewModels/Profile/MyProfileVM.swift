@@ -76,18 +76,16 @@ class MyProfileVM : ViewModel {
     weak var coordinator : ProfileCoordinator?
     
     private var kakaoService : KakaoService
-    
-    private var firebaseService : FirebaseService
+    private let profileUseCase : ProfileUseCase
     
     var nowUser : UserModel?
 
     
-    init( coordinator : ProfileCoordinator , firebaseService : FirebaseService , kakaoService : KakaoService){
+    init( coordinator : ProfileCoordinator , profileUseCase : ProfileUseCase , kakaoService : KakaoService){
         
         self.coordinator =  coordinator
-        self.firebaseService =  firebaseService
         self.kakaoService =  kakaoService
-        
+        self.profileUseCase = profileUseCase
     }
     
     func HeaderTransform(input : HeaderInput , disposeBag: DisposeBag) -> HeaderOutput {
@@ -151,8 +149,7 @@ class MyProfileVM : ViewModel {
            
             
             
-            print("viewWillAppeear")
-            self.firebaseService.getDocument(key: ownUid ).subscribe{ [weak self]
+            self.profileUseCase.getUser().subscribe{ [weak self]
                 event in
                 guard let self = self else {return}
                 switch(event){
@@ -247,29 +244,29 @@ class MyProfileVM : ViewModel {
             
 
                 if let uid = UserDefaults.standard.string(forKey: "uid"){
-//                    self.firebaseService.getFeedsUid(uid: uid).subscribe({ event in
-//                    switch(event){
-//                    case.success(let feedArr):
-//                        self.feeds = feedArr
-//                        let imageArr = feedArr.map({
-//                            $0.mainImgUrl
-//                        })
-//                        
-//                        let uidArr =  feedArr.map({
-//                            $0.feedUid
-//                        })
-//                        
-//                        output.feedImage.onNext(imageArr)
-//                        output.feedUid.onNext(uidArr)
-//
-//                        
-//                        
-//                    case.failure(let err):
-//                        print(err)
-//                    }
-//                    
-//                    
-//                }).disposed(by: disposeBag)
+                    self.profileUseCase.getFeeds(uid: uid).subscribe({ event in
+                    switch(event){
+                    case.success(let feedArr):
+                        self.feeds = feedArr
+                        let imageArr = feedArr.map({
+                            $0.mainImgUrl
+                        })
+                        
+                        let uidArr =  feedArr.map({
+                            $0.feedUid
+                        })
+                        
+                        output.feedImage.onNext(imageArr)
+                        output.feedUid.onNext(uidArr)
+
+                        
+                        
+                    case.failure(let err):
+                        print(err)
+                    }
+                    
+                    
+                }).disposed(by: disposeBag)
             }
             
         }).disposed(by: disposeBag)
@@ -302,93 +299,7 @@ class MyProfileVM : ViewModel {
     
     
     
-    
-    //
-    //    struct ChangeInput {
-    //        let viewWillApearEvent : Observable<Void>
-    //        let addButtonTapped : Observable<Void>
-    //        let nameTextField : Observable<String>
-    //        let introduceTextField : Observable<String>
-    //        let profileImageTapped : Observable<UITapGestureRecognizer>
-    //        let profileImageValue : Observable<UIImage?>
-    //
-    //    }
-    //
-    //    struct ChageOutput {
-    //        var name = BehaviorSubject<String>(value: "")
-    //        var introduce = BehaviorSubject<String>(value: "")
-    //        var profileImage = BehaviorSubject<Data?>(value: nil)
-    //
-    //
-    //    }
-    //
-    //
-    //
-    //    func ChangeTransform(input: ChangeInput, disposeBag: DisposeBag ) -> ChageOutput {
-    //
-    //        let output = ChageOutput()
-    //
-    //        input.viewWillApearEvent.subscribe(onNext: {
-    //
-    //            output.name.onNext(self.name!)
-    //            output.introduce.onNext(self.introduce ?? "")
-    //            output.profileImage.onNext(self.profileImage ?? nil)
-    //
-    //
-    //
-    //        }).disposed(by: disposeBag)
-    //
-    //
-    //
-    //
-    //        input.addButtonTapped.subscribe(onNext: { _ in
-    //            input.nameTextField.subscribe(onNext: { name in
-    //                input.introduceTextField.subscribe(onNext: { introduce in
-    //
-    //
-    //
-    //                    input.profileImageValue.subscribe(onNext: { image in
-    //                        self.firebaseService.updateValues(name: name , introduce: introduce  , key: UserDefaults.standard.string(forKey: "email") ?? "" , image : image , beforeImage: self.beforeImage ?? "" ).subscribe{ event in
-    //                            switch(event){
-    //                            case.completed:
-    //                                print("업데이트완료")
-    //
-    //                            case.error(_):
-    //                                print("error")
-    //                            }
-    //
-    //
-    //                            let imageData = image?.jpegData(compressionQuality: 0.1)
-    //                            UserDefaults.standard.set(imageData, forKey: "profileImage")
-    //
-    //                          //  self.coordinator?.navigationController.popViewController(animated: false)
-    //
-    //
-    //
-    //
-    //                        }.disposed(by: disposeBag)
-    //
-    //
-    //                    }).disposed(by: disposeBag)
-    //
-    //                }).disposed(by: disposeBag)
-    //
-    //
-    //
-    //
-    //            }).disposed(by: disposeBag)
-    //
-    //
-    //
-    //
-    //        }).disposed(by: disposeBag)
-    //
-    //
-    //        return output
-    //    }
-    //
-    
-    
+   
     struct SettingInput {
         let viewWillApearEvent : Observable<Void>
         let logoutTapped : Observable<UITapGestureRecognizer>
@@ -411,62 +322,18 @@ class MyProfileVM : ViewModel {
         
         input.logoutTapped.subscribe(onNext: { [weak self]  _ in
             guard let self = self else {return}
-            if( UserDefaults.standard.string(forKey: "loginMethod") == "kakao" ){
+            self.profileUseCase.signOut().subscribe({ [weak self] event in
                 
-                self.kakaoService.kakaoLogout().subscribe{ event in
                 switch(event){
-                case.completed:   
-                    print("completedkakao")
+                case .completed:
                     
-
-                case.error(_): 
-                    print("kako err")
-                    
-                    
-                    
-                    
-                    
+                case .error(let err):
+                    print(err)
                 }
-                    
-                    self.firebaseService.signOut().subscribe({ [weak self] event in
-                        switch(event){
-                        case.completed:
-                            self?.coordinator?.logout()
-                        case.error(_):
-                            print("signOut err")
-
-                        }
-                    
-                        
-                        
-                    }).disposed(by: disposeBag)
                 
                 
-            }.disposed(by: disposeBag)
-            
-            
-            }else if(UserDefaults.standard.string(forKey: "loginMethod") == "apple"){
                 
-                firebaseService.signOut().subscribe({ event in
-                    
-                    switch(event){
-                    case.completed:
-                        self.coordinator?.logout()
-                    case.error(_):
-                        print("logoutErr")
-
-                    }
-                    
-                    
-                    
-
-                    
-                }).disposed(by: disposeBag)
-            
-                
-                
-            }
-            
+            }).disposed(by: disposeBag)
             
             
         }).disposed(by: disposeBag)
@@ -539,28 +406,25 @@ class MyProfileVM : ViewModel {
                 if let data = data {
                     let refreshToken = String(data: data, encoding: .utf8) ?? ""
                     
-                    self.firebaseService.deleteAccount(auth: auth).subscribe({ event in
-                        switch(event){
-                        case.completed:
-                            self.coordinator?.logout()
-                            LoadingIndicator.hideLoading()
-
-
-                            
-                        case.error(_):
-                            print("error")
-                            
-                        }
-                        
-                        
-                        
-                    }).disposed(by: disposeBag)
-                    
-                    
                     AppleService().removeAccount(refreshToken : refreshToken, userId: userId).subscribe({ event in
                         switch(event){
-                        case.completed: break
-                           
+                        case.completed:
+                            self.firebaseService.deleteAccount(auth: auth).subscribe({ event in
+                                switch(event){
+                                case.completed:
+                                    self.coordinator?.logout()
+                                    LoadingIndicator.hideLoading()
+
+
+                                    
+                                case.error(_):
+                                    print("error")
+                                    
+                                }
+                                
+                                
+                                
+                            }).disposed(by: disposeBag)
                             
                         case.error(let err):
                             print(err)
@@ -569,6 +433,12 @@ class MyProfileVM : ViewModel {
                         
                         
                     }).disposed(by: disposeBag)
+                    
+                    
+                   
+                    
+                    
+                
                     
                     
                 }else{

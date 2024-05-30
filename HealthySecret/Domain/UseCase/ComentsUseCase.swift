@@ -34,22 +34,7 @@ class ComentsUseCase  {
                 switch(event){
                 case .success(let dtos):
                     
-                    var comentDtos = dtos
-                    let comentModels = comentDtos.compactMap{ dto in
-                        
-                        self.userRepository.getUser(uid: dto.uid).subscribe({ event in
-                            switch(event){
-                            case .success(let user):
-                                print(user)
-                                
-                            case .failure(let err):
-                                single( .failure(err))
-                            }
-                            
-                            
-                        }).disposed(by: self.disposeBag)
-                        
-                    }.map{ print($0) }
+                   
                 
                     
                     

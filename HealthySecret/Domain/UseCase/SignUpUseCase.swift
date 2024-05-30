@@ -27,9 +27,10 @@ class SignUpUseCase  {
     func SignUp(signUpModel: SignUpModel) -> Completable {
         
         let loginMethod = UserDefaults.standard.string(forKey: "loginMethod") ?? ""
-        let name : String = UserDefaults.standard.string(forKey: "name") ?? ""
+        let name : String = UserDefaults.standard.string(forKey: "name") ?? "사용자\(Int(arc4random_uniform(99999)))"
         let pw = UserDefaults.standard.string(forKey: "password") ?? ""
         let email = UserDefaults.standard.string(forKey: "email") ?? ""
+        let uid = UserDefaults.standard.string(forKey: "uid") ?? ""
        
  
         
@@ -37,11 +38,12 @@ class SignUpUseCase  {
         var userModel = signUpModel.toData()
         userModel.loginMethod = loginMethod
         userModel.name = name
+        userModel.uuid = uid
 
         return Completable.create{ [weak self] completable in
             guard let self = self else {return Disposables.create()}
 
-            
+            print("loginMethod \(loginMethod)")
             
             
                if loginMethod == "kakao" || loginMethod == "normal" {
@@ -99,13 +101,21 @@ class SignUpUseCase  {
                    
                }
                else if(loginMethod == "apple"){
-                   
-                   self.userRepository.setUser(userModel: userModel).subscribe({ [weak self] event in
-                       guard let self = self else {return}
-                       completable(event)
-                       
-                       
-                   }).disposed(by: disposeBag)
+                   self.userRepository.setUser(userModel: userModel).subscribe({ event in
+                       switch(event){
+                       case.completed:
+                           
+                           
+                           
+                                   completable(.completed)
+                                   
+                                   
+                               case.error(let err):
+                                   completable(.error(err))
+                               }
+                               
+                               
+                           }).disposed(by: self.disposeBag)
                    
 
                    

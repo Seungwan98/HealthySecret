@@ -112,6 +112,10 @@ class  DefaultLoginRepository : LoginRepository {
         return self.firebaseService.signOut()
     }
     
+    func kakaoSignOut() -> Completable {
+        return self.kakaoService.kakaoSignOut()
+    }
+    
     
     
     
