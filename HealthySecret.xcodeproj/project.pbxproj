@@ -467,7 +467,7 @@
 			path = ViewControllers;
 			sourceTree = "<group>";
 		};
-		608DF9712AD575F100DD27DB /* Model */ = {
+		608DF9712AD575F100DD27DB /* Entities */ = {
 			isa = PBXGroup;
 			children = (
 				608DF96A2AD4352F00DD27DB /* IngredientsDTO.swift */,
@@ -479,7 +479,7 @@
 				609C063C2BAA9D0700D61F53 /* FeedModel.swift */,
 				60C391C22C04965C00465156 /* SignUpModel.swift */,
 			);
-			path = Model;
+			path = Entities;
 			sourceTree = "<group>";
 		};
 		608DF9722AD5760600DD27DB /* Application */ = {
@@ -667,14 +667,14 @@
 		60C391AE2C03ABCE00465156 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				60C391B42C04597500465156 /* Repositories */,
 				60BC98DD2AFF781C0013FAD9 /* Services */,
 				608DF9732AD5762F00DD27DB /* API */,
-				60C391AF2C03ABEB00465156 /* Repository */,
 			);
 			path = Data;
 			sourceTree = "<group>";
 		};
-		60C391AF2C03ABEB00465156 /* Repository */ = {
+		60C391AF2C03ABEB00465156 /* Interfaces */ = {
 			isa = PBXGroup;
 			children = (
 				60C391B02C03ABFE00465156 /* LoginRepository.swift */,
@@ -686,15 +686,15 @@
 				60C391EF2C07A98300465156 /* ComentsRepository.swift */,
 				60C391F52C08584800465156 /* FollowsRepository.swift */,
 			);
-			path = Repository;
+			path = Interfaces;
 			sourceTree = "<group>";
 		};
 		60C391B22C04552100465156 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
-				60C391B72C04655100465156 /* UseCase */,
-				60C391B42C04597500465156 /* interface */,
-				608DF9712AD575F100DD27DB /* Model */,
+				60C391AF2C03ABEB00465156 /* Interfaces */,
+				60C391B72C04655100465156 /* UseCases */,
+				608DF9712AD575F100DD27DB /* Entities */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -702,14 +702,14 @@
 		60C391B32C0455B900465156 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				60D9878C2AE8B2540049CE05 /* Coordinator */,
+				60D9878C2AE8B2540049CE05 /* Coordinators */,
 				608DF9702AD567C500DD27DB /* ViewControllers */,
 				60BC98EB2B0B68140013FAD9 /* ViewModels */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
 		};
-		60C391B42C04597500465156 /* interface */ = {
+		60C391B42C04597500465156 /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
 				60C391B52C04598B00465156 /* DefaultLoginRepository.swift */,
@@ -721,10 +721,10 @@
 				60C391ED2C07A97200465156 /* DefaultComentsRepository.swift */,
 				60C391F32C08581B00465156 /* DefaultFollowsRepositoy.swift */,
 			);
-			path = interface;
+			path = Repositories;
 			sourceTree = "<group>";
 		};
-		60C391B72C04655100465156 /* UseCase */ = {
+		60C391B72C04655100465156 /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
 				60C391B82C04656300465156 /* LoginUseCase.swift */,
@@ -739,10 +739,10 @@
 				60C391F12C08576900465156 /* FollowUseCase.swift */,
 				60C391F72C0866CF00465156 /* LikesUseCase.swift */,
 			);
-			path = UseCase;
+			path = UseCases;
 			sourceTree = "<group>";
 		};
-		60D9878C2AE8B2540049CE05 /* Coordinator */ = {
+		60D9878C2AE8B2540049CE05 /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
 				60D9878D2AE8BBA20049CE05 /* Coordinator.swift */,
@@ -756,7 +756,7 @@
 				60EF3C962BE8B04D0007862F /* FollowsCoordinator.swift */,
 				60EF3C9C2BE9E4CB0007862F /* ProfileCoordinator.swift */,
 			);
-			path = Coordinator;
+			path = Coordinators;
 			sourceTree = "<group>";
 		};
 		60D987932AEA82C10049CE05 /* Source */ = {
@@ -1372,7 +1372,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1461,7 +1461,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
