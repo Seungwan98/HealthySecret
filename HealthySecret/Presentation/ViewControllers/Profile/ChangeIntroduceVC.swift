@@ -26,21 +26,15 @@ class ChangeIntroduceVC : UIViewController {
     
     private let contentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsVerticalScrollIndicator = false
         return scrollView
     }()
     
-    private let contentView : UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private let contentView = UIView()
     
     
     private let profileImageView : UIImageView = {
        let view = UIImageView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 50
         view.layer.masksToBounds = true
 
@@ -60,7 +54,6 @@ class ChangeIntroduceVC : UIViewController {
     
     private let nameTextField : UITextField = {
         let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
         textField.backgroundColor = .lightGray.withAlphaComponent(0.2)
         textField.layer.cornerRadius = 10
         textField.tintColor = .black
@@ -77,8 +70,6 @@ class ChangeIntroduceVC : UIViewController {
     lazy var introduceTextView : UITextView = {
         // Create a TextView.
         let textView: UITextView = UITextView()
-
-        textView.translatesAutoresizingMaskIntoConstraints = false
 
         textView.backgroundColor = .lightGray.withAlphaComponent(0.2)
 
@@ -109,7 +100,6 @@ class ChangeIntroduceVC : UIViewController {
         let label = UILabel()
         label.textColor = .lightGray
         label.text = "0/\(self.maxCount)"
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
         
         
@@ -118,18 +108,10 @@ class ChangeIntroduceVC : UIViewController {
     
     private let firstView = UIView()
     
-    let bottomView : UIView = {
-       let view = UIView()
-       
-       
-       view.translatesAutoresizingMaskIntoConstraints = false
-     
-       return view
-   }()
+    let bottomView = UIView()
     
     private let addButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         button.backgroundColor = .black
         
@@ -198,7 +180,6 @@ class ChangeIntroduceVC : UIViewController {
   
     func setUI(){
         
-        topImage.translatesAutoresizingMaskIntoConstraints = false
         topImage.isHidden = true
         
         self.view.addSubview(contentScrollView)
@@ -214,14 +195,12 @@ class ChangeIntroduceVC : UIViewController {
         firstView.addSubview(nameTextField)
         firstView.addSubview(introduceTextView)
         firstView.addSubview(writeContentLabel)
-        firstView.translatesAutoresizingMaskIntoConstraints = false
         
         
             
         for i in 0..<labels.count{
             firstView.addSubview(labels[i])
 
-            labels[i].translatesAutoresizingMaskIntoConstraints = false
             labels[i].text = text[i]
             labels[i].font = .boldSystemFont(ofSize: 16)
             labels[i].textColor = .lightGray.withAlphaComponent(0.8)
@@ -236,82 +215,59 @@ class ChangeIntroduceVC : UIViewController {
 
             
           
-        
-        
-        
-        NSLayoutConstraint.activate([
+        self.topImage.snp.makeConstraints{
+            $0.width.height.equalTo(30)
+            $0.trailing.bottom.equalTo(self.profileImageView)
+        }
+        self.bottomView.snp.makeConstraints{
+            $0.leading.trailing.bottom.equalTo(self.view)
+            $0.height.equalTo(100)
+        }
+        self.addButton.snp.makeConstraints{
+            $0.leading.trailing.equalTo(bottomView).inset(20)
+            $0.height.equalTo(60)
+            $0.centerY.equalTo(bottomView).offset(-10)
+        }
+        self.contentScrollView.snp.makeConstraints{
+            $0.top.trailing.leading.equalTo(self.view.safeAreaLayoutGuide)
+            $0.bottom.equalTo(self.bottomView.snp.top)
+        }
+        self.contentView.snp.makeConstraints{
+            $0.top.bottom.leading.trailing.width.equalTo(self.contentScrollView)
+        }
+        self.profileImageView.snp.makeConstraints{
+            $0.width.height.equalTo(100)
+            $0.centerX.equalTo(self.contentView)
+            $0.top.equalTo(self.contentView).inset(40)
+        }
+        self.firstView.snp.makeConstraints{
+            $0.top.equalTo(profileImageView.snp.bottom).offset(70)
+            $0.leading.trailing.equalTo(contentView).inset(20)
+            $0.height.equalTo(450)
+            $0.bottom.equalTo(contentView)
             
-            topImage.widthAnchor.constraint(equalToConstant: 30),
-            topImage.heightAnchor.constraint(equalToConstant: 30) ,
-            topImage.trailingAnchor.constraint(equalTo: self.profileImageView.trailingAnchor),
-            topImage.bottomAnchor.constraint(equalTo: self.profileImageView.bottomAnchor),
-            
-            
-            bottomView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            bottomView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            bottomView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            bottomView.heightAnchor.constraint(equalToConstant: 100),
-            
-
-            
-            addButton.leadingAnchor.constraint(equalTo:bottomView.leadingAnchor , constant: 20),
-            addButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -20 ),
-            addButton.heightAnchor.constraint(equalToConstant: 60),
-            addButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
-        
-            contentScrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            contentScrollView.bottomAnchor.constraint(equalTo: bottomView.topAnchor),
-            contentScrollView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            contentScrollView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            
-            
-            contentView.topAnchor.constraint(equalTo: self.contentScrollView.topAnchor),
-            contentView.bottomAnchor.constraint(equalTo: self.contentScrollView.bottomAnchor),
-            contentView.leadingAnchor.constraint(equalTo: self.contentScrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: self.contentScrollView.trailingAnchor),
-            self.contentView.widthAnchor.constraint(equalTo: self.contentScrollView.widthAnchor , multiplier: 1.0),
-            
-   
-
-            
-            profileImageView.widthAnchor.constraint(equalToConstant: 100),
-            profileImageView.heightAnchor.constraint(equalToConstant: 100),
-            profileImageView.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor ),
-            profileImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor , constant: 40 ),
-            
-            firstView.topAnchor.constraint(equalTo: profileImageView.bottomAnchor , constant: 70),
-            firstView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 20),
-            firstView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor , constant: -20),
-            firstView.heightAnchor.constraint(equalToConstant: 450),
-            self.firstView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            
-           
-            labels[0].topAnchor.constraint(equalTo: firstView.topAnchor ),
-            labels[0].leadingAnchor.constraint(equalTo: firstView.leadingAnchor),
-
-            nameTextField.topAnchor.constraint(equalTo: labels[0].bottomAnchor , constant: 10),
-            nameTextField.leadingAnchor.constraint(equalTo:firstView.leadingAnchor),
-            nameTextField.trailingAnchor.constraint(equalTo: firstView.trailingAnchor ),
-            nameTextField.heightAnchor.constraint(equalToConstant: 60 ),
-            
-            labels[1].topAnchor.constraint(equalTo: nameTextField.bottomAnchor , constant: 20),
-            labels[1].leadingAnchor.constraint(equalTo: firstView.leadingAnchor),
-            
-            introduceTextView.topAnchor.constraint(equalTo: labels[1].bottomAnchor , constant: 10),
-            introduceTextView.leadingAnchor.constraint(equalTo:firstView.leadingAnchor),
-            introduceTextView.trailingAnchor.constraint(equalTo: firstView.trailingAnchor ),
-            introduceTextView.heightAnchor.constraint(equalToConstant: 260 ),
-            
-            writeContentLabel.trailingAnchor.constraint(equalTo: introduceTextView.trailingAnchor , constant: -5),
-            writeContentLabel.bottomAnchor.constraint(equalTo: introduceTextView.bottomAnchor , constant: -5),
-
-         
-            
-            
-            
-        
-        
-        ])
+        }
+        self.labels[0].snp.makeConstraints{
+            $0.top.leading.equalTo(firstView)
+        }
+        self.nameTextField.snp.makeConstraints{
+            $0.leading.trailing.equalTo(firstView)
+            $0.top.equalTo(labels[0].snp.bottom).offset(10)
+            $0.height.equalTo(60)
+        }
+        self.labels[1].snp.makeConstraints{
+            $0.top.equalTo(nameTextField.snp.bottom).offset(20)
+            $0.leading.equalTo(firstView)
+        }
+        self.introduceTextView.snp.makeConstraints{
+            $0.top.equalTo(labels[1].snp.bottom).offset(10)
+            $0.leading.trailing.equalTo(firstView)
+            $0.height.equalTo(260)
+        }
+        self.writeContentLabel.snp.makeConstraints{
+            $0.trailing.bottom.equalTo(introduceTextView).inset(5)
+        }
+  
       
   
     }

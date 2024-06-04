@@ -1,6 +1,7 @@
 
 import UIKit
 import RxSwift
+import SnapKit
 final class SplashVC: UIViewController {
     private let viewModel: SplashVM
     init(viewModel: SplashVM) {
@@ -46,10 +47,7 @@ final class SplashVC: UIViewController {
     }()
     
     func startAnimation() {
-//        UIView.animate(withDuration: 1.2, delay: 0.1, options: [ ], animations: {
-//            self.logoImageView.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
-//            
-//        }, completion: nil)
+
     }
     
     private func setAutoLayout() {
@@ -57,18 +55,18 @@ final class SplashVC: UIViewController {
 
         view.addSubview(logoImageView)
 
-        mainView.translatesAutoresizingMaskIntoConstraints = false
-        logoImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            logoImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            logoImageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            logoImageView.heightAnchor.constraint(equalToConstant: 240),
-            logoImageView.widthAnchor.constraint(equalToConstant: 240),
+   
+        
+        logoImageView.snp.makeConstraints{
+            $0.centerX.centerY.equalTo(self.view)
+            $0.height.width.equalTo(240)
+        }
+        
+        mainView.snp.makeConstraints{
+            $0.top.bottom.leading.trailing.equalTo(self.view)
             
-            mainView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            mainView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            mainView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            mainView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor ),
-        ])
+        }
+        
+
     }
 }

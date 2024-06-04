@@ -7,7 +7,7 @@
 import UIKit
 import RxSwift
 import Kingfisher
-
+import SnapKit
 
 class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , FollowsBlocksCellDelegate   {
     func didPressbutton(for index: String, like: Bool) {
@@ -29,8 +29,10 @@ class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate
     
     private var viewModel : BlockListVM?
     
+    let backBarButtonItem = UIBarButtonItem()
     
- 
+    let mainView = UIView()
+
     
    
     
@@ -40,7 +42,6 @@ class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate
     
     lazy private var tableView : UITableView = {
         let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorColor = .clear
         tableView.allowsMultipleSelection = true
         tableView.backgroundView = self.backgroundView
@@ -83,9 +84,7 @@ class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate
         
     }
     
-    
-    let backBarButtonItem = UIBarButtonItem() // title 부분 수정
-    
+   
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -108,17 +107,9 @@ class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
     }
+
     
     
-    
-    
-    
-    
-    
-    //SearchController로 SearchBar 추가
-    
-    
-    let mainView = UIView()
     
     
   
@@ -136,20 +127,8 @@ class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate
         
         self.backgroundView.backgroundLabel.text = "아직 차단한 유저가 없어요"
         
-        self.loadingView.translatesAutoresizingMaskIntoConstraints = false
-        self.mainView.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundView.translatesAutoresizingMaskIntoConstraints = false
 
-
-        
-      
-        
-        
-        
-        
-        
         self.view.addSubview(self.mainView)
-        
 
         self.mainView.addSubview(self.tableView)
         
@@ -159,54 +138,19 @@ class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate
         
         view.addSubview(self.loadingView)
         
-        
-        
-        NSLayoutConstraint.activate([
-            
-            
-            
-            
-            self.loadingView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor ),
-            self.loadingView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor  ),
-            self.loadingView.topAnchor.constraint(equalTo: self.view.topAnchor ),
-            self.loadingView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor ),
-            
-            
-            
+        self.loadingView.snp.makeConstraints{
+            $0.trailing.bottom.top.leading.equalTo(self.view)
+        }
+        self.mainView.snp.makeConstraints{
+            $0.top.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+        }
+        self.tableView.snp.makeConstraints{
+            $0.top.bottom.leading.trailing.equalTo(mainView)
+        }
+        self.backgroundView.snp.makeConstraints{
+            $0.top.bottom.leading.trailing.equalTo(mainView)
+        }
        
-            
-
-            
-            
-            
-            
-            mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor ),
-            mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            mainView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            mainView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            
-            
-            tableView.topAnchor.constraint(equalTo: mainView.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
-            
-            backgroundView.topAnchor.constraint(equalTo: mainView.topAnchor),
-            backgroundView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor),
-            backgroundView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
-            backgroundView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
-            
-            
-            
-            
-            
-            
-            //
-            
-            
-        ])
-        
-        
         
         
     }

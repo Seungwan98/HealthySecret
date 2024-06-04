@@ -19,14 +19,12 @@ class AddDiaryVC : UIViewController {
     
     private let contentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsVerticalScrollIndicator = false
         return scrollView
     }()
     
     private let contentView : UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -38,7 +36,6 @@ class AddDiaryVC : UIViewController {
         // Create a TextView.
         let textView: UITextView = UITextView()
 
-        textView.translatesAutoresizingMaskIntoConstraints = false
         // Round the corners.
         textView.backgroundColor = .lightGray.withAlphaComponent(0.2)
 
@@ -72,15 +69,11 @@ class AddDiaryVC : UIViewController {
     let bottomView : UIView = {
        let view = UIView()
        
-       
-       view.translatesAutoresizingMaskIntoConstraints = false
-     
        return view
    }()
     
     private let addButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         button.backgroundColor = .black
         
@@ -92,7 +85,6 @@ class AddDiaryVC : UIViewController {
     
     private let firstLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         
         label.font = .boldSystemFont(ofSize: 26)
         label.text = "오늘의 일기를\n기록하여 주세요."
@@ -102,7 +94,6 @@ class AddDiaryVC : UIViewController {
     
     private let secondLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         
         label.font = .boldSystemFont(ofSize: 16)
         label.textColor = .gray.withAlphaComponent(0.8)
@@ -173,62 +164,38 @@ class AddDiaryVC : UIViewController {
             
           
         
-        
-        
-        NSLayoutConstraint.activate([
-            
-            bottomView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            bottomView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            bottomView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            bottomView.heightAnchor.constraint(equalToConstant: 100),
-            
-            
-
-            
-            addButton.leadingAnchor.constraint(equalTo:bottomView.leadingAnchor , constant: 20),
-            addButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -20 ),
-            addButton.heightAnchor.constraint(equalToConstant: 60),
-            addButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
-        
-            contentScrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            contentScrollView.bottomAnchor.constraint(equalTo: bottomView.topAnchor),
-            contentScrollView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            contentScrollView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            
-            
-            contentView.topAnchor.constraint(equalTo: self.contentScrollView.topAnchor),
-            contentView.bottomAnchor.constraint(equalTo: self.contentScrollView.bottomAnchor),
-            contentView.leadingAnchor.constraint(equalTo: self.contentScrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: self.contentScrollView.trailingAnchor),
-            contentView.heightAnchor.constraint(equalToConstant: 1000),
-            
-            
-            
-            self.contentView.widthAnchor.constraint(equalTo: self.contentScrollView.widthAnchor , multiplier: 1.0),
-
-       
-            firstLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
-            firstLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 20),
-            
-            secondLabel.topAnchor.constraint(equalTo: firstLabel.bottomAnchor , constant: 60),
-            secondLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 20),
-           
-     
-            
-            addDiaryTextView.topAnchor.constraint(equalTo: secondLabel.bottomAnchor , constant: 5),
-            addDiaryTextView.leadingAnchor.constraint(equalTo:contentView.leadingAnchor , constant: 20),
-            addDiaryTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor , constant: -20 ),
-            addDiaryTextView.heightAnchor.constraint(equalToConstant: 260 ),
-            
-            
-
-         
-            
-            
-            
-        
-        
-        ])
+        bottomView.snp.makeConstraints{
+            $0.leading.trailing.bottom.equalTo(self.view)
+            $0.height.equalTo(100)
+        }
+        addButton.snp.makeConstraints{
+            $0.leading.trailing.equalTo(bottomView).inset(20)
+            $0.height.equalTo(60)
+            $0.centerY.equalTo(bottomView).offset(-10)
+        }
+        contentScrollView.snp.makeConstraints{
+            $0.top.leading.trailing.equalTo(self.view)
+            $0.bottom.equalTo(self.bottomView.snp.top)
+        }  
+        contentView.snp.makeConstraints{
+            $0.top.leading.trailing.bottom.width.equalTo(self.contentScrollView)
+            $0.height.equalTo(1000)
+   
+        }
+        firstLabel.snp.makeConstraints{
+            $0.top.equalTo(contentView)
+            $0.leading.equalTo(contentView).inset(20)
+        }    
+        secondLabel.snp.makeConstraints{
+            $0.top.equalTo(firstLabel.snp.bottom).offset(60)
+            $0.leading.equalTo(contentView).inset(20)
+        }
+        addDiaryTextView.snp.makeConstraints{
+            $0.top.equalTo(secondLabel.snp.bottom).offset(5)
+            $0.leading.trailing.equalTo(contentView).inset(20)
+            $0.height.equalTo(260)
+        }
+   
       
   
     }

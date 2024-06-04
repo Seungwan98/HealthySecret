@@ -79,7 +79,6 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     
     let followButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 30
         button.tintColor = .white
         button.backgroundColor = .systemBlue
@@ -163,18 +162,13 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         self.view.addSubview(self.followButton)
         
         self.followButton.addTarget(self, action: #selector(self.didPressedFollowButton), for: .touchUpInside)
-        
-        NSLayoutConstraint.activate([
-            
-            self.followButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.followButton.widthAnchor.constraint(equalToConstant: 160 ),
-            self.followButton.heightAnchor.constraint(equalToConstant: 60 ),
-            self.followButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor , constant: -40)
-            
-            
-            
-            
-        ])
+        self.followButton.snp.makeConstraints{
+            $0.centerX.equalTo(self.view)
+            $0.width.equalTo(160)
+            $0.height.equalTo(60)
+            $0.bottom.equalTo(self.view).inset(40)
+        }
+    
         
         
         
@@ -184,45 +178,25 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     func setUI(){
         
         self.view.backgroundColor = .white
-        self.loadingView.translatesAutoresizingMaskIntoConstraints = false
         
-        
-        
-        
-        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        
-        self.backgroundView.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundView.backgroundLabel.text = "아직 피드가 없어요"
         
         
         view.addSubview(self.collectionView)
-        
         view.addSubview(self.backgroundView)
-        
         view.addSubview(self.loadingView)
 
-        NSLayoutConstraint.activate([
-            
-            
-            
-            self.backgroundView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ),
-            self.backgroundView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor  ),
-            self.backgroundView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
-            self.backgroundView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor ),
-            
-            self.collectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor  ),
-            self.collectionView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
-            self.collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor ),  
-            
-            self.loadingView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ),
-            self.loadingView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor  ),
-            self.loadingView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
-            self.loadingView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor ),
-            
-            
-        ])
+        
+        self.backgroundView.snp.makeConstraints{
+            $0.trailing.bottom.top.leading.equalTo(self.view.safeAreaLayoutGuide)
+        }
+        self.collectionView.snp.makeConstraints{
+            $0.trailing.bottom.top.leading.equalTo(self.view.safeAreaLayoutGuide)
+        }
+        self.loadingView.snp.makeConstraints{
+            $0.trailing.bottom.top.leading.equalTo(self.view.safeAreaLayoutGuide)
+        }
+     
         
         
         

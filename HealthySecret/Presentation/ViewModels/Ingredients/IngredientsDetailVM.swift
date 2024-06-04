@@ -67,7 +67,8 @@ class IngredientsDetailVM  : ViewModel {
 
 
         
-        input.viewWillApearEvent.subscribe(onNext: { _ in
+        input.viewWillApearEvent.subscribe(onNext: { [weak self] _ in
+            guard let self else {return}
             input.selectButton.subscribe(onNext: { tag in
            
             var tag = tag
@@ -79,7 +80,7 @@ class IngredientsDetailVM  : ViewModel {
                 
                 
 
-                print("tag \(tag)")
+                print("tag \(selectText)")
 
                   
                     
@@ -90,7 +91,7 @@ class IngredientsDetailVM  : ViewModel {
                         
                     }else if(tag == 3){
                         selectText = serveSize
-                        output.firstTextToField.onNext(String(selectText ?? 0))
+                        output.firstTextToField.onNext(String(Int(selectText ?? 0)))
                         tag = 1
                     }
                 
@@ -130,15 +131,15 @@ class IngredientsDetailVM  : ViewModel {
                 output.carbohydratesLabel.onNext(String(newRow.carbohydrates)+"g")
                 
                 
-                input.addBtnTapped.subscribe(onNext: { _ in
+                input.addBtnTapped.subscribe(onNext: { [weak self] _ in
                    
                         
-                    var filteredArr = self.coordinator?.filteredArr
+                    var filteredArr = self?.coordinator?.filteredArr
                    
                      filteredArr?.append(newRow)
 
-                    self.coordinator?.navigationController.popViewController(animated: false)
-                    self.coordinator?.pushIngredientsEdmit(arr: filteredArr ?? [])
+                    self?.coordinator?.navigationController.popViewController(animated: false)
+                    self?.coordinator?.pushIngredientsEdmit(arr: filteredArr ?? [])
                         
                     
                     
@@ -161,6 +162,7 @@ class IngredientsDetailVM  : ViewModel {
     
     func getGram(selectText : Double , model : IngredientsModel ) -> IngredientsModel {
         var newRow = model
+        
         let size = model.addServingSize ?? model.servingSize
         
         newRow.calorie = Int(CustomMath().getDecimalSecond(data: (selectText * (   Double(model.calorie) / size))))

@@ -26,7 +26,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     
     private let addButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
+
         
         
         button.setTitle("추가", for: .normal)
@@ -37,7 +37,6 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     }()
     private let edmitButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         
         button.setTitle("기록하기", for: .normal)
@@ -53,7 +52,6 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     private let topView : UIView = {
         let view =  UIView()
         
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .systemBlue.withAlphaComponent(0.5)
         
         return view
@@ -64,7 +62,6 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     
     private let imageView : UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "ic_health.png"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         
         return imageView
         
@@ -73,18 +70,15 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     
     lazy private var tableView : UITableView = {
         let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .white
         tableView.allowsMultipleSelection = true
-        tableView.register(ExerciseCell.self, forCellReuseIdentifier: "ExerciseCell")
+        tableView.register(EditExerciseCell.self, forCellReuseIdentifier: "ExerciseCell")
 
         return tableView
     }()
     
     let todayExerciseLabel : UILabel = {
         let label = UILabel()
-        
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "오늘 한 활동 "
         label.font = .boldSystemFont(ofSize: 26)
         
@@ -94,7 +88,6 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     
     let totalTodayExerciseLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .systemBlue.withAlphaComponent(0.8)
         label.font = .boldSystemFont(ofSize: 26)
         return label
@@ -102,14 +95,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     
   
     
-     let bottomView : UIView = {
-        let view = UIView()
-        
-        
-        view.translatesAutoresizingMaskIntoConstraints = false
-      
-        return view
-    }()
+     let bottomView = UIView()
     
     var exerciseArr = BehaviorSubject<[ExerciseModel]>(value: [])
     
@@ -169,7 +155,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
             
         }).disposed(by: disposeBag)
         
-        exerciseArr.bind(to: tableView.rx.items(cellIdentifier: "ExerciseCell" ,cellType: ExerciseCell.self )){index,item,cell in
+        exerciseArr.bind(to: tableView.rx.items(cellIdentifier: "ExerciseCell" ,cellType: EditExerciseCell.self )){index,item,cell in
             cell.layoutToEdit()
             cell.exerciseGram.text = "\(item.finalCalorie)Kcal"
             cell.name.text = item.name
@@ -209,12 +195,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     func addSubView(){
         
         self.view.backgroundColor = .white
-        
-        self.addButton.translatesAutoresizingMaskIntoConstraints = false
-        self.edmitButton.translatesAutoresizingMaskIntoConstraints = false
-        
         mainView.backgroundColor = .white
-        mainView.translatesAutoresizingMaskIntoConstraints = false
         
         self.view.addSubview(mainView)
         
@@ -229,62 +210,50 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
         bottomView.addSubview(addButton)
         bottomView.addSubview(edmitButton)
         
-        NSLayoutConstraint.activate([
-            
-            mainView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            mainView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            mainView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            mainView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            
-            addButton.heightAnchor.constraint(equalToConstant: 60),
-            addButton.widthAnchor.constraint(equalToConstant: 100),
-            addButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor , constant: 15),
-            addButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
-
-            
-            
-            edmitButton.heightAnchor.constraint(equalToConstant: 60),
-            edmitButton.leadingAnchor.constraint(equalTo: addButton.trailingAnchor, constant: 15),
-            edmitButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -15),
-            edmitButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
-
-            
-            
-            
-            bottomView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            bottomView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            bottomView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            bottomView.heightAnchor.constraint(equalToConstant: 100),
-            
-            
-            topView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            topView.heightAnchor.constraint(equalToConstant: 300),
-            topView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            topView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            
-            
-            
-            imageView.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: topView.centerYAnchor , constant:  -(self.navigationController?.navigationBar.frame.height ?? 0)/2 ),
-            imageView.widthAnchor.constraint(equalToConstant: 120),
-            imageView.heightAnchor.constraint(equalToConstant: 120),
-            
-            
-            
-            tableView.topAnchor.constraint(equalTo: topView.bottomAnchor ,constant: 60),
-            tableView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomView.topAnchor),
-            
-            todayExerciseLabel.topAnchor.constraint(equalTo: topView.bottomAnchor),
-            todayExerciseLabel.bottomAnchor.constraint(equalTo: tableView.topAnchor),
-            todayExerciseLabel.leadingAnchor.constraint(equalTo: topView.leadingAnchor , constant: 20),
-            
-            totalTodayExerciseLabel.topAnchor.constraint(equalTo: topView.bottomAnchor),
-            totalTodayExerciseLabel.bottomAnchor.constraint(equalTo: tableView.topAnchor),
-            totalTodayExerciseLabel.leadingAnchor.constraint(equalTo: todayExerciseLabel.trailingAnchor , constant: 0),
-            
-        ])
+        
+        mainView.snp.makeConstraints{
+            $0.leading.trailing.top.bottom.equalTo(self.view)
+        }
+        addButton.snp.makeConstraints{
+            $0.height.equalTo(60)
+            $0.width.equalTo(100)
+            $0.leading.equalTo(bottomView).inset(15)
+            $0.centerY.equalTo(bottomView).offset(-10)
+        }
+        edmitButton.snp.makeConstraints{
+            $0.height.equalTo(60)
+            $0.leading.equalTo(addButton.snp.trailing).offset(15)
+            $0.trailing.equalTo(bottomView).inset(15)
+            $0.centerY.equalTo(bottomView).offset(-10)
+        }
+        bottomView.snp.makeConstraints{
+            $0.leading.trailing.bottom.equalTo(self.view)
+            $0.height.equalTo(100)
+        }
+        topView.snp.makeConstraints{
+            $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+            $0.height.equalTo(300)
+        }
+        imageView.snp.makeConstraints{
+            $0.width.height.equalTo(120)
+            $0.centerX.equalTo(topView)
+            $0.centerY.equalTo(topView).offset( -(self.navigationController?.navigationBar.frame.height ?? 0) / 2 )
+        }
+        tableView.snp.makeConstraints{
+            $0.top.equalTo(topView.snp.bottom).offset(60)
+            $0.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+            $0.bottom.equalTo(bottomView.snp.top)
+        }
+        todayExerciseLabel.snp.makeConstraints{
+            $0.top.equalTo(topView.snp.bottom)
+            $0.bottom.equalTo(tableView.snp.top)
+            $0.leading.equalTo(topView).inset(20)
+        }
+        totalTodayExerciseLabel.snp.makeConstraints{
+            $0.top.bottom.equalTo(todayExerciseLabel)
+            $0.leading.equalTo(todayExerciseLabel.snp.trailing)
+        }
+      
     }
     
 }

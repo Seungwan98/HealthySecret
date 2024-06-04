@@ -56,7 +56,6 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     
     let bottomView : UIView = {
        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .systemBackground
         view.layer.cornerRadius = 20
         view.backgroundColor = .lightGray.withAlphaComponent(0.2)
@@ -76,7 +75,6 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         button.layer.cornerRadius = 15
         button.contentVerticalAlignment = .center
         button.contentHorizontalAlignment = .center
-        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -84,7 +82,6 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         let textView = UITextView()
         
         textView.backgroundColor = .clear
-        textView.translatesAutoresizingMaskIntoConstraints = false // for auto layout
           
 
         textView.font = .boldSystemFont(ofSize: 20)
@@ -100,7 +97,6 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     
     let tableView : UITableView = {
         let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.estimatedRowHeight = 100
         tableView.rowHeight = UITableView.automaticDimension
         tableView.allowsMultipleSelection = true
@@ -141,7 +137,6 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         
         self.backgroundView.isHidden = true
         self.backgroundView.backgroundLabel.text = "아직 댓글이 없어요"
-        self.backgroundView.translatesAutoresizingMaskIntoConstraints = false
         
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
         tableView.dataSource = nil
@@ -159,36 +154,31 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         self.bottomView.addSubview(self.textView)
         self.bottomView.addSubview(self.addButton)
         
-        
-        NSLayoutConstraint.activate([
+        self.backgroundView.snp.makeConstraints{
+            $0.top.leading.trailing.equalTo(self.tableView)
+            $0.bottom.equalTo(self.view)
+        }
+        self.tableView.snp.makeConstraints{
+            $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+            $0.bottom.equalTo(bottomView.snp.top)
+        }
+        self.addButton.snp.makeConstraints{
+            $0.width.height.equalTo(30)
+            $0.trailing.equalTo(self.bottomView).inset(10)
+            $0.centerY.equalTo(self.bottomView)
+        }
+        self.bottomView.snp.makeConstraints{
+            $0.leading.trailing.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(10)
+            $0.height.equalTo(self.textView)
             
-            backgroundView.topAnchor.constraint(equalTo: self.tableView.topAnchor),
-            backgroundView.leadingAnchor.constraint(equalTo: self.tableView.leadingAnchor),
-            backgroundView.trailingAnchor.constraint(equalTo: self.tableView.trailingAnchor),
-            backgroundView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            
-            self.tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            self.tableView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            self.tableView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: bottomView.topAnchor),
-            
-            self.addButton.trailingAnchor.constraint(equalTo: self.bottomView.trailingAnchor , constant: -10 ),
-            self.addButton.widthAnchor.constraint(equalToConstant: 30 ),
-            self.addButton.heightAnchor.constraint(equalToConstant: 30 ),
-            self.addButton.centerYAnchor.constraint(equalTo: self.bottomView.centerYAnchor ),
-            
-            self.bottomView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor , constant: 10),
-            self.bottomView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor , constant: -10 ),
-            self.bottomView.bottomAnchor.constraint(equalTo : self.view.safeAreaLayoutGuide.bottomAnchor , constant: -10),
-            self.bottomView.heightAnchor.constraint(equalTo: self.textView.heightAnchor ),
-            
-            self.textView.leadingAnchor.constraint(equalTo: self.bottomView.leadingAnchor , constant: 10),
-            self.textView.trailingAnchor.constraint(equalTo: self.bottomView.trailingAnchor , constant: -40),
-            self.textView.bottomAnchor.constraint(equalTo: self.bottomView.bottomAnchor),
-            self.textView.heightAnchor.constraint(equalToConstant: 40)
-        
-        
-        ])
+        }
+        self.textView.snp.makeConstraints{
+            $0.leading.equalTo(self.bottomView).inset(10)
+            $0.trailing.equalTo(self.bottomView).inset(40)
+            $0.bottom.equalTo(self.bottomView)
+            $0.height.equalTo(40)
+        }
+     
         
         
     }

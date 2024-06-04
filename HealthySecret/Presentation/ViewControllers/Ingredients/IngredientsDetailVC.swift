@@ -59,7 +59,6 @@ class IngredientsDetailVC: UIViewController {
 
     private let addButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         
         button.setTitle("추가하기", for: .normal)
@@ -73,7 +72,6 @@ class IngredientsDetailVC: UIViewController {
     
     private let contentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
        
         scrollView.backgroundColor = UIColor.brown.withAlphaComponent(0.5)
         scrollView.showsVerticalScrollIndicator = false
@@ -83,14 +81,12 @@ class IngredientsDetailVC: UIViewController {
     
     private let contentView: UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     
     let leftButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("1인분", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 18)
         button.setTitleColor(.white, for: .normal)
@@ -102,7 +98,6 @@ class IngredientsDetailVC: UIViewController {
 
     let rightButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("g", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 18)
         button.backgroundColor = .brown.withAlphaComponent(0.2)
@@ -116,7 +111,6 @@ class IngredientsDetailVC: UIViewController {
     lazy var radioButtons : [UIButton] = [leftButton , rightButton]
     lazy var radioStackView : UIStackView = {
         let view = UIStackView(arrangedSubviews: radioButtons)
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.distribution = .fillEqually
         view.backgroundColor = UIColor.brown.withAlphaComponent(0.2)
         view.layer.cornerRadius = 30
@@ -136,7 +130,6 @@ class IngredientsDetailVC: UIViewController {
     
     let minusButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "minus"), for: .normal)
         button.tintColor = .white
         return button
@@ -144,7 +137,6 @@ class IngredientsDetailVC: UIViewController {
     
     let plusButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.tintColor = .white
         
@@ -162,14 +154,12 @@ class IngredientsDetailVC: UIViewController {
         textField.textColor = .white
         textField.textAlignment = .center
         textField.keyboardType = .numberPad
-        textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
 
     }()
 
     let textFieldView : UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.brown.withAlphaComponent(0.2)
         view.layer.cornerRadius = 30
         return view
@@ -179,7 +169,6 @@ class IngredientsDetailVC: UIViewController {
     lazy var selectArr = [radioStackView , textFieldView]
     lazy var selectStackView : UIStackView = {
         let view =  UIStackView(arrangedSubviews: selectArr)
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.axis = .vertical
         view.spacing = 20
         view.distribution = .fillEqually
@@ -192,7 +181,6 @@ class IngredientsDetailVC: UIViewController {
 
     private let nameLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         
         label.font = .boldSystemFont(ofSize: 30)
         label.textColor = .white
@@ -212,7 +200,7 @@ class IngredientsDetailVC: UIViewController {
                 // sender로 들어온 버튼과 tag를 비교
                 if $0.tag == sender.tag {
                     if(!$0.isSelected){
-                        self.outputSelect.onNext($0.tag+2)
+                        self.outputSelect.onNext($0.tag + 2)
                         $0.backgroundColor = .brown.withAlphaComponent(0.2)
                         $0.isSelected = true
                         
@@ -307,13 +295,7 @@ class IngredientsDetailVC: UIViewController {
         
         guard let output = viewModel?.transform(input: input, disposeBag: self.disposeBag ) else {return}
         
-        
-//
-//        output.buttonEnable.subscribe(onNext: { event in
-//            self.addButton.isEnabled = event
-//
-//        }).disposed(by: disposeBag)
-        
+  
         output.calorieLabel.subscribe(onNext: { text in
             self.calorieLabel.text = text
             
@@ -367,13 +349,11 @@ class IngredientsDetailVC: UIViewController {
     
     let bottomView : UIView = {
        let view = UIView()
-       view.translatesAutoresizingMaskIntoConstraints = false
        return view
    }()
     
     let calorieLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .boldSystemFont(ofSize: 22)
         label.textColor = .white
         label.text = "kcal"
@@ -402,7 +382,6 @@ class IngredientsDetailVC: UIViewController {
         
        
 
-        stackView.translatesAutoresizingMaskIntoConstraints = false
 
         
         stackView.alignment = .center
@@ -413,7 +392,6 @@ class IngredientsDetailVC: UIViewController {
     }()
     lazy var informationView : UIView = {
        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         
         
         
@@ -432,31 +410,21 @@ class IngredientsDetailVC: UIViewController {
         textFieldView.addSubview(plusButton)
         
         
-        
-        
-        NSLayoutConstraint.activate([
-            
-            selectTextField.topAnchor.constraint(equalTo: textFieldView.topAnchor),
-            selectTextField.bottomAnchor.constraint(equalTo: textFieldView.bottomAnchor),
-            selectTextField.widthAnchor.constraint(equalToConstant: 80),
-            selectTextField.centerXAnchor.constraint(equalTo: textFieldView.centerXAnchor),
-            
-            minusButton.leadingAnchor.constraint(equalTo:textFieldView.leadingAnchor , constant: 15 ),
-            minusButton.widthAnchor.constraint(equalToConstant: 50 ),
-            minusButton.heightAnchor.constraint(equalTo: textFieldView.heightAnchor ),
-            
-            plusButton.trailingAnchor.constraint(equalTo:textFieldView.trailingAnchor , constant: -15 ),
-            plusButton.widthAnchor.constraint(equalToConstant: 50 ),
-            plusButton.heightAnchor.constraint(equalTo: textFieldView.heightAnchor ),
-            
-            
-            
-            
-        
-        ])
-
-    
- 
+        self.selectTextField.snp.makeConstraints{
+            $0.top.bottom.centerX.equalTo(textFieldView)
+            $0.width.equalTo(80)
+        }
+        self.minusButton.snp.makeConstraints{
+            $0.leading.equalTo(textFieldView).inset(15)
+            $0.width.equalTo(50)
+            $0.height.equalTo(textFieldView)
+        }
+        self.plusButton.snp.makeConstraints{
+            $0.trailing.equalTo(textFieldView).inset(15)
+            $0.width.equalTo(50)
+            $0.height.equalTo(textFieldView)
+        }
+       
  
 
             
@@ -493,7 +461,6 @@ class IngredientsDetailVC: UIViewController {
             self.informCircleArr[i].addSubview(informDataArr[i])
 
             
-            informCircleArr[i].translatesAutoresizingMaskIntoConstraints = false
             informCircleArr[i].layer.cornerRadius = 60
             informCircleArr[i].backgroundColor = circleColor[i]
 
@@ -504,55 +471,41 @@ class IngredientsDetailVC: UIViewController {
             informLabelArr[i].textAlignment = .center
             
             
-            informDataArr[i].translatesAutoresizingMaskIntoConstraints = false
             informDataArr[i].font = .boldSystemFont(ofSize: 18)
             informDataArr[i].textColor = .white
             informDataArr[i].textAlignment = .center
             informDataArr[i].text = "1200g"
             
-            NSLayoutConstraint.activate([
-
-          
+            informCircleArr[i].snp.makeConstraints{
+                $0.centerX.equalTo(informLabelArr[i])
+                $0.centerY.equalTo(informLabelArr[i]).offset(10)
+                $0.width.equalTo(120)
+                $0.height.equalTo(120)
+            }
+            informDataArr[i].snp.makeConstraints{
+                $0.centerX.equalTo(informLabelArr[i])
+                $0.centerY.equalTo(informLabelArr[i]).offset(20)
+            }
             
-
-
+            nameLabel.snp.makeConstraints{
+                $0.leading.equalTo(informCircle1)
+                $0.top.equalTo(informationView).inset(10)
+            }
+            labelStackView.snp.makeConstraints{
+                $0.leading.trailing.equalTo(informationView).inset(40)
+                $0.height.equalTo(20)
+                $0.centerY.equalTo(informationView)
+            }
+            calorieLabel.snp.makeConstraints{
+                $0.leading.equalTo(informCircle1)
+                $0.top.equalTo(informCircle1.snp.bottom).offset(20)
+            }
             
-            informCircleArr[i].centerXAnchor.constraint(equalTo: informLabelArr[i].centerXAnchor),
-            informCircleArr[i].centerYAnchor.constraint(equalTo: informLabelArr[i].centerYAnchor , constant: 10 ),
-            informCircleArr[i].widthAnchor.constraint(equalToConstant: 120 ),
-            informCircleArr[i].heightAnchor.constraint(equalToConstant: 120 ),
-            
-            
-            
-            informDataArr[i].centerXAnchor.constraint(equalTo: informLabelArr[i].centerXAnchor),
-            informDataArr[i].centerYAnchor.constraint(equalTo: informLabelArr[i].centerYAnchor , constant: 20),
-
-                        
-            ])
             
            
-
             
         }
-        NSLayoutConstraint.activate([
-            
-            nameLabel.leadingAnchor.constraint(equalTo: informCircle1.leadingAnchor ,constant: 0),
-            nameLabel.topAnchor.constraint(equalTo: informationView.topAnchor ,constant: 10),
-
-            labelStackView.leadingAnchor.constraint(equalTo: informationView.leadingAnchor ,constant: 40),
-            labelStackView.trailingAnchor.constraint(equalTo: informationView.trailingAnchor ,constant: -40),
-            labelStackView.heightAnchor.constraint(equalToConstant: 20),
-          
-            labelStackView.centerYAnchor.constraint(equalTo: informationView.centerYAnchor , constant:  0),
-      
-            calorieLabel.leadingAnchor.constraint(equalTo: informCircle1.leadingAnchor ,constant: 0),
-            calorieLabel.topAnchor.constraint(equalTo: informCircle1.bottomAnchor ,constant: 20),
-
-          
-        ])
-
-
-       
+   
 
     }
     
@@ -575,68 +528,38 @@ class IngredientsDetailVC: UIViewController {
         
        
         
-        
+            
+    
 
         
+        self.bottomView.snp.makeConstraints{
+            $0.leading.trailing.bottom.equalTo(self.view)
+            $0.height.equalTo(100)
+        }
+        self.addButton.snp.makeConstraints{
+            $0.leading.trailing.equalTo(bottomView).inset(20)
+            $0.centerY.equalTo(bottomView).offset(-10)
+            $0.height.equalTo(60)
+        }
+        self.informationView.snp.makeConstraints{
+            $0.top.leading.trailing.equalTo(contentView)
+            $0.height.equalTo(300)
+        }
+        self.selectStackView.snp.makeConstraints{
+            $0.leading.trailing.equalTo(contentView).inset(16)
+            $0.top.equalTo(informationView.snp.bottom).offset(20)
+            $0.bottom.equalTo(contentView)
+            $0.height.equalTo(150)
+        }
         
-        
-        NSLayoutConstraint.activate([
-            
-            
-            bottomView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            bottomView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            bottomView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            bottomView.heightAnchor.constraint(equalToConstant: 100),
-            
-            
-            addButton.heightAnchor.constraint(equalToConstant: 60),
-            addButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor , constant: 20 ),
-            addButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor , constant: -20 ),
-            addButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
-
-
-            
-            
-            informationView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            informationView.heightAnchor.constraint(equalToConstant: 300),
-            informationView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            informationView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            
-            
-            
-            
-            
-        
-            
-            
-            selectStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 16),
-            selectStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor , constant: -16) ,
-            selectStackView.topAnchor.constraint(equalTo: informationView.bottomAnchor , constant: 20),
-            selectStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            selectStackView.heightAnchor.constraint(equalToConstant: 150),
-            
-            
-            
-            
-            
-
-            
-            contentScrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            contentScrollView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            contentScrollView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            contentScrollView.bottomAnchor.constraint(equalTo: self.bottomView.topAnchor),
-            
-            
-            contentView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: contentScrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: contentScrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: contentScrollView.widthAnchor , multiplier: 1.0),
- 
-            
-            
-            
-        ])
+        self.contentScrollView.snp.makeConstraints{
+            $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+            $0.bottom.equalTo(self.bottomView.snp.top)
+        }
+        self.contentView.snp.makeConstraints{
+            $0.top.leading.trailing.bottom.width.equalTo(contentScrollView)
+        }
+      
     }
     
 }

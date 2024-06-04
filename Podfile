@@ -7,18 +7,21 @@ target 'HealthySecret' do
 
   # Pods for HealthySecret
 
-  pod 'KakaoSDK'
-  pod 'SwiftyJSON'
+ 	pod 'KakaoSDK'
+ 	pod 'SwiftyJSON'
   
- pod 'RxSwift', '6.6.0'
-    pod 'RxCocoa', '6.6.0'
+ 	pod 'RxSwift', '6.6.0'
+   	pod 'RxCocoa', '6.6.0'
 	pod 'RxGesture'
 	pod 'Charts'
 
-   pod 'Kingfisher', '~> 7.0'
+  	 pod 'Kingfisher', '~> 7.0'
 
-    pod 'FSCalendar'
-end
+   	 pod 'FSCalendar'
+
+    	
+    	pod 'SnapKit', '~> 5.6.0'
+end	
 
 
   post_install do |installer|

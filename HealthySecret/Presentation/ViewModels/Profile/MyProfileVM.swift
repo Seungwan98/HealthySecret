@@ -253,7 +253,6 @@ class MyProfileVM : ViewModel {
                         let uidArr =  feedArr.map({
                             $0.feedUid
                         })
-                        
                         output.feedImage.onNext(imageArr)
                         output.feedUid.onNext(uidArr)
                         

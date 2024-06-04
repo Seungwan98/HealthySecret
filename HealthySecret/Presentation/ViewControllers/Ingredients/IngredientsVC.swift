@@ -31,7 +31,6 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
     
     lazy private var tableView : UITableView = {
         let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
         
         tableView.allowsMultipleSelection = true
@@ -77,7 +76,6 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
     
     private var checkBoxButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
         
@@ -148,19 +146,13 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
             .searchTextField
             .attributedPlaceholder = NSAttributedString(string: "식품 검색",
                                                         attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
-        
-      
-        
+
         searchController.searchBar.searchTextField.leftView?.tintColor = .white
         searchController.searchBar.searchTextField.layer.cornerRadius = 18
         searchController.searchBar.searchTextField.layer.masksToBounds = true
-        
         searchController.searchBar.searchTextField.layer.borderWidth = 1
         searchController.searchBar.searchTextField.layer.borderColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1).cgColor
         searchController.searchBar.searchTextField.layer.backgroundColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 0.45).cgColor
-        
-        
-        
         searchController.searchBar.backgroundColor = UIColor(red: 0.09, green: 0.176, blue: 0.031, alpha: 1)
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.obscuresBackgroundDuringPresentation = false
@@ -186,8 +178,6 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
         tableView.dataSource = nil
         tableView.register(IngredientsCell.self, forCellReuseIdentifier: "IngredientsCell")
 
-        backgroundTableView.translatesAutoresizingMaskIntoConstraints = false
-        mainView.translatesAutoresizingMaskIntoConstraints = false
         
         
         self.navigationItem.titleView = titleLabelStackView
@@ -205,33 +195,17 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
         
         
         
+        mainView.snp.makeConstraints{
+            $0.top.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+        } 
+        tableView.snp.makeConstraints{
+            $0.top.bottom.leading.trailing.equalTo(mainView)
+        }
+        backgroundTableView.snp.makeConstraints{
+            $0.centerX.centerY.equalTo(backgroundView)
+        }
         
-        
-        NSLayoutConstraint.activate([
-            
-            
-            
-            mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor ),
-            mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            mainView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            mainView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            
-            
-            tableView.topAnchor.constraint(equalTo: mainView.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
-            
-
-            
-            
-            backgroundTableView.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
-            backgroundTableView.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor),
-//          
-            
-            
-        ])
-        
+   
         
         
         
@@ -397,11 +371,13 @@ class RecentSearchCell : UITableViewCell {
     
     
     func layout() {
-        self.title.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(self.title)
         
-        self.title.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
-        self.title.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        self.title.snp.makeConstraints{
+            $0.leading.equalTo(self).inset(15)
+            $0.centerY.equalTo(self)
+        }
+   
         
         
         
@@ -483,30 +459,31 @@ class IngredientsCell : UITableViewCell {
     
     
     func layout() {
-        self.checkBoxButton.translatesAutoresizingMaskIntoConstraints = false
-        self.title.translatesAutoresizingMaskIntoConstraints = false
-        self.kcal.translatesAutoresizingMaskIntoConstraints = false
         
-        
+        self.kcal.font = UIFont.systemFont(ofSize: 13)
+
         self.addSubview(contentView)
         self.contentView.addSubview(checkBoxButton)
         self.contentView.addSubview(title)
         self.contentView.addSubview(kcal)
         
         
+        self.checkBoxButton.snp.makeConstraints{
+            $0.trailing.equalTo(self.contentView).offset(-5)
+            $0.centerY.equalTo(self.contentView.safeAreaLayoutGuide)
+            $0.height.width.equalTo(40)
+        }
+        self.title.snp.makeConstraints{
+            $0.leading.equalTo(self).inset(15)
+            $0.centerY.equalTo(self).offset(-6)
+        }
+        self.kcal.snp.makeConstraints{
+            $0.leading.equalTo(self).inset(15)
+            $0.bottom.equalTo(self).offset(-4)
+        }
         
-        
-        self.checkBoxButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -5).isActive = true
-        self.checkBoxButton.centerYAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.centerYAnchor).isActive = true
-        self.checkBoxButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        self.checkBoxButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        
-        self.title.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
-        self.title.centerYAnchor.constraint(equalTo: self.centerYAnchor , constant:  -6).isActive = true
-        
-        self.kcal.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
-        self.kcal.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor , constant: -4 ).isActive = true
-        self.kcal.font = UIFont.systemFont(ofSize: 13)
+   
+    
         
         
         

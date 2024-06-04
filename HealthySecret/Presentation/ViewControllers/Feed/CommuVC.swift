@@ -337,7 +337,6 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     
     let tableView : UITableView = {
         let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = UITableView.automaticDimension
         tableView.allowsMultipleSelection = true
@@ -348,7 +347,6 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     
     let addButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.backgroundColor = .systemBlue
@@ -372,9 +370,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         
         let segment = UnderlineSegmentedControl(items: [ "전체" , "팔로잉"])
         
-        
-        segment.translatesAutoresizingMaskIntoConstraints = false
-        
+
        
         segment.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.gray], for: .normal)
         segment.setTitleTextAttributes(
@@ -472,8 +468,6 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
 
         
         self.view.backgroundColor = .white
-        backgroundView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.translatesAutoresizingMaskIntoConstraints = false
         backgroundView.backgroundLabel.text = "아직 피드가 없어요"
         
         
@@ -496,40 +490,26 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
 
         tableView.backgroundView = self.backgroundView
         
-        
-        NSLayoutConstraint.activate([
-            
-            
-            
-            self.containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            self.containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            self.containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            self.containerView.heightAnchor.constraint(equalToConstant: 40),
-            
-            self.segmentControl.topAnchor.constraint(equalTo: containerView.topAnchor),
-            self.segmentControl.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            self.segmentControl.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            self.segmentControl.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-          
-            
-            self.addButton.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor , constant: -20 ),
-            self.addButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor , constant: -20 ),
-            self.addButton.widthAnchor.constraint(equalToConstant: 50 ),
-            self.addButton.heightAnchor.constraint(equalToConstant: 50),
-          
-            self.backgroundView.topAnchor.constraint(equalTo: self.containerView.bottomAnchor),
-            self.backgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.backgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.backgroundView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-            
-            self.tableView.topAnchor.constraint(equalTo: self.containerView.bottomAnchor),
-            self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-            
-  
-            
-        ])
+        self.containerView.snp.makeConstraints{
+            $0.leading.trailing.top.equalTo(view.safeAreaLayoutGuide)
+            $0.height.equalTo(40)
+        }
+        self.segmentControl.snp.makeConstraints{
+            $0.top.trailing.centerY.centerX.equalTo(self.containerView)
+        }
+        self.addButton.snp.makeConstraints{
+            $0.trailing.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(20)
+            $0.width.height.equalTo(50)
+        }
+        self.backgroundView.snp.makeConstraints{
+            $0.top.equalTo(self.containerView.snp.bottom)
+            $0.leading.trailing.bottom.equalTo(self.view.safeAreaLayoutGuide)
+        }
+        self.tableView.snp.makeConstraints{
+            $0.top.equalTo(self.containerView.snp.bottom)
+            $0.leading.trailing.bottom.equalTo(self.view.safeAreaLayoutGuide)
+        }
+     
         
     }
     
@@ -538,11 +518,7 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
     func setBindings() {
         
         let paging = PublishSubject<Bool>()
-        
-        
-        
-        
-        
+ 
         
         let input = CommuVM.Input( viewWillAppearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), likesButtonTapped: likesButtonTapped, comentsTapped: self.comentsTapped.asObservable() , addButtonTapped: self.addButton.rx.tap.asObservable() , deleteFeed: deleteFeed , reportFeed : reportFeed , updateFeed: updateFeed , paging : paging.asObservable() , profileTapped : profileTapped.asObservable(), likesTapped : self.likesTapped.asObservable() , refreshControl: self.refreshControl.rx.controlEvent(.valueChanged).asObservable()  , segmentChanged : segmentChanged.asObservable())
         

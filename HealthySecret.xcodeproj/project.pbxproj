@@ -67,7 +67,7 @@
 		60A380052B6A37D800C9A2E6 /* Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A380042B6A37D800C9A2E6 /* Custom.swift */; };
 		60A380072B6A5F6B00C9A2E6 /* EditExerciseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A380062B6A5F6B00C9A2E6 /* EditExerciseVC.swift */; };
 		60A380092B6A663E00C9A2E6 /* EditExerciseVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A380082B6A663E00C9A2E6 /* EditExerciseVM.swift */; };
-		60A380102B6A81A400C9A2E6 /* ExerciseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A3800F2B6A81A400C9A2E6 /* ExerciseCell.swift */; };
+		60A380102B6A81A400C9A2E6 /* EditExerciseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A3800F2B6A81A400C9A2E6 /* EditExerciseCell.swift */; };
 		60A380122B6CD8B200C9A2E6 /* IngredientsDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A380112B6CD8B200C9A2E6 /* IngredientsDetailVC.swift */; };
 		60A380142B6D245D00C9A2E6 /* EditIngredientsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A380132B6D245D00C9A2E6 /* EditIngredientsVC.swift */; };
 		60A380162B6D27D400C9A2E6 /* EditIngredientsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A380152B6D27D400C9A2E6 /* EditIngredientsVM.swift */; };
@@ -263,7 +263,7 @@
 		60A380042B6A37D800C9A2E6 /* Custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Custom.swift; sourceTree = "<group>"; };
 		60A380062B6A5F6B00C9A2E6 /* EditExerciseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditExerciseVC.swift; sourceTree = "<group>"; };
 		60A380082B6A663E00C9A2E6 /* EditExerciseVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditExerciseVM.swift; sourceTree = "<group>"; };
-		60A3800F2B6A81A400C9A2E6 /* ExerciseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseCell.swift; sourceTree = "<group>"; };
+		60A3800F2B6A81A400C9A2E6 /* EditExerciseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditExerciseCell.swift; sourceTree = "<group>"; };
 		60A380112B6CD8B200C9A2E6 /* IngredientsDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsDetailVC.swift; sourceTree = "<group>"; };
 		60A380132B6D245D00C9A2E6 /* EditIngredientsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditIngredientsVC.swift; sourceTree = "<group>"; };
 		60A380152B6D27D400C9A2E6 /* EditIngredientsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditIngredientsVM.swift; sourceTree = "<group>"; };
@@ -562,7 +562,7 @@
 		60A3800E2B6A818B00C9A2E6 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				60A3800F2B6A81A400C9A2E6 /* ExerciseCell.swift */,
+				60A3800F2B6A81A400C9A2E6 /* EditExerciseCell.swift */,
 				60A380172B6D2DA600C9A2E6 /* EditIngredientsCell.swift */,
 				609C06302B9AFBA200D61F53 /* CustomCollectionCell.swift */,
 				609C063A2BA9A53200D61F53 /* FeedCollectionCell.swift */,
@@ -1150,7 +1150,7 @@
 				600DE92F2B511E9D00D5D797 /* CalendarVM.swift in Sources */,
 				60C391EE2C07A97200465156 /* DefaultComentsRepository.swift in Sources */,
 				60C391F02C07A98300465156 /* ComentsRepository.swift in Sources */,
-				60A380102B6A81A400C9A2E6 /* ExerciseCell.swift in Sources */,
+				60A380102B6A81A400C9A2E6 /* EditExerciseCell.swift in Sources */,
 				60C289AD2BECACE100213AAD /* UIResponder+.swift in Sources */,
 				60EAFE102BC5544D00D3EE73 /* DispatchQueue+.swift in Sources */,
 				6003998A2BDB9C7F0030D9EF /* ProfileHeaderView.swift in Sources */,

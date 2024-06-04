@@ -27,7 +27,6 @@ class ExerciseDetailVC: UIViewController {
     
     private let contentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.backgroundColor = .clear
         scrollView.showsVerticalScrollIndicator = false
         scrollView.delaysContentTouches = false
@@ -38,7 +37,6 @@ class ExerciseDetailVC: UIViewController {
     private let contentView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -47,7 +45,6 @@ class ExerciseDetailVC: UIViewController {
     lazy var textFieldArr = [exTimeTextField , exMemoTextField]
     lazy var textFieldStackView : UIStackView = {
         let view =  UIStackView(arrangedSubviews: textFieldArr)
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.axis = .vertical
         view.spacing = 20
         view.distribution = .fillEqually
@@ -61,7 +58,6 @@ class ExerciseDetailVC: UIViewController {
     private let topView : UIView = {
         let view =  UIView()
         
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .systemBlue.withAlphaComponent(0.5)
         
         return view
@@ -70,7 +66,6 @@ class ExerciseDetailVC: UIViewController {
     
     private let nameLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
         label.font = .boldSystemFont(ofSize: 30)
         label.textColor = .white
@@ -81,7 +76,6 @@ class ExerciseDetailVC: UIViewController {
     
     private let calorieLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "예상 칼로리는 0Kcal 입니다."
         
         return label
@@ -90,7 +84,6 @@ class ExerciseDetailVC: UIViewController {
     
     private let imageView : UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "운동하는유미.png"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         
         return imageView
         
@@ -103,14 +96,12 @@ class ExerciseDetailVC: UIViewController {
        let view = UIView()
        
        
-       view.translatesAutoresizingMaskIntoConstraints = false
      
        return view
    }()
     
     private let addButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         
         button.setTitle("추가하기", for: .normal)
@@ -226,7 +217,6 @@ class ExerciseDetailVC: UIViewController {
             
             
             
-            textField.translatesAutoresizingMaskIntoConstraints = false
             textField.backgroundColor = .lightGray.withAlphaComponent(0.6)
             textField.layer.cornerRadius = 20
             textField.rightViewMode = .always
@@ -260,69 +250,48 @@ class ExerciseDetailVC: UIViewController {
         
         
         bottomView.addSubview(addButton)
+        
+        self.bottomView.snp.makeConstraints{
+            $0.leading.trailing.bottom.equalTo(self.view)
+            $0.height.equalTo(100)
+        }
+        self.addButton.snp.makeConstraints{
+            $0.leading.trailing.equalTo(bottomView).inset(20)
+            $0.height.equalTo(60)
+            $0.centerY.equalTo(bottomView).offset(-10)
+        }
+        self.contentScrollView.snp.makeConstraints{
+            $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+            $0.bottom.equalTo(self.bottomView.snp.top)
+        }
+        self.contentView.snp.makeConstraints{
+            $0.top.leading.trailing.bottom.width.equalTo(contentScrollView)
+        }
+        self.topView.snp.makeConstraints{
+            $0.top.leading.trailing.equalTo(contentView)
+            $0.height.equalTo(300)
+        }
+        self.calorieLabel.snp.makeConstraints{
+            $0.centerY.equalTo(textFieldStackView).offset(120)
+            $0.centerX.equalTo(textFieldStackView)
+        }
+        self.imageView.snp.makeConstraints{
+            $0.centerX.equalTo(topView)
+            $0.bottom.equalTo(topView).inset(5)
+            $0.width.height.equalTo(120)
+        }
+        self.nameLabel.snp.makeConstraints{
+            $0.centerX.equalTo(topView)
+            $0.centerY.equalTo(topView).offset(-35)
+            $0.width.equalTo(topView).offset(-40)
+        }
+        self.textFieldStackView.snp.makeConstraints{
+            $0.leading.trailing.equalTo(contentView).inset(16)
+            $0.top.equalTo(topView.snp.bottom).offset(40)
+            $0.bottom.equalTo(contentView)
+            $0.height.equalTo(150)
+        }
 
-        NSLayoutConstraint.activate([
-            
-            bottomView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            bottomView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            bottomView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            bottomView.heightAnchor.constraint(equalToConstant: 100),
-            
-
-            
-            addButton.leadingAnchor.constraint(equalTo:bottomView.leadingAnchor , constant: 20),
-            addButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -20 ),
-            addButton.heightAnchor.constraint(equalToConstant: 60),
-            addButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
-
-            
-
-            
-            
-            
-            
-           
-            
-            
-            contentScrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            contentScrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            contentScrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            contentScrollView.bottomAnchor.constraint(equalTo: self.bottomView.topAnchor),
-            
-            
-            contentView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: contentScrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: contentScrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: contentScrollView.widthAnchor , multiplier: 1.0),
-            
-            
-            topView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            topView.heightAnchor.constraint(equalToConstant: 300),
-            topView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            topView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            
-            calorieLabel.centerYAnchor.constraint(equalTo: textFieldStackView.centerYAnchor  , constant: 120),
-            calorieLabel.centerXAnchor.constraint(equalTo: textFieldStackView.centerXAnchor),
-            
-            
-            imageView.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
-            imageView.bottomAnchor.constraint(equalTo: topView.bottomAnchor ,constant: 5),
-            imageView.widthAnchor.constraint(equalToConstant: 120),
-            imageView.heightAnchor.constraint(equalToConstant: 120),
-            
-            nameLabel.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
-            nameLabel.centerYAnchor.constraint(equalTo: topView.centerYAnchor , constant: -35),
-            nameLabel.widthAnchor.constraint(equalTo: topView.widthAnchor , constant: -40),
-            
-            
-            textFieldStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 16),
-            textFieldStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor , constant: -16) ,
-            textFieldStackView.topAnchor.constraint(equalTo: topView.bottomAnchor , constant: 40),
-            textFieldStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            textFieldStackView.heightAnchor.constraint(equalToConstant: 150),
-            
-        ])
     }
     
 }

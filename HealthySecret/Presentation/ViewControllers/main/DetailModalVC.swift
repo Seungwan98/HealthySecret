@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import SnapKit
 class DetailModalVC : UIViewController {
     
 
@@ -31,7 +31,6 @@ class DetailModalVC : UIViewController {
     
     lazy var textStackView : UIStackView = {
         let stackView = UIStackView(arrangedSubviews: textLabels)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
       //  stackView.backgroundColor = .lightGray.withAlphaComponent(0.2)
@@ -45,7 +44,6 @@ class DetailModalVC : UIViewController {
         
     lazy var contentStackView : UIStackView = {
         let stackView = UIStackView(arrangedSubviews: contentLabels)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
       //  stackView.backgroundColor = .lightGray.withAlphaComponent(0.2)
@@ -61,7 +59,6 @@ class DetailModalVC : UIViewController {
        let label = UILabel()
         
         label.text = "영양정보"
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .boldSystemFont(ofSize: 22)
         return label
         
@@ -74,7 +71,7 @@ class DetailModalVC : UIViewController {
         button.setImage(UIImage(systemName: "xmark"), for: .normal)
         button.contentVerticalAlignment = .fill
         button.contentHorizontalAlignment = .fill
-        button.translatesAutoresizingMaskIntoConstraints = false
+
         button.tintColor = .black
         
         return button
@@ -170,36 +167,30 @@ class DetailModalVC : UIViewController {
         self.view.addSubview(self.backButton)
     
     
-        
-        
-        NSLayoutConstraint.activate([
-            
-            self.topLabel.topAnchor.constraint(equalTo: self.view.topAnchor , constant: 30),
-            self.topLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor , constant: 25),
-            self.topLabel.heightAnchor.constraint(equalToConstant: 20),
-            
-            
-            self.backButton.topAnchor.constraint(equalTo: self.topLabel.topAnchor),
-            self.backButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor , constant:  -25),
-            self.backButton.heightAnchor.constraint(equalToConstant: 20),
-            self.backButton.widthAnchor.constraint(equalToConstant: 22),
-            
-            
-            self.textStackView.topAnchor.constraint(equalTo: self.topLabel.bottomAnchor , constant: 30),
-            self.textStackView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor , constant: 0),
-            self.textStackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor , constant: 20),
-            self.textStackView.widthAnchor.constraint(equalToConstant: (self.view.frame.width/2 - 20)),
-            
-            
-            self.contentStackView.topAnchor.constraint(equalTo: self.topLabel.bottomAnchor , constant: 30),
-            self.contentStackView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor , constant: 0),
-            self.contentStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor , constant: -20),
-            self.contentStackView.widthAnchor.constraint(equalToConstant: (self.view.frame.width/2 - 20)),
-
-            
-            
-            
-        ])
+        self.topLabel.snp.makeConstraints{
+            $0.top.equalTo(self.view).inset(30)
+            $0.leading.equalTo(self.view).inset(25)
+            $0.height.equalTo(20)
+        }
+        self.backButton.snp.makeConstraints{
+            $0.top.equalTo(self.topLabel)
+            $0.trailing.equalTo(self.view).inset(25)
+            $0.height.equalTo(20)
+            $0.width.equalTo(22)
+        }
+        self.textStackView.snp.makeConstraints{
+            $0.top.equalTo(self.topLabel.snp.bottom).offset(30)
+            $0.bottom.equalTo(self.view)
+            $0.leading.equalTo(self.view).inset(20)
+            $0.width.equalTo(self.view.frame.width/2 - 20)
+        }
+        self.contentStackView.snp.makeConstraints{
+            $0.top.equalTo(self.topLabel.snp.bottom).offset(30)
+            $0.bottom.equalTo(self.view)
+            $0.trailing.equalTo(self.view).inset(20)
+            $0.width.equalTo(self.view.frame.width/2 - 20)
+        }
+     
         
         setLines()
     }
@@ -214,14 +205,16 @@ class DetailModalVC : UIViewController {
                 let line = UIView()
                 self.view.addSubview(line)
                 
+                line.snp.makeConstraints{
+                    $0.height.equalTo(1)
+                    $0.leading.equalTo(self.textStackView)
+                    $0.trailing.equalTo(self.contentStackView)
+                    $0.bottom.equalTo(self.contentLabels[i])
+                }
                 line.backgroundColor = .lightGray
-                line.heightAnchor.constraint(equalToConstant: 1).isActive = true
-                line.leadingAnchor.constraint(equalTo: self.textStackView.leadingAnchor).isActive = true
-                line.trailingAnchor.constraint(equalTo: self.contentStackView.trailingAnchor).isActive = true
-                line.bottomAnchor.constraint(equalTo: self.contentLabels[i].bottomAnchor).isActive = true
+       
                 
                 
-                line.translatesAutoresizingMaskIntoConstraints = false
             }
         }
     }

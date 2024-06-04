@@ -28,19 +28,10 @@ class LikesVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , F
     let disposeBag = DisposeBag()
     
     private var viewModel : LikesVM?
-    
-    
- 
-    
-   
-    
-    
-    
-    
+
     
     lazy private var tableView : UITableView = {
         let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorColor = .clear
         tableView.allowsMultipleSelection = true
         tableView.backgroundView = self.backgroundView
@@ -135,16 +126,7 @@ class LikesVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , F
         self.view.backgroundColor = .white
         
         self.backgroundView.backgroundLabel.text = "아직 좋아요가 없어요"
-        
-        self.loadingView.translatesAutoresizingMaskIntoConstraints = false
-        self.mainView.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundView.translatesAutoresizingMaskIntoConstraints = false
-
-
-        
-      
-        
-        
+  
         
         
         
@@ -160,55 +142,20 @@ class LikesVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , F
         view.addSubview(self.loadingView)
         
         
-        
-        NSLayoutConstraint.activate([
-            
-            
-            
-            
-            self.loadingView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor ),
-            self.loadingView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor  ),
-            self.loadingView.topAnchor.constraint(equalTo: self.view.topAnchor ),
-            self.loadingView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor ),
-            
-            
-            
-       
-            
-
-            
-            
-            
-            
-            mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor ),
-            mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            mainView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            mainView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            
-            
-            tableView.topAnchor.constraint(equalTo: mainView.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
-            
-            backgroundView.topAnchor.constraint(equalTo: mainView.topAnchor),
-            backgroundView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor),
-            backgroundView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
-            backgroundView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
-            
-            
-            
-            
-            
-            
-            //
-            
-            
-        ])
-        
-        
-        
-        
+        self.loadingView.snp.makeConstraints{
+            $0.trailing.bottom.top.leading.equalTo(self.view)
+        }
+        self.mainView.snp.makeConstraints{
+            $0.trailing.bottom.top.leading.equalTo(self.view.safeAreaLayoutGuide)
+        }
+        self.tableView.snp.makeConstraints{
+            $0.trailing.bottom.top.leading.equalTo(self.mainView)
+        }
+        self.backgroundView.snp.makeConstraints{
+            $0.trailing.bottom.top.leading.equalTo(self.mainView)
+        }
+      
+  
     }
     
     

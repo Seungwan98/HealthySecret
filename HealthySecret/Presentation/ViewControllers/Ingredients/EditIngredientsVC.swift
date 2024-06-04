@@ -25,7 +25,6 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
     
     private let addButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         
         button.setTitle("추가", for: .normal)
@@ -36,7 +35,6 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
     }()
     private let edmitButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         
         button.setTitle("기록하기", for: .normal)
@@ -52,7 +50,7 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
     private let topView : UIView = {
         let view =  UIView()
         
-        view.translatesAutoresizingMaskIntoConstraints = false
+
         view.backgroundColor = UIColor(red: 0.09, green: 0.18, blue: 0.03, alpha: 1)
 
         
@@ -64,7 +62,7 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
     private let imageView : UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .clear
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+
         
         return imageView
         
@@ -75,7 +73,6 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
         view.addSubview(imageView)
                 
         
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 20
         view.backgroundColor =  UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
         
@@ -86,7 +83,6 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
     
     lazy private var tableView : UITableView = {
         let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .white
         tableView.allowsMultipleSelection = true
         tableView.register(EditIngredientsCell.self, forCellReuseIdentifier: "EditIngredientsCell")
@@ -98,7 +94,6 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
     let todayIngredientsLabel : UILabel = {
         let label = UILabel()
         
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = " "
         label.font = .boldSystemFont(ofSize: 26)
         
@@ -108,7 +103,6 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
     
     let todayTotalIngredientsLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .systemBlue.withAlphaComponent(0.8)
         label.font = .boldSystemFont(ofSize: 26)
         return label
@@ -120,7 +114,6 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
         let view = UIView()
         
         
-        view.translatesAutoresizingMaskIntoConstraints = false
       
         return view
     }()
@@ -186,7 +179,7 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
         
         ingredientsArr.bind(to: tableView.rx.items(cellIdentifier: "EditIngredientsCell" ,cellType: EditIngredientsCell.self )){index,item,cell in
             cell.kcal.text = String(item.calorie) + "kcal"
-            cell.gram.text = String(item.addServingSize ?? item.servingSize) + "g"
+            cell.gram.text = String(Int(item.addServingSize ?? item.servingSize)) + "g"
             cell.name.text = item.descKor
             
             cell.deleteButton.addTarget(self, action: #selector(self.delCell), for: .touchUpInside)
@@ -226,11 +219,7 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
         
         self.view.backgroundColor = .white
         
-        self.addButton.translatesAutoresizingMaskIntoConstraints = false
-        self.edmitButton.translatesAutoresizingMaskIntoConstraints = false
-        
-    
-        mainView.translatesAutoresizingMaskIntoConstraints = false
+   
         
         self.view.addSubview(mainView)
         self.mainView.addSubview(topView)
@@ -244,65 +233,53 @@ class EditIngredientsVC : UIViewController, UIScrollViewDelegate {
         bottomView.addSubview(addButton)
         bottomView.addSubview(edmitButton)
         
-        NSLayoutConstraint.activate([
-            
-            addButton.heightAnchor.constraint(equalToConstant: 60),
-            addButton.widthAnchor.constraint(equalToConstant: 100),
-            addButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor , constant: 15),
-            
-            edmitButton.heightAnchor.constraint(equalToConstant: 60),
-            edmitButton.leadingAnchor.constraint(equalTo: addButton.trailingAnchor, constant: 15),
-            edmitButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -15),
-            
-            
-            
-            bottomView.leadingAnchor.constraint(equalTo: self.mainView.leadingAnchor),
-            bottomView.trailingAnchor.constraint(equalTo: self.mainView.trailingAnchor),
-            bottomView.bottomAnchor.constraint(equalTo: self.mainView.bottomAnchor),
-            bottomView.heightAnchor.constraint(equalToConstant: 100),
-            
-            
-            topView.topAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.topAnchor),
-            topView.heightAnchor.constraint(equalToConstant: 300),
-            topView.leadingAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.leadingAnchor),
-            topView.trailingAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.trailingAnchor),
-            
-            
-            
-            mealView.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
-            mealView.centerYAnchor.constraint(equalTo: topView.centerYAnchor , constant:  -(self.navigationController?.navigationBar.frame.height ?? 0)/2 ),
-            mealView.widthAnchor.constraint(equalToConstant: 120),
-            mealView.heightAnchor.constraint(equalToConstant: 120),
-            
-            imageView.centerXAnchor.constraint(equalTo: mealView.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: mealView.centerYAnchor),
-            imageView.widthAnchor.constraint(equalToConstant: 60),
-            imageView.heightAnchor.constraint(equalToConstant: 60),
-            
-            
-            
-            
-            
-            
-            tableView.topAnchor.constraint(equalTo: topView.bottomAnchor ,constant: 60),
-            tableView.leadingAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.bottomAnchor),
-            
-            mainView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
-            mainView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            mainView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            mainView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            
-            todayIngredientsLabel.topAnchor.constraint(equalTo: topView.bottomAnchor),
-            todayIngredientsLabel.bottomAnchor.constraint(equalTo: tableView.topAnchor),
-            todayIngredientsLabel.leadingAnchor.constraint(equalTo: topView.leadingAnchor , constant: 20),
-            
-            todayTotalIngredientsLabel.topAnchor.constraint(equalTo: topView.bottomAnchor),
-            todayTotalIngredientsLabel.bottomAnchor.constraint(equalTo: tableView.topAnchor),
-            todayTotalIngredientsLabel.leadingAnchor.constraint(equalTo: todayIngredientsLabel.trailingAnchor , constant: 0),
-            
-        ])
+        
+        addButton.snp.makeConstraints{
+            $0.height.equalTo(60)
+            $0.width.equalTo(100)
+            $0.leading.equalTo(bottomView).inset(15)
+        }
+        edmitButton.snp.makeConstraints{
+            $0.height.equalTo(60)
+            $0.leading.equalTo(addButton.snp.trailing).offset(15)
+            $0.trailing.equalTo(bottomView).inset(15)
+        }
+        bottomView.snp.makeConstraints{
+            $0.leading.trailing.bottom.equalTo(mainView)
+            $0.height.equalTo(100)
+        }
+        topView.snp.makeConstraints{
+            $0.top.leading.trailing.equalTo(self.mainView.safeAreaLayoutGuide)
+            $0.height.equalTo(300)
+        }
+        mealView.snp.makeConstraints{
+            $0.centerX.equalTo(topView)
+            $0.height.width.equalTo(120)
+            $0.centerY.equalTo(topView).offset( -( self.navigationController?.navigationBar.frame.height ?? 0 ) / 2 )
+        }
+        imageView.snp.makeConstraints{
+            $0.centerX.centerY.equalTo(mealView)
+            $0.height.width.equalTo(60)
+        }
+        tableView.snp.makeConstraints{
+            $0.top.equalTo(topView.snp.bottom).offset(60)
+            $0.leading.trailing.bottom.equalTo(mainView.safeAreaLayoutGuide)
+        }
+        mainView.snp.makeConstraints{
+            $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+            $0.bottom.equalTo(self.view)
+        }
+        todayIngredientsLabel.snp.makeConstraints{
+            $0.top.equalTo(topView.snp.bottom)
+            $0.bottom.equalTo(tableView.snp.top)
+            $0.leading.equalTo(topView).inset(20)
+        }
+        todayTotalIngredientsLabel.snp.makeConstraints{
+            $0.top.equalTo(topView.snp.bottom)
+            $0.bottom.equalTo(tableView.snp.top)
+            $0.leading.equalTo(todayIngredientsLabel.snp.trailing)
+        }
+ 
     }
     
 }

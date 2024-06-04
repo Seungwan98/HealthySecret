@@ -17,7 +17,6 @@ class CustomCollectionViewCell: UICollectionViewCell {
     var image : UIImageView = {
         let image = UIImageView()
         image.backgroundColor = .lightGray.withAlphaComponent(0.2)
-        image.translatesAutoresizingMaskIntoConstraints = false
         image.isUserInteractionEnabled = true
         
         return image
@@ -29,7 +28,6 @@ class CustomCollectionViewCell: UICollectionViewCell {
     
     var squareImage : UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "square.fill.on.square.fill"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.tintColor = .white
         
         imageView.isHidden = true
@@ -61,20 +59,14 @@ class CustomCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(self.image)
         contentView.addSubview(self.squareImage)
         
-        
-        
-        NSLayoutConstraint.activate([
-            self.image.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.image.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-            self.image.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            self.image.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            
-            self.squareImage.topAnchor.constraint(equalTo: self.image.topAnchor , constant: 6),
-            self.squareImage.trailingAnchor.constraint(equalTo: self.image.trailingAnchor , constant: -6),
-            self.squareImage.widthAnchor.constraint(equalToConstant: 20),
-            self.squareImage.heightAnchor.constraint(equalToConstant: 20),
-        
-        ])
+        self.image.snp.makeConstraints{
+            $0.top.bottom.trailing.leading.equalTo(self.contentView)
+        }
+        self.squareImage.snp.makeConstraints{
+            $0.trailing.top.equalTo(self.image).inset(6)
+            $0.width.height.equalTo(20)
+        }
+    
     }
     
     @objc

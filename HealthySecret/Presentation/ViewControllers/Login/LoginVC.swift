@@ -25,7 +25,6 @@ class LoginViewController : UIViewController {
     
     var kakaoButton : UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor(red: 254 / 255, green: 229 / 255, blue: 0 / 255, alpha: 1)
         view.layer.cornerRadius = 30
         
@@ -33,27 +32,23 @@ class LoginViewController : UIViewController {
         label.text = "카카오로 로그인"
         label.textAlignment = .center
         label.font = .boldSystemFont(ofSize: 18 )
-        label.translatesAutoresizingMaskIntoConstraints = false
         
         let image = UIImageView(image: UIImage(named: "kakaoLogin.png"))
-        image.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(label)
         view.addSubview(image)
         
+        
+        label.snp.makeConstraints{
+            $0.center.equalTo(view)
+        }
+        image.snp.makeConstraints{
+            $0.width.height.equalTo(20)
+            $0.leading.equalTo(view).inset(20)
+            $0.centerY.equalTo(view)
+        }
 
-        NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
-            image.widthAnchor.constraint(equalToConstant: 20),
-            image.heightAnchor.constraint(equalToConstant: 20),
-            image.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 20),
-            image.centerYAnchor.constraint(equalTo: view.centerYAnchor )
-            
-
-            
-        ])
+      
         
         
         return view
@@ -61,7 +56,6 @@ class LoginViewController : UIViewController {
     
     var appleButton : UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .black
         view.layer.cornerRadius = 30
         
@@ -70,31 +64,25 @@ class LoginViewController : UIViewController {
         label.textColor = .white
         label.textAlignment = .center
         label.font = .boldSystemFont(ofSize: 18 )
-        label.translatesAutoresizingMaskIntoConstraints = false
         
         
         let image = UIImageView(image: UIImage(named: "appleLogin.png"))
-        image.translatesAutoresizingMaskIntoConstraints = false
         
         
         view.addSubview(label)
         view.addSubview(image)
         
 
-        NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
-            image.widthAnchor.constraint(equalToConstant: 20),
-            image.heightAnchor.constraint(equalToConstant: 22),
-            image.leadingAnchor.constraint(equalTo: view.leadingAnchor , constant: 20),
-            image.centerYAnchor.constraint(equalTo: view.centerYAnchor ,constant: -2 )
-            
-
-            
-        ])
-        
-        
+        label.snp.makeConstraints{
+            $0.center.equalTo(view)
+        }
+        image.snp.makeConstraints{
+            $0.width.equalTo(20)
+            $0.height.equalTo(22)
+            $0.leading.equalTo(view).inset(20)
+            $0.centerY.equalTo(view).offset(-2)
+        }
+    
         return view
     }()
     
@@ -107,7 +95,6 @@ class LoginViewController : UIViewController {
     
     lazy var loginStackView : UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [ kakaoButton ,appleButton ])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.spacing = 15
         stackView.distribution = .fillEqually
@@ -131,10 +118,7 @@ class LoginViewController : UIViewController {
     ///
     let mainLoginImage : UIImageView = {
         let image = UIImageView(image: UIImage(named: "mainImage.jpeg"))
-        
-        
-        
-        image.translatesAutoresizingMaskIntoConstraints = false
+     
         return image
         
     }()
@@ -143,9 +127,7 @@ class LoginViewController : UIViewController {
         let view = UIView()
         view.backgroundColor = .systemBlue.withAlphaComponent(0.5)
         view.layer.cornerRadius = 8
-        
-        
-        view.translatesAutoresizingMaskIntoConstraints = false
+
         return view
         
     }()
@@ -210,44 +192,19 @@ class LoginViewController : UIViewController {
         
         
         
-        
-        
-        
-        NSLayoutConstraint.activate([
-            
-            
-            
-            
-           
-            mainView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            mainView.bottomAnchor.constraint(equalTo:  self.view.bottomAnchor ),
-            mainView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            mainView.leadingAnchor.constraint(equalTo:  self.view.leadingAnchor ),
-            
-            
-           
-            mainLoginImage.widthAnchor.constraint(equalToConstant: 240),
-            mainLoginImage.heightAnchor.constraint(equalToConstant: 240),
-            mainLoginImage.centerXAnchor.constraint(equalTo:  self.view.centerXAnchor ),
-            mainLoginImage.centerYAnchor.constraint(equalTo:  self.view.centerYAnchor ),
-        
-        
-      
-            
+        self.mainView.snp.makeConstraints{
+            $0.top.bottom.trailing.leading.equalTo(self.view)
+        }
+        self.mainLoginImage.snp.makeConstraints{
+            $0.width.height.equalTo(240)
+            $0.center.equalTo(self.view)
+        }
+        self.loginStackView.snp.makeConstraints{
+            $0.height.equalTo( HEIGHT * 2 + 15 )
+            $0.leading.trailing.equalTo(self.view).inset(20)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(60)
+        }
    
-            
-         
-            
-            loginStackView.heightAnchor.constraint(equalToConstant: HEIGHT * 2 + 15),
-            loginStackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor , constant: 20),
-            loginStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor , constant: -20),
-            loginStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor , constant: -60),
-            
-//            signUpButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            signUpButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
-            
- 
-        ])
         
         
         

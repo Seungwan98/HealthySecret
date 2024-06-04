@@ -34,7 +34,7 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
     
     lazy private var tableView : UITableView = {
         let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+
         tableView.backgroundColor = .clear
         tableView.allowsMultipleSelection = true
         return tableView
@@ -128,7 +128,7 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
         
         
         
-        output.exerciseArr.bind(to: tableView.rx.items(cellIdentifier: "ExerciseCell" ,cellType: ExerciseCell.self )){index,item,cell in
+        output.exerciseArr.bind(to: tableView.rx.items(cellIdentifier: "ExerciseCell" ,cellType: EditExerciseCell.self )){index,item,cell in
             
             cell.layoutToAdd()
             cell.exerciseGram.text = item.exerciseGram
@@ -186,38 +186,22 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
         self.navigationItem.titleView = titleLabelStackView
         self.navigationItem.rightBarButtonItem = self.rightButton
         
-        mainView.translatesAutoresizingMaskIntoConstraints = false
 
         
-        tableView.register(ExerciseCell.self, forCellReuseIdentifier: "ExerciseCell")
+        tableView.register(EditExerciseCell.self, forCellReuseIdentifier: "ExerciseCell")
         
         
         self.view.addSubview(mainView)
         self.view.addSubview(tableView)
         
- 
+        mainView.snp.makeConstraints{
+            $0.top.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+        }
+        tableView.snp.makeConstraints{
+            $0.top.bottom.leading.trailing.equalTo(mainView)
+        }
         
-        NSLayoutConstraint.activate([
-            
-    
-
-
-            mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor ),
-            mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            mainView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            mainView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-           
-            tableView.topAnchor.constraint(equalTo: mainView.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
-            
-            
-         
-            
-            
-        ])
-        
+       
         
         
         

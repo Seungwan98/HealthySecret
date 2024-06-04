@@ -34,14 +34,12 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
     
     private let contentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsVerticalScrollIndicator = false
         return scrollView
     }()
     
     private let contentView : UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -74,7 +72,6 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
     
     private let writeButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         
         button.setTitle("일기 쓰기", for: .normal)
@@ -86,7 +83,6 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
     }()
     private let moveButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         
         button.setTitle("날짜로 이동", for: .normal)
@@ -99,7 +95,6 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
     
     private let backgroundLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .lightGray.withAlphaComponent(1)
         label.text = "작성된 일기가 없어요"
         label.font = .systemFont(ofSize: 12)
@@ -166,92 +161,61 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         self.informationView.addSubview(dateLabel)
         self.informationView.addSubview(informLabel)
         self.informationView.addSubview(backgroundLabel)
+
         
         
+        self.bottomView.snp.makeConstraints{
+            $0.leading.trailing.bottom.equalTo(self.view)
+            $0.height.equalTo(100)
+        }
+        self.contentScrollView.snp.makeConstraints{
+            $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+            $0.bottom.equalTo(self.bottomView.snp.top)
+        } 
+        self.contentView.snp.makeConstraints{
+            $0.top.leading.trailing.bottom.width.equalTo(self.contentScrollView)
+        }
+        self.writeButton.snp.makeConstraints{
+            $0.height.equalTo(60)
+            $0.width.equalTo(100)
+            $0.leading.equalTo(bottomView).inset(15)
+            $0.centerY.equalTo(bottomView).offset(-10)
+        } 
         
-        
-        self.bottomView.translatesAutoresizingMaskIntoConstraints = false
-        self.informationView.translatesAutoresizingMaskIntoConstraints = false
-        self.calendar.translatesAutoresizingMaskIntoConstraints = false
-        self.calendarView.translatesAutoresizingMaskIntoConstraints = false
-        self.writeButton.translatesAutoresizingMaskIntoConstraints = false
-        self.moveButton.translatesAutoresizingMaskIntoConstraints = false
-        self.dateLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.informLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        
-        NSLayoutConstraint.activate([
-            
-            bottomView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            bottomView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            bottomView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            bottomView.heightAnchor.constraint(equalToConstant: 100),
-            
-            self.contentScrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
-            self.contentScrollView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            self.contentScrollView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            self.contentScrollView.bottomAnchor.constraint(equalTo: self.bottomView.topAnchor),
-            
-            self.contentView.topAnchor.constraint(equalTo: self.contentScrollView.topAnchor ),
-            self.contentView.leadingAnchor.constraint(equalTo: self.contentScrollView.leadingAnchor),
-            self.contentView.trailingAnchor.constraint(equalTo: self.contentScrollView.trailingAnchor),
-            self.contentView.bottomAnchor.constraint(equalTo: self.contentScrollView.bottomAnchor ),
-            
-            self.contentView.widthAnchor.constraint(equalTo: self.contentScrollView.widthAnchor , multiplier: 1.0),
-            
-            
-            
-            
-            
-            
-            writeButton.heightAnchor.constraint(equalToConstant: 60),
-            writeButton.widthAnchor.constraint(equalToConstant: 100),
-            writeButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor , constant: 15),
-            writeButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
-            
-            
-            
-            moveButton.heightAnchor.constraint(equalToConstant: 60),
-            moveButton.leadingAnchor.constraint(equalTo: writeButton.trailingAnchor, constant: 15),
-            moveButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -15),
-            moveButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
-            
-            
-            calendarView.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor , constant: 0),
-            calendarView.trailingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.trailingAnchor , constant: -0),
-            calendarView.topAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.topAnchor),
-            calendarView.bottomAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.bottomAnchor),
-            
-            //
-            calendar.topAnchor.constraint(equalTo: calendarView.safeAreaLayoutGuide.topAnchor),
-            calendar.heightAnchor.constraint(equalToConstant:  500),
-            calendar.leadingAnchor.constraint(equalTo: calendarView.safeAreaLayoutGuide.leadingAnchor  , constant: 10),
-            calendar.trailingAnchor.constraint(equalTo: calendarView.safeAreaLayoutGuide.trailingAnchor , constant: -10 ),
-            
-            informationView.topAnchor.constraint(equalTo: calendar.bottomAnchor),
-            informationView.leadingAnchor.constraint(equalTo: calendar.leadingAnchor , constant: 0),
-            informationView.trailingAnchor.constraint(equalTo: calendar.trailingAnchor , constant: 0 ),
-            //            /informationView.heightAnchor.constraint(equalToConstant: 80),
-            
-            backgroundLabel.centerXAnchor.constraint(equalTo: informationView.centerXAnchor),
-            backgroundLabel.centerYAnchor.constraint(equalTo: informationView.centerYAnchor),
-            //
-            //
-            dateLabel.topAnchor.constraint(equalTo: informationView.topAnchor , constant: 15),
-            dateLabel.leadingAnchor.constraint(equalTo: informationView.leadingAnchor , constant: 15),
-            dateLabel.widthAnchor.constraint(equalToConstant: 100),
-            dateLabel.heightAnchor.constraint(equalToConstant: 20),
-            
-            informLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor , constant: 10 ),
-            informLabel.leadingAnchor.constraint(equalTo: informationView.leadingAnchor , constant: 15),
-            informLabel.trailingAnchor.constraint(equalTo: informationView.trailingAnchor , constant: -15),
-            informLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor , constant: -10 ),
-            
-            informationView.bottomAnchor.constraint(equalTo: informLabel.bottomAnchor),
-            
-            
-            
-        ])
+        self.moveButton.snp.makeConstraints{
+            $0.height.equalTo(60)
+            $0.leading.equalTo(writeButton.snp.trailing).offset(15)
+            $0.trailing.equalTo(bottomView).inset(15)
+            $0.centerY.equalTo(bottomView).offset(-10)
+       
+        }
+        self.calendarView.snp.makeConstraints{
+            $0.leading.trailing.top.bottom.equalTo(self.contentView)
+        }
+        self.calendar.snp.makeConstraints{
+            $0.top.equalTo(calendarView.safeAreaLayoutGuide)
+            $0.leading.trailing.equalTo(calendarView.safeAreaLayoutGuide).inset(10)
+            $0.height.equalTo(500)
+        }
+        self.informationView.snp.makeConstraints{
+            $0.top.equalTo(calendar.snp.bottom)
+            $0.leading.trailing.equalTo(calendar)
+            $0.bottom.equalTo(informLabel)
+        }
+        self.backgroundLabel.snp.makeConstraints{
+            $0.centerY.centerX.equalTo(informationView)
+        }
+        self.dateLabel.snp.makeConstraints{
+            $0.top.leading.equalTo(informationView).inset(15)
+            $0.width.equalTo(100)
+            $0.height.equalTo(20)
+        } 
+        self.informLabel.snp.makeConstraints{
+            $0.top.equalTo(dateLabel.snp.bottom).offset(10)
+            $0.leading.trailing.equalTo(informationView).inset(15)
+            $0.bottom.equalTo(contentView).offset(-15)
+        }
+    
         
     }
     

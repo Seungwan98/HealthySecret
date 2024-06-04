@@ -46,7 +46,6 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     
     let addButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.backgroundColor = .systemBlue
@@ -108,7 +107,6 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         let label = UILabel()
         label.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
         label.font = .boldSystemFont(ofSize: 22)
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.sizeToFit()
         label.layer.masksToBounds = true
         
@@ -116,13 +114,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         
     }()
     
-    let leftBarView : UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        return view
-    }()
-    
+    let leftBarView = UIView()
     
     let rightBarImage : UIImageView = {
         let view = UIImageView(image: UIImage(systemName: "gearshape"))
@@ -259,78 +251,42 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         self.view.backgroundColor = .white
 
         
-        
-        self.backgroundView.translatesAutoresizingMaskIntoConstraints = false
-        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
-        self.leftBarImage.translatesAutoresizingMaskIntoConstraints = false
-        self.loadingView.translatesAutoresizingMaskIntoConstraints = false
-        
         self.backgroundView.backgroundLabel.text = "아직 피드가 없어요"
         
         leftBarView.addSubview(leftBarLabel)
         leftBarView.addSubview(leftBarImage)
-        
-        
-        
-        
+
         view.addSubview(self.collectionView)
-        
         view.addSubview(self.addButton)
-        
         view.addSubview(self.loadingView)
         
         self.backgroundView.isHidden = false
         
         
-        
-        
-        NSLayoutConstraint.activate([
-            
-            
-            leftBarView.widthAnchor.constraint(equalToConstant: 180),
-            leftBarView.heightAnchor.constraint(equalToConstant: 40),
-            
-            
-            leftBarLabel.centerYAnchor.constraint(equalTo: leftBarView.centerYAnchor ),
-            leftBarLabel.leadingAnchor.constraint(equalTo: leftBarView.leadingAnchor ),
-            
-            NSLayoutConstraint(item: self.leftBarLabel, attribute: .width, relatedBy: .lessThanOrEqual, toItem: self.leftBarView, attribute: .width, multiplier: 1.0, constant: -20),
-            
-            
-            leftBarImage.heightAnchor.constraint(equalToConstant: 12 ),
-            leftBarImage.widthAnchor.constraint(equalToConstant: 12 ),
-            leftBarImage.centerYAnchor.constraint(equalTo: leftBarView.centerYAnchor ),
-            leftBarImage.leadingAnchor.constraint(equalTo: leftBarLabel.trailingAnchor , constant: 2 ),
-            
-            
-            
-            
-            
-            self.loadingView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor ),
-            self.loadingView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor  ),
-            self.loadingView.topAnchor.constraint(equalTo: self.view.topAnchor ),
-            self.loadingView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor ),
-            
-            self.collectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor  ),
-            self.collectionView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor ),
-            self.collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor ),
-            
-            
-            
-            
-            
-            
-            self.addButton.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor , constant: -20 ),
-            self.addButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor , constant: -20 ),
-            self.addButton.widthAnchor.constraint(equalToConstant: 50 ),
-            self.addButton.heightAnchor.constraint(equalToConstant: 50),
-            
-            
-            
-            
-            
-        ])
+        self.leftBarView.snp.makeConstraints{
+            $0.width.equalTo(180)
+            $0.height.equalTo(40)
+        } 
+        self.leftBarLabel.snp.makeConstraints{
+            $0.centerY.leading.equalTo(leftBarView)
+            $0.width.lessThanOrEqualTo(self.leftBarView).offset(-20)
+        }
+        self.leftBarImage.snp.makeConstraints{
+            $0.height.width.equalTo(12)
+            $0.centerY.equalTo(leftBarView)
+            $0.leading.equalTo(leftBarLabel.snp.trailing).offset(2)
+        }
+        self.loadingView.snp.makeConstraints{
+            $0.trailing.bottom.top.leading.equalTo(self.view)
+        }
+        self.collectionView.snp.makeConstraints{
+            $0.trailing.bottom.top.leading.equalTo(self.view.safeAreaLayoutGuide)
+        }
+        self.addButton.snp.makeConstraints{
+            $0.trailing.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(20)
+            $0.height.width.equalTo(50)
+        }
+      
         
         
         

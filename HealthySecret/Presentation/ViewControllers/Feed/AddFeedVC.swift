@@ -28,7 +28,6 @@ class AddFeedVC : UIViewController {
         let label = UILabel()
         label.textColor = .lightGray
         label.text = "0/\(self.maxCount)"
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
         
         
@@ -36,14 +35,12 @@ class AddFeedVC : UIViewController {
     
     private let contentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsVerticalScrollIndicator = false
         return scrollView
     }()
     
     private let contentView : UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -56,7 +53,6 @@ class AddFeedVC : UIViewController {
         let textView: UITextView = UITextView()
         
 
-        textView.translatesAutoresizingMaskIntoConstraints = false
         // Round the corners.
         textView.backgroundColor = .lightGray.withAlphaComponent(0.2)
 
@@ -88,18 +84,10 @@ class AddFeedVC : UIViewController {
     }()
 
         
-    let bottomView : UIView = {
-       let view = UIView()
-       
-       
-       view.translatesAutoresizingMaskIntoConstraints = false
-     
-       return view
-   }()
+    let bottomView = UIView()
     
     private let addButton : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         button.backgroundColor = .black
     
@@ -112,7 +100,6 @@ class AddFeedVC : UIViewController {
     
     private let firstLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         
         label.font = .boldSystemFont(ofSize: 26)
         label.text = "오늘의 일상을\n공유하여 주세요."
@@ -123,7 +110,6 @@ class AddFeedVC : UIViewController {
     
     private let imageLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         
         label.font = .boldSystemFont(ofSize: 16)
         label.textColor = .gray.withAlphaComponent(0.8)
@@ -146,8 +132,10 @@ class AddFeedVC : UIViewController {
 
         image.backgroundColor = .lightGray.withAlphaComponent(0.2)
         image.tintColor = .lightGray.withAlphaComponent(0.6)
-        image.widthAnchor.constraint(equalToConstant: 120).isActive = true
-        image.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        image.snp.makeConstraints{
+            $0.width.height.equalTo(120)
+        }
+
         
        return image
     }()
@@ -157,7 +145,6 @@ class AddFeedVC : UIViewController {
  
        let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.alignment = .center
         stackView.distribution = .fillProportionally
         stackView.spacing = 10
@@ -170,7 +157,6 @@ class AddFeedVC : UIViewController {
     
     private let informationLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         
         label.font = .boldSystemFont(ofSize: 16)
         label.textColor = .gray.withAlphaComponent(0.8)
@@ -226,26 +212,20 @@ class AddFeedVC : UIViewController {
     func getInputView(image : UIImage ) -> UIView {
         let inputView = UIView()
         let inputImage = UIImageView()
-        
-      
-        inputImage.translatesAutoresizingMaskIntoConstraints = false
-        inputView.translatesAutoresizingMaskIntoConstraints = false
-        
+    
         inputImage.layer.masksToBounds = true
         inputImage.layer.cornerRadius = 30
         inputImage.image = image
         inputView.addSubview(inputImage)
 
 
-        
-        inputView.widthAnchor.constraint(equalToConstant: 120).isActive = true
-        inputView.heightAnchor.constraint(equalToConstant: 120).isActive = true
-        
-        
-        inputImage.trailingAnchor.constraint(equalTo: inputView.trailingAnchor , constant: 0 ).isActive = true
-        inputImage.leadingAnchor.constraint(equalTo: inputView.leadingAnchor , constant: 0).isActive = true
-        inputImage.topAnchor.constraint(equalTo: inputView.topAnchor , constant: 0).isActive = true
-        inputImage.bottomAnchor.constraint(equalTo: inputView.bottomAnchor , constant: 0).isActive = true
+        inputView.snp.makeConstraints{
+            $0.width.height.equalTo(120)
+        }
+        inputImage.snp.makeConstraints{
+            $0.trailing.leading.top.bottom.equalTo(inputView)
+        }
+
         
         return inputView
     }
@@ -265,31 +245,41 @@ class AddFeedVC : UIViewController {
         if self.imagesArr.count <= 5 {
             print(imagesArr.count)
             for i in 0..<self.imagesArr.count {
-                
-              
-                let inputView = self.getInputView(image: self.imagesArr[i])
-                
-                
-                
-                
-                let minusImage = UIButton()
-                inputView.addSubview(minusImage)
+                print(imagesArr.count)
+                for i in 0..<self.imagesArr.count {
+                    
+                  
+                    let inputView = self.getInputView(image: self.imagesArr[i])
+                    
+                    
+                    
+                    
+                    let minusImage = UIButton()
+                    inputView.addSubview(minusImage)
 
-                self.imageStackView.addArrangedSubview(inputView)
-                minusImage.tintColor = .lightGray
-                minusImage.translatesAutoresizingMaskIntoConstraints = false
-                minusImage.setImage(UIImage(systemName: "x.circle.fill"), for: .normal )
-                minusImage.heightAnchor.constraint(equalToConstant: 24).isActive = true
-                minusImage.widthAnchor.constraint(equalToConstant: 24).isActive = true
-                minusImage.contentVerticalAlignment = .fill
-                minusImage.contentHorizontalAlignment = .fill
-                minusImage.trailingAnchor.constraint(equalTo: inputView.trailingAnchor  ).isActive = true
-                minusImage.topAnchor.constraint(equalTo: inputView.topAnchor ).isActive = true
-                minusImage.backgroundColor = .white
-                minusImage.layer.cornerRadius = 13
-                minusImage.tag = i
-                minusImage.addTarget(self, action: #selector(removeImage), for: .touchUpInside )
+                    self.imageStackView.addArrangedSubview(inputView)
+                    minusImage.tintColor = .lightGray
+                    minusImage.setImage(UIImage(systemName: "x.circle.fill"), for: .normal )
+                    minusImage.contentVerticalAlignment = .fill
+                    minusImage.contentHorizontalAlignment = .fill
+                    minusImage.backgroundColor = .white
+                    minusImage.layer.cornerRadius = 13
+                    minusImage.tag = i
+                    minusImage.addTarget(self, action: #selector(removeImage), for: .touchUpInside )
+                    
+                    minusImage.snp.makeConstraints{
+                        $0.trailing.top.equalTo(inputView)
+                        $0.width.height.equalTo(24)
+                    }
+         
+                    
+                }
+                if(self.imagesArr.count <= 4){
+                    self.imageStackView.addArrangedSubview(self.plusImage)
+
+                }
                 
+     
             }
             if(self.imagesArr.count <= 4){
                 self.imageStackView.addArrangedSubview(self.plusImage)
@@ -331,11 +321,7 @@ class AddFeedVC : UIViewController {
         addFeedTextView.text = "부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다."
         addFeedTextView.textColor = .lightGray
         
-        
 
-        
-        imageScrollView.translatesAutoresizingMaskIntoConstraints = false
-        mainView.translatesAutoresizingMaskIntoConstraints = false
         mainView.backgroundColor = .white
 
         self.view.addSubview(mainView)
@@ -362,84 +348,55 @@ class AddFeedVC : UIViewController {
 
             
           
-        
-        
-        
-        NSLayoutConstraint.activate([
+        mainView.snp.makeConstraints{
+            $0.leading.trailing.bottom.top.equalTo(self.view)
+        }
+        bottomView.snp.makeConstraints{
+            $0.leading.trailing.bottom.equalTo(self.view)
+            $0.height.equalTo(100)
+        }
+        addButton.snp.makeConstraints{
+            $0.leading.trailing.equalTo(bottomView).inset(20)
+            $0.height.equalTo(60)
+            $0.centerY.equalTo(bottomView).offset(-10)
+        }
+        contentScrollView.snp.makeConstraints{
+            $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+            $0.bottom.equalTo(bottomView.snp.top)
+        }
+        contentView.snp.makeConstraints{
+            $0.top.bottom.leading.trailing.width.equalTo(self.contentScrollView)
+            $0.height.equalTo(600)
+        }
+        firstLabel.snp.makeConstraints{
+            $0.top.equalTo(contentView)
+            $0.leading.equalTo(contentView).inset(20)
+        }
+        imageLabel.snp.makeConstraints{
+            $0.top.equalTo(firstLabel.snp.bottom).offset(60)
+            $0.leading.equalTo(contentView).inset(20)
+        }
+        imageScrollView.snp.makeConstraints{
+            $0.top.equalTo(imageLabel.snp.bottom).offset(5)
+            $0.leading.trailing.equalTo(self.contentView).inset(20)
+            $0.height.equalTo(120)
+        }
+        imageStackView.snp.makeConstraints{
+            $0.top.leading.trailing.bottom.height.equalTo(imageScrollView)
+        }
+        informationLabel.snp.makeConstraints{
+            $0.top.equalTo(imageScrollView.snp.bottom).offset(40)
+            $0.leading.equalTo(contentView).inset(20)
+        }
+        addFeedTextView.snp.makeConstraints{
+            $0.top.equalTo(informationLabel.snp.bottom).offset(5)
+            $0.leading.trailing.equalTo(contentView).inset(20)
+            $0.height.equalTo(260)
+        }
+        writeContentLabel.snp.makeConstraints{
+            $0.trailing.bottom.equalTo(addFeedTextView).inset(5)
             
-            mainView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            mainView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            mainView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            mainView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            
-            bottomView.leadingAnchor.constraint(equalTo: self.mainView.leadingAnchor),
-            bottomView.trailingAnchor.constraint(equalTo: self.mainView.trailingAnchor),
-            bottomView.bottomAnchor.constraint(equalTo: self.mainView.bottomAnchor),
-            bottomView.heightAnchor.constraint(equalToConstant: 100),
-            
-            
-
-            
-            addButton.leadingAnchor.constraint(equalTo:bottomView.leadingAnchor , constant: 20),
-            addButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -20 ),
-            addButton.heightAnchor.constraint(equalToConstant: 60),
-            addButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
-        
-            contentScrollView.topAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.topAnchor),
-            contentScrollView.bottomAnchor.constraint(equalTo: bottomView.topAnchor),
-            contentScrollView.leadingAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.leadingAnchor),
-            contentScrollView.trailingAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.trailingAnchor),
-            
-            
-            contentView.topAnchor.constraint(equalTo: self.contentScrollView.topAnchor),
-            contentView.bottomAnchor.constraint(equalTo: self.contentScrollView.bottomAnchor),
-            contentView.leadingAnchor.constraint(equalTo: self.contentScrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: self.contentScrollView.trailingAnchor),
-            contentView.heightAnchor.constraint(equalToConstant: 600),
-            
-            
-            
-            self.contentView.widthAnchor.constraint(equalTo: self.contentScrollView.widthAnchor , multiplier: 1.0),
-
-       
-            firstLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
-            firstLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 20),
-            
-            imageLabel.topAnchor.constraint(equalTo: firstLabel.bottomAnchor , constant: 60),
-            imageLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 20),
-            
-            imageScrollView.topAnchor.constraint(equalTo: imageLabel.bottomAnchor , constant: 5),
-            imageScrollView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor , constant: 20),
-            imageScrollView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor , constant: -20),
-            imageScrollView.heightAnchor.constraint(equalToConstant: 120),
-            
-            imageStackView.topAnchor.constraint(equalTo: imageScrollView.topAnchor),
-            imageStackView.leadingAnchor.constraint(equalTo: imageScrollView.leadingAnchor),
-            imageStackView.trailingAnchor.constraint(equalTo: imageScrollView.trailingAnchor),
-            imageStackView.bottomAnchor.constraint(equalTo: imageScrollView.bottomAnchor),
-            imageStackView.heightAnchor.constraint(equalTo: imageScrollView.heightAnchor),
-
-            
-            informationLabel.topAnchor.constraint(equalTo: imageScrollView.bottomAnchor , constant: 40),
-            informationLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 20),
-           
-
-            
-            addFeedTextView.topAnchor.constraint(equalTo: informationLabel.bottomAnchor , constant: 5),
-            addFeedTextView.leadingAnchor.constraint(equalTo:contentView.leadingAnchor , constant: 20),
-            addFeedTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor , constant: -20 ),
-            addFeedTextView.heightAnchor.constraint(equalToConstant: 260 ),
-            
-            
-            writeContentLabel.trailingAnchor.constraint(equalTo: addFeedTextView.trailingAnchor , constant: -5),
-            writeContentLabel.bottomAnchor.constraint(equalTo: addFeedTextView.bottomAnchor , constant: -5),
-         
-            
-            
-            
-        
-        
-        ])
+        }
       
   
     }

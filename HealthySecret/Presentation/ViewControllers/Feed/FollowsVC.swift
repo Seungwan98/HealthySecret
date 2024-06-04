@@ -41,7 +41,6 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
     private lazy var containerView: UIView = {
         let container = UIView()
         container.backgroundColor = .clear
-        container.translatesAutoresizingMaskIntoConstraints = false
         return container
     }()
     
@@ -72,7 +71,6 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
         ], for: .selected)
         
         
-        segment.translatesAutoresizingMaskIntoConstraints = false
         
         return segment
     }()
@@ -83,7 +81,6 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
     
     lazy private var tableView : UITableView = {
         let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorColor = .clear
         tableView.allowsMultipleSelection = true
         tableView.backgroundView = self.backgroundView
@@ -186,21 +183,13 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
         
         self.view.backgroundColor = .white
         
-        self.loadingView.translatesAutoresizingMaskIntoConstraints = false
         
         self.segmentControl.addTarget(self, action: #selector(didChangeValue(segment: )), for: .valueChanged )
         
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
         tableView.dataSource = nil
         tableView.register(FollowsBlocksCell.self, forCellReuseIdentifier: "FollowsBlocksCell")
-        
-        self.mainView.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundView.translatesAutoresizingMaskIntoConstraints = false
 
-        
-        
-        
-        
         
         self.view.addSubview(self.mainView)
         
@@ -216,58 +205,27 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
         containerView.addSubview(segmentControl)
         
         
-        
-        NSLayoutConstraint.activate([
-            
-            
-            
-            
-            self.loadingView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor ),
-            self.loadingView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor  ),
-            self.loadingView.topAnchor.constraint(equalTo: self.view.topAnchor ),
-            self.loadingView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor ),
-            
-            
-            
-            
-            containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            containerView.heightAnchor.constraint(equalToConstant: 40),
-            
-            segmentControl.topAnchor.constraint(equalTo: containerView.topAnchor),
-            segmentControl.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            segmentControl.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            segmentControl.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            
-            
-            
-            
-            mainView.topAnchor.constraint(equalTo: containerView.bottomAnchor ),
-            mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            mainView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            mainView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            
-            
-            tableView.topAnchor.constraint(equalTo: mainView.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
-            
-            backgroundView.topAnchor.constraint(equalTo: mainView.topAnchor),
-            backgroundView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor),
-            backgroundView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
-            backgroundView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
-            
-            
-            
-            
-            
-            
-            //
-            
-            
-        ])
+        self.loadingView.snp.makeConstraints{
+            $0.trailing.bottom.top.leading.equalTo(self.view)
+        }
+        self.containerView.snp.makeConstraints{
+            $0.leading.trailing.top.equalTo(self.view.safeAreaLayoutGuide)
+            $0.height.equalTo(40)
+        }
+        self.segmentControl.snp.makeConstraints{
+            $0.top.leading.centerY.centerX.equalTo(self.containerView)
+        }
+        self.mainView.snp.makeConstraints{
+            $0.top.equalTo(self.containerView.snp.bottom)
+            $0.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+        }
+        self.tableView.snp.makeConstraints{
+            $0.top.bottom.leading.trailing.equalTo(mainView)
+        }
+        self.backgroundView.snp.makeConstraints{
+            $0.top.bottom.leading.trailing.equalTo(mainView)
+        }
+     
         
         
         

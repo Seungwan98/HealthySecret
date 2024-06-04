@@ -28,7 +28,6 @@ class SignUpVC : UIViewController {
     
     private let contentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsVerticalScrollIndicator = false
         
         return scrollView
@@ -37,7 +36,6 @@ class SignUpVC : UIViewController {
     let contentView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -50,21 +48,18 @@ class SignUpVC : UIViewController {
         let view = UIView()
         view.layer.borderColor = UIColor.black.cgColor
 
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     var secondView : UIView = {
         let view = UIView()
         view.layer.borderColor = UIColor.black.cgColor
 
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     var thirdView : UIView = {
         let view = UIView()
         view.layer.borderColor = UIColor.black.cgColor
 
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
 
@@ -73,7 +68,6 @@ class SignUpVC : UIViewController {
     lazy var questionStackView: UIStackView = {
         let stackview = UIStackView(arrangedSubviews:  [firstView , secondView , thirdView ])
        
-        stackview.translatesAutoresizingMaskIntoConstraints = false
         stackview.axis = .vertical
         stackview.spacing = 15
         stackview.distribution = .fillEqually
@@ -89,7 +83,6 @@ class SignUpVC : UIViewController {
     let nextButton : UIButton = {
        let button = UIButton()
         
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("완료", for: .normal)
         button.tintColor = .white
         button.layer.cornerRadius = 30
@@ -145,7 +138,6 @@ class SignUpVC : UIViewController {
     
     let topLabel : UILabel = {
        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "나만의 다이어트 설정"
         label.font = .boldSystemFont(ofSize: 25)
         return label
@@ -156,7 +148,6 @@ class SignUpVC : UIViewController {
     let firstLabel : UILabel = {
         let label = UILabel()
         label.text = "성별"
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 18)
         return label
     }()
@@ -173,14 +164,7 @@ class SignUpVC : UIViewController {
     
     
     
-     let bottomView : UIView = {
-        let view = UIView()
-        
-        
-        view.translatesAutoresizingMaskIntoConstraints = false
-      
-        return view
-    }()
+     let bottomView = UIView()
 
     
     override func viewWillAppear(_ animated: Bool) {
@@ -220,7 +204,6 @@ class SignUpVC : UIViewController {
         _ = sexButtons.map({ btn in
              
              self.firstView.addSubview(btn)
-             btn.translatesAutoresizingMaskIntoConstraints = false
             btn.backgroundColor = .lightGray.withAlphaComponent(0.6)
             btn.layer.cornerCurve = .circular
             btn.layer.cornerRadius = 60
@@ -230,13 +213,10 @@ class SignUpVC : UIViewController {
             index += 1
 
              
-             NSLayoutConstraint.activate([
-             btn.centerYAnchor.constraint(equalTo: firstView.centerYAnchor , constant: 50),
-             btn.widthAnchor.constraint(equalToConstant: 120),
-             btn.heightAnchor.constraint(equalToConstant: 120),
-             
-             
-         ])
+            btn.snp.makeConstraints{
+                $0.centerY.equalTo(firstView).offset(50)
+                $0.width.height.equalTo(120)
+            }
              
          })
         index = 0
@@ -246,7 +226,6 @@ class SignUpVC : UIViewController {
         _ = subStackViews.map({ (value : UIStackView)  in
             value.axis = .horizontal
             value.distribution = .fillEqually
-            value.translatesAutoresizingMaskIntoConstraints = false
             
     
         })
@@ -290,7 +269,6 @@ class SignUpVC : UIViewController {
             
             index += 1
             
-            textField.translatesAutoresizingMaskIntoConstraints = false
             textField.backgroundColor = .lightGray.withAlphaComponent(0.6)
             textField.layer.cornerRadius = 10
             textField.rightViewMode = .always
@@ -335,7 +313,6 @@ class SignUpVC : UIViewController {
             let stackView = UIStackView(arrangedSubviews: subStackViews)
             stackView.axis = .vertical
             stackView.distribution = .fillEqually
-            stackView.translatesAutoresizingMaskIntoConstraints = false
             
             
             
@@ -349,7 +326,6 @@ class SignUpVC : UIViewController {
            let label = UILabel()
             label.text = "평소 활동량"
             label.font = .boldSystemFont(ofSize: 18)
-            label.translatesAutoresizingMaskIntoConstraints = false
             
             return label
         }()
@@ -360,7 +336,6 @@ class SignUpVC : UIViewController {
         
         let thirdStackView : UIStackView = {
             let stackview = UIStackView()
-            stackview.translatesAutoresizingMaskIntoConstraints = false
             stackview.axis = .horizontal
             stackview.alignment = .center
             stackview.distribution = .equalCentering
@@ -388,9 +363,9 @@ class SignUpVC : UIViewController {
                 button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -3)
             }
         
-           
-            button.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            button.heightAnchor.constraint(equalToConstant: 50).isActive = true
+            button.snp.makeConstraints{
+                $0.width.height.equalTo(50)
+            }
             
             thirdStackView.addArrangedSubview(button)
             
@@ -422,20 +397,15 @@ class SignUpVC : UIViewController {
         _ = thirdLabels.map({ label in
             thirdView.addSubview(label)
             label.text = thirdLabelTexts[index]
-            label.translatesAutoresizingMaskIntoConstraints = false
             label.font = .boldSystemFont(ofSize: 15)
             label.textColor = .lightGray.withAlphaComponent(0.6)
             
             
-            NSLayoutConstraint.activate([
-                
-                
-                
-                label.centerXAnchor.constraint(equalTo: thirdViewButtons[index].centerXAnchor),
-                label.topAnchor.constraint(equalTo: thirdViewButtons[index].bottomAnchor , constant: 1),
-            
-            ])
-           
+            label.snp.makeConstraints{
+                $0.centerX.equalTo(thirdViewButtons[index])
+                $0.top.equalTo(thirdViewButtons[index].snp.bottom).offset(1)
+            }
+         
             
             index += 1
             
@@ -446,42 +416,33 @@ class SignUpVC : UIViewController {
         
         
         
-        NSLayoutConstraint.activate([
+        
+        topLabel.snp.makeConstraints{
+            $0.top.equalTo(firstView).inset(10)
+            $0.leading.trailing.equalTo(firstView)
+        }
+        firstLabel.snp.makeConstraints{
+            $0.top.equalTo(firstView).inset(70)
+            $0.leading.equalTo(firstView)
+        }
+        sexButtons[0].snp.makeConstraints{
+            $0.centerX.equalTo(firstView).offset(-80)
+        }
+        sexButtons[1].snp.makeConstraints{
+            $0.centerX.equalTo(firstView).offset(80)
+        }
+        informationStackView.snp.makeConstraints{
+            $0.top.bottom.leading.trailing.equalTo(secondView)
+        }
+        thirdLabel.snp.makeConstraints{
+            $0.top.equalTo(thirdView).inset(50)
+            $0.leading.equalTo(thirdView)
+        }
+        thirdStackView.snp.makeConstraints{
+            $0.leading.trailing.equalTo(thirdView).inset(50)
+            $0.centerY.equalTo(thirdView).offset(20)
             
-            topLabel.topAnchor.constraint(equalTo: firstView.topAnchor  , constant: 10),
-            topLabel.leadingAnchor.constraint(equalTo: firstView.leadingAnchor ),
-            topLabel.trailingAnchor.constraint(equalTo: firstView.trailingAnchor ),
-            
-            
-            firstLabel.topAnchor.constraint(equalTo: firstView.topAnchor , constant: 70),
-            firstLabel.leadingAnchor.constraint(equalTo: firstView.leadingAnchor ),
-            
-            
-            
-            sexButtons[0].centerXAnchor.constraint(equalTo: firstView.centerXAnchor , constant: -80),
-            sexButtons[1].centerXAnchor.constraint(equalTo: firstView.centerXAnchor , constant: 80),
-            
-            
-            informationStackView.topAnchor.constraint(equalTo: secondView.topAnchor),
-            informationStackView.bottomAnchor.constraint(equalTo: secondView.bottomAnchor),
-            informationStackView.leadingAnchor.constraint(equalTo: secondView.leadingAnchor),
-            informationStackView.trailingAnchor.constraint(equalTo: secondView.trailingAnchor),
-            
-            
-            thirdLabel.topAnchor.constraint(equalTo: thirdView.topAnchor , constant: 50),
-            thirdLabel.leadingAnchor.constraint(equalTo: thirdView.leadingAnchor ),
-            
-            thirdStackView.leadingAnchor.constraint(equalTo: thirdView.leadingAnchor , constant: 40),
-            thirdStackView.trailingAnchor.constraint(equalTo: thirdView.trailingAnchor , constant: -40 ),
-            thirdStackView.centerYAnchor.constraint(equalTo: thirdView.centerYAnchor , constant: 20 ),
-            
-            
-            
-            //thirdStackView.topAnchor.constraint(equalTo: thirdView.topAnchor , constant: 40 ),
-          //  thirdStackView.bottomAnchor.constraint(equalTo: thirdView.bottomAnchor , constant: -30 ),
-            
-            
-        ])
+        }
         
         
         
@@ -538,51 +499,27 @@ class SignUpVC : UIViewController {
         self.contentView.addSubview(questionStackView)
         
         
+        self.bottomView.snp.makeConstraints{
+            $0.leading.trailing.bottom.equalTo(self.view)
+            $0.height.equalTo(100)
+        }
+        self.contentScrollView.snp.makeConstraints{
+            $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+            $0.bottom.equalTo(self.bottomView.snp.top)
+        }
+        self.contentView.snp.makeConstraints{
+            $0.top.leading.trailing.bottom.width.equalTo(self.contentScrollView)
+        }
+        self.nextButton.snp.makeConstraints{
+            $0.leading.trailing.equalTo(self.bottomView).inset(20)
+            $0.height.equalTo(60)
+            $0.centerY.equalTo(bottomView).offset(-10)
+        }
+        self.questionStackView.snp.makeConstraints{
+            $0.edges.equalTo(contentView).inset(UIEdgeInsets(top: 20, left: 15, bottom: 0, right: 15))
+            $0.height.equalTo(680)
+        }
         
-        NSLayoutConstraint.activate([
-            
-            
-            bottomView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            bottomView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            bottomView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            bottomView.heightAnchor.constraint(equalToConstant: 100),
-            
-           
-            contentScrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            contentScrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            contentScrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            contentScrollView.bottomAnchor.constraint(equalTo: self.bottomView.topAnchor),
-            
-            
-            contentView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: contentScrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: contentScrollView.trailingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: contentScrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
-            //스크롤 방향
-            contentView.widthAnchor.constraint(equalTo: contentScrollView.widthAnchor),
-            
-            
-            nextButton.heightAnchor.constraint(equalToConstant: 60),
-            nextButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor , constant: -20),
-            nextButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor , constant: 20),
-            nextButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor , constant: -10 ),
-            
-            
-            
-            
-            questionStackView.topAnchor.constraint(equalTo: contentView.topAnchor , constant: 20),
-            questionStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 15),
-            questionStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor , constant: -15 ),
-            
-            questionStackView.heightAnchor.constraint(equalToConstant: 680),
-            questionStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            
-           
-            
-            
-            
-        ])
     }
     
 }
