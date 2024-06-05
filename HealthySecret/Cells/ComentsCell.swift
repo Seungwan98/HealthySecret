@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 
 protocol ComentsCellDelegate {
   
@@ -29,13 +30,11 @@ class ComentsCell : UITableViewCell  {
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 15
         imageView.image = UIImage(named: "일반적.png")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
     let nicknameLabel : UILabel = {
        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.text = "승팔"
         return label
@@ -47,7 +46,6 @@ class ComentsCell : UITableViewCell  {
     
     let comentsLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 14)
         label.isUserInteractionEnabled = true
         label.sizeToFit()
@@ -60,7 +58,6 @@ class ComentsCell : UITableViewCell  {
     
     let dateLabel : UILabel = {
        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .lightGray
 
@@ -75,7 +72,6 @@ class ComentsCell : UITableViewCell  {
        let view = UIView()
         view.isUserInteractionEnabled = true
 
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
         return view
         
@@ -84,7 +80,6 @@ class ComentsCell : UITableViewCell  {
     
     let ownTitle : UILabel = {
        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "작성자"
         label.textColor = .white
         label.font = .boldSystemFont(ofSize: 10)
@@ -98,7 +93,6 @@ class ComentsCell : UITableViewCell  {
     
     var ellipsis : UIButton = {
        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         button.tintColor = .black
         button.contentVerticalAlignment = .center
@@ -183,70 +177,44 @@ class ComentsCell : UITableViewCell  {
      
         
         
-        NSLayoutConstraint.activate([
-   
-            
-            self.topView.topAnchor.constraint(equalTo: self.contentView.topAnchor , constant: 10),
-            self.topView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor , constant: 10 ),
-            self.topView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor ),
-            self.topView.heightAnchor.constraint(equalToConstant: 30 ),
-            
-            
-            self.profileImage.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
-            self.profileImage.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor , constant: 10),
-            self.profileImage.widthAnchor.constraint(equalToConstant: 36),
-            self.profileImage.heightAnchor.constraint(equalToConstant: 36),
-            
-            
-            self.ownTitle.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
-            self.ownTitle.leadingAnchor.constraint(equalTo: self.nicknameLabel.trailingAnchor , constant:6),
-            self.ownTitle.heightAnchor.constraint(equalToConstant: 16),
-            self.ownTitle.widthAnchor.constraint(equalToConstant: 30),
-            
-
-            self.nicknameLabel.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor ),
-            self.nicknameLabel.leadingAnchor.constraint(equalTo: self.profileImage.trailingAnchor , constant: 10 ),
-            
-            NSLayoutConstraint(item: self.nicknameLabel, attribute: .width, relatedBy: .lessThanOrEqual, toItem: self , attribute: .width, multiplier: 1.0, constant: -60),
-
-            
-            self.ellipsis.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor ),
-            self.ellipsis.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor ),
-            self.ellipsis.widthAnchor.constraint(equalToConstant: 40 ),
-            self.ellipsis.heightAnchor.constraint(equalToConstant: 40 ),
- 
-            
-            self.comentsLabel.topAnchor.constraint(equalTo: self.topView.bottomAnchor , constant: 10 ),
-            self.comentsLabel.leadingAnchor.constraint(equalTo: self.nicknameLabel.leadingAnchor ),
-            self.comentsLabel.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor , constant: -60),
-            
-            
-            self.dateLabel.topAnchor.constraint(equalTo: self.comentsLabel.bottomAnchor , constant: 10 ),
-            self.dateLabel.leadingAnchor.constraint(equalTo: self.nicknameLabel.leadingAnchor ),
-            self.dateLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor , constant: -10),
-            self.dateLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor , constant: -10),
-            self.dateLabel.heightAnchor.constraint(equalToConstant: 20),
-
-
-            
-            
-            
-            
+        self.topView.snp.makeConstraints{
+            $0.top.leading.equalTo(self.contentView).inset(10)
+            $0.trailing.equalTo(self.contentView)
+            $0.height.equalTo(30)
+        }
+        self.profileImage.snp.makeConstraints{
+            $0.width.height.equalTo(36)
+            $0.centerY.equalTo(self.topView)
+            $0.leading.equalTo(self.topView).inset(10)
+        }
+        self.ownTitle.snp.makeConstraints{
+            $0.centerY.equalTo(self.topView)
+            $0.leading.equalTo(self.nicknameLabel.snp.trailing).offset(6)
+            $0.height.equalTo(16)
+            $0.width.equalTo(30)
+        }
+        self.nicknameLabel.snp.makeConstraints{
+            $0.centerY.equalTo(self.topView)
+            $0.leading.equalTo(self.profileImage.snp.trailing).offset(10)
+            $0.width.lessThanOrEqualTo(self).offset(-60)
+        }
+        self.ellipsis.snp.makeConstraints{
+            $0.centerY.trailing.equalTo(self.topView)
+            $0.width.height.equalTo(40)
+        }
+        self.comentsLabel.snp.makeConstraints{
+            $0.top.equalTo(self.topView.snp.bottom).offset(10)
+            $0.leading.equalTo(self.nicknameLabel)
+            $0.trailing.equalTo(topView).offset(-60)
+        }
+        self.dateLabel.snp.makeConstraints{
+            $0.height.equalTo(20)
+            $0.trailing.bottom.equalTo(self.contentView).inset(10)
+            $0.leading.equalTo(self.nicknameLabel)
+            $0.top.equalTo(self.comentsLabel.snp.bottom).offset(10)
+        }
         
-            
-          
-            
-            
-           
-            
-            
-          
-            
-                                                
-            
-            
         
-        ])
     }
     
     

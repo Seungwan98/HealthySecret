@@ -259,7 +259,11 @@ class MyProfileVM : ViewModel {
                         
                         
                     case.failure(let err):
-                        print(err)
+                        if(err as! CustomError == CustomError.isNil){
+                            print("nil")
+                            output.feedImage.onNext([])
+                            output.feedUid.onNext([])
+                        }
                     }
                     
                     

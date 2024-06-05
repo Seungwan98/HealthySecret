@@ -1392,7 +1392,6 @@ extension FirebaseService {
                             let jsonData = try JSONSerialization.data(withJSONObject: doc.data(), options: [])
                             let feed = try JSONDecoder().decode(FeedDTO.self, from: jsonData)
                             
-                            
                             feedModels.append(feed)
                             
                             

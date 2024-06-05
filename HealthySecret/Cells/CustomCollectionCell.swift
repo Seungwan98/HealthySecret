@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 
 protocol CustomCollectionCellDelegate {
   

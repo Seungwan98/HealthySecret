@@ -8,6 +8,7 @@
 import Foundation
 import RxSwift
 import UIKit
+import SnapKit
 
 
 class ProfileHeaderView : UICollectionViewCell  {
@@ -18,8 +19,8 @@ class ProfileHeaderView : UICollectionViewCell  {
     
     var appearEvent = PublishSubject<Bool>()
     
-   var setBind = PublishSubject<Bool>()
-   
+    var setBind = PublishSubject<Bool>()
+    
     
     let feedInformValLabels = [UILabel() , UILabel() , UILabel()]
     
@@ -28,8 +29,7 @@ class ProfileHeaderView : UICollectionViewCell  {
     let feedInformTexts = ["피드" , "팔로워" , "팔로잉"]
     
     lazy var informationStackView = {
-       let stackview = UIStackView(arrangedSubviews: feedInformValLabels)
-        stackview.translatesAutoresizingMaskIntoConstraints = false
+        let stackview = UIStackView(arrangedSubviews: feedInformValLabels)
         stackview.axis = .horizontal
         stackview.distribution = .fillEqually
         stackview.alignment = .center
@@ -42,7 +42,6 @@ class ProfileHeaderView : UICollectionViewCell  {
     
     let profileImage : UIImageView = {
         let view = UIImageView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 60
         view.layer.masksToBounds = true
         
@@ -60,7 +59,6 @@ class ProfileHeaderView : UICollectionViewCell  {
         label.numberOfLines = 0
         label.sizeToFit()
         label.font =  .systemFont(ofSize: 16 )
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
         
         
@@ -70,7 +68,6 @@ class ProfileHeaderView : UICollectionViewCell  {
     var goalLabel : UILabel = {
         let label = UILabel()
         let imageAttachment = NSTextAttachment(image: UIImage(named: "arrow.png")!)
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .boldSystemFont(ofSize: 16)
         let attributedString = NSMutableAttributedString(string: "")
         attributedString.append(NSAttributedString(string: "나의 목표 "))
@@ -88,7 +85,6 @@ class ProfileHeaderView : UICollectionViewCell  {
     
     let rightLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "목표까지"
         label.font = .boldSystemFont(ofSize: 16)
         
@@ -99,7 +95,6 @@ class ProfileHeaderView : UICollectionViewCell  {
     
     let gramLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .boldSystemFont(ofSize: 16)
         label.text = "80 kg"
         label.textColor = .systemBlue
@@ -128,19 +123,18 @@ class ProfileHeaderView : UICollectionViewCell  {
         
         view.backgroundColor = .lightGray.withAlphaComponent(0.2)
         
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor ,constant: 50).isActive = true
-        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor ,constant: -50).isActive = true
-        stackView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        stackView.snp.makeConstraints{
+            $0.leading.trailing.equalTo(view).inset(50)
+            $0.height.equalTo(20)
+            $0.centerY.equalTo(view).offset(-15)
+        }
         
-        stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor , constant:  -15).isActive = true
         stackView.alignment = .center
         stackView.spacing = 10
         stackView.distribution = .equalCentering
         
         
         view.layer.cornerRadius = 20
-        view.translatesAutoresizingMaskIntoConstraints = false
         
         
         
@@ -151,7 +145,7 @@ class ProfileHeaderView : UICollectionViewCell  {
     
     
     let topImage = UIImageView(image:UIImage(named:  "camera.png"))
-
+    
     
     
     override init(frame: CGRect ) {
@@ -168,43 +162,37 @@ class ProfileHeaderView : UICollectionViewCell  {
     }
     
     
-  
+    
     
     private func setStackViews(){
         var idx = 0
         
         feedInformValLabels.forEach{
-            
-            $0.tag = idx
-            $0.textAlignment = .center
-            $0.text = "0"
-            $0.font = .boldSystemFont(ofSize: 24)
-            
-            
+            let value = $0
+            value.tag = idx
+            value.textAlignment = .center
+            value.text = "0"
+            value.font = .boldSystemFont(ofSize: 24)
             
             
-            feedInformTextLabels[idx].translatesAutoresizingMaskIntoConstraints = false
+            
+            
             
             self.addSubview(feedInformTextLabels[idx])
             
             feedInformTextLabels[idx].text = feedInformTexts[idx]
             feedInformTextLabels[idx].font = .systemFont(ofSize: 12)
             
-
-            NSLayoutConstraint.activate([
-                
-                
-                feedInformTextLabels[idx].centerXAnchor.constraint(equalTo: $0.centerXAnchor),
-                feedInformTextLabels[idx].bottomAnchor.constraint(equalTo: $0.topAnchor , constant: -5),
-
+            feedInformTextLabels[idx].snp.makeConstraints{
+                $0.centerX.equalTo(value)
+                $0.bottom.equalTo(value.snp.top).offset(-5)
+            }
             
             
-            ])
-
             
             
             idx += 1
-
+            
             
         }
         
@@ -212,7 +200,7 @@ class ProfileHeaderView : UICollectionViewCell  {
         
     }
     
-   
+    
     
     private func setUI() {
         
@@ -227,56 +215,48 @@ class ProfileHeaderView : UICollectionViewCell  {
         self.addSubview(topImage)
         
         
-        topImage.translatesAutoresizingMaskIntoConstraints = false
         topImage.isHidden = true
-  
         
-        NSLayoutConstraint.activate([
-            
-            
-            profileImage.widthAnchor.constraint(equalToConstant: 100),
-            profileImage.heightAnchor.constraint(equalToConstant: 100),
-            profileImage.topAnchor.constraint(equalTo: self.topAnchor , constant: 20 ),
-            profileImage.leadingAnchor.constraint(equalTo: self.leadingAnchor , constant: 20 ),
-            
-            
-            introduceLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor , constant: 20 ),
-            introduceLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor , constant: -20 ),
-            introduceLabel.topAnchor.constraint(equalTo: self.profileImage.bottomAnchor , constant: 10 ),
-            introduceLabel.bottomAnchor.constraint(equalTo: self.goalLabel.topAnchor , constant: -10  ),
-            
-            
-            goalLabel.leadingAnchor.constraint(equalTo: informationView.leadingAnchor),
-            goalLabel.bottomAnchor.constraint(equalTo: informationView.topAnchor , constant: -10),
-            
-            
-            gramLabel.trailingAnchor.constraint(equalTo: informationView.trailingAnchor ),
-            gramLabel.centerYAnchor.constraint(equalTo: goalLabel.centerYAnchor ),
-            
-            
-            rightLabel.trailingAnchor.constraint(equalTo: gramLabel.leadingAnchor , constant: -5),
-            rightLabel.centerYAnchor.constraint(equalTo: goalLabel.centerYAnchor ),
-
-            
-            informationView.leadingAnchor.constraint(equalTo: self.leadingAnchor , constant: 20),
-            informationView.trailingAnchor.constraint(equalTo: self.trailingAnchor , constant: -20),
-            informationView.heightAnchor.constraint(equalToConstant: 120),
-            informationView.bottomAnchor.constraint(equalTo: self.bottomAnchor ,constant: -20),
-            
-            
-            topImage.widthAnchor.constraint(equalToConstant: 30),
-            topImage.heightAnchor.constraint(equalToConstant: 30) ,
-            topImage.trailingAnchor.constraint(equalTo: self.profileImage.trailingAnchor),
-            topImage.bottomAnchor.constraint(equalTo: self.profileImage.bottomAnchor),
-            
-            
-            informationStackView.centerYAnchor.constraint(equalTo: profileImage.centerYAnchor ,constant: 4),
-            informationStackView.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor ,constant: 30),
-            informationStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor ,constant: -30),
-            informationStackView.heightAnchor.constraint(equalToConstant: 40),
-            
-  
-        ])
+        
+        self.profileImage.snp.makeConstraints{
+            $0.width.height.equalTo(100)
+            $0.top.leading.equalTo(self).inset(20)
+        }
+        self.introduceLabel.snp.makeConstraints{
+            $0.leading.trailing.equalTo(self).inset(20)
+            $0.top.equalTo(self.profileImage.snp.bottom).offset(10)
+            $0.bottom.equalTo(self.goalLabel.snp.top).offset(-10)
+        }
+        self.goalLabel.snp.makeConstraints{
+            $0.leading.equalTo(informationView)
+            $0.bottom.equalTo(informationView.snp.top).offset(-10)
+        }
+        self.gramLabel.snp.makeConstraints{
+            $0.trailing.equalTo(informationView)
+            $0.centerY.equalTo(goalLabel)
+        }
+        self.rightLabel.snp.makeConstraints{
+            $0.trailing.equalTo(gramLabel.snp.leading).offset(-5)
+            $0.centerY.equalTo(goalLabel)
+        }
+        self.informationView.snp.makeConstraints{
+            $0.leading.trailing.equalTo(self).inset(20)
+            $0.height.equalTo(120)
+            $0.bottom.equalTo(self).inset(20)
+        }
+        self.topImage.snp.makeConstraints{
+            $0.width.height.equalTo(30)
+            $0.trailing.bottom.equalTo(self.profileImage)
+        }
+        self.informationStackView.snp.makeConstraints{
+            $0.centerY.equalTo(profileImage).offset(4)
+            $0.leading.equalTo(profileImage.snp.trailing).offset(30)
+            $0.trailing.equalTo(self).inset(30)
+            $0.height.equalTo(40)
+        }
+        
+        
+        
         
         let text = ["현재 체중" , "칼로리" , "목표 체중"]
         for i in 0..<3{
@@ -284,15 +264,19 @@ class ProfileHeaderView : UICollectionViewCell  {
             informLabelArr[i].textColor = .lightGray.withAlphaComponent(0.8)
             informLabelArr[i].font = .boldSystemFont(ofSize: 16)
             
-            self.addSubview(informDataArr[i])
-            
-            informDataArr[i].translatesAutoresizingMaskIntoConstraints = false
             informDataArr[i].font = .boldSystemFont(ofSize: 16)
             informDataArr[i].textColor = .black
             
+            self.addSubview(informDataArr[i])
             
-            informDataArr[i].centerXAnchor.constraint(equalTo: informLabelArr[i].centerXAnchor).isActive = true
-            informDataArr[i].centerYAnchor.constraint(equalTo: informationView.centerYAnchor , constant: 15).isActive = true
+            
+            
+            informDataArr[i].snp.makeConstraints{
+                $0.centerX.equalTo(informLabelArr[i])
+                $0.centerY.equalTo(informationView).offset(15)
+                
+            }
+            
             
             
         }

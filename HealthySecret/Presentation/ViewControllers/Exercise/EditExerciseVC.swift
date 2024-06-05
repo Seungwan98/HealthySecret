@@ -7,6 +7,7 @@
 
 import UIKit
 import RxSwift
+import SnapKit
 
 class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     let viewModel : EditExerciseVM?

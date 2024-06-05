@@ -9,6 +9,7 @@ import RxSwift
 import Kingfisher
 import SnapKit
 
+
 class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , FollowsBlocksCellDelegate   {
     func didPressbutton(for index: String, like: Bool) {
         self.pressedBlock.onNext([index:like])

@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 
 protocol FeedCollectionCellDelegate {
     func didPressHeart(for index: String, like: Bool)
@@ -26,26 +27,17 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
     var mainImage : UIImageView = {
         let image = UIImageView()
         image.backgroundColor = .lightGray.withAlphaComponent(0.2)
-        image.translatesAutoresizingMaskIntoConstraints = false
         return image
         
     }()
     
-    let topView : UIView = {
-       let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .white
-        return view
-        
-        
-    }()
+    let topView = UIView()
     
     let bottomView : UIView = {
         let view = UIView()
         view.isUserInteractionEnabled = true
         
         
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
         
         
@@ -59,14 +51,12 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
 
         imageView.layer.cornerRadius = 20
         imageView.backgroundColor = .clear
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         
         return imageView
     }()
     
     let nicknameLabel : UILabel = {
        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 18)
         return label
         
@@ -76,7 +66,6 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
     var contentLabel : UILabel = {
         
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 16)
         label.isUserInteractionEnabled = true
         
@@ -87,30 +76,33 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
     let likesButton : UIButton = {
         let button = UIButton()
         
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage( UIImage(systemName: "heart")  , for: .normal)
         button.contentVerticalAlignment = .fill
         button.contentHorizontalAlignment = .fill
         button.tintColor = .black
         
-        
-        button.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        button.snp.makeConstraints{
+            $0.width.equalTo(30)
+            $0.height.equalTo(26)
+        }
+   
         return button
     }()
     
     let comentsButton : UIButton = {
         let button = UIButton()
         
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage( UIImage(systemName: "message")  , for: .normal)
         
         button.contentVerticalAlignment = .fill
         button.contentHorizontalAlignment = .fill
         button.tintColor = .black
 
-        button.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        button.snp.makeConstraints{
+            $0.width.equalTo(30)
+            $0.height.equalTo(26)
+        }
+   
         
         return button
     }()
@@ -122,14 +114,12 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         stackview.alignment = .center
         stackview.distribution = .fillProportionally
         stackview.spacing = 14
-        stackview.translatesAutoresizingMaskIntoConstraints = false
         return stackview
         
     }()
     
     let likesLabel : UILabel = {
        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .boldSystemFont(ofSize: 16)
         label.text = "좋아요 0개"
         label.isUserInteractionEnabled = true
@@ -141,7 +131,6 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
     
     let comentsLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 16)
         label.text = "댓글 0개 보기"
         label.textColor = .lightGray
@@ -152,19 +141,12 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         return label
     }()
     
-    var pageControl : UIPageControl = {
-        let pageControl = UIPageControl()
-        pageControl.translatesAutoresizingMaskIntoConstraints = false
-        return pageControl
-        
-        
-    }()
+    var pageControl = UIPageControl()
     var scrollView = UIScrollView()
     var imageViews = [UIImageView]()
     
     let dateLabel : UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .lightGray
         label.font = .systemFont(ofSize: 14)
         return label
@@ -172,7 +154,6 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
     
     let ellipsis : UIButton = {
        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         button.tintColor = .black
         button.contentVerticalAlignment = .center
@@ -412,10 +393,8 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         self.scrollView.isScrollEnabled = true
         self.scrollView.showsHorizontalScrollIndicator = false
         self.scrollView.showsVerticalScrollIndicator = false
-        self.scrollView.translatesAutoresizingMaskIntoConstraints = false
         self.scrollView.delegate = self
         
-        mainView.translatesAutoresizingMaskIntoConstraints = false
         
         contentView.addSubview(mainView)
         
@@ -436,98 +415,65 @@ class FeedCollectionCell: UITableViewCell , UIScrollViewDelegate {
         self.bottomView.addSubview(self.comentsLabel)
     
         
-        NSLayoutConstraint.activate([
-            
-            
-            
-            self.mainView.topAnchor.constraint(equalTo: self.contentView.topAnchor ),
-            self.mainView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor ),
-            self.mainView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor ),
-            self.mainView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor ),
-            
-            self.topView.topAnchor.constraint(equalTo: self.contentView.topAnchor ),
-            self.topView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor ),
-            self.topView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor ),
-            self.topView.heightAnchor.constraint(equalToConstant: 60 ),
-            
-            self.profileImage.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
-            self.profileImage.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor , constant: 10),
-            self.profileImage.widthAnchor.constraint(equalToConstant: 40),
-            self.profileImage.heightAnchor.constraint(equalToConstant: 40),
-            
-            
-            
-        
-            self.nicknameLabel.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor ),
-            self.nicknameLabel.leadingAnchor.constraint(equalTo: self.profileImage.trailingAnchor , constant: 10 ),
-            self.nicknameLabel.trailingAnchor.constraint(equalTo: self.ellipsis.leadingAnchor , constant: -10 ),
-            
-            
-            self.ellipsis.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor ),
-            self.ellipsis.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor ),
-            self.ellipsis.widthAnchor.constraint(equalToConstant: 40 ),
-            self.ellipsis.heightAnchor.constraint(equalToConstant: 40 ),
- 
-            
-            
-            
-            self.scrollView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor ),
-            self.scrollView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor ),
-            self.scrollView.topAnchor.constraint(equalTo: self.topView.bottomAnchor ),
-            self.scrollView.heightAnchor.constraint(equalToConstant: 400),
-            
-            
-
-            
-            self.pageControl.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor ),
-            self.pageControl.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor ),
-            self.pageControl.heightAnchor.constraint(equalToConstant: 40),
-            self.pageControl.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor ),
-            
-            
-            
-            
-            self.bottomView.topAnchor.constraint(equalTo:  self.scrollView.bottomAnchor , constant: 10),
-            self.bottomView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor , constant: -10 ),
-            self.bottomView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor , constant: 10 ),
-            self.bottomView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor ),
-            
-            
-            self.buttonStackView.topAnchor.constraint(equalTo: bottomView.topAnchor),
-            self.buttonStackView.heightAnchor.constraint(equalToConstant: 30),
-            
-            self.dateLabel.centerYAnchor.constraint(equalTo: buttonStackView.centerYAnchor),
-            self.dateLabel.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor),
-            
-            
-            self.likesLabel.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor),
-            self.likesLabel.topAnchor.constraint(equalTo: buttonStackView.bottomAnchor , constant: 12),
-            self.likesLabel.heightAnchor.constraint(equalToConstant : 20),
-            
-            self.comentsLabel.bottomAnchor.constraint(equalTo: self.bottomView.bottomAnchor , constant: -12 ),
-            self.comentsLabel.leadingAnchor.constraint(equalTo: self.bottomView.leadingAnchor),
-            self.comentsLabel.trailingAnchor.constraint(equalTo: self.bottomView.trailingAnchor),
-            self.comentsLabel.heightAnchor.constraint(equalToConstant: 20),
-            
-            
-            self.contentLabel.topAnchor.constraint(equalTo: self.likesLabel.bottomAnchor , constant: 12),
-            self.contentLabel.trailingAnchor.constraint(equalTo: self.bottomView.trailingAnchor),
-            self.contentLabel.leadingAnchor.constraint(equalTo: self.bottomView.leadingAnchor),
-            self.contentLabel.bottomAnchor.constraint(equalTo: self.comentsLabel.topAnchor , constant: -12 ),
-            
-          
-            
-            
-           
-            
-            
-          
-            
-                                                
-            
-            
-        
-        ])
+        self.mainView.snp.makeConstraints{
+            $0.top.leading.trailing.bottom.equalTo(self.contentView)
+        }
+        self.topView.snp.makeConstraints{
+            $0.top.leading.trailing.equalTo(self.contentView)
+            $0.height.equalTo(60)
+        }
+        self.profileImage.snp.makeConstraints{
+            $0.centerY.equalTo(topView)
+            $0.leading.equalTo(topView).inset(10)
+            $0.width.height.equalTo(40)
+        }
+        self.nicknameLabel.snp.makeConstraints{
+            $0.centerY.equalTo(topView)
+            $0.leading.equalTo(self.profileImage.snp.trailing).offset(10)
+            $0.trailing.equalTo(self.ellipsis.snp.leading).offset(-10)
+        }
+        self.ellipsis.snp.makeConstraints{
+            $0.centerY.trailing.equalTo(self.topView)
+            $0.width.height.equalTo(40)
+        }
+        self.scrollView.snp.makeConstraints{
+            $0.trailing.leading.equalTo(self.contentView)
+            $0.top.equalTo(self.topView.snp.bottom)
+            $0.height.equalTo(400)
+        }
+        self.pageControl.snp.makeConstraints{
+            $0.trailing.leading.bottom.equalTo(self.scrollView)
+            $0.height.equalTo(40)
+        }
+        self.bottomView.snp.makeConstraints{
+            $0.top.equalTo(self.scrollView.snp.bottom).offset(10)
+            $0.trailing.leading.equalTo(self.contentView).inset(10)
+            $0.bottom.equalTo(self.contentView)
+        }
+        self.buttonStackView.snp.makeConstraints{
+            $0.top.equalTo(self.bottomView)
+            $0.height.equalTo(30)
+        }
+        self.dateLabel.snp.makeConstraints{
+            $0.centerY.equalTo(self.buttonStackView)
+            $0.trailing.equalTo(self.bottomView)
+        }
+        self.likesLabel.snp.makeConstraints{
+            $0.leading.equalTo(self.bottomView)
+            $0.top.equalTo(buttonStackView.snp.bottom).offset(12)
+            $0.height.equalTo(20)
+        }
+        self.comentsLabel.snp.makeConstraints{
+            $0.leading.trailing.equalTo(self.bottomView)
+            $0.bottom.equalTo(self.bottomView)
+            $0.height.equalTo(20)
+        }
+        self.contentLabel.snp.makeConstraints{
+            $0.trailing.leading.equalTo(self.bottomView)
+            $0.top.equalTo(self.likesLabel.snp.bottom).offset(12)
+            $0.bottom.equalTo(self.comentsLabel.snp.top).offset(-12)
+        }
+       
     }
     
     

@@ -12,6 +12,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 import Kingfisher
+import SnapKit
 
 class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     
@@ -76,7 +77,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         layout.scrollDirection = .vertical
         layout.sectionInset = UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 0)
         layout.headerReferenceSize = CGSize(width: self.view.frame.width, height: 400)
-        layout.footerReferenceSize  = CGSize(width: 0, height: 0)
+        layout.footerReferenceSize  = CGSize(width: 400, height: 400)
         
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -526,7 +527,6 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
             return header
         } else {
             
-          
                 guard let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DummyCollectionCell.identifier, for: indexPath) as? DummyCollectionCell else {
                     return UICollectionViewCell()
                     

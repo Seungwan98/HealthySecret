@@ -12,6 +12,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 import Kingfisher
+import SnapKit
 
 class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDelegate  , UITableViewDataSource, UITableViewDelegate {
     

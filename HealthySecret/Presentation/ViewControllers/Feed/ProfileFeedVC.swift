@@ -3,6 +3,7 @@ import Kingfisher
 import RxCocoa
 import RxSwift
 import RxGesture
+import SnapKit
 
 
 class ProfileFeedVC : UIViewController , UIScrollViewDelegate {

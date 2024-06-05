@@ -7,6 +7,7 @@
 import UIKit
 import RxSwift
 import Kingfisher
+import SnapKit
 
 
 class LikesVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , FollowsBlocksCellDelegate   {

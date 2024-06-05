@@ -1,5 +1,5 @@
 import UIKit
-
+import SnapKit
 
 protocol FollowsBlocksCellDelegate {
     func didPressbutton(for index: String , like: Bool)
@@ -11,7 +11,6 @@ class FollowsBlocksCell : UITableViewCell {
     
     let button : UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 15
         button.tintColor = .white
         button.titleLabel?.font = .boldSystemFont(ofSize: 12)
@@ -172,13 +171,7 @@ class FollowsBlocksCell : UITableViewCell {
     
     
     func layout() {
-        
-        
-        
-        self.button.translatesAutoresizingMaskIntoConstraints = false
-        self.nickname.translatesAutoresizingMaskIntoConstraints = false
-        self.profileImage.translatesAutoresizingMaskIntoConstraints = false
-        
+   
         self.nickname.font = .systemFont(ofSize: 18)
         
         self.addSubview(contentView)
@@ -186,28 +179,23 @@ class FollowsBlocksCell : UITableViewCell {
         self.contentView.addSubview(self.nickname)
         self.contentView.addSubview(self.profileImage)
         
-        
-        NSLayoutConstraint.activate([
-            
-            
-            self.profileImage.widthAnchor.constraint(equalToConstant: 40),
-            self.profileImage.heightAnchor.constraint(equalToConstant: 40),
-            self.profileImage.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            self.profileImage.leadingAnchor.constraint(equalTo: self.leadingAnchor , constant: 16),
-            
-            
-            self.button.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -12),
-            self.button.centerYAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.centerYAnchor),
-            self.button.widthAnchor.constraint(equalToConstant: 80),
-            self.button.heightAnchor.constraint(equalToConstant: 30),
-            
-            
-            self.nickname.leadingAnchor.constraint(equalTo: self.profileImage.trailingAnchor , constant: 10),
-            self.nickname.centerYAnchor.constraint(equalTo: self.centerYAnchor ),
-            self.nickname.trailingAnchor.constraint(equalTo: self.button.leadingAnchor , constant: -10 ),
-            
-            
-        ])
+        self.profileImage.snp.makeConstraints{
+            $0.width.height.equalTo(40)
+            $0.centerY.equalTo(self)
+            $0.leading.equalTo(self).inset(16)
+        }
+        self.button.snp.makeConstraints{
+            $0.trailing.equalTo(self.contentView).inset(12)
+            $0.centerY.equalTo(self.contentView.safeAreaLayoutGuide)
+            $0.width.equalTo(80)
+            $0.height.equalTo(30)
+        }
+        self.nickname.snp.makeConstraints{
+            $0.leading.equalTo(self.profileImage.snp.trailing).offset(10)
+            $0.centerY.equalTo(self)
+            $0.trailing.equalTo(self.button.snp.leading).offset(-10)
+        }
+ 
         
         
         

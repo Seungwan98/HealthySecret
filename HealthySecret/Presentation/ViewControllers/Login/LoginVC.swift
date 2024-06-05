@@ -6,6 +6,7 @@ import RxCocoa
 import KakaoSDKAuth
 import KakaoSDKUser
 import FirebaseAuth
+import SnapKit
 
 class LoginViewController : UIViewController {
     

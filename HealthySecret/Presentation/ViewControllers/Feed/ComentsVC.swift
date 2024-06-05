@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import Kingfisher
 import RxCocoa
+import SnapKit
 
 class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     func profileTapped(comentsUuid: String) {

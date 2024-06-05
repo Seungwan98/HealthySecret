@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxRelay
+import SnapKit
 
 class CustomSegment : UISegmentedControl {
     override init(items : [Any]?){

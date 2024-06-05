@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SnapKit
 
 class EditIngredientsCell : UITableViewCell {
     let name = UILabel()

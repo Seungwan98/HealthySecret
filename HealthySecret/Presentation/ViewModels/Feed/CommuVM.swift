@@ -131,16 +131,15 @@ class CommuVM : ViewModel {
                 switch(event){
                 case.completed:
          
-                    
-                        
-                        
+      
                         
                     var count = 4
-                    
+
                     for i in 0..<self.feedModels.count{
+
                         if(self.feedModels[i].feedUid == feedUid){
-                                self.feedModels.remove(at: i)
-                                
+                            self.feedModels.remove(at: 0)
+                            break
                             }
                         }
                     count = self.feedModels.count

@@ -53,38 +53,42 @@ class ProfileUseCase  {
                 case .success(let feedDtos):
                     var index = 0
                     var feedModels = feedDtos.map{ $0.toDomain(nickname: "" , profileImage: "" ) }
-                    for i in 0..<feedDtos.count {
-                        self.userRepository.getUser(uid: feedDtos[i].uuid ).subscribe({ event in
-                            
-                            switch(event){
-                            case.success(let user):
+                    if(feedDtos.isEmpty){
+                        single(.success([]))
+                    }else{
+                        for i in 0..<feedDtos.count {
+                            self.userRepository.getUser(uid: feedDtos[i].uuid ).subscribe({ event in
                                 
-                                print("feedDtos \(feedDtos)")
-                                
-                                feedModels[i] = feedDtos[i].toDomain(nickname: user.name , profileImage: user.profileImage ?? "")
-                                
-                                if(index + 1 >= feedDtos.count){
-                                    single(.success(feedModels))
-                                }else{
-                                    index += 1
+                                switch(event){
+                                case.success(let user):
+                                    
+                                    print("feedDtos \(feedDtos)")
+                                    
+                                    feedModels[i] = feedDtos[i].toDomain(nickname: user.name , profileImage: user.profileImage ?? "")
+                                    
+                                    if(index + 1 >= feedDtos.count){
+                                        single(.success(feedModels))
+                                    }else{
+                                        index += 1
+                                    }
+                                    
+                                    
+                                    
+                                    
+                                case .failure(_):
+                                    single(.failure(CustomError.isNil))
                                 }
                                 
                                 
                                 
-                                
-                            case .failure(_):
-                                single(.failure(CustomError.isNil))
-                            }
+                            }).disposed(by: self.disposeBag)
                             
-                            
-                            
-                        }).disposed(by: self.disposeBag)
-                        
+                        }
                     }
                     
-                    
                 case .failure(let err):
-                    single( .failure(err))
+                    single(.failure(CustomError.isNil))
+
                 }
                 
                 

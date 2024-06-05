@@ -6,6 +6,7 @@
 //
 import UIKit
 import RxSwift
+import SnapKit
 
 
 class IngredientsViewController : UIViewController, UIScrollViewDelegate, IngredientsCellDelegate, UISearchBarDelegate   {

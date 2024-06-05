@@ -12,6 +12,7 @@ import RxGesture
 import Kingfisher
 import AVFoundation
 import Photos
+import SnapKit
 
 class ChangeIntroduceVC : UIViewController {
     

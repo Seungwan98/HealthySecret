@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import FSCalendar
 import RxSwift
+import SnapKit
 
 class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance {
     

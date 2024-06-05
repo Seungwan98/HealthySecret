@@ -9,6 +9,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 import RxGesture
+import SnapKit
 
 class AddDiaryVC : UIViewController {
     

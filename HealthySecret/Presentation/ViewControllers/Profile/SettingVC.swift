@@ -11,6 +11,7 @@ import RxSwift
 import RxGesture
 import AuthenticationServices
 import FirebaseAuth
+import SnapKit
 
 class SettingVC : UIViewController {
     
