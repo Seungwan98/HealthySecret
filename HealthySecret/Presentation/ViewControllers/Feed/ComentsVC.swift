@@ -191,7 +191,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     var reportTapped = PublishSubject<ComentModel>()
     
     
-    func setBindings(){
+    func setBindings() {
         addButton.rx.tap.asObservable().subscribe({ _ in
             
             self.textView.text = ""
@@ -201,7 +201,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         var feedUuid = ""
 
         
-        let input = ComentsVM.Input(addButtonTapped : addButton.rx.tap.asObservable(), coments: self.textView.rx.text.orEmpty.distinctUntilChanged().asObservable() , comentsDelete : comentsDelete.asObservable() , profileTapped : self.profileTapped.asObservable() , reportTapped : self.reportTapped.asObservable() )
+        let input = ComentsVM.Input(addButtonTapped: addButton.rx.tap.asObservable(), coments: self.textView.rx.text.orEmpty.distinctUntilChanged().asObservable(), comentsDelete: comentsDelete.asObservable() , profileTapped: self.profileTapped.asObservable(), reportTapped: self.reportTapped.asObservable() )
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else {return}
         
         output.backgroundHidden.bind(to: self.backgroundView.rx.isHidden ).disposed(by: disposeBag)
@@ -242,7 +242,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
             
             
             //작성자 표시
-            if(feedUuid == item.uid){
+            if(feedUuid == item.uid) {
                 
                 cell.ownTitle.isHidden = false
                 
@@ -252,7 +252,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
 
             }
             
-            if(uid == item.uid){
+            if(uid == item.uid) {
                 
                 cell.mine = true
                 
@@ -261,8 +261,8 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
                 cell.mine = false
             }
                 
-            let profileImage = item.profileImage ?? ""
-            if (!profileImage.isEmpty){
+            let profileImage = item.profileImage
+            if !(profileImage.isEmpty) {
                 
                 
                 let url = URL(string: profileImage )
@@ -295,7 +295,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         
         
         
-        output.alert.subscribe(onNext : { _ in 
+        output.alert.subscribe(onNext: { _ in
             
             AlertHelper.shared.showResult(title: "신고가 접수되었습니다", message: "신고는 24시간 이내 검토 후 반영됩니다", over: self)
 
@@ -308,14 +308,14 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     
 extension ComentsVC : UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView ) {
-        if(textView.text.count > 0) {
+        if !(textView.text.isEmpty ) {
             self.addButton.backgroundColor = .systemBlue
             self.addButton.isEnabled = true
-        }else{
+        } else {
             self.addButton.backgroundColor = .lightGray.withAlphaComponent(0.2)
             self.addButton.isEnabled = false
         }
-        let size = CGSize(width: textView.frame.width , height: .infinity)
+        let size = CGSize(width: textView.frame.width, height: .infinity)
         let estimatedSize = textView.sizeThatFits(size)
         textView.constraints.forEach { (constraint) in
             if constraint.firstAttribute == .height {
@@ -330,23 +330,23 @@ extension ComentsVC {
     
   
     // 노티피케이션을 추가하는 메서드
-    func addKeyboardNotifications(){
+    func addKeyboardNotifications() {
         // 키보드가 나타날 때 앱에게 알리는 메서드 추가
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShowComents(_:)), name: UIResponder.keyboardWillShowNotification , object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShowComents(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         // 키보드가 사라질 때 앱에게 알리는 메서드 추가
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHideComents(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
     // 노티피케이션을 제거하는 메서드
-    func removeKeyboardNotifications(){
+    func removeKeyboardNotifications() {
         // 키보드가 나타날 때 앱에게 알리는 메서드 제거
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification , object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         // 키보드가 사라질 때 앱에게 알리는 메서드 제거
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // 키보드가 나타났다는 알림을 받으면 실행할 메서드
-    @objc func keyboardWillShowComents(_ noti: NSNotification){
+    @objc func keyboardWillShowComents(_ noti: NSNotification) {
         // 키보드의 높이만큼 화면을 올려준다.
         if let keyboardSize = (noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             self.BOTTOMVIEW_ORIGIN_Y =  self.bottomView.frame.origin.y

@@ -1,0 +1,41 @@
+included: # 린트 과정에 포함할 파일 경로.
+
+excluded: # 린트 과정에서 무시할 파일 경로. `included`보다 우선순위 높음
+- Pods
+  
+disabled_rules: # 실행에서 제외할 룰 식별자들
+- force_cast
+- force_try
+- identifier_name
+- type_name
+- type_body_length
+- function_body_length
+- shorthand_operator
+- cyclomatic_complexity
+- function_parameter_count
+- large_tuple
+- vertical_whitespace
+- trailing_whitespace
+- unused_capture_list
+- empty_enum_arguments
+
+
+line_length: # 코드 길이 제한
+    warning: 2000
+    error: 2000
+    ignores_comments: true
+    ignores_urls: true
+
+file_length: # 코드 라인수 제한
+    warning: 1000
+    error: 100000
+    
+todo: # TODO, FIXME 미해결 확인
+    included: ".*.swift"
+    match_kinds: comment
+    severity: warning
+
+opt_in_rules: # 옵트 인 룰
+  - indentation_width
+  - empty_count
+  - empty_string

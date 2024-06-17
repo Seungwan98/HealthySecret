@@ -556,10 +556,10 @@ class CommuVC : UIViewController, UIScrollViewDelegate , FeedCollectionCellDeleg
         
 
         
-        output.feedModel.subscribe(onNext:{ [weak self] feeds in
+        output.feedModel.subscribe(onNext: { [weak self] feeds in
             guard let self = self else {return}
             self.feeds = feeds
-            self.backgroundView.isHidden = !(feeds.count <= 0 )
+            self.backgroundView.isHidden = !(feeds.isEmpty )
             
             self.tableView.reloadData()
             

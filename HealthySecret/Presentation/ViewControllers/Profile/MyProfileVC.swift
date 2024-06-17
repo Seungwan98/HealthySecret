@@ -612,7 +612,7 @@ extension MyProfileVC: UICollectionViewDelegateFlowLayout {
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
        
-        if(self.imagesArr.count > 0){
+        if !(self.imagesArr.isEmpty) {
             return CGSize(width: 0 , height: 0 )
         }else{
             return CGSize(width: collectionView.frame.width, height: collectionView.frame.width)

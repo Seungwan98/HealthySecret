@@ -317,10 +317,10 @@ class ChangeIntroduceVC : UIViewController {
     
         
         
-        Observable.zip(output.name.asObservable() , output.introduce.asObservable() , output.profileImage.asObservable() ).subscribe(onNext: {
+        Observable.zip(output.name.asObservable(), output.introduce.asObservable(), output.profileImage.asObservable() ).subscribe(onNext: {
             
             
-            if  $1.count <= 0 {
+            if  $1.isEmpty {
          
                 
                     self.introduceTextView.textColor = .lightGray
@@ -503,7 +503,7 @@ extension ChangeIntroduceVC : UIImagePickerControllerDelegate , UINavigationCont
                 }
             })
         }
-    func checkAlbumPermission(){
+    func checkAlbumPermission() {
             PHPhotoLibrary.requestAuthorization( { status in
                 switch status{
                 case .authorized:
@@ -521,11 +521,11 @@ extension ChangeIntroduceVC : UIImagePickerControllerDelegate , UINavigationCont
                 }
             })
         }
-    func actionSheetAlert(){
+    func actionSheetAlert() {
         let alert = UIAlertController(title: nil , message: nil , preferredStyle: .alert)
         
         let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-        let replaceImage = UIAlertAction(title: "삭제" , style: .default ){
+        let replaceImage = UIAlertAction(title: "삭제", style: .default ){
             [weak self] _ in
             self?.profileImageView.image = self?.smileImage
             self?.profileImageView.layer.cornerRadius = 0
@@ -552,7 +552,7 @@ extension ChangeIntroduceVC : UIImagePickerControllerDelegate , UINavigationCont
         
     }
     
-    func presentCamera(){
+    func presentCamera() {
         
         let vc = UIImagePickerController()
         vc.sourceType = .camera
@@ -563,7 +563,7 @@ extension ChangeIntroduceVC : UIImagePickerControllerDelegate , UINavigationCont
         present(vc, animated: true, completion: nil)
     }
     
-    func presentAlbum(){
+    func presentAlbum() {
         
         
         let vc = UIImagePickerController()
@@ -589,8 +589,7 @@ extension ChangeIntroduceVC : UIImagePickerControllerDelegate , UINavigationCont
                 
             }
             
-        }
-        else{
+        } else {
             
             if let image = info[.originalImage] as? UIImage {
                 self.profileImageView.image = image
@@ -618,7 +617,7 @@ extension ChangeIntroduceVC : UITextViewDelegate {
     
     func textViewDidEndEditing(_ textView: UITextView) {
    
-        if textView.text.count <= 0 {
+        if textView.text.isEmpty {
             
             textView.textColor = .lightGray
             textView.text = "내 소개를 입력하여 주세요."
@@ -629,7 +628,7 @@ extension ChangeIntroduceVC : UITextViewDelegate {
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         
-        if textView.text.count <= 0 {
+        if textView.text.isEmpty {
             
             textView.textColor = .lightGray
             textView.text = "내 소개를 입력하여 주세요."

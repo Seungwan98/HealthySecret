@@ -1281,8 +1281,8 @@ extension FirebaseService {
                 print("total \(totalFeeds)")
                 
                 
-                if(followCount < 4 || getFollow ) {
-                    getFeedPagination(feeds: totalFeeds , pagesCount: 4, follow: follow , getFollow: getFollow , followCount: followCount, block: block ).subscribe({ event in
+                if (followCount < 4 || getFollow ) {
+                    getFeedPagination(feeds: totalFeeds, pagesCount: 4, follow: follow, getFollow: getFollow, followCount: followCount, block: block ).subscribe({ event in
                         switch(event){
                             
                         case.success(let feeds):
@@ -1291,9 +1291,9 @@ extension FirebaseService {
                             
                             single(.success(feeds))
                         case.failure(let err):
-                            if(err as! CustomError == CustomError.isNil){
+                            if (err as! CustomError == CustomError.isNil){
                                 
-                                if(totalFeeds.count == 0 ){
+                                if (totalFeeds.isEmpty ){
                                     single(.failure(CustomError.isNil))
                                 }
                                 

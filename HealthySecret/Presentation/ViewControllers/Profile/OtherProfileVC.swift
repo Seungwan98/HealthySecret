@@ -610,14 +610,14 @@ extension OtherProfileVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = view.frame.size.width / 3
         
-        return CGSize(width: width  , height: width  )
+        return CGSize(width: width, height: width  )
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
        
-        if(self.imagesArr.count > 0){
+        if !(self.imagesArr.isEmpty) {
             return CGSize(width: 0 , height: 0 )
-        }else{
+        } else {
             return CGSize(width: collectionView.frame.width, height: collectionView.frame.width)
 
         }
@@ -626,7 +626,7 @@ extension OtherProfileVC: UICollectionViewDelegateFlowLayout {
      }
 }
 
-extension OtherProfileVC : UINavigationControllerDelegate {
+extension OtherProfileVC: UINavigationControllerDelegate {
     @objc func actionSheetAlert( ){
         let alert = UIAlertController(title: nil , message: nil , preferredStyle: .actionSheet)
         

@@ -8,13 +8,13 @@
 import Foundation
 import UIKit
 
-class ProfileCoordinator : Coordinator {
+class ProfileCoordinator: Coordinator {
     
-    private let kakaoService : KakaoService
+    private let kakaoService: KakaoService
 
-    private let firebaseService : FirebaseService
+    private let firebaseService: FirebaseService
     
-    private let appleService : AppleService
+    private let appleService: AppleService
     
     var parentCoordinator: TabBarCoordinator?
         
@@ -24,7 +24,7 @@ class ProfileCoordinator : Coordinator {
         
     var type: CoordinatorType = .myprofile
             
-    var navigationController : UINavigationController
+    var navigationController: UINavigationController
         
     var childCoordinator: [Coordinator] = []
     
@@ -40,7 +40,7 @@ class ProfileCoordinator : Coordinator {
     func start() {}
  
    
-    func pushAddFeedVC(){
+    func pushAddFeedVC() {
         let viewController = AddFeedVC(viewModel: AddFeedVM( coordinator: self, commuUseCase: CommuUseCase(feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService), userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService)) ))
         
         self.navigationController.navigationBar.topItem?.title = ""
@@ -48,7 +48,7 @@ class ProfileCoordinator : Coordinator {
         
         viewController.hidesBottomBarWhenPushed = true
 
-        self.navigationController.pushViewController(viewController , animated: false)
+        self.navigationController.pushViewController(viewController, animated: false)
     }
         
     
@@ -58,37 +58,33 @@ class ProfileCoordinator : Coordinator {
     func PushMyProfileVC() {
      
 
-        
-        let firebaseService = self.firebaseService
-        let kakaoService = self.kakaoService
-        let viewController =  MyProfileVC(viewModel : MyProfileVM ( coordinator : self , profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService )  , feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService) ) ) )
+        let viewController =  MyProfileVC(viewModel: MyProfileVM( coordinator: self, profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService) ) ) )
         
 
 
        
-        self.navigationController.pushViewController( viewController , animated: true )
+        self.navigationController.pushViewController( viewController, animated: true )
     
     }
     
     func PushOtherProfileVC( uuid: String) {
      
         
-        let viewModel = OtherProfileVM(coordinator: self , profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService , appleService: self.appleService , kakaoServcie: self.kakaoService  ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService ))   , commuUseCase: CommuUseCase(feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), userRepository: DefaultUserRepository (firebaseService: self.firebaseService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService )), followUseCase: FollowUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), followsRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService )), uuid: uuid )
+        let viewModel = OtherProfileVM(coordinator: self, profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService  ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService )), commuUseCase: CommuUseCase(feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService )), followUseCase: FollowUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), followsRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService )), uuid: uuid )
         
-        let viewController = OtherProfileVC(viewModel:viewModel)
+        let viewController = OtherProfileVC(viewModel: viewModel)
         self.navigationController.navigationBar.topItem?.title = ""
         self.navigationController.navigationBar.tintColor = .black
         
         viewController.hidesBottomBarWhenPushed = true
 
-        self.navigationController.pushViewController(viewController , animated: false)
+        self.navigationController.pushViewController(viewController, animated: false)
     
     }
     
-    func pushChangeProfileVC(name : String , introduce : String , profileImage : Data? , beforeImageUrl : String){
-        let firebaseService = self.firebaseService
-        let kakaoService = self.kakaoService
-        let viewModel = ChangeIntroduceVM(coordinator: self, profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService ) , fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService ) ) )
+    func pushChangeProfileVC(name: String, introduce: String, profileImage: Data?, beforeImageUrl: String) {
+   
+        let viewModel = ChangeIntroduceVM(coordinator: self, profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService ) ) )
         viewModel.introduce = introduce
         viewModel.name = name
         viewModel.beforeImage = beforeImageUrl
@@ -105,12 +101,9 @@ class ProfileCoordinator : Coordinator {
         
     }
     
-    func pushSettingVC(){
-        print("setting")
-        let firebaseService = self.firebaseService
-        let kakaoService = self.kakaoService
-
-        let viewModel = MyProfileVM(coordinator: self , profileUseCase : ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService ))  )
+    func pushSettingVC() {
+  
+        let viewModel = MyProfileVM(coordinator: self, profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService ))  )
         let viewController = SettingVC(viewModel: viewModel)
         
         self.navigationController.navigationBar.topItem?.title = ""
@@ -121,7 +114,7 @@ class ProfileCoordinator : Coordinator {
     }
     
     
-    func pushBlockList(){
+    func pushBlockList() {
        
 
         let viewController = BlockListVC(viewModel: BlockListVM(coordinator: self, profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService)) ))
@@ -145,9 +138,9 @@ class ProfileCoordinator : Coordinator {
     
 
     
-    func pushChangeSignUpVC(user : UserModel){
+    func pushChangeSignUpVC(user: UserModel) {
         
-        let viewModel = ChangeSignUpVM(coordinator: self, profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService , kakaoServcie: self.kakaoService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService )))
+        let viewModel = ChangeSignUpVM(coordinator: self, profileUseCase: ProfileUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ), feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService ), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService ), fireStorageRepository: DefaultFireStorageRepository(firebaseService: self.firebaseService ), followRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService )))
         viewModel.signUpModel = user.toSignUpModel()
         let viewController = ChangeSignUpVC(viewModel: viewModel)
         viewController.hidesBottomBarWhenPushed = true
@@ -163,7 +156,7 @@ class ProfileCoordinator : Coordinator {
     }
     
     
-    func pushProfileFeed(feedUid:String){
+    func pushProfileFeed(feedUid: String) {
         let commuCoordinator = CommuCoordinator(self.navigationController)
         
         childCoordinator.append(commuCoordinator)
@@ -174,13 +167,13 @@ class ProfileCoordinator : Coordinator {
 
     
     
-    func pushFollowsVC( follow : Bool , uid : String , name : String ) {
+    func pushFollowsVC( follow: Bool, uid: String, name: String ) {
         
         let coordinator = FollowsCoordinator(self.navigationController)
         
         childCoordinator.append(coordinator)
         coordinator.finishDelegate = self
-        coordinator.startPush(follow: follow , uid : uid, name: name  )
+        coordinator.startPush(follow: follow, uid: uid, name: name  )
         
     }
     
@@ -197,7 +190,7 @@ class ProfileCoordinator : Coordinator {
     
     
 }
-extension ProfileCoordinator : CoordinatorFinishDelegate {
+extension ProfileCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinishNotRoot(childCoordinator: any Coordinator) {
         //
     }

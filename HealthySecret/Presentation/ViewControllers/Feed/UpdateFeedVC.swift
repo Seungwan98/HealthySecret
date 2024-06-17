@@ -588,7 +588,7 @@ extension UpdateFeedVC : UITextViewDelegate {
     
     func textViewDidEndEditing(_ textView: UITextView) {
    
-        if textView.text.count <= 0 {
+        if textView.text.isEmpty {
             
             textView.textColor = .lightGray
             textView.text = "부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다."
@@ -599,17 +599,17 @@ extension UpdateFeedVC : UITextViewDelegate {
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         
-        if textView.text.count <= 0 {
+        if textView.text.isEmpty {
             
             textView.textColor = .lightGray
             textView.text = "부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다."
 
             
-        }else if(textView.text == "부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다." && textView.textColor == .lightGray){
+        } else if (textView.text == "부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다." && textView.textColor == .lightGray){
             textView.text = ""
             textView.textColor = .black
             
-        }else{
+        } else {
             textView.textColor = .black
 
         }
