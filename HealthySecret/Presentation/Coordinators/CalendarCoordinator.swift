@@ -12,7 +12,7 @@ import Foundation
 
 class CalendarCoordinator: Coordinator {
     
-    var parentCoordinator : DiaryCoordinator?
+    var parentCoordinator: DiaryCoordinator?
     
     var childCoordinator: [Coordinator] = []
         
@@ -28,7 +28,7 @@ class CalendarCoordinator: Coordinator {
     
     func start() {
         let firebaseService = FirebaseService()
-        let viewModel = CalendarVM(coordinator: self, calendarUseCase: CalendarUseCase(exerciseRepository: DefaultExerciseRepository(firebaseService: firebaseService), userRepository: DefaultUserRepository(firebaseService : firebaseService)))
+        let viewModel = CalendarVM(coordinator: self, calendarUseCase: CalendarUseCase(exerciseRepository: DefaultExerciseRepository(firebaseService: firebaseService), userRepository: DefaultUserRepository(firebaseService: firebaseService)))
         let calendarViewController = CalendarViewController(viewModel: viewModel)
         calendarViewController.view.backgroundColor =  .white
         calendarViewController.hidesBottomBarWhenPushed = true
@@ -45,7 +45,7 @@ class CalendarCoordinator: Coordinator {
         
     }
     
-    func pushAddDiaryVC(pickDate : String , diarys : [Diary]){
+    func pushAddDiaryVC(pickDate: String, diarys: [Diary]) {
         let firebaseService = FirebaseService()
         let viewModel = CalendarVM(coordinator: self, calendarUseCase: CalendarUseCase(exerciseRepository: DefaultExerciseRepository(firebaseService: firebaseService), userRepository: DefaultUserRepository(firebaseService: firebaseService)))
         viewModel.pickDate = pickDate
@@ -59,7 +59,7 @@ class CalendarCoordinator: Coordinator {
 
     }
     
-    func BacktoDiaryVC(){
+    func BacktoDiaryVC() {
         finishDelegate?.coordinatorDidFinish(childCoordinator: self)
 
       
@@ -69,7 +69,7 @@ class CalendarCoordinator: Coordinator {
     
 }
 
-extension CalendarCoordinator : CoordinatorFinishDelegate {
+extension CalendarCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinishNotRoot(childCoordinator: any Coordinator) {
         //
     }

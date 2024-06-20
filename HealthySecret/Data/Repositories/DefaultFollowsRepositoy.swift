@@ -9,19 +9,19 @@ import Foundation
 import RxSwift
 
 
-class DefaultFollowsRepositoy : FollowsRepository {
+class DefaultFollowsRepositoy: FollowsRepository {
    
    
-    private let firebaseService : FirebaseService
+    private let firebaseService: FirebaseService
     
-    init( firebaseService : FirebaseService   ) {
+    init( firebaseService: FirebaseService   ) {
         self.firebaseService = firebaseService
     }
     
     
   
     func updateFollowers(ownUid: String, opponentUid: String, follow: Bool) -> Completable {
-        return firebaseService.updateFollowers(ownUid: ownUid , opponentUid: opponentUid, follow: follow)
+        return firebaseService.updateFollowers(ownUid: ownUid, opponentUid: opponentUid, follow: follow)
     }
     
     func getFollowsLikes(uid: [String]) -> Single<[UserModel]> {

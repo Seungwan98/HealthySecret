@@ -10,20 +10,20 @@ import RxCocoa
 import RxSwift
 
 
-class EditIngredientsVM : ViewModel {
+class EditIngredientsVM: ViewModel {
     
     
     var disposeBag = DisposeBag()
     
-    var Ingredients : [IngredientsModel]
+    var Ingredients: [IngredientsModel]
     
     
     
     struct Input {
-        let viewWillApearEvent : Observable<Void>
-        let edmitButtonTapped : Observable<Void>
-        let inputArr : Observable<[IngredientsModel]>
-        let addButtonTapped : Observable<Void>
+        let viewWillApearEvent: Observable<Void>
+        let edmitButtonTapped: Observable<Void>
+        let inputArr: Observable<[IngredientsModel]>
+        let addButtonTapped: Observable<Void>
     }
     
     struct Output {
@@ -36,11 +36,11 @@ class EditIngredientsVM : ViewModel {
 
     
     
-    weak var coordinator : IngredientsCoordinator?
-    private let ingredientsUseCase : IngredientsUseCase
-    private let firebaseService : FirebaseService
+    weak var coordinator: IngredientsCoordinator?
+    private let ingredientsUseCase: IngredientsUseCase
+    private let firebaseService: FirebaseService
     
-    init( coordinator : IngredientsCoordinator , firebaseService : FirebaseService , Ingredients : [IngredientsModel] , ingredientsUseCase : IngredientsUseCase){
+    init( coordinator: IngredientsCoordinator, firebaseService: FirebaseService, Ingredients: [IngredientsModel], ingredientsUseCase: IngredientsUseCase) {
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
         self.Ingredients =  Ingredients
@@ -58,7 +58,7 @@ class EditIngredientsVM : ViewModel {
         let value = 0
 
         
-        switch UserDefaults.standard.string(forKey: "meal"){
+        switch UserDefaults.standard.string(forKey: "meal") {
         case "아침식사":
             output.imagePicker.onNext(0)
         case "점심식사":
@@ -84,7 +84,7 @@ class EditIngredientsVM : ViewModel {
             guard let self = self else {return}
             input.inputArr.subscribe(onNext: { arr in
                 
-                self.ingredientsUseCase.updateUsersIngredients(models: arr).subscribe({ event in
+                self.ingredientsUseCase.updateUsersIngredients(models: arr).subscribe({ _ in
                     
                     self.coordinator?.backToDiaryVC()
                     

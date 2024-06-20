@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 import SnapKit
-class EditExerciseCell : UITableViewCell {
+class EditExerciseCell: UITableViewCell {
     let name = UILabel()
     let time = UILabel()
     let calorie = UILabel()
@@ -26,11 +26,10 @@ class EditExerciseCell : UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func layoutToEdit(){
+    func layoutToEdit() {
         
-        //layoutToEdit
-        //
-        //
+        // layoutToEdit
+
         
         self.contentView.addSubview(self.name)
         self.contentView.addSubview(self.time)
@@ -46,28 +45,28 @@ class EditExerciseCell : UITableViewCell {
         
         self.name.font = .systemFont(ofSize: 22)
         
-        self.deleteButton.setImage(UIImage(systemName: "xmark") , for: .normal)
+        self.deleteButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         self.deleteButton.tintColor = .black
         
-        self.time.snp.makeConstraints{
+        self.time.snp.makeConstraints {
             $0.leading.equalTo(self).inset(20)
             $0.centerY.equalTo(self).offset(14)
         }
-        self.name.snp.makeConstraints{
+        self.name.snp.makeConstraints {
             $0.leading.equalTo(self).inset(20)
             $0.centerY.equalTo(self).offset(-14)
 
         }
-        self.deleteButton.snp.makeConstraints{
+        self.deleteButton.snp.makeConstraints {
             $0.centerY.equalTo(self)
             $0.trailing.equalTo(self).inset(20)
             $0.width.height.equalTo(20)
         }
-        self.exerciseGram.snp.makeConstraints{
+        self.exerciseGram.snp.makeConstraints {
             $0.trailing.equalTo(self.deleteButton).inset(30)
             $0.centerY.equalTo(self)
         }
-        self.name.snp.makeConstraints{
+        self.name.snp.makeConstraints {
             $0.trailing.equalTo(self.exerciseGram.snp.leading).offset(-10)
         }
    
@@ -82,7 +81,7 @@ class EditExerciseCell : UITableViewCell {
         self.name.font = .systemFont(ofSize: 18)
         self.contentView.addSubview(self.name)
 
-        self.name.snp.makeConstraints{
+        self.name.snp.makeConstraints {
             $0.leading.equalTo(self).inset(15)
             $0.centerY.equalTo(self)
         }

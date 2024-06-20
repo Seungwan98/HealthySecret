@@ -9,17 +9,17 @@ import RxSwift
 import SnapKit
 
 
-class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
-   
+class ExerciseViewController: UIViewController, UIScrollViewDelegate {
+    
     
     
     
     
     
     let disposeBag = DisposeBag()
-    private let viewModel : ExerciseVM?
+    private let viewModel: ExerciseVM?
     
-    init(viewModel : ExerciseVM){
+    init(viewModel: ExerciseVM) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         
@@ -33,9 +33,9 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
     
     
     
-    lazy private var tableView : UITableView = {
+    lazy private var tableView: UITableView = {
         let tableView = UITableView()
-
+        
         tableView.backgroundColor = .clear
         tableView.allowsMultipleSelection = true
         return tableView
@@ -48,9 +48,9 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
         button.isEnabled = false
         return button
     }()
- 
     
-    private var titleLabel : UILabel = {
+    
+    private var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textColor = .white
@@ -60,7 +60,7 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
     }()
     
     
-    private lazy var titleLabelStackView : UIStackView = {
+    private lazy var titleLabelStackView: UIStackView = {
         let stackview = UIStackView(arrangedSubviews: [titleLabel])
         stackview.axis = .vertical
         stackview.distribution = .fill
@@ -78,20 +78,20 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
     
     
     
-    override func viewDidLoad(){
+    override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
         self.makeView()
         self.setupSearchController()
         self.setBinds()
         
-
+        
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
-       // self.navigationController?.hidesBarsOnSwipe = false
-
+        // self.navigationController?.hidesBarsOnSwipe = false
+        
         self.navigationController?.navigationBar.backgroundColor = .systemBlue.withAlphaComponent(0.5)
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         
@@ -102,15 +102,15 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
         }
     }
     override func viewWillDisappear(_ animated: Bool) {
-
+        
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
     }
     
     
     
-    func setBinds(){
-        let input = ExerciseVM.Input(viewWillApearEvent :  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable(), cellTapped: tableView.rx.modelSelected(ExerciseModel.self).asObservable() , searchText: searchController.searchBar.rx.text.orEmpty.asObservable())
+    func setBinds() {
+        let input = ExerciseVM.Input(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable(), cellTapped: tableView.rx.modelSelected(ExerciseModel.self).asObservable(), searchText: searchController.searchBar.rx.text.orEmpty.asObservable())
         
         
         
@@ -122,25 +122,25 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
         tableView.rx.rowHeight.onNext(60)
         tableView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
-                        self?.tableView.deselectRow(at: indexPath, animated: true)
-                    }).disposed(by: disposeBag)
+            self?.tableView.deselectRow(at: indexPath, animated: true)
+        }).disposed(by: disposeBag)
         
         
         
         
         
-        output.exerciseArr.bind(to: tableView.rx.items(cellIdentifier: "ExerciseCell" ,cellType: EditExerciseCell.self )){index,item,cell in
+        output.exerciseArr.bind(to: tableView.rx.items(cellIdentifier: "ExerciseCell", cellType: EditExerciseCell.self )) { _, item, cell in
             
             cell.layoutToAdd()
             cell.exerciseGram.text = item.exerciseGram
             cell.name.text = item.name
-
+            
         }.disposed(by: disposeBag)
         
         output.titleLabelText.subscribe(onNext: { text in
             
             self.titleLabel.text = text
-        
+            
             
             
         }).disposed(by: disposeBag)
@@ -148,18 +148,17 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
     
     
     
-    //SearchController로 SearchBar 추가
+    // SearchController로 SearchBar 추가
     func setupSearchController() {
         
         
         
         searchController.searchBar
             .searchTextField
-            .attributedPlaceholder = NSAttributedString(string: "운동 검색",
-                                                        attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
+            .attributedPlaceholder = NSAttributedString(string: "운동 검색", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         
         searchController.searchBar.searchTextField.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.2)
-
+        
         searchController.searchBar.searchTextField.leftView?.tintColor = .white
         searchController.searchBar.searchTextField.layer.cornerRadius = 18
         searchController.searchBar.searchTextField.layer.masksToBounds = true
@@ -173,21 +172,21 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
         
         
         definesPresentationContext = false
-
+        
         self.navigationItem.hidesSearchBarWhenScrolling = false
         self.navigationItem.searchController = searchController
-
+        
         
         
     }
     
     
-    func makeView(){
+    func makeView() {
         
         self.navigationItem.titleView = titleLabelStackView
         self.navigationItem.rightBarButtonItem = self.rightButton
         
-
+        
         
         tableView.register(EditExerciseCell.self, forCellReuseIdentifier: "ExerciseCell")
         
@@ -195,42 +194,19 @@ class ExerciseViewController : UIViewController, UIScrollViewDelegate  {
         self.view.addSubview(mainView)
         self.view.addSubview(tableView)
         
-        mainView.snp.makeConstraints{
+        mainView.snp.makeConstraints {
             $0.top.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
-        tableView.snp.makeConstraints{
+        tableView.snp.makeConstraints {
             $0.top.bottom.leading.trailing.equalTo(mainView)
         }
         
-       
+        
         
         
         
     }
-
-   
+    
+    
     
 }
-
-
-   
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-//}
-
-
-
-
-

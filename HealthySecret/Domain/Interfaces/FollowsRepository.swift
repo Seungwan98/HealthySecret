@@ -10,6 +10,6 @@ import RxSwift
 
 protocol FollowsRepository {
     
-    func updateFollowers( ownUid : String , opponentUid : String  , follow : Bool ) -> Completable
+    func updateFollowers( ownUid: String, opponentUid: String, follow: Bool ) -> Completable
     func getFollowsLikes(uid:[String]) -> Single<[UserModel]>
 }

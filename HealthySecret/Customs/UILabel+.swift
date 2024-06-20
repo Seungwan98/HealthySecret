@@ -19,14 +19,13 @@ extension UILabel {
     private var minimumLines: Int { return 4 }
     private var highlightColor: UIColor { return .lightGray }
     
-    //let paragraphStyle = NSMutableParagraphStyle()
+    // let paragraphStyle = NSMutableParagraphStyle()
     
-    private var paragraphStyle : NSMutableParagraphStyle {return NSMutableParagraphStyle()}
+    private var paragraphStyle: NSMutableParagraphStyle {return NSMutableParagraphStyle()}
     
 
     var attributes: [NSAttributedString.Key: Any] {
-        return [.font: self.font ?? .systemFont(ofSize: 16)
-  ]
+        return [.font: self.font ?? .systemFont(ofSize: 16)]
     }
     
 
@@ -103,5 +102,3 @@ extension UILabel {
 
     }
 }
-
-

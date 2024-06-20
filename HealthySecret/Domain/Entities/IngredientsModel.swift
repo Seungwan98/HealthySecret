@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct IngredientsModel : Codable {
-    var num : String
+struct IngredientsModel: Codable {
+    var num: String
     var descKor: String
     var carbohydrates: Double
     var calorie: Int
@@ -20,7 +20,7 @@ struct IngredientsModel : Codable {
     var fattyAcid: Double
     var transFat: Double
     let servingSize: Double
-    var addServingSize : Double?
+    var addServingSize: Double?
     
 
     

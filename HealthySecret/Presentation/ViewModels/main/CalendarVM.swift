@@ -10,22 +10,22 @@ import RxCocoa
 import RxSwift
 
 
-class CalendarVM : ViewModel {
+class CalendarVM: ViewModel {
     
-    weak var coordinator : CalendarCoordinator?
+    weak var coordinator: CalendarCoordinator?
     
-    private let calendarUseCase : CalendarUseCase
+    private let calendarUseCase: CalendarUseCase
     var disposeBag = DisposeBag()
     var disposeBag1 = DisposeBag()
     
-    var diarys : [Diary] = []
+    var diarys: [Diary] = []
     
-    var pickDate : String?
+    var pickDate: String?
     
     var selectingDate = BehaviorSubject<String>(value: "")
     
     
-    init( coordinator : CalendarCoordinator , calendarUseCase : CalendarUseCase ){
+    init( coordinator: CalendarCoordinator, calendarUseCase: CalendarUseCase ) {
         self.coordinator =  coordinator
         self.calendarUseCase =  calendarUseCase
         
@@ -33,17 +33,17 @@ class CalendarVM : ViewModel {
     
     
     struct Input {
-        let viewWillApearEvent : Observable<Void>
-        let moveButtonTapped : Observable<Void>
-        let writeButtonTapped : Observable<Void>
-        let selectingDate : Observable<Date>
+        let viewWillApearEvent: Observable<Void>
+        let moveButtonTapped: Observable<Void>
+        let writeButtonTapped: Observable<Void>
+        let selectingDate: Observable<Date>
         
         
     }
     
     struct Output {
-        var outputDate = BehaviorSubject<String>(value : "")
-        var outputTodayDiary = BehaviorSubject<String>(value : "")
+        var outputDate = BehaviorSubject<String>(value: "")
+        var outputTodayDiary = BehaviorSubject<String>(value: "")
     }
     
     
@@ -58,29 +58,29 @@ class CalendarVM : ViewModel {
         
         input.viewWillApearEvent.subscribe(onNext: { [weak self] _ in guard let self = self else {return}
             self.calendarUseCase.getDiarys().subscribe({ event in
-                switch event{
+                switch event {
                 case.success(let diarys):
                     self.diarys = diarys
                     
-                    input.selectingDate.subscribe(onNext : { date in
+                    input.selectingDate.subscribe(onNext: { date in
                         
                         dayFormatter.dateFormat = "M.dd EEEE "
-                        dayFormatter.locale = Locale(identifier:"ko_KR")
+                        dayFormatter.locale = Locale(identifier: "ko_KR")
                         self.pickDate = (dateFormatter.string(from: date))
-
-                        let todayDiary = diarys.filter{
-         
+                        
+                        let todayDiary = diarys.filter {
+                            
                             $0.date == self.pickDate!
                         }
                         
                         output.outputDate.onNext(dayFormatter.string(from: date))
                         output.outputTodayDiary.onNext( todayDiary.first?.diary ?? "" )
-
-                 
-                       
+                        
+                        
+                        
                         
                         input.moveButtonTapped.subscribe(onNext: { [weak self] _ in
-                            UserDefaults.standard.set( dateFormatter.string(from: date) , forKey: "date")
+                            UserDefaults.standard.set( dateFormatter.string(from: date), forKey: "date")
                             self?.coordinator?.BacktoDiaryVC()
                             
                             
@@ -109,9 +109,9 @@ class CalendarVM : ViewModel {
         
         
         input.writeButtonTapped.subscribe(onNext: { [weak self]  _ in
-            guard let self = self , let pickDate = self.pickDate else {return}
+            guard let self = self, let pickDate = self.pickDate else {return}
             
-            self.coordinator?.pushAddDiaryVC(pickDate: pickDate , diarys: self.diarys)
+            self.coordinator?.pushAddDiaryVC(pickDate: pickDate, diarys: self.diarys)
             
             
         }).disposed(by: disposeBag)
@@ -123,8 +123,8 @@ class CalendarVM : ViewModel {
     
     
     struct AddInput {
-        let addButtonTapped : Observable<Void>
-        let diaryText : Observable<String?>
+        let addButtonTapped: Observable<Void>
+        let diaryText: Observable<String?>
         
         
     }
@@ -137,41 +137,41 @@ class CalendarVM : ViewModel {
     func addTransform(input: AddInput, disposeBag1: DisposeBag ) -> AddOutput {
         
         let output = AddOutput()
-                
-        self.selectingDate.subscribe(onNext: { date in
+        
+        self.selectingDate.subscribe(onNext: { _ in
             
             for i in 0..<self.diarys.count {
-                if(self.diarys[i].date == self.pickDate){
+                if self.diarys[i].date == self.pickDate {
                     output.writedText.onNext(self.diarys[i].diary)
                 }
                 
                 
             }
-        
-        input.addButtonTapped.subscribe(onNext: { [weak self] _ in guard let self = self else {return}
             
-            input.diaryText.subscribe(onNext: { text in
-                guard let text = text else {return}
+            input.addButtonTapped.subscribe(onNext: { [weak self] _ in guard let self = self else {return}
                 
-               
+                input.diaryText.subscribe(onNext: { text in
+                    guard let text = text else {return}
                     
-                let diary = Diary(date:  self.pickDate ?? "", diary: text )
                     
-                for i in 0..<self.diarys.count {
-                    if(self.diarys[i].date == self.pickDate){
-                        self.diarys.remove(at: i)
+                    
+                    let diary = Diary(date: self.pickDate ?? "", diary: text )
+                    
+                    for i in 0..<self.diarys.count {
+                        if self.diarys[i].date == self.pickDate {
+                            self.diarys.remove(at: i)
+                        }
+                        
+                        
                     }
-                    
-                    
-                }
                     self.diarys.append(diary)
                     
                     
                     self.calendarUseCase.updateDiary(diarys: self.diarys).subscribe({ event in
-                        switch(event){
+                        switch event {
                         case.completed: self.coordinator?.navigationController.popViewController(animated: false)
                             
-
+                            
                             
                         case.error(_):
                             print("error")

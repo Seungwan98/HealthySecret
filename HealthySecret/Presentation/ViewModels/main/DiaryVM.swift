@@ -10,23 +10,23 @@ import RxSwift
 import RxRelay
 import RxCocoa
 
-class DiaryVM : ViewModel {
+class DiaryVM: ViewModel {
     
     
-    let coordinator : DiaryCoordinator?
+    let coordinator: DiaryCoordinator?
     
     var disposeBag = DisposeBag()
     
-    let filetedArr : [Row] = []
+    let filetedArr: [Row] = []
     
-    var recentAdd : [String] = []
+    var recentAdd: [String] = []
         
-    var user : UserModel?
+    var user: UserModel?
     
-    private let diaryUseCase : DiaryUseCase
+    private let diaryUseCase: DiaryUseCase
     
     
-    init( coordinator : DiaryCoordinator , diaryUseCase : DiaryUseCase){
+    init( coordinator: DiaryCoordinator, diaryUseCase: DiaryUseCase) {
         self.coordinator =  coordinator
         self.diaryUseCase = diaryUseCase
         
@@ -35,16 +35,16 @@ class DiaryVM : ViewModel {
    
     
     struct Input {
-        let viewWillApearEvent : Observable<Void>
-        let mealButtonsTapped : Observable<Void>
+        let viewWillApearEvent: Observable<Void>
+        let mealButtonsTapped: Observable<Void>
         
         
-        let calendarLabelTapped : ControlEvent<UITapGestureRecognizer>
-        let execiseButtonTapped : Observable<Void>
+        let calendarLabelTapped: ControlEvent<UITapGestureRecognizer>
+        let execiseButtonTapped: Observable<Void>
         
-        let rightBarButtonTapped : Observable<Void>
-        let leftBarButtonTapped : Observable<Void>
-        let detailButtonTapped : Observable<Void>
+        let rightBarButtonTapped: Observable<Void>
+        let leftBarButtonTapped: Observable<Void>
+        let detailButtonTapped: Observable<Void>
         
     }
     
@@ -60,7 +60,7 @@ class DiaryVM : ViewModel {
         let minuteLabel = BehaviorRelay<String>(value: "0")
         let exCalorieLabel = BehaviorRelay<String>(value: "0")
         
-        let goalLabel = BehaviorRelay<String>(value:  "0")
+        let goalLabel = BehaviorRelay<String>(value: "0")
         let leftCalorieLabel = BehaviorRelay<String>(value: "0")
         
         let ingTotalCalorie = BehaviorRelay<String>(value: "0")
@@ -95,16 +95,16 @@ class DiaryVM : ViewModel {
             
         }).disposed(by: disposeBag)
         
-        self.diaryUseCase.getMorning.map{ !$0.isEmpty }.bind(to: output.checkBreakFast).disposed(by: disposeBag)
-        self.diaryUseCase.getLunch.map{ !$0.isEmpty }.bind(to: output.checkLunch).disposed(by: disposeBag)
-        self.diaryUseCase.getDinner.map{ !$0.isEmpty }.bind(to: output.checkDinner).disposed(by: disposeBag)
-        self.diaryUseCase.getSnack.map{ !$0.isEmpty }.bind(to: output.checkSnack).disposed(by: disposeBag)
+        self.diaryUseCase.getMorning.map { !$0.isEmpty }.bind(to: output.checkBreakFast).disposed(by: disposeBag)
+        self.diaryUseCase.getLunch.map { !$0.isEmpty }.bind(to: output.checkLunch).disposed(by: disposeBag)
+        self.diaryUseCase.getDinner.map { !$0.isEmpty }.bind(to: output.checkDinner).disposed(by: disposeBag)
+        self.diaryUseCase.getSnack.map { !$0.isEmpty }.bind(to: output.checkSnack).disposed(by: disposeBag)
     
     
         
         input.mealButtonsTapped.subscribe(onNext: { [weak self] _ in
             guard let self = self else {return}
-            let meal : String = UserDefaults.standard.value(forKey: "meal") as! String
+            let meal: String = UserDefaults.standard.value(forKey: "meal") as! String
             switch meal {
             case "아침식사":
                 self.diaryUseCase.getMorning.subscribe(onNext: { arr in
@@ -173,8 +173,8 @@ class DiaryVM : ViewModel {
             
             
             //날짜로 검색
-            var pickedDate : String = ""
-            var outputDate : String = ""
+            var pickedDate: String = ""
+            var outputDate: String = ""
             
             let imageAttach = NSTextAttachment()
             let textAttach = NSMutableAttributedString(string: "")
@@ -184,7 +184,7 @@ class DiaryVM : ViewModel {
             
             
             
-            if let date = UserDefaults.standard.string(forKey: "date"){
+            if let date = UserDefaults.standard.string(forKey: "date") {
                 
                 pickedDate = date
                 outputDate = CustomFormatter().formatToOutput(date: date)
@@ -205,7 +205,7 @@ class DiaryVM : ViewModel {
             
             
             self.diaryUseCase.getUser(pickedDate: pickedDate ).subscribe({  [weak self] event in guard let self = self else {return}
-                switch(event){
+                switch event {
                 case.success(let total):
                     
                     

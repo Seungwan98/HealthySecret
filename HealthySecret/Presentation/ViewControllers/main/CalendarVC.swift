@@ -11,9 +11,9 @@ import FSCalendar
 import RxSwift
 import SnapKit
 
-class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance {
+class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance {
     
-    let viewModel : CalendarVM?
+    let viewModel: CalendarVM?
     let disposeBag = DisposeBag()
     init(viewModel: CalendarVM) {
         self.viewModel = viewModel
@@ -39,13 +39,9 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         return scrollView
     }()
     
-    private let contentView : UIView = {
-        let view = UIView()
-        return view
-    }()
+    private let contentView = UIView()
     
-    
-    var calendarView : UIView = {
+    var calendarView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         return view
@@ -55,7 +51,7 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
     let informLabel = UILabel()
     
     
-    let informationView : UIView = {
+    let informationView: UIView = {
         let view = UIView()
         
         view.backgroundColor = .lightGray.withAlphaComponent(0.2)
@@ -66,12 +62,12 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
     
     var selectedDate: Date = Date()
     
-    var selectingDate = BehaviorSubject<Date>(value : Date())
+    var selectingDate = BehaviorSubject<Date>(value: Date())
     
     let bottomView = UIView()
     
     
-    private let writeButton : UIButton = {
+    private let writeButton: UIButton = {
         let button = UIButton()
         
         
@@ -82,7 +78,7 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         button.backgroundColor = .systemBlue.withAlphaComponent(0.8)
         return button
     }()
-    private let moveButton : UIButton = {
+    private let moveButton: UIButton = {
         let button = UIButton()
         
         
@@ -94,7 +90,7 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         return button
     }()
     
-    private let backgroundLabel : UILabel = {
+    private let backgroundLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray.withAlphaComponent(1)
         label.text = "작성된 일기가 없어요"
@@ -135,7 +131,7 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         
         
     }
-    func addView(){
+    func addView() {
         //        calendarView.backgroundColor = UIColor(red: 0.09, green: 0.176, blue: 0.031, alpha: 1)
         self.dateLabel.font = .boldSystemFont(ofSize: 14)
         self.informLabel.font = .boldSystemFont(ofSize: 14)
@@ -165,53 +161,53 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
 
         
         
-        self.bottomView.snp.makeConstraints{
+        self.bottomView.snp.makeConstraints {
             $0.leading.trailing.bottom.equalTo(self.view)
             $0.height.equalTo(100)
         }
-        self.contentScrollView.snp.makeConstraints{
+        self.contentScrollView.snp.makeConstraints {
             $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
             $0.bottom.equalTo(self.bottomView.snp.top)
         } 
-        self.contentView.snp.makeConstraints{
+        self.contentView.snp.makeConstraints {
             $0.top.leading.trailing.bottom.width.equalTo(self.contentScrollView)
         }
-        self.writeButton.snp.makeConstraints{
+        self.writeButton.snp.makeConstraints {
             $0.height.equalTo(60)
             $0.width.equalTo(100)
             $0.leading.equalTo(bottomView).inset(15)
             $0.centerY.equalTo(bottomView).offset(-10)
         } 
         
-        self.moveButton.snp.makeConstraints{
+        self.moveButton.snp.makeConstraints {
             $0.height.equalTo(60)
             $0.leading.equalTo(writeButton.snp.trailing).offset(15)
             $0.trailing.equalTo(bottomView).inset(15)
             $0.centerY.equalTo(bottomView).offset(-10)
        
         }
-        self.calendarView.snp.makeConstraints{
+        self.calendarView.snp.makeConstraints {
             $0.leading.trailing.top.bottom.equalTo(self.contentView)
         }
-        self.calendar.snp.makeConstraints{
+        self.calendar.snp.makeConstraints {
             $0.top.equalTo(calendarView.safeAreaLayoutGuide)
             $0.leading.trailing.equalTo(calendarView.safeAreaLayoutGuide).inset(10)
             $0.height.equalTo(500)
         }
-        self.informationView.snp.makeConstraints{
+        self.informationView.snp.makeConstraints {
             $0.top.equalTo(calendar.snp.bottom)
             $0.leading.trailing.equalTo(calendar)
             $0.bottom.equalTo(informLabel)
         }
-        self.backgroundLabel.snp.makeConstraints{
+        self.backgroundLabel.snp.makeConstraints {
             $0.centerY.centerX.equalTo(informationView)
         }
-        self.dateLabel.snp.makeConstraints{
+        self.dateLabel.snp.makeConstraints {
             $0.top.leading.equalTo(informationView).inset(15)
             $0.width.equalTo(100)
             $0.height.equalTo(20)
         } 
-        self.informLabel.snp.makeConstraints{
+        self.informLabel.snp.makeConstraints {
             $0.top.equalTo(dateLabel.snp.bottom).offset(10)
             $0.leading.trailing.equalTo(informationView).inset(15)
             $0.bottom.equalTo(contentView).offset(-15)
@@ -221,11 +217,10 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
     }
     
     
-    func setBindings(){
+    func setBindings() {
         
         
-        let input = CalendarVM.Input( viewWillApearEvent:  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), moveButtonTapped: moveButton.rx.tap.asObservable() , writeButtonTapped: writeButton.rx.tap.asObservable() ,
-                                     selectingDate : self.selectingDate.asObservable())
+        let input = CalendarVM.Input( viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), moveButtonTapped: moveButton.rx.tap.asObservable(), writeButtonTapped: writeButton.rx.tap.asObservable(), selectingDate: self.selectingDate.asObservable())
         
         
         guard let output = viewModel?.transform(input: input, disposeBag: disposeBag) else {return}
@@ -234,8 +229,7 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         
         
         
-        output.outputDate.subscribe(onNext: {
-            date in
+        output.outputDate.subscribe(onNext: { date in
             self.dateLabel.text = date
             
             
@@ -246,14 +240,14 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         output.outputTodayDiary.subscribe(onNext: { text in
             var memo = ""
             
-            if text.isEmpty{
+            if text.isEmpty {
                 self.backgroundLabel.isHidden = false
                 self.writeButton.setTitle("일기 쓰기", for: .normal)
                 memo = "\n\n\n"
                 
                 
                 
-            }else{
+            } else {
                 self.writeButton.setTitle("일기 수정", for: .normal)
 
                 self.backgroundLabel.isHidden = true
@@ -379,8 +373,8 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
         if dateFormatter.string(from: date) == dateFormatter.string(from: Date()) {
             
             
-            return "오늘" }
-        else{
+            return "오늘"
+        } else {
             return nil
         }
     }
@@ -391,6 +385,3 @@ class CalendarViewController : UIViewController , FSCalendarDelegate, FSCalendar
     
     
 }
-
-
-

@@ -8,8 +8,8 @@
 import Foundation
 import UIKit
 
-//탭바 두번째 인자 컨트롤러
-class IngredientsCoordinator : Coordinator {
+// 탭바 두번째 인자 컨트롤러
+class IngredientsCoordinator: Coordinator {
     func start() {
         
     }
@@ -22,25 +22,25 @@ class IngredientsCoordinator : Coordinator {
     
     var finishDelegate: CoordinatorFinishDelegate?
     
-    var childCoordinator : [Coordinator] = []
+    var childCoordinator: [Coordinator] = []
     
-    var type : CoordinatorType = .ingredients
+    var type: CoordinatorType = .ingredients
     
-    var filteredArr : [IngredientsModel] = []
+    var filteredArr: [IngredientsModel] = []
     
-    required init(_ navigationController : UINavigationController){
+    required init(_ navigationController: UINavigationController) {
         self.navigationController = navigationController
         self.navigationController.navigationBar.tintColor = .white
         self.navigationController.navigationBar.topItem?.title = ""
     }
     
-    func pushIngredientsSelecting(arr:[IngredientsModel]){
+    func pushIngredientsSelecting(arr: [IngredientsModel]) {
         self.filteredArr = arr
         let firebaseService = FirebaseService()
         let ingredientsVM =  IngredientsVM(coordinator: self, firebaseService: firebaseService, ingredientsUseCase: IngredientsUseCase(ingredientsRepository: DefaultIngredientsRepository(firebaseService: firebaseService), userRepository: DefaultUserRepository(firebaseService: firebaseService)))
         
         ingredientsVM.lastArr = arr
-        let viewController = IngredientsViewController(viewModel : ingredientsVM )
+        let viewController = IngredientsViewController(viewModel: ingredientsVM )
         
         viewController.view.backgroundColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
         viewController.hidesBottomBarWhenPushed = true
@@ -48,15 +48,15 @@ class IngredientsCoordinator : Coordinator {
         
         
         
-        //self.navigationController.popViewController(animated: false)
+        // self.navigationController.popViewController(animated: false)
     
         self.navigationController.pushViewController(viewController, animated: false)
     }
     
     
-    func pushIngredientsEdmit(arr:[IngredientsModel]){
+    func pushIngredientsEdmit(arr: [IngredientsModel]) {
         let firebaseService = FirebaseService()
-        let EditIngredientsVM =  EditIngredientsVM(coordinator: self, firebaseService: firebaseService, Ingredients: arr, ingredientsUseCase: IngredientsUseCase(ingredientsRepository: DefaultIngredientsRepository(firebaseService: firebaseService) , userRepository: DefaultUserRepository(firebaseService: firebaseService)) )
+        let EditIngredientsVM =  EditIngredientsVM(coordinator: self, firebaseService: firebaseService, Ingredients: arr, ingredientsUseCase: IngredientsUseCase(ingredientsRepository: DefaultIngredientsRepository(firebaseService: firebaseService), userRepository: DefaultUserRepository(firebaseService: firebaseService)) )
         let viewController = EditIngredientsVC(viewModel: EditIngredientsVM )
         viewController.hidesBottomBarWhenPushed = true
 
@@ -67,13 +67,12 @@ class IngredientsCoordinator : Coordinator {
     }
     
     
-    func pushIngredientsVC(arr : [IngredientsModel]) {
+    func pushIngredientsVC(arr: [IngredientsModel]) {
         
-        if(arr.isEmpty){
+        if arr.isEmpty {
 
             pushIngredientsSelecting(arr: arr)
-        }
-        else{
+        } else {
             pushIngredientsEdmit(arr: arr)
         }
         
@@ -89,7 +88,7 @@ class IngredientsCoordinator : Coordinator {
         
         
     }
-    func pushIngredientsDetail(model : IngredientsModel){
+    func pushIngredientsDetail(model: IngredientsModel ) {
         
         let firebaseService = FirebaseService()
         let ingredientsDetailVM =  IngredientsDetailVM(coordinator: self, firebaseService: firebaseService, model: model)
@@ -102,7 +101,7 @@ class IngredientsCoordinator : Coordinator {
         
     }
     
-    func backToDiaryVC(){
+    func backToDiaryVC() {
         self.navigationController.hidesBottomBarWhenPushed = false
         self.finishDelegate?.coordinatorDidFinish(childCoordinator: self)
         
@@ -115,7 +114,7 @@ class IngredientsCoordinator : Coordinator {
     
 }
 
-extension IngredientsCoordinator : CoordinatorFinishDelegate {
+extension IngredientsCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinishNotRoot(childCoordinator: any Coordinator) {
 //
     }

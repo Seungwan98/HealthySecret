@@ -9,47 +9,47 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class IngredientsVM : ViewModel {
+class IngredientsVM: ViewModel {
     
-    weak var coordinator : IngredientsCoordinator?
+    weak var coordinator: IngredientsCoordinator?
     
     var disposeBag = DisposeBag()
     
-    var firebaseService : FirebaseService
+    var firebaseService: FirebaseService
     
-    var ingredientsArr : [IngredientsModel] = []
+    var ingredientsArr: [IngredientsModel] = []
     
-    var searchArr : [IngredientsModel] = []
+    var searchArr: [IngredientsModel] = []
     
-    var filteredArr : [IngredientsModel] = []
+    var filteredArr: [IngredientsModel] = []
     
     var likes: [String:Int] = [:]
     
-    var recentSearchArr : [String] = []
+    var recentSearchArr: [String] = []
     
-    var filteredNumbersArr : [String] = []
+    var filteredNumbersArr: [String] = []
     
-    var filteredIngredientsArr : [IngredientsModel] = []
+    var filteredIngredientsArr: [IngredientsModel] = []
     
-    var realIndex : String?
+    var realIndex: String?
     
-    var lastArr : [IngredientsModel] = []
+    var lastArr: [IngredientsModel] = []
     
     
-    private let ingredientsUseCase : IngredientsUseCase
+    private let ingredientsUseCase: IngredientsUseCase
     
     private let searchText = BehaviorRelay<Bool>(value: false)
     private let touchedArr = BehaviorRelay<[String:Int]>(value: [:])
     
     
-    init( coordinator : IngredientsCoordinator , firebaseService : FirebaseService , ingredientsUseCase : IngredientsUseCase ){
+    init( coordinator: IngredientsCoordinator, firebaseService: FirebaseService, ingredientsUseCase: IngredientsUseCase ) {
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
         self.ingredientsUseCase = ingredientsUseCase
     }
     
     let outputPushedCheck = PublishSubject<Bool>()
-
+    
     private var test = PublishSubject<Bool>()
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         
@@ -57,13 +57,13 @@ class IngredientsVM : ViewModel {
         
         
         
-       
+        
         
         input.viewWillAppear.subscribe(onNext: { [self] in
             
             self.ingredientsUseCase.getIngredientsList().subscribe({ [weak self] event in
                 
-                switch(event){
+                switch event {
                     
                 case.success(let arr):
                     self?.ingredientsArr = arr
@@ -73,18 +73,18 @@ class IngredientsVM : ViewModel {
                 
                 
             }).disposed(by: disposeBag)
-
             
             
- 
+            
+            
             
         }).disposed(by: disposeBag)
         
         
         
-        input.cellTouchToDetail.subscribe(onNext : { model in
+        input.cellTouchToDetail.subscribe(onNext: { model in
             
-            self.coordinator?.pushIngredientsDetail(model : model)
+            self.coordinator?.pushIngredientsDetail(model: model)
             
             
         }).disposed(by: disposeBag)
@@ -93,74 +93,74 @@ class IngredientsVM : ViewModel {
         
         input.searchText.map({ [self] text in
             print("\(text) text")
-            var check : Bool = false
+            var check: Bool = false
             if text.isEmpty{
                 check = false
-            }else{
-                self.searchArr = self.ingredientsArr.filter{ $0.descKor.localizedCaseInsensitiveContains(text) }
+            } else {
+                self.searchArr = self.ingredientsArr.filter { $0.descKor.localizedCaseInsensitiveContains(text) }
                 output.ingredientsArr.onNext(self.searchArr)
                 check = true
-
+                
             }
-
+            
             return check
         }).bind(to: output.checkController).disposed(by: disposeBag)
         
         self.rightButtonEvent.bind(to: output.rightButtonEnable).disposed(by: disposeBag)
         
-   
-        output.titleLabelTexts.onNext([UserDefaults.standard.string(forKey: "meal") ?? "" , UserDefaults.standard.string(forKey: "date") ?? ""])
-
-      
+        
+        output.titleLabelTexts.onNext([UserDefaults.standard.string(forKey: "meal") ?? "", UserDefaults.standard.string(forKey: "date") ?? ""])
+        
+        
         
         
         
         
         input.rightButtonTapped.subscribe(onNext: {
             
-
-
+            
+            
+            
+            _ = self.likes.map({ (key, value) in
+                if value == 1 {
+                    self.filteredNumbersArr.append(key)
                     
-            _ = self.likes.map({ (key , value) in
-                    if value == 1 {
-                        self.filteredNumbersArr.append(key)
-
-                        if let idx = self.ingredientsArr.firstIndex(where: { $0.num == key }){
-                            self.filteredArr.append(self.ingredientsArr[idx])
-                        }
-
+                    if let idx = self.ingredientsArr.firstIndex(where: { $0.num == key }) {
+                        self.filteredArr.append(self.ingredientsArr[idx])
                     }
-                })
-
+                    
+                }
+            })
+            
             self.filteredArr += self.lastArr
-
-
-
-
+            
+            
+            
+            
             self.coordinator?.finish()
             self.coordinator?.pushIngredientsVC(arr: self.filteredArr)
-
-
-
-                
             
-        
+            
+            
+            
+            
+            
             
         }).disposed(by: disposeBag)
         
         
-     
+        
         
         
         return output
     }
     
     struct Input {
-        let viewWillAppear : Observable<Void>
-        let rightButtonTapped : Observable<Void>
-        let searchText : Observable<String>
-        let likesInputArr : Observable<[String:Int]>
-        let cellTouchToDetail : Observable<IngredientsModel>
+        let viewWillAppear: Observable<Void>
+        let rightButtonTapped: Observable<Void>
+        let searchText: Observable<String>
+        let likesInputArr: Observable<[String: Int]>
+        let cellTouchToDetail: Observable<IngredientsModel>
         
         
         
@@ -174,10 +174,10 @@ class IngredientsVM : ViewModel {
         var ingredientsArr = PublishSubject<[IngredientsModel]>()
         var rightButtonEnable = PublishSubject<Bool>()
         var checkController =  PublishSubject<Bool>()
-        var likesOutput = PublishSubject<[String:Int]>()
-        var testOutput = PublishSubject<[String:Int]>()
+        var likesOutput = PublishSubject<[String: Int]>()
+        var testOutput = PublishSubject<[String: Int]>()
         var reloadOutput = PublishSubject<Bool>()
-        var titleLabelTexts = BehaviorSubject<[String]>(value: ["",""])
+        var titleLabelTexts = BehaviorSubject<[String]>(value: ["", ""])
         
         
         
@@ -192,36 +192,32 @@ class IngredientsVM : ViewModel {
     
     
     
-    func cellTransform(input: CellInput , disposeBag : DisposeBag) -> CellOutput {
+    func cellTransform(input: CellInput, disposeBag: DisposeBag) -> CellOutput {
         let output = CellOutput()
         
-    
+        
         input.checkBoxTapped.subscribe(onNext: {
-            input.idx.subscribe(onNext: {
-
-                idx in
-
-                
+            input.idx.subscribe(onNext: { idx in
                 print("touch \(idx)")
-
-            if( self.likes[idx] == 1 ){
-                self.likes[idx] = nil
-
+                
+                if self.likes[idx] == 1 {
+                    self.likes[idx] = nil
+                    
                 } else {
-
+                    
                     self.likes[idx] = 1
-
+                    
                 }
                 print(self.likes)
-
-
-
-
-
-
+                
+                
+                
+                
+                
+                
             }).disposed(by: disposeBag)
-
-
+            
+            
             
             
         }).disposed(by: disposeBag)
@@ -233,8 +229,8 @@ class IngredientsVM : ViewModel {
     
     
     struct CellInput {
-        let checkBoxTapped : Observable<Void>
-        let idx : Observable<String>
+        let checkBoxTapped: Observable<Void>
+        let idx: Observable<String>
     }
     struct CellOutput {
         let outputPushedCheck = BehaviorRelay<Bool>(value: false)

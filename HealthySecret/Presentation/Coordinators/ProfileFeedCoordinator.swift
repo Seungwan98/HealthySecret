@@ -12,7 +12,7 @@ import Firebase
 
 
 
-class ProfileFeedCoordinator : Coordinator  {
+class ProfileFeedCoordinator: Coordinator {
     func start() {
         //
     }
@@ -27,11 +27,11 @@ class ProfileFeedCoordinator : Coordinator  {
     var type: CoordinatorType
     var firebaseService: FirebaseService
     var disposeBag = DisposeBag()
-    var CommuCoordinator : CommuCoordinator?
+    var CommuCoordinator: CommuCoordinator?
     
     
     // MARK: - Initializers
-    required init(_ navigationController : UINavigationController ){
+    required init(_ navigationController: UINavigationController ) {
         self.navigationController = navigationController
         self.type = CoordinatorType.follow
         self.firebaseService = FirebaseService()
@@ -81,6 +81,3 @@ extension ProfileFeedCoordinator: CoordinatorFinishDelegate {
         childCoordinator.navigationController.popToRootViewController(animated: true)
     }
 }
-
-
-

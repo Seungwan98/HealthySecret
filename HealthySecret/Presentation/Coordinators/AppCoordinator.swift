@@ -10,17 +10,17 @@ import RxSwift
 import Firebase
 
 
-protocol LoginCoordinatorDelegate {
+protocol LoginCoordinatorDelegate: AnyObject {
     func didLoggedIn(_ coordinator: Coordinator)
     
 }
 
-protocol LogoutCoordinatorDelegate{
-    func didLoggedOut(_ coordinator : Coordinator )
+protocol LogoutCoordinatorDelegate: AnyObject {
+    func didLoggedOut(_ coordinator: Coordinator )
 }
 
 
-class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinatorDelegate {
+class AppCoordinator: Coordinator, LoginCoordinatorDelegate, LogoutCoordinatorDelegate {
     
     
     // MARK: - Properties
@@ -29,18 +29,18 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
     var finishDelegate: CoordinatorFinishDelegate?
     var type: CoordinatorType
     var firebaseService: FirebaseService
-    var kakaoService : KakaoService
-    var appleService : AppleService
+    var kakaoService: KakaoService
+    var appleService: AppleService
     var disposeBag = DisposeBag()
     
     // MARK: - Initializers
-    required init(_ navigationController : UINavigationController ){
+    required init(_ navigationController: UINavigationController ) {
         self.navigationController = navigationController
         self.type = CoordinatorType.tab
         self.firebaseService = FirebaseService()
         self.kakaoService = KakaoService()
         self.appleService = AppleService()
-       
+        
     }
     
     
@@ -50,7 +50,7 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
         print("\(self.childCoordinator)  childCoordinator")
         self.showMainViewController()
     }
-  
+    
     func didLoggedOut(_ coordinator: Coordinator) {
         self.finishDelegate?.coordinatorDidFinish(childCoordinator: coordinator)
         self.showLoginViewController()
@@ -58,17 +58,17 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
     }
     
     
-   
+    
     
     func start() {
         
-       
+        
         let viewController = SplashVC(viewModel: SplashVM(coordinator: self, loginUseCase: LoginUseCase(loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService), userRepository: DefaultUserRepository(firebaseService: self.firebaseService))   )  )
         self.navigationController.setViewControllers([viewController], animated: false)
-       
+        
     }
     
-    func showMainViewController(){
+    func showMainViewController() {
         
         print("mainView")
         let coordinator = TabBarCoordinator(self.navigationController)
@@ -87,14 +87,11 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
     func showLoginViewController() {
         
         let coordinator = LoginCoordinator(self.navigationController)
-        
         coordinator.delegate = self
-        
         coordinator.start()
-        
         self.childCoordinator.append(coordinator)
         
-    } 
+    }
     func showSignUpVC() {
         
         let coordinator = LoginCoordinator(self.navigationController)
@@ -107,17 +104,17 @@ class AppCoordinator : Coordinator , LoginCoordinatorDelegate , LogoutCoordinato
         
     }
     
-   
-  
-    
- 
     
     
     
     
     
     
-   
+    
+    
+    
+    
+    
     
     
 }
@@ -129,13 +126,13 @@ extension AppCoordinator: CoordinatorFinishDelegate {
     
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         
-
+        
         
         self.childCoordinator = self.childCoordinator.filter({ $0.type != childCoordinator.type })
         self.navigationController.view.backgroundColor = .systemBackground
         self.navigationController.viewControllers.removeAll()
         
-
+        
         
         switch childCoordinator.type {
         case .tab:
@@ -152,32 +149,32 @@ extension AppCoordinator: CoordinatorFinishDelegate {
 
 
 
-class LoginCoordinator : Coordinator  {
+class LoginCoordinator: Coordinator {
     var parentCoordinator: AppCoordinator?
     
     var navigationController: UINavigationController
     
     var finishDelegate: CoordinatorFinishDelegate?
-        
+    
     var type: CoordinatorType
     
-    private let firebaseService : FirebaseService
+    private let firebaseService: FirebaseService
     
-    private let kakaoService : KakaoService
+    private let kakaoService: KakaoService
     
-    private let appleService : AppleService
+    private let appleService: AppleService
     
     var childCoordinator: [Coordinator] = []
     
-    var delegate : LoginCoordinatorDelegate?
+    var delegate: LoginCoordinatorDelegate?
     
     
-        
-    
-
     
     
-    required init(_ navigationController  : UINavigationController ){
+    
+    
+    
+    required init(_ navigationController: UINavigationController ) {
         self.navigationController = navigationController
         self.type = .login
         self.firebaseService = FirebaseService()
@@ -186,21 +183,21 @@ class LoginCoordinator : Coordinator  {
         
     }
     
-    func presentModal(){
+    func presentModal() {
         let viewController = AssignModalVC()
-            
+        
         viewController.view.backgroundColor = .white
         if let sheet = viewController.sheetPresentationController {
-                    
-                    //지원할 크기 지정
+            
+            // 지원할 크기 지정
             sheet.detents = [.medium()]
             
-                   
-                    //시트 상단에 그래버 표시 (기본 값은 false)
-                    sheet.prefersGrabberVisible = true
-                    
-             
-                }
+            
+            // 시트 상단에 그래버 표시 (기본 값은 false)
+            sheet.prefersGrabberVisible = true
+            
+            
+        }
         viewController.coordinator = self
         self.navigationController.present(viewController, animated: true)
         
@@ -209,25 +206,25 @@ class LoginCoordinator : Coordinator  {
         
     }
     
-   
+    
     
     func start() {
-        let viewModel = LoginVM(loginUseCase: LoginUseCase(loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService , kakaoServcie: self.kakaoService), userRepository: DefaultUserRepository(firebaseService: self.firebaseService)   ), loginCoordinator: self )
+        let viewModel = LoginVM(loginUseCase: LoginUseCase(loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService), userRepository: DefaultUserRepository(firebaseService: self.firebaseService)), loginCoordinator: self )
         let loginViewController = LoginViewController(viewModel: viewModel)
         loginViewController.view.backgroundColor = .white
         
-       
+        
         self.navigationController.viewControllers = [loginViewController]
-   
+        
     }
     
     
     func pushSignUpVC() {
-        let viewModel = SignUpVM(coordinator: self, signUpUseCase: SignUpUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService , kakaoServcie: self.kakaoService )))
+        let viewModel = SignUpVM(coordinator: self, signUpUseCase: SignUpUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService), loginRepository: DefaultLoginRepository(firebaseService: self.firebaseService, appleService: self.appleService, kakaoServcie: self.kakaoService )))
         let viewController = SignUpVC(viewModel: viewModel)
         self.navigationController.viewControllers = [viewController]
     }
-     
+    
     
     func pushLicenseVC() {
         let viewController = LicenseVC()
@@ -238,10 +235,10 @@ class LoginCoordinator : Coordinator  {
     }
     
     func login() {
-        print("login")
+        // print("login")
         self.delegate?.didLoggedIn(self)
         
-            
+        
         
         
     }
@@ -249,14 +246,14 @@ class LoginCoordinator : Coordinator  {
     
     
 }
-extension LoginCoordinator : CoordinatorFinishDelegate {
+extension LoginCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinishNotRoot(childCoordinator: any Coordinator) {
         //
     }
     
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         // 자식 뷰를 삭제하는 델리게이트 (자식 -> 부모 접근 -> 부모에서 자식 삭제)
-        print("LoginCoordinatorDidfinsh")
+        // print("LoginCoordinatorDidfinsh")
         self.childCoordinator = self.childCoordinator
             .filter({ $0.type != childCoordinator.type })
         childCoordinator.navigationController.popToRootViewController(animated: true)

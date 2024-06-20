@@ -2,8 +2,8 @@ import UIKit
 import Foundation
 
 
-//탭바 첫번째 인자 컨트롤러
-class DiaryCoordinator : Coordinator  {
+// 탭바 첫번째 인자 컨트롤러
+class DiaryCoordinator: Coordinator {
     func start() {
     }
     
@@ -35,11 +35,11 @@ class DiaryCoordinator : Coordinator  {
  
     
     
-    func pushEditIngredientsVC( arr : [IngredientsModel] ) {
+    func pushEditIngredientsVC( arr: [IngredientsModel] ) {
         let ingredientsCoordinator =  IngredientsCoordinator( self.navigationController )
         ingredientsCoordinator.finishDelegate = self
         childCoordinator.append(ingredientsCoordinator)
-        ingredientsCoordinator.pushIngredientsVC( arr : arr )
+        ingredientsCoordinator.pushIngredientsVC( arr: arr )
         
     }
      
@@ -58,25 +58,25 @@ class DiaryCoordinator : Coordinator  {
     
     func pushDiaryVC() {
         
-        let viewController = DiaryViewController(viewModel : DiaryVM ( coordinator : self , diaryUseCase: DiaryUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService )     )))
+        let viewController = DiaryViewController(viewModel: DiaryVM( coordinator: self, diaryUseCase: DiaryUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService ))))
         
         self.navigationController.hidesBottomBarWhenPushed = false
-        self.navigationController.pushViewController( viewController , animated: false )
+        self.navigationController.pushViewController( viewController, animated: false )
     
     }
     
-    func startExerciseCoordinator(exercises : [ExerciseModel]) {
+    func startExerciseCoordinator(exercises: [ExerciseModel]) {
         let exerciseCoordinator =  ExerciseCoordinator( self.navigationController )
         exerciseCoordinator.finishDelegate = self
         exerciseCoordinator.parentCoordinator = self
         childCoordinator.append(exerciseCoordinator)
         
-        if( exercises.isEmpty ){
+        if exercises.isEmpty {
             
             
-            exerciseCoordinator.pushExerciseVC(exercises : exercises)
+            exerciseCoordinator.pushExerciseVC(exercises: exercises)
             
-        }else{
+        } else {
             exerciseCoordinator.pushEditExerciseVC(exercises: exercises)
         }
         
@@ -85,9 +85,9 @@ class DiaryCoordinator : Coordinator  {
         
     }
     
-    func presentDetailView(models : IngredientsModel ){
-        print("pushDetailView")
-        let viewController = DetailModalVC(models:models)
+    func presentDetailView(models: IngredientsModel ) {
+        // print("pushDetailView")
+        let viewController = DetailModalVC(models: models)
             
         viewController.view.backgroundColor = .white
         self.navigationController.present(viewController, animated: true)
@@ -97,13 +97,13 @@ class DiaryCoordinator : Coordinator  {
         
     }
     
-    func pop(){
+    func pop() {
         print("popnavigation")
         self.navigationController.popViewController(animated: false)
         
     }
     
-    func refreshChild(){
+    func refreshChild() {
         self.childCoordinator = []
     }
     

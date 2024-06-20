@@ -12,24 +12,24 @@ import FirebaseStorage
 import FirebaseAuth
 
 
-class MyProfileVM : ViewModel {
+class MyProfileVM: ViewModel {
     
     
     var disposeBag = DisposeBag()
     
-    var name : String?
+    var name: String?
     
-    var feeds:[FeedModel]?
+    var feeds: [FeedModel]?
     
-    var profileImage:Data?
+    var profileImage: Data?
     
     struct Input {
-        let viewWillApearEvent : Observable<Void>
-        let leftBarButton : Observable<UITapGestureRecognizer>
-        let settingTapped : Observable<UITapGestureRecognizer>
-        let addButtonTapped : Observable<Void>
-        let outputProfileImage : Observable<Data?>
-        let imageTapped : Observable<String>
+        let viewWillApearEvent: Observable<Void>
+        let leftBarButton: Observable<UITapGestureRecognizer>
+        let settingTapped: Observable<UITapGestureRecognizer>
+        let addButtonTapped: Observable<Void>
+        let outputProfileImage: Observable<Data?>
+        let imageTapped: Observable<String>
         
     }
     
@@ -43,12 +43,11 @@ class MyProfileVM : ViewModel {
     }
     
     struct HeaderInput {
-        let viewWillApearEvent : Observable<Bool>
-        
-        let goalLabelTapped : Observable<UITapGestureRecognizer>
-        let changeProfile : Observable<UITapGestureRecognizer>
-        let outputProfileImage : Observable<Data?>
-        let outputFollows : Observable<UITapGestureRecognizer>
+        let viewWillApearEvent: Observable<Bool>
+        let goalLabelTapped: Observable<UITapGestureRecognizer>
+        let changeProfile: Observable<UITapGestureRecognizer>
+        let outputProfileImage: Observable<Data?>
+        let outputFollows: Observable<UITapGestureRecognizer>
         
         
         
@@ -73,27 +72,27 @@ class MyProfileVM : ViewModel {
     
     
     
-    weak var coordinator : ProfileCoordinator?
+    weak var coordinator: ProfileCoordinator?
     
-    private let profileUseCase : ProfileUseCase
+    private let profileUseCase: ProfileUseCase
     
-    var nowUser : UserModel?
+    var nowUser: UserModel?
     
     
-    init( coordinator : ProfileCoordinator , profileUseCase : ProfileUseCase ){
+    init( coordinator: ProfileCoordinator, profileUseCase: ProfileUseCase ) {
         
         self.coordinator =  coordinator
         self.profileUseCase = profileUseCase
     }
     
-    func HeaderTransform(input : HeaderInput , disposeBag: DisposeBag) -> HeaderOutput {
+    func HeaderTransform(input: HeaderInput, disposeBag: DisposeBag) -> HeaderOutput {
         let ownUid = UserDefaults.standard.string(forKey: "uid") ?? ""
         
         
         let output = HeaderOutput()
         
         
-        input.outputProfileImage.subscribe(onNext:{ image in
+        input.outputProfileImage.subscribe(onNext: { image in
             
             self.profileImage = image
             
@@ -103,26 +102,25 @@ class MyProfileVM : ViewModel {
             
             guard let view = event.view else {return}
             let name = self.name ?? ""
-            if(view.tag == 1 ){
-                self.coordinator?.pushFollowsVC(follow: true , uid : ownUid, name: name)
+            if view.tag == 1 {
+                self.coordinator?.pushFollowsVC(follow: true, uid: ownUid, name: name)
                 
-            }else{
+            } else {
                 
-                self.coordinator?.pushFollowsVC(follow: false , uid : ownUid, name: name)
+                self.coordinator?.pushFollowsVC(follow: false, uid: ownUid, name: name)
             }
             
             
         }).disposed(by: disposeBag)
         
         input.changeProfile.when(.recognized).subscribe(onNext: { [weak self] _ in
-            //print(nowUser)
             
-            self?.coordinator?.pushChangeProfileVC(name: self?.nowUser?.name ?? "" , introduce: self?.nowUser?.introduce ?? "" , profileImage: self?.profileImage ?? nil , beforeImageUrl : self?.nowUser?.profileImage ?? "" )
+            self?.coordinator?.pushChangeProfileVC(name: self?.nowUser?.name ?? "", introduce: self?.nowUser?.introduce ?? "", profileImage: self?.profileImage ?? nil, beforeImageUrl: self?.nowUser?.profileImage ?? "" )
             
         }).disposed(by: disposeBag)
         
         
-        input.outputProfileImage.subscribe(onNext:{ image in
+        input.outputProfileImage.subscribe(onNext: { image in
             
             
             
@@ -144,13 +142,10 @@ class MyProfileVM : ViewModel {
         
         input.viewWillApearEvent.subscribe(onNext: { event in
             
-            
-            
-            
-            self.profileUseCase.getUser().subscribe{ [weak self]
-                event in
+            self.profileUseCase.getUser().subscribe { [weak self] event in
+                
                 guard let self = self else {return}
-                switch(event){
+                switch event {
                 case.success(let user):
                     
                     UserDefaults.standard.set(user.profileImage, forKey: "profileImage")
@@ -206,11 +201,11 @@ class MyProfileVM : ViewModel {
         
         let output = Output()
         
-        input.imageTapped.subscribe(onNext:{ feedUid in
+        input.imageTapped.subscribe(onNext: { feedUid in
             
             print(feedUid)
             self.feeds?.forEach({
-                if(feedUid == $0.feedUid){
+                if feedUid == $0.feedUid {
                     self.coordinator?.pushProfileFeed(feedUid: feedUid)
                 }
                 
@@ -219,10 +214,10 @@ class MyProfileVM : ViewModel {
             
         }).disposed(by: disposeBag)
         
-        input.leftBarButton.subscribe(onNext:{ _ in
+        input.leftBarButton.subscribe(onNext: { _ in
             print("tapped")
             
-            self.coordinator?.pushChangeProfileVC(name: self.nowUser?.name ?? "" , introduce: self.nowUser?.introduce ?? "" , profileImage: self.profileImage ?? nil , beforeImageUrl : self.nowUser?.profileImage ?? "" )
+            self.coordinator?.pushChangeProfileVC(name: self.nowUser?.name ?? "", introduce: self.nowUser?.introduce ?? "", profileImage: self.profileImage ?? nil, beforeImageUrl: self.nowUser?.profileImage ?? "" )
             
             
             
@@ -241,9 +236,9 @@ class MyProfileVM : ViewModel {
             self.coordinator?.refreshChild()
             
             
-            if let uid = UserDefaults.standard.string(forKey: "uid"){
+            if let uid = UserDefaults.standard.string(forKey: "uid") {
                 self.profileUseCase.getFeeds(uid: uid).subscribe({ event in
-                    switch(event){
+                    switch event {
                     case.success(let feedArr):
                         self.feeds = feedArr
                         let imageArr = feedArr.map({
@@ -259,7 +254,7 @@ class MyProfileVM : ViewModel {
                         
                         
                     case.failure(let err):
-                        if(err as! CustomError == CustomError.isNil){
+                        if err as! CustomError == CustomError.isNil {
                             print("nil")
                             output.feedImage.onNext([])
                             output.feedUid.onNext([])
@@ -300,12 +295,12 @@ class MyProfileVM : ViewModel {
     
     
     struct SettingInput {
-        let viewWillApearEvent : Observable<Void>
-        let logoutTapped : Observable<UITapGestureRecognizer>
-        let secessionTapped : Observable<Bool>
-        let values : Observable<(String, String)>
-        let OAuthCredential : Observable<OAuthCredential>
-        let blockListTapped : Observable<UITapGestureRecognizer>
+        let viewWillApearEvent: Observable<Void>
+        let logoutTapped: Observable<UITapGestureRecognizer>
+        let secessionTapped: Observable<Bool>
+        let values: Observable<(String, String)>
+        let OAuthCredential: Observable<OAuthCredential>
+        let blockListTapped: Observable<UITapGestureRecognizer>
         
     }
     
@@ -323,7 +318,7 @@ class MyProfileVM : ViewModel {
             guard let self else {return}
             self.profileUseCase.signOut().subscribe({ [weak self] event in
                 guard let self else { return }
-                switch(event){
+                switch event {
                 case .completed:
                     self.coordinator?.logout()
                 case .error(let err):
@@ -341,37 +336,37 @@ class MyProfileVM : ViewModel {
             guard let self else {return}
             LoadingIndicator.showLoading()
             
-            if(UserDefaults.standard.string(forKey: "loginMethod") == "kakao"  ){
+            if UserDefaults.standard.string(forKey: "loginMethod") == "kakao" {
                 
                 self.profileUseCase.kakaoSecessionOut().subscribe({ event in
                     
-                    switch(event){
+                    switch event {
                     case .completed:
                         LoadingIndicator.hideLoading()
                         self.coordinator?.logout()
                         
-                    case .error(let err):
-                        print("err")
+                    case .error(_):
+                        break
                     }
                     
                     
                 }).disposed(by: disposeBag)
                 
                 
-            }else{
+            } else {
                 output.appleSecession.onNext(true)
             }
             
         }).disposed(by: disposeBag)
         
         
-        input.values.subscribe(onNext: { [weak self] codeString , userId in
+        input.values.subscribe(onNext: { [weak self] codeString, userId in
             guard let self else {return}
             
             input.OAuthCredential.subscribe(onNext: { credential in
                 
-                self.profileUseCase.appleSecession(codeString: codeString, userId: userId , credential : credential).subscribe({ event in
-                    switch(event){
+                self.profileUseCase.appleSecession(codeString: codeString, userId: userId, credential: credential).subscribe( { event in
+                    switch event {
                         
                     case .completed:
                         LoadingIndicator.hideLoading()
@@ -389,7 +384,7 @@ class MyProfileVM : ViewModel {
         
         
         
-        input.blockListTapped.subscribe(onNext:{ _ in
+        input.blockListTapped.subscribe(onNext: { _ in
             
             self.coordinator?.pushBlockList()
             
@@ -405,4 +400,3 @@ class MyProfileVM : ViewModel {
         
     }
 }
-                                           

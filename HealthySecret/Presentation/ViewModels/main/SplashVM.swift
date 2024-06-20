@@ -18,11 +18,11 @@ final class SplashVM {
   
     weak var coordinator: AppCoordinator?
     private let disposeBag = DisposeBag()
-    private let loginUseCase : LoginUseCase
+    private let loginUseCase: LoginUseCase
     
     init(
         coordinator: AppCoordinator,
-        loginUseCase : LoginUseCase
+        loginUseCase: LoginUseCase
     ) {
         self.coordinator = coordinator
         self.loginUseCase = loginUseCase
@@ -31,18 +31,18 @@ final class SplashVM {
     var freeze = PublishSubject<Bool>()
    
     
-    func selectStart(){
+    func selectStart() {
         
         freeze.bind(to: self.freeze).disposed(by: disposeBag)
         
         
         self.setStart().subscribe({ event in
             
-            switch(event){
+            switch event {
             case.success(let select):
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
                     
-                    switch(select){
+                    switch(select) {
                     case(.logIn):
                         self.coordinator?.showLoginViewController()
                     case(.signUp):
@@ -70,7 +70,7 @@ final class SplashVM {
         
     }
     
-    func setStart() -> Single<LoginStatus>{
+    func setStart() -> Single<LoginStatus> {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"

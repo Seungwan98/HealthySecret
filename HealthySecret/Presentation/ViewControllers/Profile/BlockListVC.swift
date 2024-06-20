@@ -10,38 +10,38 @@ import Kingfisher
 import SnapKit
 
 
-class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , FollowsBlocksCellDelegate   {
+class BlockListVC: UIViewController, UIScrollViewDelegate, UISearchBarDelegate, FollowsBlocksCellDelegate {
     func didPressbutton(for index: String, like: Bool) {
-        self.pressedBlock.onNext([index:like])
-
+        self.pressedBlock.onNext([index: like])
+        
     }
     
     func didPressProfile(for index: String) {
         //
     }
     
-  
     
-    private var pressedBlock = PublishSubject<[String:Bool]>()
-
+    
+    private var pressedBlock = PublishSubject<[String: Bool]>()
+    
     
     
     let disposeBag = DisposeBag()
     
-    private var viewModel : BlockListVM?
+    private var viewModel: BlockListVM?
     
     let backBarButtonItem = UIBarButtonItem()
     
     let mainView = UIView()
-
-    
-   
     
     
     
     
     
-    lazy private var tableView : UITableView = {
+    
+    
+    
+    lazy private var tableView: UITableView = {
         let tableView = UITableView()
         tableView.separatorColor = .clear
         tableView.allowsMultipleSelection = true
@@ -60,7 +60,7 @@ class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate
     
     
     
-    init(viewModel : BlockListVM){
+    init(viewModel: BlockListVM) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         
@@ -75,7 +75,7 @@ class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate
     
     
     
-    override func viewDidLoad(){
+    override func viewDidLoad() {
         super.viewDidLoad()
         
         
@@ -85,13 +85,13 @@ class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate
         
     }
     
-   
+    
     
     
     override func viewWillAppear(_ animated: Bool) {
         
         self.navigationItem.title = "차단목록"
-
+        
         
         backBarButtonItem.tintColor = .black
         backBarButtonItem.image = UIImage(systemName: "chevron.backward")
@@ -108,16 +108,16 @@ class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
     }
-
     
     
     
     
-  
     
     
     
-    func setUI(){
+    
+    
+    func setUI() {
         
         
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
@@ -128,9 +128,9 @@ class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate
         
         self.backgroundView.backgroundLabel.text = "아직 차단한 유저가 없어요"
         
-
+        
         self.view.addSubview(self.mainView)
-
+        
         self.mainView.addSubview(self.tableView)
         
         
@@ -139,48 +139,46 @@ class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate
         
         view.addSubview(self.loadingView)
         
-        self.loadingView.snp.makeConstraints{
+        self.loadingView.snp.makeConstraints {
             $0.trailing.bottom.top.leading.equalTo(self.view)
         }
-        self.mainView.snp.makeConstraints{
+        self.mainView.snp.makeConstraints {
             $0.top.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
-        self.tableView.snp.makeConstraints{
+        self.tableView.snp.makeConstraints {
             $0.top.bottom.leading.trailing.equalTo(mainView)
         }
-        self.backgroundView.snp.makeConstraints{
+        self.backgroundView.snp.makeConstraints {
             $0.top.bottom.leading.trailing.equalTo(mainView)
         }
-       
+        
         
         
     }
     
     
-  
+    
     
     
     var loadingView = LoadingView()
-
+    
     func setBindings() {
         
         loadingView.isLoading = true
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.loadingView.isLoading = false
             
-          }
+        }
         
         guard let ownUid = UserDefaults.standard.string(forKey: "uid") else {
             print("ownUid nil")
             return  }
         
         
-        let input = BlockListVM.Input( viewWillApearEvent : self.rx.methodInvoked(#selector(viewWillAppear(_:)))
-            .map( { _ in }).asObservable() ,
-                                       pressedBlock : self.pressedBlock.asObservable()
-                                     
-                                     
+        let input = BlockListVM.Input( viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map( { _ in }).asObservable(), pressedBlock: self.pressedBlock.asObservable()
+                                       
+                                       
         )
         
         
@@ -197,7 +195,7 @@ class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate
         }).disposed(by: disposeBag)
         
         output.backgroundViewHidden.bind(to: self.backgroundView.rx.isHidden).disposed(by: disposeBag)
-    
+        
         output.alert.subscribe(onNext: { [weak self] _ in
             
             guard let self = self else {return}
@@ -208,30 +206,30 @@ class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate
         }).disposed(by: disposeBag)
         
         
-        output.userModels.bind(to: tableView.rx.items(cellIdentifier: "FollowsBlocksCell" , cellType: FollowsBlocksCell.self )){
-            [weak self] index , item , cell in
+        output.userModels.bind(to: tableView.rx.items(cellIdentifier: "FollowsBlocksCell", cellType: FollowsBlocksCell.self )) {
+            [weak self] _, item, cell in
             guard let self = self else {return}
             
-
+            
             cell.setBlockButton()
-               
-                    if(item.blocked.contains(ownUid)){
-                        cell.blockIsTouched = true
-                        
-                        cell.button.isSelected = true
-                    }else{
-
-                        cell.blockIsTouched = false
-                        cell.button.isSelected = false
-                    }
+            
+            if item.blocked.contains(ownUid) {
+                cell.blockIsTouched = true
                 
+                cell.button.isSelected = true
+            } else {
                 
-                
+                cell.blockIsTouched = false
+                cell.button.isSelected = false
+            }
+            
+            
+            
             
             cell.index = item.uuid
             cell.nickname.text = item.name
             
-        
+            
             
             
             cell.delegate = self
@@ -243,73 +241,26 @@ class BlockListVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate
                 if let url = URL(string: item.profileImage ?? "" ) {
                     
                     
-                    let processor = DownsamplingImageProcessor(size: CGSize(width: cell.profileImage.bounds.width , height: cell.profileImage.bounds.height) ) // 크기 지정 다운 샘플링
+                    let processor = DownsamplingImageProcessor(size: CGSize(width: cell.profileImage.bounds.width, height: cell.profileImage.bounds.height) ) // 크기 지정 다운 샘플링
                     |> RoundCornerImageProcessor(cornerRadius: 0) // 모서리 둥글게
                     cell.profileImage.kf.indicatorType = .activity  // indicator 활성화
                     cell.profileImage.kf.setImage(
                         with: url,  // 이미지 불러올 url
-                        placeholder: UIImage(named: "일반적.png") ,  // 이미지 없을 때의 이미지 설정
+                        placeholder: UIImage(named: "일반적.png"),  // 이미지 없을 때의 이미지 설정
                         options: [
                             .processor(processor),
                             .scaleFactor(UIScreen.main.scale),
                             .transition(.none),  // 애니메이션 효과
                             .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
                         ])
-                    
-                    
-                    
-                    
-                }else{
+                } else {
                     cell.profileImage.image = UIImage(named: "일반적.png")
                 }
                 
-                
-                
-                
             }
-            
-            
-            
-            
-            
-            
             
         }.disposed(by: disposeBag)
         
-        
-        
-        
-        
-        
-        
-        
-        
     }
     
-    
-    
-    
-    
-    
-    
-    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

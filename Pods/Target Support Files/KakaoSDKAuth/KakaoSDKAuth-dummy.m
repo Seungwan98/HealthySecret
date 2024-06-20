@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-@interface PodsDummy_KakaoSDKAuth : NSObject
+@interface PodsDummy_KakaoSDKAuth: NSObject
 @end
 @implementation PodsDummy_KakaoSDKAuth
 @end

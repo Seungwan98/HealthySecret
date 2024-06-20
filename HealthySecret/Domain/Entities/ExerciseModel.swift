@@ -6,25 +6,25 @@
 //
 
 import Foundation
-struct ExerciseModel : Codable {
-    var key : String
-    var date : String
-    var name : String
-    var time : String
-    var finalCalorie : String
-    var memo : String
-    var exerciseGram : String
+struct ExerciseModel: Codable {
+    var key: String
+    var date: String
+    var name: String
+    var time: String
+    var finalCalorie: String
+    var memo: String
+    var exerciseGram: String
 
 
     
-    enum Codingkeys : String , CodingKey {
-        case date , name , time , finalCalorie , memo , key , exerciseGram
+    enum Codingkeys: String, CodingKey {
+        case date, name, time, finalCalorie, memo, key, exerciseGram
         
         
         
     }
     
-    init(date : String , name : String , time : String , finalCalorie : String , memo : String , key : String , exerciseGram : String){
+    init(date: String, name: String, time: String, finalCalorie: String, memo: String, key: String, exerciseGram: String) {
         self.date = date
         self.name = name
         self.time = time

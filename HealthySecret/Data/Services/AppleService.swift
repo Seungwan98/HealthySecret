@@ -7,8 +7,8 @@ final class AppleService {
     
     private var disposeBag = DisposeBag()
     
-    func removeAccount(refreshToken : String? , userId : String?) -> Completable {
-        return Completable.create{ completable in
+    func removeAccount(refreshToken: String?, userId: String?) -> Completable {
+        return Completable.create { completable in
        
             
              
@@ -29,7 +29,7 @@ final class AppleService {
                                              print("authorized")                                             
                                              self.removeAccount(refreshToken: refreshToken, userId: userId).subscribe({ event in
                                                  
-                                                 switch(event){
+                                                 switch event {
                                                  case .completed:
                                                      completable(.completed)
                                                  case .error(let err):

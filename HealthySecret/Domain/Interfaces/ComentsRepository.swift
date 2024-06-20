@@ -10,9 +10,9 @@ import RxSwift
 
 protocol ComentsRepository {
     
-    func getComents(feedUid : String) -> Single<[ComentDTO]>
-    func reportComents(  uid: String , uuid: String ) -> Completable
-    func deleteComents( coment : ComentDTO , feedUid : String) -> Single<[ComentDTO]>
-    func updateComents(feedUid: String , coment: ComentDTO ) -> Single<[ComentDTO]>
+    func getComents(feedUid: String) -> Single<[ComentDTO]>
+    func reportComents(  uid: String, uuid: String ) -> Completable
+    func deleteComents( coment: ComentDTO, feedUid: String) -> Single<[ComentDTO]>
+    func updateComents(feedUid: String, coment: ComentDTO ) -> Single<[ComentDTO]>
     
 }

@@ -10,24 +10,24 @@ import RxCocoa
 import RxSwift
 
 
-class ProfileFeedVM : ViewModel {
+class ProfileFeedVM: ViewModel {
     
     
     var disposeBag = DisposeBag()
     
-    var feedUid : String?
+    var feedUid: String?
     
     var reload = PublishSubject<Bool>()
     
     struct Input {
-        let viewWillApearEvent : Observable<Void>
-        let likesButtonTapped : Observable<Bool>
-        let comentsTapped : Observable<UITapGestureRecognizer>
-        let deleteFeed : Observable<Bool>
-        let reportFeed : Observable<Bool>
-        let updateFeed : Observable<Bool>
-        let profileTapped : Observable<UITapGestureRecognizer>
-        let refreshControl : Observable<Void>
+        let viewWillApearEvent: Observable<Void>
+        let likesButtonTapped: Observable<Bool>
+        let comentsTapped: Observable<UITapGestureRecognizer>
+        let deleteFeed: Observable<Bool>
+        let reportFeed: Observable<Bool>
+        let updateFeed: Observable<Bool>
+        let profileTapped: Observable<UITapGestureRecognizer>
+        let refreshControl: Observable<Void>
         
         
     }
@@ -43,13 +43,13 @@ class ProfileFeedVM : ViewModel {
     
     
     
-    var feedModel : FeedModel?
+    var feedModel: FeedModel?
     
-    weak var coordinator : CommuCoordinator?
+    weak var coordinator: CommuCoordinator?
     
-    private let commuUseCase : CommuUseCase
+    private let commuUseCase: CommuUseCase
     
-    init( coordinator : CommuCoordinator , commuUseCase : CommuUseCase ){
+    init(coordinator: CommuCoordinator, commuUseCase: CommuUseCase) {
         self.coordinator =  coordinator
         self.commuUseCase = commuUseCase
     }
@@ -58,12 +58,10 @@ class ProfileFeedVM : ViewModel {
     
     
     
-    func transform(input : Input , disposeBag: DisposeBag) -> Output {
+    func transform(input: Input, disposeBag: DisposeBag) -> Output {
         let authUid = UserDefaults.standard.string(forKey: "uid") ?? ""
         
-        guard let feedUid = self.feedUid  else {
-                print("nil feedUid")
-            return Output()}
+        guard let feedUid = self.feedUid  else {return Output()}
 
         
         
@@ -81,14 +79,14 @@ class ProfileFeedVM : ViewModel {
             
         }).disposed(by: disposeBag)
         
-        input.profileTapped.subscribe(onNext : { _ in
+        input.profileTapped.subscribe(onNext: { _ in
             guard let uuid = self.feedModel?.uuid else {return}
             self.coordinator?.pushProfileVC(uuid: uuid )
             
             
         }).disposed(by: disposeBag)
         
-        input.updateFeed.subscribe(onNext :{ [weak self]  _ in
+        input.updateFeed.subscribe(onNext: { [weak self]  _ in
             
             guard let self = self else {return}
             guard let feedModel = self.feedModel else {return}
@@ -102,7 +100,7 @@ class ProfileFeedVM : ViewModel {
 
             
             self.commuUseCase.deleteFeed(feedUid: feedUid).subscribe({ event in
-                switch(event){
+                switch event {
                 case.completed:
                     
                     print("delete")
@@ -126,18 +124,18 @@ class ProfileFeedVM : ViewModel {
 
             guard let feed = self.feedModel else {return}
             
-            self.coordinator?.pushComents(coments: feed.coments , feedUid : feed.feedUid , feedUuid: feed.uuid )
+            self.coordinator?.pushComents(coments: feed.coments, feedUid: feed.feedUid, feedUuid: feed.uuid )
             
             
         }).disposed(by: disposeBag)
         
-        input.likesButtonTapped.throttle(.seconds(1) , latest: true  ,  scheduler: MainScheduler.instance).subscribe(onNext: { like in
+        input.likesButtonTapped.throttle(.seconds(1), latest: true, scheduler: MainScheduler.instance).subscribe(onNext: { like in
           
             guard let feedUid = self.feedUid else {return}
             
             
-            self.commuUseCase.updateFeedLikes(feedUid: feedUid  , uuid: authUid, like: like ).subscribe({ event in
-                switch(event){
+            self.commuUseCase.updateFeedLikes(feedUid: feedUid, uuid: authUid, like: like ).subscribe({ event in
+                switch event {
                 case(.completed):
                     print("좋아요 수정완료")
                 case(.error(let err)):
@@ -150,7 +148,7 @@ class ProfileFeedVM : ViewModel {
             }).disposed(by: disposeBag)
             
             
-        }).disposed(by:disposeBag )
+        }).disposed(by: disposeBag)
         
 
         
@@ -175,7 +173,7 @@ class ProfileFeedVM : ViewModel {
             if let feedUid = self.feedUid {
                 
                 self.commuUseCase.getFeedFeedUid(feedUid: feedUid).subscribe({ event in
-                    switch(event){
+                    switch event {
                     case.success(let feed):
                         
                         
@@ -189,8 +187,7 @@ class ProfileFeedVM : ViewModel {
                         
                         
                         
-                    case.failure(let err):
-                        print(err)
+                    case.failure(_):
                         break
                     }
                     

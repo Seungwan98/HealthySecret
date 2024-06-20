@@ -8,7 +8,7 @@
 //import Alamofire
 //import UIKit
 //import RxSwift
-//class RequestFile{
+//class RequestFile {
 //
 //    func getRequestData(_ ingredientsViewController: IngredientsViewController) -> Completable {
 //
@@ -34,7 +34,7 @@
 //            case .failure(let error):
 //
 //
-//                print("DEBUG>> OpenWeather Get Error : \(error.localizedDescription)")
+//                print("DEBUG>> OpenWeather Get Error: \(error.localizedDescription)")
 //            }
 //
 //
@@ -63,7 +63,7 @@
 ////            case .failure(let error):
 ////
 ////
-////                print("DEBUG>> OpenWeather Get Error : \(error.localizedDescription)")
+////                print("DEBUG>> OpenWeather Get Error: \(error.localizedDescription)")
 ////            }
 //
 //

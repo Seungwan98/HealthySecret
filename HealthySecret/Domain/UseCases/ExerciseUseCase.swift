@@ -14,10 +14,10 @@ import FirebaseAuth
 class ExerciseUseCase {
 
     private let disposeBag = DisposeBag()
-    private let exerciseRepository : ExerciseRepository
-    private let userRepository : UserRepository
+    private let exerciseRepository: ExerciseRepository
+    private let userRepository: UserRepository
     
-    init( exerciseRepository : ExerciseRepository , userRepository : UserRepository ){
+    init( exerciseRepository: ExerciseRepository, userRepository: UserRepository ) {
         self.exerciseRepository = exerciseRepository
         self.userRepository = userRepository
         
@@ -32,7 +32,7 @@ class ExerciseUseCase {
     }
     
     
-    func updateUsersExercise(exercises : [ExerciseModel]) -> Completable {
+    func updateUsersExercise(exercises: [ExerciseModel]) -> Completable {
         
         return self.userRepository.updateUsersExercises(exercises: exercises)
     }

@@ -1,5 +1,3 @@
-
-
 import UIKit
 import RxSwift
 import RxCocoa
@@ -8,12 +6,12 @@ import KakaoSDKUser
 import FirebaseAuth
 import SnapKit
 
-class LoginViewController : UIViewController {
+class LoginViewController: UIViewController {
     
     
     
     fileprivate var currentNonce: String?
- 
+    
     
     
     var appleLogin = PublishSubject<OAuthCredential>()
@@ -24,7 +22,7 @@ class LoginViewController : UIViewController {
     ///
     ///
     
-    var kakaoButton : UIView = {
+    var kakaoButton: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(red: 254 / 255, green: 229 / 255, blue: 0 / 255, alpha: 1)
         view.layer.cornerRadius = 30
@@ -40,22 +38,22 @@ class LoginViewController : UIViewController {
         view.addSubview(image)
         
         
-        label.snp.makeConstraints{
+        label.snp.makeConstraints {
             $0.center.equalTo(view)
         }
-        image.snp.makeConstraints{
+        image.snp.makeConstraints {
             $0.width.height.equalTo(20)
             $0.leading.equalTo(view).inset(20)
             $0.centerY.equalTo(view)
         }
-
-      
+        
+        
         
         
         return view
     }()
     
-    var appleButton : UIView = {
+    var appleButton: UIView = {
         let view = UIView()
         view.backgroundColor = .black
         view.layer.cornerRadius = 30
@@ -73,29 +71,29 @@ class LoginViewController : UIViewController {
         view.addSubview(label)
         view.addSubview(image)
         
-
-        label.snp.makeConstraints{
+        
+        label.snp.makeConstraints {
             $0.center.equalTo(view)
         }
-        image.snp.makeConstraints{
+        image.snp.makeConstraints {
             $0.width.equalTo(20)
             $0.height.equalTo(22)
             $0.leading.equalTo(view).inset(20)
             $0.centerY.equalTo(view).offset(-2)
         }
-    
+        
         return view
     }()
     
- 
-    
-
     
     
     
     
-    lazy var loginStackView : UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [ kakaoButton ,appleButton ])
+    
+    
+    
+    lazy var loginStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [ kakaoButton,appleButton ])
         stackView.axis = .vertical
         stackView.spacing = 15
         stackView.distribution = .fillEqually
@@ -114,44 +112,44 @@ class LoginViewController : UIViewController {
     
     
     
-    ///이미지
+    /// 이미지
     ///
     ///
-    let mainLoginImage : UIImageView = {
+    let mainLoginImage: UIImageView = {
         let image = UIImageView(image: UIImage(named: "mainImage.jpeg"))
-     
+        
         return image
         
     }()
     
-    let mainView : UIView = {
+    let mainView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemBlue.withAlphaComponent(0.5)
         view.layer.cornerRadius = 8
-
+        
         return view
         
     }()
     
     
-  
     
     
     
     
-
     
     
     
-   
+    
+    
+    
     
     
     private var viewModel: LoginVM?
     let disposeBag = DisposeBag()
-    weak var loginCoordinator : LoginCoordinator?
+    weak var loginCoordinator: LoginCoordinator?
     
     
-    init(viewModel : LoginVM){
+    init(viewModel: LoginVM) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         
@@ -165,7 +163,7 @@ class LoginViewController : UIViewController {
         super.viewDidLoad()
         
         
- 
+        
         self.setUI()
         self.setBindings()
         
@@ -177,14 +175,14 @@ class LoginViewController : UIViewController {
     }
     
     @objc
-    func AppleLoginTapped(){
+    func AppleLoginTapped() {
         
         self.startSignInWithAppleFlow()
     }
     
     
-    func setUI(){
-        let HEIGHT : CGFloat = 60
+    func setUI() {
+        let HEIGHT: CGFloat = 60
         
         
         view.addSubview(mainView)
@@ -193,38 +191,38 @@ class LoginViewController : UIViewController {
         
         
         
-        self.mainView.snp.makeConstraints{
+        self.mainView.snp.makeConstraints {
             $0.top.bottom.trailing.leading.equalTo(self.view)
         }
-        self.mainLoginImage.snp.makeConstraints{
+        self.mainLoginImage.snp.makeConstraints {
             $0.width.height.equalTo(240)
             $0.center.equalTo(self.view)
         }
-        self.loginStackView.snp.makeConstraints{
+        self.loginStackView.snp.makeConstraints {
             $0.height.equalTo( HEIGHT * 2 + 15 )
             $0.leading.trailing.equalTo(self.view).inset(20)
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(60)
         }
-   
+        
         
         
         
         
     }
     
-    func setBindings(){
+    func setBindings() {
         
         
         
         
-        let input = LoginVM.Input( kakaoLoginButtonTapped: kakaoButton.rx.tapGesture().when(.recognized) , appleLogin : appleLogin.asObservable())
+        let input = LoginVM.Input( kakaoLoginButtonTapped: kakaoButton.rx.tapGesture().when(.recognized), appleLogin: appleLogin.asObservable())
         
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else {return}
         
-        output.alert.subscribe(onNext: { event in
+        output.alert.subscribe(onNext: { _ in
             
-            AlertHelper.shared.showResult(title: "계정 정지", message: "신고 누적으로 계정이 정지되었습니다" , over: self)
-
+            AlertHelper.shared.showResult(title: "계정 정지", message: "신고 누적으로 계정이 정지되었습니다", over: self)
+            
         }).disposed(by: disposeBag)
     }
     
@@ -301,7 +299,7 @@ extension LoginViewController {
     }
 }
 
-extension LoginViewController : ASAuthorizationControllerDelegate {
+extension LoginViewController: ASAuthorizationControllerDelegate {
     
     
     
@@ -324,47 +322,15 @@ extension LoginViewController : ASAuthorizationControllerDelegate {
             let family = appleIDCredential.fullName?.familyName ?? ""
             
             
-            UserDefaults.standard.set( "\(family)\(given)"  , forKey: "name")
-            let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString , rawNonce: nonce)
+            UserDefaults.standard.set( "\(family)\(given)", forKey: "name")
+            let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString, rawNonce: nonce)
             
             if let authorizationCode = appleIDCredential.authorizationCode, let codeString = String(data: authorizationCode, encoding: .utf8) {
                 
-           
-                
-//                let url = URL(string: "https://us-central1-healthysecrets-f1b20.cloudfunctions.net/getRefreshToken?code=\(codeString)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "https://apple.com")!
-//                let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
-//                    if let data = data {
-//                        let refreshToken = String(data: data, encoding: .utf8) ?? ""
-//                        
-//                      
-//                        
-//                        
-//                        AppleService().removeAccount(refreshToken : refreshToken, userId: appleIDCredential.user).subscribe({ event in
-//                            switch(event){
-//                            case.completed: break
-//                               
-//                                
-//                            case.error(let err):
-//                                print(err)
-//                            }
-//                            
-//                            
-//                            
-//                        }).disposed(by: self.disposeBag)
-//                        
-//                        
-//                    }else{
-//                        print("\(String(describing: error)) error")
-//                    }
-//                }
-//                
-//                
-//                task.resume()
-//                
                 
             }
             
-           
+            
             
             
             
@@ -402,6 +368,3 @@ extension LoginViewController: ASAuthorizationControllerPresentationContextProvi
         return self.view.window ?? UIWindow()
     }
 }
-
-
-

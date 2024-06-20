@@ -16,16 +16,15 @@ final class KakaoService {
     let firebaseService = FirebaseService()
     
     func kakaoSessionOut() -> Completable {
-        return Completable.create{ com in
+        return Completable.create { com in
             UserApi.shared.unlink {(error) in
-                        if let error = error {
-                            print(error)
-                            com(.error(error))
-                        }
-                        else {
-                            com(.completed)
-                        }
-                    }
+                if let error = error {
+                    print(error)
+                    com(.error(error))
+                } else {
+                    com(.completed)
+                }
+            }
             
             return Disposables.create()
             
@@ -33,16 +32,15 @@ final class KakaoService {
         
     }
     func kakaoSignOut() -> Completable {
-        return Completable.create{ com in
+        return Completable.create { com in
             UserApi.shared.logout {(error) in
-                        if let error = error {
-                            print(error)
-                            com(.error(error))
-                        }
-                        else {
-                            com(.completed)
-                        }
-                    }
+                if let error = error {
+                    print(error)
+                    com(.error(error))
+                } else {
+                    com(.completed)
+                }
+            }
             
             return Disposables.create()
             
@@ -51,11 +49,11 @@ final class KakaoService {
     }
     
     func kakaoGetToken() -> Single<String> {
-        Single.create{ single in
-        var password : String = ""
-        if AuthApi.hasToken()  {
-         
-                UserApi.shared.accessTokenInfo{ token,err  in
+        Single.create { single in
+            var password: String = ""
+            if AuthApi.hasToken() {
+                
+                UserApi.shared.accessTokenInfo { token, err  in
                     password =  "kakao_" + String(token?.id ?? 0)
                     
                     single(.success(password))
@@ -65,22 +63,22 @@ final class KakaoService {
             }
             return Disposables.create()
         }
-
+        
         
     }
     
     
-    func kakaoLogin() -> Single<[String:String]> {
+    func kakaoLogin() -> Single<[String: String]> {
         
-        var outputId : String!
-        var outputPassword : String!
-        var outputName : String!
+        var outputId: String!
+        var outputPassword: String!
+        var outputName: String!
         
         return Single.create { single in
             
             if AuthApi.hasToken() {
                 
-                UserApi.shared.accessTokenInfo { token , error in
+                UserApi.shared.accessTokenInfo { _, error in
                     if let error = error {
                         print("_________login error_________")
                         print(error)
@@ -94,14 +92,13 @@ final class KakaoService {
                                 } else {
                                     print("새로운 Login")
                                     
-                                    //do something
                                     _ = oauthToken
                                     
                                     // 로그인 성공 시
                                     UserApi.shared.me { kuser, error in
                                         
                                         if let error = error {
-                                            print("------KAKAO : user loading failed------")
+                                            print("------KAKAO: user loading failed------")
                                             print(error)
                                             single(.failure(error))
                                         } else {
@@ -114,8 +111,8 @@ final class KakaoService {
                                             outputPassword = "kakao_" + String(describing: pw )
                                             outputName = name
                                             
-                                            single(.success(["email": outputId , "pw" : outputPassword , "name" : outputName ] ))
-
+                                            single(.success(["email": outputId, "pw": outputPassword, "name": outputName ] ))
+                                            
                                         }
                                     }
                                     
@@ -124,25 +121,24 @@ final class KakaoService {
                                 }
                             }
                             
-                        }
-                        else{
+                        } else {
                             UserApi.shared.loginWithKakaoAccount { oauthToken, error in
                                 
                                 print("2")
-
+                                
                                 if let error = error {
                                     print(error)
                                 } else {
                                     print("새로운 Login")
                                     
-                                    //do something
+                                    // do something
                                     _ = oauthToken
                                     
                                     // 로그인 성공 시
                                     UserApi.shared.me { kuser, error in
                                         
                                         if let error = error {
-                                            print("------KAKAO : user loading failed------")
+                                            print("------KAKAO: user loading failed------")
                                             print(error)
                                             single(.failure(error))
                                         } else {
@@ -150,57 +146,51 @@ final class KakaoService {
                                             guard let email = ((kuser?.kakaoAccount?.email)) else { return }
                                             guard let pw =  kuser?.id else {return}
                                             guard let name = ((kuser?.kakaoAccount?.profile?.nickname)) else { return }
-
+                                            
                                             
                                             outputId = "kakao_" + email
                                             outputPassword = "kakao_" + String(describing: pw )
                                             outputName = name
-                                            single(.success(["email": outputId , "pw" : outputPassword , "name" : outputName  ] ))
-
-
+                                            single(.success(["email": outputId, "pw": outputPassword, "name": outputName  ] ))
+                                            
+                                            
                                         }
                                     }
                                 }
                                 
                                 
-
-                           
+                                
+                                
                             }
                         }
                         
-                    }
-                    else{
-                        print("g")
-                        UserApi.shared.me { kuser, error in
-                            guard let email = ((kuser?.kakaoAccount?.email)) else { return }
+                    } else {
+                        UserApi.shared.me { kuser, _ in
+                            guard let email = (kuser?.kakaoAccount?.email) else { return }
                             guard let pw =  kuser?.id else {return}
                             guard let name  = kuser?.kakaoAccount?.profile?.nickname else {return}
                             
                             outputId = "kakao_" + email
                             outputPassword = "kakao_" + String(describing: pw )
                             outputName = name
-                            single(.success(["email" : outputId  , "pw" : outputPassword , "name" : outputName ]))
-
+                            single(.success(["email": outputId, "pw": outputPassword, "name": outputName ]))
+                            
                         }
-
+                        
                     }
                     
                     
                 }
-                
-                
-                
-                
             } else {
                 if UserApi.isKakaoTalkLoginAvailable() {
                     print("3")
-                    UserApi.shared.loginWithKakaoTalk{ oauthToken, error in
+                    UserApi.shared.loginWithKakaoTalk { oauthToken, error in
                         if let error = error {
                             print(error)
                         } else {
                             print("New Kakao Login")
                             
-                            //do something
+                            // do something
                             _ = oauthToken
                             
                             
@@ -208,7 +198,7 @@ final class KakaoService {
                             // 로그인 성공 시
                             UserApi.shared.me { kuser, error in
                                 if let error = error {
-                                    print("------KAKAO : user loading failed------")
+                                    print("------KAKAO: user loading failed------")
                                     print(error)
                                 } else {
                                     guard let email = ((kuser?.kakaoAccount?.email)) else { return }
@@ -218,17 +208,16 @@ final class KakaoService {
                                     outputId = "kakao_" + email
                                     outputPassword = "kakao_" + String(describing: pw )
                                     outputName = name
-                                    single(.success(["email": outputId , "pw" : outputPassword , "name" : outputName ] ))
-
+                                    single(.success(["email": outputId, "pw": outputPassword, "name": outputName ] ))
+                                    
                                 }
                             }
                             
                             print("갱신")
                         }
-
+                        
                     }
-                }
-                else {
+                } else {
                     UserApi.shared.loginWithKakaoAccount { oauthToken, error in
                         print("4")
                         
@@ -237,13 +226,13 @@ final class KakaoService {
                         } else {
                             print("New Kakao Login")
                             
-                            //do something
+                            // do something
                             _ = oauthToken
                             
                             // 로그인 성공 시
                             UserApi.shared.me { kuser, error in
                                 if let error = error {
-                                    print("------KAKAO : user loading failed------")
+                                    print("------KAKAO: user loading failed------")
                                     print(error)
                                     single(.failure(error))
                                 } else {
@@ -256,15 +245,15 @@ final class KakaoService {
                                     outputId = "kakao_" + email
                                     outputPassword = "kakao_" + String(describing: pw )
                                     outputName = name
-
-                                    single(.success(["email": outputId , "pw" : outputPassword , "name" : outputName] ))
-
+                                    
+                                    single(.success(["email": outputId, "pw": outputPassword, "name": outputName] ))
+                                    
                                 }
                             }
                             
-                        
+                            
                         }
-
+                        
                     }
                     
                 }
@@ -276,4 +265,4 @@ final class KakaoService {
     }
     
     
-    }
+}

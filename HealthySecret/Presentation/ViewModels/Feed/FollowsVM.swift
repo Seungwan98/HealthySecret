@@ -10,25 +10,25 @@ import RxCocoa
 import RxSwift
 
 
-class FollowsVM : ViewModel {
+class FollowsVM: ViewModel {
     
-    var follow : Bool?
-    var uid : String?
-    private var followings : [UserModel] = []
-    private var followers : [UserModel] = []
+    var follow: Bool?
+    var uid: String?
+    private var followings: [UserModel] = []
+    private var followers: [UserModel] = []
     
     var disposeBag = DisposeBag()
     
     
-
+    
     
     struct Input {
-        let viewWillApearEvent : Observable<Void>
-        let backButtonTapped : Observable<Void>
-        let segmentChanged : Observable<Bool>
-        let pressedFollows : Observable<[String:Bool]>
-        let pressedProfile : Observable<String>
-
+        let viewWillApearEvent: Observable<Void>
+        let backButtonTapped: Observable<Void>
+        let segmentChanged: Observable<Bool>
+        let pressedFollows: Observable<[String: Bool]>
+        let pressedProfile: Observable<String>
+        
     }
     
     struct Output {
@@ -36,18 +36,18 @@ class FollowsVM : ViewModel {
         var userModels = BehaviorSubject<[UserModel]>(value: [])
         var follow = BehaviorSubject<Bool?>(value: nil)
         var backgroundViewHidden = PublishSubject<Bool>()
-
+        
         
     }
     
     
-    weak var coordinator : FollowsCoordinator?
+    weak var coordinator: FollowsCoordinator?
     
-    private let followUseCase : FollowUseCase
-
-
+    private let followUseCase: FollowUseCase
     
-    init( coordinator : FollowsCoordinator , followUseCase : FollowUseCase ){
+    
+    
+    init( coordinator: FollowsCoordinator, followUseCase: FollowUseCase ) {
         self.coordinator =  coordinator
         self.followUseCase =  followUseCase
         
@@ -58,7 +58,7 @@ class FollowsVM : ViewModel {
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         
         let output = Output()
-
+        
         
         
         guard let uid = self.uid  else { return output }
@@ -68,19 +68,19 @@ class FollowsVM : ViewModel {
         
         
         
-        input.segmentChanged.subscribe(onNext:{ [weak self] event in
+        input.segmentChanged.subscribe(onNext: { [weak self] event in
             
             guard let self else {return}
             
-        
-            if(event){
+            
+            if event {
                 output.userModels.onNext(self.followers)
                 output.backgroundViewHidden.onNext(!self.followers.isEmpty)
                 
-            }else{
+            } else {
                 output.userModels.onNext(self.followings)
                 output.backgroundViewHidden.onNext(!self.followings.isEmpty)
-
+                
             }
             
         }).disposed(by: disposeBag)
@@ -98,16 +98,16 @@ class FollowsVM : ViewModel {
             
             guard let self else {return}
             
-            if(data.count > 1 ){
+            if data.count > 1 {
                 return
-            }else{
+            } else {
                 
-
-                guard let like = data.first?.value , let uid = data.first?.key  else {return}
                 
-                self.followUseCase.updateFollowers(opponentUid: uid  , follow: like).subscribe({ event in
+                guard let like = data.first?.value, let uid = data.first?.key else {return}
+                
+                self.followUseCase.updateFollowers(opponentUid: uid, follow: like).subscribe({ event in
                     
-                    switch(event){
+                    switch event {
                         
                     case.completed:
                         print("팔로워 완")
@@ -132,7 +132,7 @@ class FollowsVM : ViewModel {
             guard let self = self else {return}
             
             self.coordinator?.pushProfileVC(uuid: idx)
-           
+            
             
             
             
@@ -143,7 +143,7 @@ class FollowsVM : ViewModel {
         input.viewWillApearEvent.subscribe({ [weak self] _ in
             
             
-                guard let self = self else { return }
+            guard let self = self else { return }
             
             if let follow = self.follow {
                 
@@ -157,26 +157,25 @@ class FollowsVM : ViewModel {
                 
                 self.followUseCase.getFollows(uid: uid).subscribe({ [weak self]  event in
                     guard let self else { return }
-
-                    switch(event){
+                    
+                    switch event {
                     case.success(let dic):
                         self.followers = dic[ .followers ] ?? []
                         self.followings = dic[ .followings ] ?? []
+                        
+                        if follow {
                             
-                            if(follow){
-                                
-                                output.userModels.onNext(self.followers)
-                                output.backgroundViewHidden.onNext(!self.followers.isEmpty)
-                            }else{
-                                output.userModels.onNext(self.followings)
-                                output.backgroundViewHidden.onNext(!self.followings.isEmpty)
-                            }
-                            
+                            output.userModels.onNext(self.followers)
+                            output.backgroundViewHidden.onNext(!self.followers.isEmpty)
+                        } else {
+                            output.userModels.onNext(self.followings)
+                            output.backgroundViewHidden.onNext(!self.followings.isEmpty)
+                        }
                         
                         
                         
-                    case.failure(let err):
-                        print(err)
+                        
+                    case.failure(_):
                         break
                         
                     }
@@ -196,9 +195,9 @@ class FollowsVM : ViewModel {
         
         
         
-
         
-       
+        
+        
         
         
         return output

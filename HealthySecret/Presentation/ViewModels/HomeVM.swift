@@ -10,17 +10,16 @@ import RxCocoa
 import RxSwift
 
 
-class HomeVM : ViewModel {
-    
-   // var coreMotionService = CoreMotionService.shared
+class HomeVM: ViewModel {
+    // var coreMotionService = CoreMotionService.shared
     
     var disposeBag = DisposeBag()
     
-    var user : UserModel?
+    var user: UserModel?
     
     struct Input {
-        let logoutButtonTapped : Observable<Void>
-        let rightBarButtonTapped : Observable<Void>
+        let logoutButtonTapped: Observable<Void>
+        let rightBarButtonTapped: Observable<Void>
         
     }
     
@@ -31,11 +30,11 @@ class HomeVM : ViewModel {
     }
     
     
-    weak var coordinator : HomeCoordinator?
+    weak var coordinator: HomeCoordinator?
     
-    private var firebaseService : FirebaseService
+    private var firebaseService: FirebaseService
     
-    init( coordinator : HomeCoordinator , firebaseService : FirebaseService ){
+    init( coordinator: HomeCoordinator, firebaseService: FirebaseService ) {
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
         
@@ -46,8 +45,8 @@ class HomeVM : ViewModel {
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         
         
- 
-
+        
+        
         
         let output = Output()
         
@@ -63,21 +62,21 @@ class HomeVM : ViewModel {
         }).disposed(by: disposeBag)
         
         input.rightBarButtonTapped.subscribe(onNext: { [weak self] _ in
-                CoreMotionService.getSteps.subscribe(onNext: { step in
-                    _ = CoreMotionService.shared
-
-                    output.testLabel.onNext(step ?? "0")
-                    
-                }).disposed(by: self!.disposeBag)
+            CoreMotionService.getSteps.subscribe(onNext: { step in
+                _ = CoreMotionService.shared
                 
+                output.testLabel.onNext(step ?? "0")
+                
+            }).disposed(by: self!.disposeBag)
+            
             
             
         }).disposed(by: disposeBag)
         
         
-   
         
-       
+        
+        
         
         
         return output

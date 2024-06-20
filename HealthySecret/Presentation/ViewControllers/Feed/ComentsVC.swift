@@ -12,19 +12,19 @@ import Kingfisher
 import RxCocoa
 import SnapKit
 
-class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
+class ComentsVC: UIViewController, UIScrollViewDelegate, ComentsCellDelegate {
     func profileTapped(comentsUuid: String) {
         self.profileTapped.onNext(comentsUuid)
         
     }
     
-    func report(comentsUid : String) {
-       let arr = coments.filter({$0.comentUid == comentsUid})
+    func report(comentsUid: String) {
+        let arr = coments.filter({$0.comentUid == comentsUid})
         guard let coment = arr.first else {return}
         self.reportTapped.onNext(coment)
     }
     
-    func delete(comentsUid : String) {
+    func delete(comentsUid: String) {
         
         let arr = coments.filter({$0.comentUid == comentsUid})
         guard let coment = arr.first else {return}
@@ -32,7 +32,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         self.tableView.reloadData()
         
         self.comentsDelete.onNext(coment)
-
+        
     }
     
     var coments = [ComentModel]()
@@ -40,9 +40,9 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     
     let disposeBag = DisposeBag()
     
-    private var viewModel : ComentsVM?
-
-    init(viewModel : ComentsVM ){
+    private var viewModel: ComentsVM?
+    
+    init(viewModel: ComentsVM ) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         
@@ -52,24 +52,24 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var BOTTOMVIEW_ORIGIN_Y : CGFloat?
+    var BOTTOMVIEW_ORIGIN_Y: CGFloat?
     
     
-    let bottomView : UIView = {
-       let view = UIView()
+    let bottomView: UIView = {
+        let view = UIView()
         view.backgroundColor = .systemBackground
         view.layer.cornerRadius = 20
         view.backgroundColor = .lightGray.withAlphaComponent(0.2)
-
-
+        
+        
         return view
         
         
         
     }()
     
-    let addButton : UIButton = {
-       let button = UIButton()
+    let addButton: UIButton = {
+        let button = UIButton()
         button.setImage(UIImage(systemName: "arrow.up"), for: .normal)
         button.backgroundColor = .systemBlue
         button.tintColor = .white
@@ -79,15 +79,15 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         return button
     }()
     
-    let textView : UITextView = {
+    let textView: UITextView = {
         let textView = UITextView()
         
         textView.backgroundColor = .clear
-          
-
+        
+        
         textView.font = .boldSystemFont(ofSize: 20)
-                textView.isScrollEnabled = false
-                
+        textView.isScrollEnabled = false
+        
         
         
         return textView
@@ -96,7 +96,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         
     }()
     
-    let tableView : UITableView = {
+    let tableView: UITableView = {
         let tableView = UITableView()
         tableView.estimatedRowHeight = 100
         tableView.rowHeight = UITableView.automaticDimension
@@ -106,7 +106,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     }()
     
     var backgroundView = CustomBackgroundView()
-
+    
     
     override func viewDidLoad() {
         self.hideKeyboardWhenTappedAround()
@@ -131,10 +131,10 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
     }
     
     
-    func setUI(){
+    func setUI() {
         
         self.view.backgroundColor = .white
-
+        
         
         self.backgroundView.isHidden = true
         self.backgroundView.backgroundLabel.text = "아직 댓글이 없어요"
@@ -145,41 +145,41 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         
         self.textView.delegate = self
         textViewDidChange(textView)
-
+        
         self.view.addSubview(self.tableView)
         self.view.addSubview(self.backgroundView)
-
+        
         self.view.addSubview(self.bottomView)
         
         
         self.bottomView.addSubview(self.textView)
         self.bottomView.addSubview(self.addButton)
         
-        self.backgroundView.snp.makeConstraints{
+        self.backgroundView.snp.makeConstraints {
             $0.top.leading.trailing.equalTo(self.tableView)
             $0.bottom.equalTo(self.view)
         }
-        self.tableView.snp.makeConstraints{
+        self.tableView.snp.makeConstraints {
             $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
             $0.bottom.equalTo(bottomView.snp.top)
         }
-        self.addButton.snp.makeConstraints{
+        self.addButton.snp.makeConstraints {
             $0.width.height.equalTo(30)
             $0.trailing.equalTo(self.bottomView).inset(10)
             $0.centerY.equalTo(self.bottomView)
         }
-        self.bottomView.snp.makeConstraints{
+        self.bottomView.snp.makeConstraints {
             $0.leading.trailing.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(10)
             $0.height.equalTo(self.textView)
             
         }
-        self.textView.snp.makeConstraints{
+        self.textView.snp.makeConstraints {
             $0.leading.equalTo(self.bottomView).inset(10)
             $0.trailing.equalTo(self.bottomView).inset(40)
             $0.bottom.equalTo(self.bottomView)
             $0.height.equalTo(40)
         }
-     
+        
         
         
     }
@@ -199,9 +199,9 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         
         let uid = UserDefaults.standard.string(forKey: "uid")
         var feedUuid = ""
-
         
-        let input = ComentsVM.Input(addButtonTapped: addButton.rx.tap.asObservable(), coments: self.textView.rx.text.orEmpty.distinctUntilChanged().asObservable(), comentsDelete: comentsDelete.asObservable() , profileTapped: self.profileTapped.asObservable(), reportTapped: self.reportTapped.asObservable() )
+        
+        let input = ComentsVM.Input(addButtonTapped: addButton.rx.tap.asObservable(), coments: self.textView.rx.text.orEmpty.distinctUntilChanged().asObservable(), comentsDelete: comentsDelete.asObservable(), profileTapped: self.profileTapped.asObservable(), reportTapped: self.reportTapped.asObservable() )
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else {return}
         
         output.backgroundHidden.bind(to: self.backgroundView.rx.isHidden ).disposed(by: disposeBag)
@@ -219,8 +219,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         
         
         
-        output.coments.bind(to: self.tableView.rx.items(cellIdentifier: "ComentsCell" , cellType: ComentsCell.self )){
-            index,item,cell in
+        output.coments.bind(to: self.tableView.rx.items(cellIdentifier: "ComentsCell", cellType: ComentsCell.self )) { _, item, cell in
             cell.comentsLabel.text = item.coment
             cell.nicknameLabel.text = item.nickname
             
@@ -241,26 +240,26 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
             cell.comentUid = item.comentUid
             
             
-            //작성자 표시
-            if(feedUuid == item.uid) {
+            // 작성자 표시
+            if feedUuid == item.uid {
                 
                 cell.ownTitle.isHidden = false
                 
-            }else{
+            } else {
                 
                 cell.ownTitle.isHidden = true
-
+                
             }
             
-            if(uid == item.uid) {
+            if uid == item.uid {
                 
                 cell.mine = true
                 
                 
-            }else {
+            } else {
                 cell.mine = false
             }
-                
+            
             let profileImage = item.profileImage
             if !(profileImage.isEmpty) {
                 
@@ -270,7 +269,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
                 DispatchQueue.main.async {
                     
                     let processor = DownsamplingImageProcessor(size: cell.profileImage.bounds.size ) // 크기 지정 다운 샘플링
-
+                    
                     cell.profileImage.kf.indicatorType = .activity  // indicator 활성화
                     cell.profileImage.kf.setImage(
                         with: url,  // 이미지 불러올 url
@@ -287,7 +286,7 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
                 
                 
                 
-
+                
                 
             }
             
@@ -298,15 +297,15 @@ class ComentsVC : UIViewController, UIScrollViewDelegate , ComentsCellDelegate {
         output.alert.subscribe(onNext: { _ in
             
             AlertHelper.shared.showResult(title: "신고가 접수되었습니다", message: "신고는 24시간 이내 검토 후 반영됩니다", over: self)
-
+            
             
         }).disposed(by: disposeBag)
     }
     
     
 }
-    
-extension ComentsVC : UITextViewDelegate {
+
+extension ComentsVC: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView ) {
         if !(textView.text.isEmpty ) {
             self.addButton.backgroundColor = .systemBlue
@@ -322,13 +321,13 @@ extension ComentsVC : UITextViewDelegate {
                 constraint.constant = estimatedSize.height
             }
         }
-       
+        
     }
     
 }
 extension ComentsVC {
     
-  
+    
     // 노티피케이션을 추가하는 메서드
     func addKeyboardNotifications() {
         // 키보드가 나타날 때 앱에게 알리는 메서드 추가
@@ -336,7 +335,7 @@ extension ComentsVC {
         // 키보드가 사라질 때 앱에게 알리는 메서드 추가
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHideComents(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-
+    
     // 노티피케이션을 제거하는 메서드
     func removeKeyboardNotifications() {
         // 키보드가 나타날 때 앱에게 알리는 메서드 제거
@@ -350,15 +349,15 @@ extension ComentsVC {
         // 키보드의 높이만큼 화면을 올려준다.
         if let keyboardSize = (noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             self.BOTTOMVIEW_ORIGIN_Y =  self.bottomView.frame.origin.y
-              
-                   self.bottomView.frame.origin.y -= keyboardSize.height
+            
+            self.bottomView.frame.origin.y -= keyboardSize.height
             self.view.frame.size.height -= keyboardSize.height
-           }
-       
+        }
+        
     }
-
+    
     // 키보드가 사라졌다는 알림을 받으면 실행할 메서드
-    @objc func keyboardWillHideComents(_ noti: NSNotification){
+    @objc func keyboardWillHideComents(_ noti: NSNotification) {
         print("hide")
         if let keyboardSize = (noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if self.bottomView.frame.origin.y != self.BOTTOMVIEW_ORIGIN_Y {

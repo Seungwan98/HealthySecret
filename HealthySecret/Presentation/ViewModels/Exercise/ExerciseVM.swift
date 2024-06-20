@@ -10,17 +10,17 @@ import RxCocoa
 import RxSwift
 
 
-class ExerciseVM : ViewModel {
+class ExerciseVM: ViewModel {
     
     
     var disposeBag = DisposeBag()
     
-    var exercises : [ExerciseModel]?
+    var exercises: [ExerciseModel]?
     
     struct Input {
-        let viewWillApearEvent : Observable<Void>
-        let cellTapped : Observable<ExerciseModel>
-        let searchText : Observable<String>
+        let viewWillApearEvent: Observable<Void>
+        let cellTapped: Observable<ExerciseModel>
+        let searchText: Observable<String>
         
     }
     
@@ -32,16 +32,16 @@ class ExerciseVM : ViewModel {
     }
     
     
-    weak var coordinator : ExerciseCoordinator?
-    private let exerciseUseCase : ExerciseUseCase
+    weak var coordinator: ExerciseCoordinator?
+    private let exerciseUseCase: ExerciseUseCase
     
-    init( coordinator : ExerciseCoordinator , exerciseUseCase : ExerciseUseCase ){
+    init( coordinator: ExerciseCoordinator, exerciseUseCase: ExerciseUseCase ) {
         self.coordinator =  coordinator
         self.exerciseUseCase = exerciseUseCase
     }
     
     
-    var exerciseArr : ExerciseDTO?
+    var exerciseArr: ExerciseDTO?
     
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         
@@ -50,9 +50,9 @@ class ExerciseVM : ViewModel {
         input.viewWillApearEvent.subscribe(onNext: {
             
             self.exerciseUseCase.getExerciseList().subscribe({ event in
-                switch(event){
+                switch event {
                 case.success(let models):
-                    input.searchText.subscribe(onNext:{ [weak self] text in
+                    input.searchText.subscribe(onNext: { [weak self] text in
                         guard let self = self else {return}
                         var arr = models
                         
@@ -60,8 +60,8 @@ class ExerciseVM : ViewModel {
                         if text.isEmpty{
                             output.exerciseArr.onNext(arr)
                             
-                        }else{
-                            arr = arr.filter{ $0.name.localizedCaseInsensitiveContains(text) }
+                        } else {
+                            arr = arr.filter { $0.name.localizedCaseInsensitiveContains(text) }
                             print(arr)
                             output.exerciseArr.onNext(arr)
                             
@@ -81,11 +81,11 @@ class ExerciseVM : ViewModel {
             
         }).disposed(by: disposeBag)
         
-        input.cellTapped.subscribe(onNext:{
+        input.cellTapped.subscribe(onNext: {
             model in
             
             print("model \(model)")
-            self.coordinator?.pushExerciseDetailVC(model : model , exercises : self.exercises ?? [])
+            self.coordinator?.pushExerciseDetailVC(model: model, exercises: self.exercises ?? [])
             
             
             

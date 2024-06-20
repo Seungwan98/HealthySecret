@@ -10,47 +10,47 @@ import RxCocoa
 import RxSwift
 
 
-class ChangeIntroduceVM : ViewModel {
-
+class ChangeIntroduceVM: ViewModel {
+    
     
     
     var disposeBag = DisposeBag()
     
     
     
-    var name:String?
-    var introduce:String?
-    var profileImage:Data?
-    var beforeImage:String?
-    
-  
+    var name: String?
+    var introduce: String?
+    var profileImage: Data?
+    var beforeImage: String?
     
     
-
     
-    weak var coordinator : ProfileCoordinator?
     
-    private let profileUseCase : ProfileUseCase
-  
     
-    init( coordinator : ProfileCoordinator , profileUseCase : ProfileUseCase ){
+    
+    weak var coordinator: ProfileCoordinator?
+    
+    private let profileUseCase: ProfileUseCase
+    
+    
+    init( coordinator: ProfileCoordinator, profileUseCase: ProfileUseCase ) {
         self.coordinator =  coordinator
         self.profileUseCase = profileUseCase
     }
     
     
-  
+    
     
     
     
     struct Input {
-        let viewWillApearEvent : Observable<Void>
-        let addButtonTapped : Observable<Bool>
-        let nameTextField : Observable<String>
-        let introduceTextField : Observable<String>
-        let profileImageTapped : Observable<UITapGestureRecognizer>
-        let profileImageValue : Observable<UIImage?>
-        let profileChange : Observable<Bool>
+        let viewWillApearEvent: Observable<Void>
+        let addButtonTapped: Observable<Bool>
+        let nameTextField: Observable<String>
+        let introduceTextField: Observable<String>
+        let profileImageTapped: Observable<UITapGestureRecognizer>
+        let profileImageValue: Observable<UIImage?>
+        let profileChange: Observable<Bool>
         
     }
     
@@ -64,30 +64,30 @@ class ChangeIntroduceVM : ViewModel {
     
     
     
-    func transform(input: Input , disposeBag: DisposeBag ) -> Output {
+    func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         
         let output = Output()
-        let backgroundScheduler = ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global())
-
-   
-            print("appear")
-            
-            output.name.onNext(self.name!)
-            output.introduce.onNext(self.introduce ?? "")
-            output.profileImage.onNext(self.beforeImage)
-            
-           
-
+        _ = ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global())
+        
+        
+        print("appear")
+        
+        output.name.onNext(self.name!)
+        output.introduce.onNext(self.introduce ?? "")
+        output.profileImage.onNext(self.beforeImage)
+        
+        
+        
         
         
         input.addButtonTapped.subscribe(onNext: { event in
-
             
-   
+            
+            
             input.nameTextField.subscribe(onNext: { name in
                 input.introduceTextField.subscribe(onNext: { introduce in
                     var introduce = introduce
-                    if(event){
+                    if event {
                         introduce = ""
                         
                         
@@ -101,31 +101,31 @@ class ChangeIntroduceVM : ViewModel {
                             guard let uuid = UserDefaults.standard.string(forKey: "uid") else {return}
                             
                             LoadingIndicator.showLoading()
-
                             
-                            self.profileUseCase.updateValues(name: name , introduce: introduce  , uuid : uuid , image : image , beforeImage: self.beforeImage ?? "" , profileChage: change ).subscribe{ event in
-                                switch(event){
+                            
+                            self.profileUseCase.updateValues(name: name, introduce: introduce, uuid: uuid, image: image, beforeImage: self.beforeImage ?? "", profileChage: change ).subscribe { event in
+                                switch event {
                                 case.completed:
                                     
                                     DispatchQueue.main.async {
-                                               LoadingIndicator.hideLoading()
-                                           }
-
+                                        LoadingIndicator.hideLoading()
+                                    }
+                                    
                                     self.coordinator?.navigationController.popViewController(animated: false)
-
+                                    
                                     print("업데이트완료")
-
+                                    
                                     
                                 case.error(_):
                                     print("error")
                                 }
-                             
+                                
                                 print("UserDefaultsStandart")
-
-                               
                                 
                                 
-
+                                
+                                
+                                
                                 
                                 
                                 
@@ -134,7 +134,7 @@ class ChangeIntroduceVM : ViewModel {
                             
                             
                         }).disposed(by: disposeBag)
-            
+                        
                         
                         
                     }).disposed(by: disposeBag)
@@ -157,8 +157,6 @@ class ChangeIntroduceVM : ViewModel {
     
     
     
-   
+    
     
 }
-
-

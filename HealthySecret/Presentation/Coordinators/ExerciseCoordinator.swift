@@ -21,15 +21,15 @@ class ExerciseCoordinator: Coordinator {
         
     var navigationController: UINavigationController
     
-    var parentCoordinator : Coordinator?
+    var parentCoordinator: Coordinator?
     
     var finishDelegate: CoordinatorFinishDelegate?
     
     var type: CoordinatorType = .exercise
     
-    let firebaseService : FirebaseService
+    let firebaseService: FirebaseService
     
-    required init(_ navigationController: UINavigationController  ) {
+    required init(_ navigationController: UINavigationController ) {
         self.navigationController = navigationController
         self.firebaseService = FirebaseService()
 
@@ -38,7 +38,7 @@ class ExerciseCoordinator: Coordinator {
         
     }
     
-    func pushExerciseVC(exercises : [ExerciseModel]) {
+    func pushExerciseVC(exercises: [ExerciseModel]) {
         let viewModel = ExerciseVM(coordinator: self, exerciseUseCase: ExerciseUseCase(exerciseRepository: DefaultExerciseRepository(firebaseService: self.firebaseService), userRepository: DefaultUserRepository(firebaseService: self.firebaseService)) )
         viewModel.exercises =  exercises
         let ExerciseViewController = ExerciseViewController(viewModel: viewModel)
@@ -52,7 +52,7 @@ class ExerciseCoordinator: Coordinator {
         
     }
     
-    func pushExerciseDetailVC(model : ExerciseModel , exercises : [ExerciseModel]){
+    func pushExerciseDetailVC(model: ExerciseModel, exercises: [ExerciseModel]) {
         
         let firebaseService = FirebaseService()
         let viewModel = ExerciseDetailVM(coordinator: self, firebaseService: firebaseService)
@@ -66,17 +66,16 @@ class ExerciseCoordinator: Coordinator {
         
     }
     
-    func pushEditExerciseVC(exercises:[ExerciseModel]){
-        print("pushEdit")
-        let firebaseService = self.firebaseService
-        let viewController = EditExerciseVC(viewModel: EditExerciseVM(coordinator: self, exercises : exercises, exerciseUseCase: ExerciseUseCase(exerciseRepository: DefaultExerciseRepository(firebaseService: self.firebaseService ), userRepository: DefaultUserRepository(firebaseService: self.firebaseService))))
+    func pushEditExerciseVC(exercises: [ExerciseModel]) {
+        // print("pushEdit")
+        let viewController = EditExerciseVC(viewModel: EditExerciseVM(coordinator: self, exercises: exercises, exerciseUseCase: ExerciseUseCase(exerciseRepository: DefaultExerciseRepository(firebaseService: self.firebaseService ), userRepository: DefaultUserRepository(firebaseService: self.firebaseService))))
 
         viewController.hidesBottomBarWhenPushed = true
 
         self.navigationController.navigationBar.topItem?.title = ""
         self.navigationController.navigationBar.tintColor = .white
 
-        self.navigationController.pushViewController( viewController , animated: false )
+        self.navigationController.pushViewController( viewController, animated: false )
     }
     
     
@@ -97,11 +96,11 @@ class ExerciseCoordinator: Coordinator {
     
 }
 
-extension ExerciseCoordinator : CoordinatorFinishDelegate {
+extension ExerciseCoordinator: CoordinatorFinishDelegate {
   
     
     func coordinatorDidFinish(childCoordinator: Coordinator) {
-        print("CalendarDidFinished")
+        // print("CalendarDidFinished")
         self.childCoordinator = self.childCoordinator
             .filter({ $0.type != childCoordinator.type })
         childCoordinator.navigationController.popToRootViewController(animated: true)
@@ -111,7 +110,7 @@ extension ExerciseCoordinator : CoordinatorFinishDelegate {
     func coordinatorDidFinishNotRoot(childCoordinator: any Coordinator) {
         
         
-        print("coordinatorDidFinishNotRoot")
+        // print("coordinatorDidFinishNotRoot")
         
         
     }

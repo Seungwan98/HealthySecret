@@ -12,19 +12,19 @@ import RxGesture
 import AuthenticationServices
 import FirebaseAuth
 import SnapKit
-
-class SettingVC : UIViewController {
+import CryptoKit
+class SettingVC: UIViewController {
     
     let disposeBag = DisposeBag()
     
     fileprivate var currentNonce: String?
-
-    private var viewModel : MyProfileVM?
+    
+    private var viewModel: MyProfileVM?
     
     var codeString = PublishSubject<String>()
     var userId = PublishSubject<String>()
     var OAuthCredential = PublishSubject<OAuthCredential>()
-
+    
     
     
     private let contentScrollView: UIScrollView = {
@@ -34,36 +34,36 @@ class SettingVC : UIViewController {
     }()
     
     private let contentView = UIView()
-
-    private let logoutButton : UIView = {
+    
+    private let logoutButton: UIView = {
         let view = UIView()
         view.frame = CGRect(x: 0, y: 0, width: 0, height: 20)
-
+        
         return view
     }()
-    private let secessionButton : UIView = {
+    private let secessionButton: UIView = {
         let view = UIView()
         view.frame = CGRect(x: 0, y: 0, width: 0, height: 80)
-
-
-        return view
         
-    }() 
-    
-    private let blockListButton : UIView = {
-        let view = UIView()
-        view.frame = CGRect(x: 0, y: 0, width: 0, height: 80)
-
-
+        
         return view
         
     }()
-
-
     
-    private lazy var stackViewValues : [UIView] = [logoutButton , secessionButton , blockListButton ]
+    private let blockListButton: UIView = {
+        let view = UIView()
+        view.frame = CGRect(x: 0, y: 0, width: 0, height: 80)
+        
+        
+        return view
+        
+    }()
     
-    private lazy var informationView : UIStackView = {
+    
+    
+    private lazy var stackViewValues: [UIView] = [logoutButton, secessionButton, blockListButton ]
+    
+    private lazy var informationView: UIStackView = {
         let view = UIStackView(arrangedSubviews: stackViewValues)
         view.axis = .vertical
         view.spacing = 5
@@ -71,32 +71,32 @@ class SettingVC : UIViewController {
         return view
         
     }()
-
     
-
     
-    init(viewModel : MyProfileVM){
+    
+    
+    init(viewModel: MyProfileVM) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-
+        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-   
-
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.topItem?.title = "설정"
         self.navigationController?.setNavigationBarHidden(false, animated: false)
-
+        
         self.navigationController?.navigationBar.backgroundColor = .white
-
+        
     }
     override func viewWillDisappear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-
+        
     }
     
     
@@ -109,94 +109,94 @@ class SettingVC : UIViewController {
         
     }
     
-    let texts = ["로그아웃" , "회원탈퇴" , "차단목록"]
+    let texts = ["로그아웃", "회원탈퇴", "차단목록"]
     var idx = 0
-    func setStackView(){
-       _ = stackViewValues.map{
-           
-           let value = $0
-           let label = UILabel()
-           let image = UIImageView(image : UIImage(named: "arrow.png"))
-
-           
-           value.addSubview(label)
-           value.addSubview(image)
-           
-           label.backgroundColor = .white
-           label.text = texts[idx]
-           idx = idx + 1
-           label.textAlignment = .left
-           label.font = .boldSystemFont(ofSize: 16)
-           
-           
-           label.snp.makeConstraints{
-               $0.centerY.equalTo(value)
-               $0.leading.equalTo(value).inset(5)
-               
-           }
-           image.snp.makeConstraints{
-               $0.width.height.equalTo(14)
-               $0.centerY.equalTo(value)
-               $0.trailing.equalTo(value).inset(5)
-           }
-         
-           
-         
-           
-         
-           
-     
-           
-
-           
-           
+    func setStackView() {
+        _ = stackViewValues.map {
+            
+            let value = $0
+            let label = UILabel()
+            let image = UIImageView(image: UIImage(named: "arrow.png"))
+            
+            
+            value.addSubview(label)
+            value.addSubview(image)
+            
+            label.backgroundColor = .white
+            label.text = texts[idx]
+            idx = idx + 1
+            label.textAlignment = .left
+            label.font = .boldSystemFont(ofSize: 16)
+            
+            
+            label.snp.makeConstraints {
+                $0.centerY.equalTo(value)
+                $0.leading.equalTo(value).inset(5)
+                
+            }
+            image.snp.makeConstraints {
+                $0.width.height.equalTo(14)
+                $0.centerY.equalTo(value)
+                $0.trailing.equalTo(value).inset(5)
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
         }
     }
-
     
-    func setUI(){
+    
+    func setUI() {
         
         self.view.backgroundColor = .white
         
         self.view.addSubview(contentScrollView)
-
+        
         self.contentScrollView.addSubview(contentView)
-     
-       
+        
+        
         
         self.contentView.addSubview(informationView)
-
-            
-          
         
-        self.contentScrollView.snp.makeConstraints{
+        
+        
+        
+        self.contentScrollView.snp.makeConstraints {
             $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
             $0.bottom.equalTo(self.view)
         }
-        self.contentView.snp.makeConstraints{
+        self.contentView.snp.makeConstraints {
             $0.top.bottom.leading.trailing.width.equalTo(contentScrollView)
             $0.height.equalTo(900)
         }
-        self.informationView.snp.makeConstraints{
+        self.informationView.snp.makeConstraints {
             $0.leading.trailing.equalTo(contentView).inset(20)
             $0.top.equalTo(contentView).inset(10)
             $0.height.equalTo(150)
         }
         
-       
-      
-  
-    }
-   
-    
-    
-    
-    
-    func setBindings(){
         
-        let values = Observable.zip(self.codeString.asObservable() , self.userId.asObservable() )
-
+        
+        
+    }
+    
+    
+    
+    
+    
+    func setBindings() {
+        
+        let values = Observable.zip(self.codeString.asObservable(), self.userId.asObservable() )
+        
         let scessionTapped = PublishSubject<Bool>()
         
         secessionButton.rx.tapGesture().when(.recognized).subscribe({ [weak self] _ in
@@ -205,48 +205,45 @@ class SettingVC : UIViewController {
             AlertHelper.shared.showRevoke(title: "회원을 탈퇴 하시겠습니까?", message: "탈퇴한 회원의 정보는 되돌릴 수 없습니다", onConfirm: {
                 
                 scessionTapped.onNext(true)
-
                 
-            } , over: self)
+                
+            }, over: self)
             
         }).disposed(by: disposeBag)
         
-        let input = MyProfileVM.SettingInput(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable() , logoutTapped: logoutButton.rx.tapGesture().when(.recognized).asObservable(), secessionTapped: scessionTapped , values : values ,
-                                             OAuthCredential: self.OAuthCredential.asObservable() , blockListTapped : blockListButton.rx.tapGesture().when(.recognized).asObservable())
-
+        let input = MyProfileVM.SettingInput(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable(), logoutTapped: logoutButton.rx.tapGesture().when(.recognized).asObservable(), secessionTapped: scessionTapped, values: values, OAuthCredential: self.OAuthCredential.asObservable(), blockListTapped: blockListButton.rx.tapGesture().when(.recognized).asObservable())
+        
         
         
         
         guard let output = viewModel?.settingTransform(input: input, disposeBag: self.disposeBag) else { return }
         
-        output.appleSecession.subscribe(onNext: { event in
-          
+        output.appleSecession.subscribe(onNext: { _ in
+            
             
             AlertHelper.shared.showRevoke(title: "재 로그인 하시겠습니까?", message: "회원 탈퇴를 위해 Apple 재 로그인을 진행합니다", onConfirm: {
                 
                 self.startSignInWithAppleFlow()
-
                 
-            } , over: self)
-
+                
+            }, over: self)
+            
             
         }).disposed(by: disposeBag)
     }
     
- 
-  
     
-   
     
-
-
-
-
+    
+    
+    
+    
+    
+    
+    
 }
-import CryptoKit
-import AuthenticationServices
-import SnapKit
-extension SettingVC : ASAuthorizationControllerDelegate {
+
+extension SettingVC: ASAuthorizationControllerDelegate {
     
     
     func startSignInWithAppleFlow() {
@@ -266,7 +263,7 @@ extension SettingVC : ASAuthorizationControllerDelegate {
         controller.performRequests()
         
         request.nonce = sha256(nonce)
-
+        
         
         
     }
@@ -317,7 +314,7 @@ extension SettingVC : ASAuthorizationControllerDelegate {
             
             
             
-            let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString , rawNonce: nonce)
+            let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString, rawNonce: nonce)
             
             if let authorizationCode = appleIDCredential.authorizationCode, let codeString = String(data: authorizationCode, encoding: .utf8) {
                 
@@ -325,12 +322,10 @@ extension SettingVC : ASAuthorizationControllerDelegate {
                 self.userId.onNext(appleIDCredential.user)
                 self.OAuthCredential.onNext(credential)
                 
-               
+            } else {
                 
-                
-            }else{
-                    print("else")
-                }
+                print("else")
+            }
             
             
             
@@ -340,4 +335,3 @@ extension SettingVC : ASAuthorizationControllerDelegate {
     }
     
 }
-

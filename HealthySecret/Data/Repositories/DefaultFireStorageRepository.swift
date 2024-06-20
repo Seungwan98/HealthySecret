@@ -8,18 +8,18 @@
 import Foundation
 import RxSwift
 
-class DefaultFireStorageRepository : FireStorageRepository {
+class DefaultFireStorageRepository: FireStorageRepository {
   
     
    
     
-    private let firebaseService : FirebaseService
-    init( firebaseService : FirebaseService   ) {
+    private let firebaseService: FirebaseService
+    init( firebaseService: FirebaseService   ) {
         self.firebaseService = firebaseService
     }
     
-    func uploadImage(imageData : Data, pathRoot : String) -> Single<String> {
-        self.firebaseService.uploadImage(imageData: imageData , pathRoot: pathRoot)
+    func uploadImage(imageData: Data, pathRoot: String) -> Single<String> {
+        self.firebaseService.uploadImage(imageData: imageData, pathRoot: pathRoot)
     }
     
     func deleteImage(urlString: String) -> Completable {

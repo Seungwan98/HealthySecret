@@ -9,28 +9,28 @@ import RxSwift
 import SnapKit
 
 
-class IngredientsViewController : UIViewController, UIScrollViewDelegate, IngredientsCellDelegate, UISearchBarDelegate   {
+class IngredientsViewController: UIViewController, UIScrollViewDelegate, IngredientsCellDelegate, UISearchBarDelegate {
     
     
     
     
     let disposeBag = DisposeBag()
     
-    private var viewModel : IngredientsVM?
+    private var viewModel: IngredientsVM?
     
-    private var ingredientsArr : [IngredientsModel] = []
+    private var ingredientsArr: [IngredientsModel] = []
     
-    private var recentsearchArr : [String] = []
+    private var recentsearchArr: [String] = []
     
-    private var filteredArr : [IngredientsModel] = []
+    private var filteredArr: [IngredientsModel] = []
     
-    private var pushArr : [IngredientsModel] = []
+    private var pushArr: [IngredientsModel] = []
     
-    private var cellController : Bool = false
+    private var cellController: Bool = false
     
-    private var likes : [String:Int] = [:]
+    private var likes: [String: Int] = [:]
     
-    lazy private var tableView : UITableView = {
+    lazy private var tableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = UIColor(red: 0.949, green: 0.918, blue: 0.886, alpha: 1)
         
@@ -46,7 +46,7 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
         return button
     }()
     
-    private var titleLabel : UILabel = {
+    private var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "/t/t식사"
         label.textColor = .white
@@ -54,7 +54,7 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
         
     }()
     
-    private var titleLabel2 : UILabel = {
+    private var titleLabel2: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 10)
         label.textColor = .white
@@ -64,8 +64,8 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
     }()
     
     
-    private lazy var titleLabelStackView : UIStackView = {
-        let stackview = UIStackView(arrangedSubviews: [titleLabel , titleLabel2])
+    private lazy var titleLabelStackView: UIStackView = {
+        let stackview = UIStackView(arrangedSubviews: [titleLabel, titleLabel2])
         stackview.axis = .vertical
         stackview.distribution = .fill
         stackview.alignment = .center
@@ -73,14 +73,9 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
         
     }()
     
-    private var backgroundTableView = UIImageView(image: UIImage(named:"tableBackGround.png"))
+    private var backgroundTableView = UIImageView(image: UIImage(named: "tableBackGround.png"))
     
-    private var checkBoxButton : UIButton = {
-        let button = UIButton()
-        
-        return button
-        
-    }()
+    private var checkBoxButton = UIButton()
     
     private var backgroundView = UIView()
     
@@ -88,7 +83,7 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
     
     
     
-    init(viewModel : IngredientsVM){
+    init(viewModel: IngredientsVM) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         
@@ -103,22 +98,22 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
     
     
     
-    override func viewDidLoad(){
+    override func viewDidLoad() {
         super.viewDidLoad()
         
         self.setUI()
         self.setupSearchController()
         self.setBind()
-
+        
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
-   
-
+        
+        
         self.navigationController?.navigationBar.backgroundColor = UIColor(red: 0.09, green: 0.18, blue: 0.03, alpha: 1)
         
-       
+        
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         
         
@@ -133,21 +128,20 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
     
     
     
-  
     
     
     
     
-    //SearchController로 SearchBar 추가
+    
+    // SearchController로 SearchBar 추가
     func setupSearchController() {
         
         
         
         searchController.searchBar
             .searchTextField
-            .attributedPlaceholder = NSAttributedString(string: "식품 검색",
-                                                        attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
-
+            .attributedPlaceholder = NSAttributedString(string: "식품 검색", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
+        
         searchController.searchBar.searchTextField.leftView?.tintColor = .white
         searchController.searchBar.searchTextField.layer.cornerRadius = 18
         searchController.searchBar.searchTextField.layer.masksToBounds = true
@@ -170,7 +164,7 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
     
     
     let mainView = UIView()
-    func setUI(){
+    func setUI() {
         
         self.tableView.backgroundView = backgroundView
         
@@ -178,7 +172,7 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
         tableView.dataSource = nil
         tableView.register(IngredientsCell.self, forCellReuseIdentifier: "IngredientsCell")
-
+        
         
         
         self.navigationItem.titleView = titleLabelStackView
@@ -196,17 +190,17 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
         
         
         
-        mainView.snp.makeConstraints{
+        mainView.snp.makeConstraints {
             $0.top.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
-        } 
-        tableView.snp.makeConstraints{
+        }
+        tableView.snp.makeConstraints {
             $0.top.bottom.leading.trailing.equalTo(mainView)
         }
-        backgroundTableView.snp.makeConstraints{
+        backgroundTableView.snp.makeConstraints {
             $0.centerX.centerY.equalTo(backgroundView)
         }
         
-   
+        
         
         
         
@@ -214,7 +208,7 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
     
     
     
-    var likesInputArr = PublishSubject<[String:Int]>()
+    var likesInputArr = PublishSubject<[String: Int]>()
     var getBool = PublishSubject<Bool>()
     var cellTouchToDetail = PublishSubject<IngredientsModel>()
     
@@ -222,15 +216,8 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
     
     func setBind() {
         
-        
-        
-        
-        
-        let input = IngredientsVM.Input( viewWillAppear : self.rx.methodInvoked(#selector(viewWillAppear(_:)))
-            .map( { _ in }).asObservable(),
-                                         rightButtonTapped: rightButton.rx.tap.asObservable(),
-                                         searchText: Observable.merge( searchController.searchBar.rx.text.orEmpty.distinctUntilChanged().asObservable()),
-                                         likesInputArr: self.likesInputArr.asObservable() , cellTouchToDetail:  tableView.rx.modelSelected(IngredientsModel.self).asObservable()
+        let input = IngredientsVM.Input( viewWillAppear: self.rx.methodInvoked(#selector(viewWillAppear(_:)))
+            .map( { _ in }).asObservable(), rightButtonTapped: rightButton.rx.tap.asObservable(), searchText: Observable.merge( searchController.searchBar.rx.text.orEmpty.distinctUntilChanged().asObservable()), likesInputArr: self.likesInputArr.asObservable(), cellTouchToDetail: tableView.rx.modelSelected(IngredientsModel.self).asObservable()
                                          
         )
         
@@ -243,7 +230,7 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
         tableView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
             self?.tableView.deselectRow(at: indexPath, animated: true)
         }).disposed(by: disposeBag)
-      
+        
         
         output.rightButtonEnable.bind(to: rightButton.rx.isEnabled).disposed(by: disposeBag)
         
@@ -258,12 +245,11 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
         }).disposed(by: disposeBag)
         
         
-        output.ingredientsArr.bind(to: tableView.rx.items(cellIdentifier: "IngredientsCell" , cellType: IngredientsCell.self )){
-            index,item,cell in
-
+        output.ingredientsArr.bind(to: tableView.rx.items(cellIdentifier: "IngredientsCell", cellType: IngredientsCell.self )) { index, item, cell in
+            
             let index = item.num
             cell.backgroundColor = .clear
-
+            
             cell.title.text = item.descKor
             cell.index = item.num
             cell.kcal.text = "( " + String(item.servingSize) + "g )" + " " + String(item.calorie) + " kcal"
@@ -272,21 +258,21 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
             if self.likes[index] == 1 {
                 cell.checkBoxButton.isSelected = true
                 cell.isTouched = true
-
-
-            }else{
+                
+                
+            } else {
                 cell.checkBoxButton.isSelected = false
                 cell.isTouched = false
             }
             
             print(item.descKor)
-
+            
             
         }.disposed(by: disposeBag)
         
         
         
-       
+        
         
         
         
@@ -304,13 +290,12 @@ class IngredientsViewController : UIViewController, UIScrollViewDelegate, Ingred
 
 var checkBoxButtonTapped = PublishSubject<Void>()
 
-extension IngredientsViewController{
+extension IngredientsViewController {
     func rightButtonEnabled() {
         if likes.isEmpty == true {
             self.rightButton.isEnabled = false
             
-        }
-        else{
+        } else {
             self.rightButton.isEnabled = true
             
             
@@ -323,7 +308,7 @@ extension IngredientsViewController{
     func didPressHeart(for index: String, like: Bool) {
         if like {
             likes[index] = 1
-        }else{
+        } else {
             likes[index] = nil
         }
         viewModel?.likes = likes
@@ -356,7 +341,7 @@ extension IngredientsViewController{
 
 
 
-class RecentSearchCell : UITableViewCell {
+class RecentSearchCell: UITableViewCell {
     var title = UILabel()
     
     required override init( style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -374,11 +359,11 @@ class RecentSearchCell : UITableViewCell {
     func layout() {
         self.contentView.addSubview(self.title)
         
-        self.title.snp.makeConstraints{
+        self.title.snp.makeConstraints {
             $0.leading.equalTo(self).inset(15)
             $0.centerY.equalTo(self)
         }
-   
+        
         
         
         
@@ -392,19 +377,19 @@ class RecentSearchCell : UITableViewCell {
 
 
 
-protocol IngredientsCellDelegate {
+protocol IngredientsCellDelegate: AnyObject {
     func didPressHeart(for index: String, like: Bool)
     func rightButtonEnabled()
 }
 
-class IngredientsCell : UITableViewCell {
+class IngredientsCell: UITableViewCell {
     
     var checkBoxButton = UIButton()
     var title = UILabel()
     var kcal = UILabel()
     var delegate: IngredientsCellDelegate?
-    var selector : Bool?
-    var index : String?
+    var selector: Bool?
+    var index: String?
     
     
     @IBAction func didPressedHeart(_ sender: UIButton) {
@@ -417,7 +402,7 @@ class IngredientsCell : UITableViewCell {
             
             isTouched = true
             delegate?.didPressHeart(for: idx, like: true)
-        }else {
+        } else {
             isTouched = false
             delegate?.didPressHeart(for: idx, like: false)
         }
@@ -429,7 +414,7 @@ class IngredientsCell : UITableViewCell {
         didSet {
             if isTouched == true {
                 checkBoxButton.setImage(UIImage(systemName: "checkmark.circle.fill", withConfiguration: UIImage.SymbolConfiguration(scale: .large)), for: .normal)
-            }else{
+            } else {
                 checkBoxButton.setImage(UIImage(systemName: "checkmark.circle", withConfiguration: UIImage.SymbolConfiguration(scale: .large)), for: .normal)
             }
         }
@@ -439,7 +424,7 @@ class IngredientsCell : UITableViewCell {
     
     required override init( style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier )
-        checkBoxButton.addTarget(self, action: #selector(didPressedHeart) , for: .touchUpInside )
+        checkBoxButton.addTarget(self, action: #selector(didPressedHeart), for: .touchUpInside )
         
         layout()
         
@@ -462,29 +447,29 @@ class IngredientsCell : UITableViewCell {
     func layout() {
         
         self.kcal.font = UIFont.systemFont(ofSize: 13)
-
+        
         self.addSubview(contentView)
         self.contentView.addSubview(checkBoxButton)
         self.contentView.addSubview(title)
         self.contentView.addSubview(kcal)
         
         
-        self.checkBoxButton.snp.makeConstraints{
+        self.checkBoxButton.snp.makeConstraints {
             $0.trailing.equalTo(self.contentView).offset(-5)
             $0.centerY.equalTo(self.contentView.safeAreaLayoutGuide)
             $0.height.width.equalTo(40)
         }
-        self.title.snp.makeConstraints{
+        self.title.snp.makeConstraints {
             $0.leading.equalTo(self).inset(15)
             $0.centerY.equalTo(self).offset(-6)
         }
-        self.kcal.snp.makeConstraints{
+        self.kcal.snp.makeConstraints {
             $0.leading.equalTo(self).inset(15)
             $0.bottom.equalTo(self).offset(-4)
         }
         
-   
-    
+        
+        
         
         
         
@@ -494,4 +479,3 @@ class IngredientsCell : UITableViewCell {
     
     
 }
-

@@ -10,40 +10,40 @@ import RxCocoa
 import RxSwift
 
 
-class LikesVM : ViewModel {
+class LikesVM: ViewModel {
     
-    var uid : String?
-    var feedUid : String?
-   
+    var uid: String?
+    var feedUid: String?
+    
     
     var disposeBag = DisposeBag()
     
-
+    
     
     struct Input {
-        let viewWillApearEvent : Observable<Void>
-        let pressedFollows : Observable<[String:Bool]>
-        let pressedProfile : Observable<String>
-
+        let viewWillApearEvent: Observable<Void>
+        let pressedFollows: Observable<[String: Bool]>
+        let pressedProfile: Observable<String>
+        
     }
     
     struct Output {
         
         var userModels = BehaviorSubject<[UserModel]>(value: [])
         var backgroundViewHidden = PublishSubject<Bool>()
-
+        
         
     }
     
     
-    weak var coordinator : CommuCoordinator?
+    weak var coordinator: CommuCoordinator?
     
     
     
     
-    private let likesUseCase : LikesUseCase
+    private let likesUseCase: LikesUseCase
     
-    init( coordinator : CommuCoordinator , likesUseCase : LikesUseCase ){
+    init( coordinator: CommuCoordinator, likesUseCase: LikesUseCase ) {
         self.coordinator =  coordinator
         self.likesUseCase =  likesUseCase
         
@@ -54,9 +54,9 @@ class LikesVM : ViewModel {
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         
         let output = Output()
-
         
-        guard let ownUid = UserDefaults.standard.string(forKey: "uid") else {
+        
+        guard UserDefaults.standard.string(forKey: "uid") != nil else {
             print("ownUid nil")
             return output }
         
@@ -69,7 +69,7 @@ class LikesVM : ViewModel {
             guard let self = self else {return}
             
             self.coordinator?.pushProfileVC(uuid: idx)
-           
+            
             
             
             
@@ -77,22 +77,22 @@ class LikesVM : ViewModel {
         
         
         
-  
+        
         
         input.pressedFollows.subscribe(onNext: { [weak self] data in
             
             guard let self = self else {return}
             
-            if(data.count > 1 ){
+            if data.count > 1 {
                 return
-            }else{
+            } else {
                 
-
-                guard let follow = data.first?.value , let uid = data.first?.key  else {return}
                 
-                self.likesUseCase.updateFollowers( opponentUid: uid  , follow: follow).subscribe({ event in
+                guard let follow = data.first?.value, let uid = data.first?.key else {return}
+                
+                self.likesUseCase.updateFollowers( opponentUid: uid, follow: follow ).subscribe({ event in
                     
-                    switch(event){
+                    switch event {
                         
                     case.completed:
                         print("팔로워 완")
@@ -115,33 +115,32 @@ class LikesVM : ViewModel {
         
         
         input.viewWillApearEvent.subscribe({ [weak self] _ in
-            guard let self = self ,let feedUid = self.feedUid else { return }
-
-                
-                
+            guard let self = self, let feedUid = self.feedUid else { return }
+            
+            
+            
             self.likesUseCase.getLikes(feedUid: feedUid).subscribe({ event in
-                    
-
-                    
-                    
-                    switch(event){
-                    case.success(let likes):
-                        output.userModels.onNext( likes)
-                        output.backgroundViewHidden.onNext(!likes.isEmpty)
-                     
-                        
-                        
-                    case.failure(let err):
-                        print(err)
-                        break
-                        
-                    }
-                    
-                    
-                    
-                    
-                }).disposed(by: disposeBag )
                 
+                
+                
+                
+                switch event {
+                case.success(let likes):
+                    output.userModels.onNext( likes)
+                    output.backgroundViewHidden.onNext(!likes.isEmpty)
+                    
+                    
+                    
+                case.failure(let err):
+                    break
+                    
+                }
+                
+                
+                
+                
+            }).disposed(by: disposeBag )
+            
             
             
             
@@ -152,9 +151,9 @@ class LikesVM : ViewModel {
         
         
         
-
         
-       
+        
+        
         
         
         return output

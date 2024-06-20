@@ -25,7 +25,7 @@ class CustomBackgroundView: UIView {
     
    
     
-    func setLayout(){
+    func setLayout() {
         self.backgroundImage.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -50,7 +50,7 @@ class CustomBackgroundView: UIView {
         
             
             self.backgroundLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            self.backgroundLabel.topAnchor.constraint(equalTo: self.backgroundImage.bottomAnchor , constant: 4),
+            self.backgroundLabel.topAnchor.constraint(equalTo: self.backgroundImage.bottomAnchor, constant: 4),
         ])
         
         

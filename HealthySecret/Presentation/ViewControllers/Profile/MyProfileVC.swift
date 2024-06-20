@@ -1,9 +1,6 @@
-
-
-
 //
 //  ViewController.swift
-//  MovieProject
+//  HealthySecret
 //
 //  Created by 양승완 on 2023/10/04.
 //
@@ -14,7 +11,7 @@ import RxSwift
 import Kingfisher
 import SnapKit
 
-class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
+class MyProfileVC: UIViewController, CustomCollectionCellDelegate {
     
     func imageTapped(feedUid: String) {
         print("tappe")
@@ -30,10 +27,10 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     var loadControll = false
     
     
-    private var viewModel : MyProfileVM?
+    private var viewModel: MyProfileVM?
     
     
-    init(viewModel : MyProfileVM){
+    init(viewModel: MyProfileVM) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         
@@ -45,7 +42,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     
     
     
-    let addButton : UIButton = {
+    let addButton: UIButton = {
         let button = UIButton()
         
         button.setImage(UIImage(systemName: "plus"), for: .normal)
@@ -104,7 +101,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     
     
     
-    let leftBarLabel : UILabel = {
+    let leftBarLabel: UILabel = {
         let label = UILabel()
         label.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
         label.font = .boldSystemFont(ofSize: 22)
@@ -117,7 +114,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     
     let leftBarView = UIView()
     
-    let rightBarImage : UIImageView = {
+    let rightBarImage: UIImageView = {
         let view = UIImageView(image: UIImage(systemName: "gearshape"))
         
         
@@ -134,7 +131,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     
     lazy var leftBarButton = UIBarButtonItem(customView: leftBarView)
     
-    var profileHeader : ProfileHeaderView?
+    var profileHeader: ProfileHeaderView?
     
     
     
@@ -155,24 +152,24 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     
     
     
-    var HEADER_HEIGHT : CGFloat = 0
+    var HEADER_HEIGHT: CGFloat = 0
     
-    var followersCount : Int?
+    var followersCount: Int?
     
-    var imagesArr : [[String]] = []
+    var imagesArr: [[String]] = []
     
-    var uidsArr : [String] = []
+    var uidsArr: [String] = []
     
     
     
-    func setHeadersCount( selected : Bool ){
+    func setHeadersCount( selected: Bool ) {
         
         var count =  self.followersCount ?? 0
         
         
-        if(selected){
+        if selected {
             count += 1
-        }else{
+        } else {
             count -= 1
         }
         self.profileHeader?.feedInformValLabels[1].text = String(count)
@@ -234,29 +231,29 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     
     
     @objc
-    func didPressedFollowers(_ sender: UITapGestureRecognizer){
+    func didPressedFollowers(_ sender: UITapGestureRecognizer) {
         
         self.outputFollows.onNext(true)
         
     }
     
     @objc
-    func didPressedFollowings(_ sender: UITapGestureRecognizer){
+    func didPressedFollowings(_ sender: UITapGestureRecognizer) {
         
         self.outputFollows.onNext(false)
         
     }
     
-    func setUI(){
+    func setUI() {
         
         self.view.backgroundColor = .white
-
+        
         
         self.backgroundView.backgroundLabel.text = "아직 피드가 없어요"
         
         leftBarView.addSubview(leftBarLabel)
         leftBarView.addSubview(leftBarImage)
-
+        
         view.addSubview(self.collectionView)
         view.addSubview(self.addButton)
         view.addSubview(self.loadingView)
@@ -264,30 +261,30 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         self.backgroundView.isHidden = false
         
         
-        self.leftBarView.snp.makeConstraints{
+        self.leftBarView.snp.makeConstraints {
             $0.width.equalTo(180)
             $0.height.equalTo(40)
-        } 
-        self.leftBarLabel.snp.makeConstraints{
+        }
+        self.leftBarLabel.snp.makeConstraints {
             $0.centerY.leading.equalTo(leftBarView)
             $0.width.lessThanOrEqualTo(self.leftBarView).offset(-20)
         }
-        self.leftBarImage.snp.makeConstraints{
+        self.leftBarImage.snp.makeConstraints {
             $0.height.width.equalTo(12)
             $0.centerY.equalTo(leftBarView)
             $0.leading.equalTo(leftBarLabel.snp.trailing).offset(2)
         }
-        self.loadingView.snp.makeConstraints{
+        self.loadingView.snp.makeConstraints {
             $0.trailing.bottom.top.leading.equalTo(self.view)
         }
-        self.collectionView.snp.makeConstraints{
+        self.collectionView.snp.makeConstraints {
             $0.trailing.bottom.top.leading.equalTo(self.view.safeAreaLayoutGuide)
         }
-        self.addButton.snp.makeConstraints{
+        self.addButton.snp.makeConstraints {
             $0.trailing.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(20)
             $0.height.width.equalTo(50)
         }
-      
+        
         
         
         
@@ -299,17 +296,17 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     }
     
     
-    func setHeaderBindings( header : ProfileHeaderView ){
+    func setHeaderBindings( header: ProfileHeaderView ) {
         
         
-        let input = MyProfileVM.HeaderInput( viewWillApearEvent: headerAppearEvent.asObservable()  , goalLabelTapped: header.goalLabel.rx.tapGesture().when(.recognized).asObservable(), changeProfile: header.profileImage.rx.tapGesture().when(.recognized).asObservable(), outputProfileImage: self.outputProfileImage.asObservable(),  outputFollows : Observable.merge( header.feedInformValLabels[1].rx.tapGesture().when(.recognized).asObservable() , header.feedInformValLabels[2].rx.tapGesture().when(.recognized).asObservable()  ) )
+        let input = MyProfileVM.HeaderInput( viewWillApearEvent: headerAppearEvent.asObservable(), goalLabelTapped: header.goalLabel.rx.tapGesture().when(.recognized).asObservable(), changeProfile: header.profileImage.rx.tapGesture().when(.recognized).asObservable(), outputProfileImage: self.outputProfileImage.asObservable(), outputFollows: Observable.merge( header.feedInformValLabels[1].rx.tapGesture().when(.recognized).asObservable(), header.feedInformValLabels[2].rx.tapGesture().when(.recognized).asObservable() ) )
         
         
         guard let output = self.viewModel?.HeaderTransform(input: input, disposeBag: header.disposeBag) else { return }
         
         
         
-        Observable.zip( output.calorie , output.goalWeight , output.nowWeight , output.name , output.introduce , output.profileImage ).subscribe(onNext: { [self] in
+        Observable.zip( output.calorie, output.goalWeight, output.nowWeight, output.name, output.introduce, output.profileImage ).subscribe(onNext: { [self] in
             
             
             
@@ -349,11 +346,11 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
             
             if weight > 0 {
                 header.gramLabel.text = "+" + String(weight) + " kg"
-            }else{
+            } else {
                 header.gramLabel.text = String(weight) + " kg"
             }
             
-            if let url = URL(string: $5 ?? ""){
+            if let url = URL(string: $5 ?? "") {
                 
                 
                 DispatchQueue.main.async {
@@ -427,7 +424,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         
         
         
-        let input = MyProfileVM.Input(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable()  , leftBarButton : leftBarView.rx.tapGesture().when(.recognized).asObservable() , settingTapped: rightBarImage.rx.tapGesture().when(.recognized).asObservable() , addButtonTapped : addButton.rx.tap.asObservable() , outputProfileImage : outputProfileImage.asObservable(), imageTapped: self.imageTapped.asObservable()
+        let input = MyProfileVM.Input(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable(), leftBarButton: leftBarView.rx.tapGesture().when(.recognized).asObservable(), settingTapped: rightBarImage.rx.tapGesture().when(.recognized).asObservable(), addButtonTapped: addButton.rx.tap.asObservable(), outputProfileImage: outputProfileImage.asObservable(), imageTapped: self.imageTapped.asObservable()
                                       
         )
         
@@ -445,16 +442,16 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
             
             self.imagesArr = imagesArr
             
-            var indexPathsToReload : [IndexPath] = []
+            var indexPathsToReload: [IndexPath] = []
             
-            if( self.imagesArr.count == self.collectionView.numberOfItems(inSection: 0)){
-                for i in 0..<self.imagesArr.count{
+            if  self.imagesArr.count == self.collectionView.numberOfItems(inSection: 0) {
+                for i in 0..<self.imagesArr.count {
                     indexPathsToReload.append( IndexPath(row: i, section: 0) )
                 }
                 self.collectionView.reloadItems(at: indexPathsToReload)
                 
                 
-            }else{
+            } else {
                 self.collectionView.reloadData()
             }
             
@@ -468,7 +465,7 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
         }).disposed(by: disposeBag)
         
         output.feedUid.subscribe( onNext: { [weak self] uidsArr in
-            guard let uidsArr = uidsArr , let self = self else { return }
+            guard let uidsArr = uidsArr, let self = self else { return }
             self.loadControll = true
             
             self.uidsArr = uidsArr
@@ -491,19 +488,19 @@ class MyProfileVC : UIViewController , CustomCollectionCellDelegate {
     
 }
 
-extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
+extension MyProfileVC: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         cell.layer.removeAllAnimations()
     }
     
-  
+    
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
         if kind == UICollectionView.elementKindSectionHeader {
             
-            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ProfileHeaderView.identifier , for: indexPath) as? ProfileHeaderView  else {
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ProfileHeaderView.identifier, for: indexPath) as? ProfileHeaderView  else {
                 
                 return UICollectionViewCell()
             }
@@ -511,7 +508,7 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
             print("head start")
             
             
-            if(firstBind){
+            if firstBind {
                 self.HEADER_HEIGHT = header.frame.height
                 self.setHeaderBindings(header: header)
                 
@@ -527,14 +524,14 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
             return header
         } else {
             
-                guard let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DummyCollectionCell.identifier, for: indexPath) as? DummyCollectionCell else {
-                    return UICollectionViewCell()
-                    
-                }
-            
+            guard let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DummyCollectionCell.identifier, for: indexPath) as? DummyCollectionCell else {
+                return UICollectionViewCell()
                 
-                return footer
             }
+            
+            
+            return footer
+        }
         
         
         
@@ -554,13 +551,13 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
         }
         
         
-        if let url = URL(string: self.imagesArr[indexPath.row].first ?? "" ){
+        if let url = URL(string: self.imagesArr[indexPath.row].first ?? "" ) {
             cell.delegate = self
             cell.feedUid = uidsArr[indexPath.row]
             
             if self.imagesArr[indexPath.row].count > 1 {
                 cell.squareImage.isHidden = false
-            }else{
+            } else {
                 cell.squareImage.isHidden = true
             }
             
@@ -604,23 +601,17 @@ extension MyProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
 extension MyProfileVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        
-        
         let width = view.frame.size.width / 3
         
-        return CGSize(width: width  , height: width  )
+        return CGSize(width: width, height: width  )
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-       
-        if !(self.imagesArr.isEmpty) {
-            return CGSize(width: 0 , height: 0 )
-        }else{
-            return CGSize(width: collectionView.frame.width, height: collectionView.frame.width)
-
-        }
         
-      
-     }
+        if !self.imagesArr.isEmpty {
+            return CGSize(width: 0, height: 0 )
+        } else {
+            return CGSize(width: collectionView.frame.width, height: collectionView.frame.width)
+            
+        }
+    }
 }
-
-

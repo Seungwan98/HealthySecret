@@ -9,8 +9,8 @@ import UIKit
 import RxSwift
 import SnapKit
 
-class EditExerciseVC : UIViewController, UIScrollViewDelegate {
-    let viewModel : EditExerciseVM?
+class EditExerciseVC: UIViewController, UIScrollViewDelegate {
+    let viewModel: EditExerciseVM?
     let disposeBag = DisposeBag()
     
     init(viewModel: EditExerciseVM) {
@@ -25,9 +25,9 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     
     let mainView = UIView()
     
-    private let addButton : UIButton = {
+    private let addButton: UIButton = {
         let button = UIButton()
-
+        
         
         
         button.setTitle("추가", for: .normal)
@@ -36,12 +36,12 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
         button.backgroundColor = .systemBlue.withAlphaComponent(0.8)
         return button
     }()
-    private let edmitButton : UIButton = {
+    private let edmitButton: UIButton = {
         let button = UIButton()
         
         
         button.setTitle("기록하기", for: .normal)
-
+        
         button.backgroundColor = .black
         button.layer.cornerRadius = 30
         return button
@@ -50,7 +50,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     
     
     
-    private let topView : UIView = {
+    private let topView: UIView = {
         let view =  UIView()
         
         view.backgroundColor = .systemBlue.withAlphaComponent(0.5)
@@ -61,7 +61,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     
     
     
-    private let imageView : UIImageView = {
+    private let imageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "ic_health.png"))
         
         return imageView
@@ -69,16 +69,16 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     }()
     
     
-    lazy private var tableView : UITableView = {
+    lazy private var tableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .white
         tableView.allowsMultipleSelection = true
         tableView.register(EditExerciseCell.self, forCellReuseIdentifier: "ExerciseCell")
-
+        
         return tableView
     }()
     
-    let todayExerciseLabel : UILabel = {
+    let todayExerciseLabel: UILabel = {
         let label = UILabel()
         label.text = "오늘 한 활동 "
         label.font = .boldSystemFont(ofSize: 26)
@@ -87,16 +87,16 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
         
     }()
     
-    let totalTodayExerciseLabel : UILabel = {
+    let totalTodayExerciseLabel: UILabel = {
         let label = UILabel()
         label.textColor = .systemBlue.withAlphaComponent(0.8)
         label.font = .boldSystemFont(ofSize: 26)
         return label
     }()
     
-  
     
-     let bottomView = UIView()
+    
+    let bottomView = UIView()
     
     var exerciseArr = BehaviorSubject<[ExerciseModel]>(value: [])
     
@@ -110,11 +110,11 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     
     
     @objc
-    func delCell( _ sender : UIButton){
-
+    func delCell( _ sender: UIButton) {
+        
         let contentView = sender.superview
-               let cell = contentView?.superview as! UITableViewCell
-        var value : [ExerciseModel] = []
+        let cell = contentView?.superview as! UITableViewCell
+        var value: [ExerciseModel] = []
         if let indexPath = self.tableView.indexPath(for: cell) {
             exerciseArr.subscribe(onNext: { arr in
                 value = arr
@@ -123,15 +123,14 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
                 value.remove(at: indexPath.row)
                 
             }).disposed(by: DisposeBag())
-            
-               }
+        }
         exerciseArr.onNext(value)
-
+        
     }
     
     
     
-    func setBinds(){
+    func setBinds() {
         
         
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
@@ -140,7 +139,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
             self?.tableView.deselectRow(at: indexPath, animated: true)
         }).disposed(by: disposeBag)
         
-        let input = EditExerciseVM.Input(viewWillApearEvent :  self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable()  , edmitButtonTapped : edmitButton.rx.tap.asObservable() , inputArr : exerciseArr  , addButtonTapped : addButton.rx.tap.asObservable())
+        let input = EditExerciseVM.Input(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable(), edmitButtonTapped: edmitButton.rx.tap.asObservable(), inputArr: exerciseArr, addButtonTapped: addButton.rx.tap.asObservable())
         
         
         
@@ -156,7 +155,7 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
             
         }).disposed(by: disposeBag)
         
-        exerciseArr.bind(to: tableView.rx.items(cellIdentifier: "ExerciseCell" ,cellType: EditExerciseCell.self )){index,item,cell in
+        exerciseArr.bind(to: tableView.rx.items(cellIdentifier: "ExerciseCell", cellType: EditExerciseCell.self )) { _, item, cell in
             cell.layoutToEdit()
             cell.exerciseGram.text = "\(item.finalCalorie)Kcal"
             cell.name.text = item.name
@@ -168,18 +167,18 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
             
         }.disposed(by: disposeBag)
         
-
+        
         
     }
     
     
     
     override func viewWillAppear(_ animated: Bool) {
-
+        
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .systemBlue.withAlphaComponent(0.5)
         
-
+        
         self.navigationController?.view.backgroundColor = .white
         
         
@@ -188,12 +187,12 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
     }
     override func viewWillDisappear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-
+        
     }
-     
     
     
-    func addSubView(){
+    
+    func addSubView() {
         
         self.view.backgroundColor = .white
         mainView.backgroundColor = .white
@@ -212,49 +211,49 @@ class EditExerciseVC : UIViewController, UIScrollViewDelegate {
         bottomView.addSubview(edmitButton)
         
         
-        mainView.snp.makeConstraints{
+        mainView.snp.makeConstraints {
             $0.leading.trailing.top.bottom.equalTo(self.view)
         }
-        addButton.snp.makeConstraints{
+        addButton.snp.makeConstraints {
             $0.height.equalTo(60)
             $0.width.equalTo(100)
             $0.leading.equalTo(bottomView).inset(15)
             $0.centerY.equalTo(bottomView).offset(-10)
         }
-        edmitButton.snp.makeConstraints{
+        edmitButton.snp.makeConstraints {
             $0.height.equalTo(60)
             $0.leading.equalTo(addButton.snp.trailing).offset(15)
             $0.trailing.equalTo(bottomView).inset(15)
             $0.centerY.equalTo(bottomView).offset(-10)
         }
-        bottomView.snp.makeConstraints{
+        bottomView.snp.makeConstraints {
             $0.leading.trailing.bottom.equalTo(self.view)
             $0.height.equalTo(100)
         }
-        topView.snp.makeConstraints{
+        topView.snp.makeConstraints {
             $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
             $0.height.equalTo(300)
         }
-        imageView.snp.makeConstraints{
+        imageView.snp.makeConstraints {
             $0.width.height.equalTo(120)
             $0.centerX.equalTo(topView)
             $0.centerY.equalTo(topView).offset( -(self.navigationController?.navigationBar.frame.height ?? 0) / 2 )
         }
-        tableView.snp.makeConstraints{
+        tableView.snp.makeConstraints {
             $0.top.equalTo(topView.snp.bottom).offset(60)
             $0.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
             $0.bottom.equalTo(bottomView.snp.top)
         }
-        todayExerciseLabel.snp.makeConstraints{
+        todayExerciseLabel.snp.makeConstraints {
             $0.top.equalTo(topView.snp.bottom)
             $0.bottom.equalTo(tableView.snp.top)
             $0.leading.equalTo(topView).inset(20)
         }
-        totalTodayExerciseLabel.snp.makeConstraints{
+        totalTodayExerciseLabel.snp.makeConstraints {
             $0.top.bottom.equalTo(todayExerciseLabel)
             $0.leading.equalTo(todayExerciseLabel.snp.trailing)
         }
-      
+        
     }
     
 }

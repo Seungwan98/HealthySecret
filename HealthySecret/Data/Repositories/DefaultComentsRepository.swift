@@ -9,11 +9,11 @@ import Foundation
 import RxSwift
 
 
-class DefaultComentsRepository : ComentsRepository {
+class DefaultComentsRepository: ComentsRepository {
    
-    private let firebaseService : FirebaseService
+    private let firebaseService: FirebaseService
     
-    init( firebaseService : FirebaseService   ) {
+    init( firebaseService: FirebaseService   ) {
         self.firebaseService = firebaseService
     }
     
@@ -35,7 +35,7 @@ class DefaultComentsRepository : ComentsRepository {
     
     
     func deleteComents(coment: ComentDTO, feedUid: String) -> Single<[ComentDTO]> {
-        return self.firebaseService.deleteComents(coment: coment , feedUid: feedUid)
+        return self.firebaseService.deleteComents(coment: coment, feedUid: feedUid)
     }
     
     

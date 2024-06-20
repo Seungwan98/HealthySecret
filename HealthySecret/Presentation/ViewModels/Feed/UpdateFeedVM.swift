@@ -10,24 +10,24 @@ import RxCocoa
 import RxSwift
 
 
-class UpdateFeedVM : ViewModel {
+class UpdateFeedVM: ViewModel {
     
     
     
     
-    var feed : FeedModel?
+    var feed: FeedModel?
     
     var disposeBag = DisposeBag()
     
     var beforeArr = [Int?]()
     
-
     
-    weak var coordinator : Coordinator?
     
-    private let commuUseCase : CommuUseCase
+    weak var coordinator: Coordinator?
     
-    init( coordinator : Coordinator , commuUseCase : CommuUseCase ){
+    private let commuUseCase: CommuUseCase
+    
+    init( coordinator: Coordinator, commuUseCase: CommuUseCase ) {
         self.coordinator =  coordinator
         self.commuUseCase = commuUseCase
     }
@@ -36,9 +36,9 @@ class UpdateFeedVM : ViewModel {
     
     struct Input {
         
-        let addButtonTapped : Observable<Void>
-        let feedText : Observable<String>
-        let imagesDatas : Observable<([Int?], [UIImage])>
+        let addButtonTapped: Observable<Void>
+        let feedText: Observable<String>
+        let imagesDatas: Observable<([Int?], [UIImage])>
         
         
     }
@@ -57,9 +57,9 @@ class UpdateFeedVM : ViewModel {
         
         let mainImgUrl = feed?.mainImgUrl ?? []
         
-        var mainImgUrlRm = feed?.mainImgUrl ?? []
+        let mainImgUrlRm = feed?.mainImgUrl ?? []
         
-        for i in 0..<(mainImgUrl.count){
+        for i in 0..<(mainImgUrl.count) {
             beforeArr.append(i)
         }
         
@@ -75,93 +75,88 @@ class UpdateFeedVM : ViewModel {
         
         input.addButtonTapped.subscribe(onNext: { _ in
             
-            input.imagesDatas.subscribe(onNext: { before , after  in
+            input.imagesDatas.subscribe(onNext: { before, after  in
                 
                 input.feedText.subscribe(onNext: { text in
                     var urlArr = [String]()
-                    print("\(before) before , \(after ) after ")
+                    print("\(before) before, \(after ) after ")
                     LoadingIndicator.showLoading()
-
                     
                     
-                    var singleArr = [Observable<String>]()
                     
-//                    for i in (0..<before.count).reversed() {
-//                        if let index = before[i]{
-//                            print(index)
-//                            print(mainImgUrlRm)
-//                            urlArr.append(mainImgUrl[index])
-//                            mainImgUrlRm.remove(at: index)
-//                        }else{
-//                            singleArr.insert( ( self.firebaseService.uploadImage(imageData: after[i] , pathRoot: "test").asObservable() ) , at : 0 )
-//                        }
-//                        
-//                        
-//                    }
+                    let singleArr = [Observable<String>]()
+                    
+                    //                    for i in (0..<before.count).reversed() {
+                    //                        if let index = before[i]{
+                    //                            print(index)
+                    //                            print(mainImgUrlRm)
+                    //                            urlArr.append(mainImgUrl[index])
+                    //                            mainImgUrlRm.remove(at: index)
+                    //                        } else {
+                    //                            singleArr.insert( ( self.firebaseService.uploadImage(imageData: after[i], pathRoot: "test").asObservable() ), at: 0 )
+                    //                        }
+                    //
+                    //
+                    //                    }
+                    
+                    
+                    
+                    
+                    
+                    
+                    Observable.concat(singleArr).subscribe( onNext: { url in
+                        urlArr.append(url)
                         
-                    
-                
-                    
-                    
-                
-                    Observable.concat(singleArr).subscribe(
+                    }, onCompleted: {
                         
-                        onNext: {
+                        
+                        var feed = self.feed!
+                        feed.mainImgUrl = urlArr
+                        feed.contents = text
+                        if let profileImage = UserDefaults.standard.string(forKey: "profileImage") {
                             
-                            url in
-                            urlArr.append(url)
-                            
-                        }, onCompleted: {
-                            
-                            
-                            var feed = self.feed!
-                            feed.mainImgUrl = urlArr
-                            feed.contents = text
-                            if let profileImage = UserDefaults.standard.string(forKey: "profileImage"){
-                                
-                                feed.profileImage = profileImage
-                            }
-                            
-                            self.commuUseCase.updateFeed(feed: feed).subscribe({ event in
-                                switch(event){
-                                case.completed:
-                                    DispatchQueue.main.async {
-                                        LoadingIndicator.hideLoading()
-                                    }
-                                    
-                                        for url in mainImgUrlRm {
-                                        
-                                            self.commuUseCase.deleteImage(urlString: url).subscribe{
-                                                event in
-                                                switch(event){
-                                                case.completed:
-                                                    print("전 사진 삭제")
-                                                case.error(_):
-                                                    print("사진 삭제 에러")
-                                                }
-                                                
-                                            }.disposed(by: disposeBag)
-                                        }
-                                    
-                                    self.coordinator?.finish()
-                                    
-                                case .error(_):
-                                    break
+                            feed.profileImage = profileImage
+                        }
+                        
+                        self.commuUseCase.updateFeed(feed: feed).subscribe({ event in
+                            switch event { 
+                            case.completed:
+                                DispatchQueue.main.async {
+                                    LoadingIndicator.hideLoading()
                                 }
                                 
-                            }).disposed(by: disposeBag)
+                                for url in mainImgUrlRm {
+                                    
+                                    self.commuUseCase.deleteImage(urlString: url).subscribe { event in
+                                        switch event { 
+                                        case.completed:
+                                            print("전 사진 삭제")
+                                        case.error(_):
+                                            print("사진 삭제 에러")
+                                        }
+                                        
+                                    }.disposed(by: disposeBag)
+                                }
+                                
+                                self.coordinator?.finish()
+                                
+                            case .error(_):
+                                break
+                            }
                             
-                            
-                        }, onDisposed: {
-                            
-                            print("disposed")
-                            
-                            
-                        }
-                    
-                    
+                        }).disposed(by: disposeBag)
+                        
+                        
+                    }, onDisposed: {
+                        
+                        print("disposed")
+                        
+                        
+                    }
+                                                            
+                                                            
                     ).disposed(by: disposeBag)
-                     
+                    
                     
                     
                     

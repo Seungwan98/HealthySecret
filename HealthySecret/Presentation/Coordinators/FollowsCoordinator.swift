@@ -12,7 +12,7 @@ import Firebase
 
 
 
-class FollowsCoordinator : Coordinator  {
+class FollowsCoordinator: Coordinator {
     func start() {
         //
     }
@@ -30,7 +30,7 @@ class FollowsCoordinator : Coordinator  {
     
     
     // MARK: - Initializers
-    required init(_ navigationController : UINavigationController ){
+    required init(_ navigationController: UINavigationController ) {
         self.navigationController = navigationController
         self.type = CoordinatorType.follow
         self.firebaseService = FirebaseService()
@@ -40,9 +40,9 @@ class FollowsCoordinator : Coordinator  {
     
   
     
-    func startPush( follow : Bool , uid : String , name : String) {
+    func startPush( follow: Bool, uid: String, name: String) {
         
-        let viewModel = FollowsVM(coordinator: self , followUseCase: FollowUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService), followsRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService)) )
+        let viewModel = FollowsVM(coordinator: self, followUseCase: FollowUseCase(userRepository: DefaultUserRepository(firebaseService: self.firebaseService), followsRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService)) )
         
         viewModel.follow = follow
         viewModel.uid = uid
@@ -56,7 +56,7 @@ class FollowsCoordinator : Coordinator  {
         
         viewController.hidesBottomBarWhenPushed = true
         
-        self.navigationController.pushViewController(viewController , animated: false)
+        self.navigationController.pushViewController(viewController, animated: false)
         
         
     }
@@ -73,7 +73,7 @@ class FollowsCoordinator : Coordinator  {
 
     
    
-    func pushProfileVC(uuid:String){
+    func pushProfileVC(uuid: String) {
         
         let profileCoordinator =  ProfileCoordinator( self.navigationController )
         childCoordinator.append(profileCoordinator)
@@ -108,6 +108,3 @@ extension FollowsCoordinator: CoordinatorFinishDelegate {
         childCoordinator.navigationController.popToRootViewController(animated: true)
     }
 }
-
-
-

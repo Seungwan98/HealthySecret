@@ -10,7 +10,7 @@ import Firebase
 import FirebaseAuth
 import Foundation
 
-//AnyObject로 등록 시 특정 클래스만 사용 가능
+
 protocol Coordinator: AnyObject {
     
     /// 부모 코디네이터가 자식이 finish 됐을 때 알 수 있도록 돕는 delegate 프로토콜
@@ -47,10 +47,5 @@ protocol CoordinatorFinishDelegate: AnyObject {
 
 // MARK: - CoordinatorType
 enum CoordinatorType {
-    case login , tab  , diaryPage , ingredients , calendar , exercise , myprofile , run ,communicate , follow
+    case login, tab, diaryPage, ingredients, calendar, exercise, myprofile, run, communicate, follow
 }
-
-
-
-
-

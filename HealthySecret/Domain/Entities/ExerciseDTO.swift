@@ -6,7 +6,7 @@
 import Foundation
 
 // MARK: - Welcome
-struct ExerciseDTO : Codable {
+struct ExerciseDTO: Codable {
     let data: [ExerciseDtoData]
     
     enum CodingKeys: String, CodingKey {
@@ -16,7 +16,7 @@ struct ExerciseDTO : Codable {
 
 // MARK: - Datum
 struct ExerciseDtoData: Codable {
-    let exerciseGram : String
+    let exerciseGram: String
     let name: String
     
     enum CodingKeys: String, CodingKey {
@@ -26,7 +26,7 @@ struct ExerciseDtoData: Codable {
     
     func toDomain() -> ExerciseModel {
         
-        return ExerciseModel(date: "" , name: self.name , time: "0" , finalCalorie: "0" , memo: "" , key: "" , exerciseGram: self.exerciseGram )
+        return ExerciseModel(date: "", name: self.name, time: "0", finalCalorie: "0", memo: "", key: "", exerciseGram: self.exerciseGram )
         
     }
     

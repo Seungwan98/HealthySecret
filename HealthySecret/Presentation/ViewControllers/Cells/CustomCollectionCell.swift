@@ -1,9 +1,9 @@
 import UIKit
 import SnapKit
 
-protocol CustomCollectionCellDelegate {
+protocol CustomCollectionCellDelegate: AnyObject {
   
-    func imageTapped(feedUid:String)
+    func imageTapped(feedUid: String)
 
 }
 
@@ -11,11 +11,11 @@ class CustomCollectionViewCell: UICollectionViewCell {
     static let identifier = "CustomCollectionViewCell"
     
     
-    var delegate : CustomCollectionCellDelegate?
+    var delegate: CustomCollectionCellDelegate?
     
-    var feedUid : String?
+    var feedUid: String?
     
-    var image : UIImageView = {
+    var image: UIImageView = {
         let image = UIImageView()
         image.backgroundColor = .lightGray.withAlphaComponent(0.2)
         image.isUserInteractionEnabled = true
@@ -27,7 +27,7 @@ class CustomCollectionViewCell: UICollectionViewCell {
     
     
     
-    var squareImage : UIImageView = {
+    var squareImage: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "square.fill.on.square.fill"))
         imageView.tintColor = .white
         
@@ -60,10 +60,10 @@ class CustomCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(self.image)
         contentView.addSubview(self.squareImage)
         
-        self.image.snp.makeConstraints{
+        self.image.snp.makeConstraints {
             $0.top.bottom.trailing.leading.equalTo(self.contentView)
         }
-        self.squareImage.snp.makeConstraints{
+        self.squareImage.snp.makeConstraints {
             $0.trailing.top.equalTo(self.image).inset(6)
             $0.width.height.equalTo(20)
         }
@@ -71,7 +71,7 @@ class CustomCollectionViewCell: UICollectionViewCell {
     }
     
     @objc
-    func imageTapped(){
+    func imageTapped() {
         guard let feedUid = self.feedUid else {return}
         self.delegate?.imageTapped(feedUid: feedUid)
     }

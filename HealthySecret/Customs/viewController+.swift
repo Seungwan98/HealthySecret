@@ -47,15 +47,15 @@ extension UIViewController {
         let keyboardTopY = keyboardFrame.cgRectValue.origin.y
         // 현재 선택한 텍스트 필드의 Frame 값
         let convertedTextFieldFrame = view.convert(currentTextField.frame,
-                                                  from: currentTextField.superview)
+                                                   from: currentTextField.superview)
         // Y축으로 현재 텍스트 필드의 하단 위치
         let textFieldBottomY = convertedTextFieldFrame.origin.y + convertedTextFieldFrame.size.height
-    
-
+        
+        
         // Y축으로 텍스트필드 하단 위치가 키보드 상단 위치보다 클 때 (즉, 텍스트필드가 키보드에 가려질 때가 되겠죠!)
         if textFieldBottomY > keyboardTopY {
-
-
+            
+            
             let textFieldTopY = convertedTextFieldFrame.origin.y
             // 노가다를 통해서 모든 기종에 적절한 크기를 설정함.
             let newFrame = textFieldTopY - keyboardTopY/1.6
@@ -63,17 +63,17 @@ extension UIViewController {
         }
         
     }
-
+    
     @objc func keyboardWillHide(_ sender: Notification) {
         if view.frame.origin.y != 0 {
             view.frame.origin.y = 0
         }
-
+        
     }
 }
 
 
-extension UIViewController : UITextFieldDelegate {
+extension UIViewController: UITextFieldDelegate {
     
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         // 붙여넣기가 발생하면 false를 반환하여 입력을 막습니다.

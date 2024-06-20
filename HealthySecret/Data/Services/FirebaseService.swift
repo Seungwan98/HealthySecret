@@ -30,8 +30,8 @@ public enum FireStoreError: Error, LocalizedError {
 final class FirebaseService {
     
     var requestQuery: Query?
-    var query: Query? = nil
-    var listener : ListenerRegistration?
+    var query: Query?
+    var listener: ListenerRegistration?
     
     
     
@@ -40,25 +40,23 @@ final class FirebaseService {
     let db =  Firestore.firestore()
     
     
-    func getMessage(uid : String) -> Single<String>{
-        return Single.create(){ single in
-            print(uid)
-            self.db.collection("HealthySecretStartMessages").document(uid).getDocument(completion: { doc,err in
-                
+    func getMessage(uid: String) -> Single<String> {
+        return Single.create { single in
+            self.db.collection("HealthySecretStartMessages").document(uid).getDocument(completion: { doc, err in
                 if let err = err {
                     
                     single(.failure(err))
                     
-                }else{
+                } else {
                     
-                    if let data = doc?.data(){
-                        let outputData : String = data["report"] as! String
+                    if let data = doc?.data() {
+                        let outputData: String = data["report"] as! String
                         doc?.reference.delete()
                         single(.success(outputData))
                         
                         
                         
-                    }else{
+                    } else {
                         single(.failure(CustomError.isNil))
                         
                     }
@@ -73,34 +71,33 @@ final class FirebaseService {
         }
         
     }
-    func deleteDatas(user : User) -> Completable {
+    func deleteDatas(user: User) -> Completable {
         
         
-        Completable.create(){ completable in
-            
+        Completable.create { completable in
             let collection = self.db.collection("HealthySecretUsers")
             let uid = user.uid
-            collection.document(uid).delete{ err in
+            collection.document(uid).delete { err in
                 
                 if let err = err {
                     completable(.error(err))
                 }
             }
-            collection.getDocuments{ snapshot , err  in
+            collection.getDocuments { snapshot, err  in
                 if let err = err {
                     print("Error removing document: \(err)")
                     completable(.error(err))
                 }
                 guard let snapshot = snapshot else {return}
                 
-                for doc in snapshot.documents{
+                for doc in snapshot.documents {
                     
                     doc.reference.updateData([
                         
-                        "followings" : FieldValue.arrayRemove([uid]),
-                        "followers" : FieldValue.arrayRemove([uid]),
-                        "blocking" : FieldValue.arrayRemove([uid]),
-                        "blocked" : FieldValue.arrayRemove([uid]),
+                        "followings": FieldValue.arrayRemove([uid]),
+                        "followers": FieldValue.arrayRemove([uid]),
+                        "blocking": FieldValue.arrayRemove([uid]),
+                        "blocked": FieldValue.arrayRemove([uid])
                         
                         
                     ])
@@ -111,7 +108,7 @@ final class FirebaseService {
                 
                 
                 
-                self.db.collection("HealthySecretFeed").getDocuments{ snapshot , error in
+                self.db.collection("HealthySecretFeed").getDocuments { snapshot, error in
                     if error != nil { return }
                     
                     guard let snapshot = snapshot else {
@@ -119,8 +116,8 @@ final class FirebaseService {
                         return
                     }
                     
-                    for doc in snapshot.documents{
-                        var comentArr : [ComentDTO] = []
+                    for doc in snapshot.documents {
+                        var comentArr: [ComentDTO] = []
                         
                         
                         do {
@@ -133,22 +130,20 @@ final class FirebaseService {
                             
                             if creditCard.uuid.elementsEqual( uid ) {
                                 doc.reference.delete()
-                            }
-                            else{
-                               
-                                    for coment in creditCard.coments {
-                                        if(coment.uid == uid){
-                                            comentArr.append(coment)
-                                        }
-                                        
-                                    }
+                            } else {
+                                
+                                for coment in creditCard.coments where coment.uid == uid {
+                                    comentArr.append(coment)
+
                                     
+                                }
+                                
                                 
                                 
                                 doc.reference.updateData([
                                     
-                                    "likes" : FieldValue.arrayRemove([uid]),
-                                    "coments" : FieldValue.arrayRemove(comentArr)
+                                    "likes": FieldValue.arrayRemove([uid]),
+                                    "coments": FieldValue.arrayRemove(comentArr)
                                     
                                 ])
                                 
@@ -166,12 +161,12 @@ final class FirebaseService {
                     let lock = NSLock()
                     lock.lock()
                     print("lock \(uid)  \(user.uid)")
-                    storageReference.listAll()  { refs ,err in
+                    storageReference.listAll { refs, _ in
                         guard let refs = refs else {return}
-                        for item in refs.items{
+                        for item in refs.items {
                             print("\(item.name) refsItems")
                             let ref = Storage.storage().reference().child("\(uid)/\(item.name)")
-                            ref.delete{ _ in
+                            ref.delete { _ in
                                 
                             }
                             
@@ -194,23 +189,23 @@ final class FirebaseService {
         }
     }
     
-    func deleteAccount( credential : AuthCredential ) -> Completable {
-        return Completable.create{ completable in
+    func deleteAccount( credential: AuthCredential ) -> Completable {
+        return Completable.create { completable in
             if  let user = Auth.auth().currentUser {
                 
-                user.reauthenticate(with: credential){ result ,err in
-                    self.signOut().subscribe{ event in
-                        switch(event){
+                user.reauthenticate(with: credential) { result, err in
+                    self.signOut().subscribe { event in
+                        switch event {
                         case.completed:
                             result?.user.delete { [weak self] error in
                                 if let error = error {
-                                    print("Firebase Error : ",error)
+                                    print("Firebase Error: ", error)
                                     
                                     
                                 } else {
                                     print("user \(user)")
                                     self?.deleteDatas(user: user).subscribe({ event in
-                                        switch(event){
+                                        switch event {
                                         case.completed:
                                             
                                             
@@ -250,11 +245,10 @@ final class FirebaseService {
     
     
     public func signOut() -> Completable {
-        return Completable.create{ completable in
-            if let res = try? Auth.auth().signOut() {
+        return Completable.create { completable in
+            if (try? Auth.auth().signOut()) != nil {
                 completable(.completed)
-            }
-            else{
+            } else {
                 completable(.error("error" as! Error))
             }
             
@@ -269,15 +263,15 @@ final class FirebaseService {
     
     
     
-    public func signUp(email : String , pw : String) -> Completable {
+    public func signUp(email: String, pw: String) -> Completable {
         return Completable.create { completable in
-            Auth.auth().createUser(withEmail : email, password: pw){  [weak self] res, error in
+            Auth.auth().createUser(withEmail: email, password: pw) {  [weak self] _, error in
                 guard self != nil else { return }
                 
-                if let error = error{
+                if let error = error {
                     completable(.error(error))
                     return
-                }else{
+                } else {
                     completable(.completed)
                     
                 }
@@ -292,7 +286,7 @@ final class FirebaseService {
     
     public func getCurrentUser() -> Single<User> {
         return Single.create { single in
-            guard let currentUser = Auth.auth().currentUser else{
+            guard let currentUser = Auth.auth().currentUser else {
                 
                 single(.failure(FireStoreError.unknown))
                 return Disposables.create()
@@ -303,10 +297,10 @@ final class FirebaseService {
         }
     }
     
-    public func signIn(email : String , pw : String) -> Completable {
+    public func signIn(email: String, pw: String) -> Completable {
         return Completable.create { completable in
             Auth.auth()
-                .signIn(withEmail: email, password: pw){ [weak self] res, error in
+                .signIn(withEmail: email, password: pw) { [weak self] res, error in
                     guard let self = self else { return }
                     if let error = error {
                         // 에러가 났다면 여기서 처리
@@ -315,16 +309,16 @@ final class FirebaseService {
                     } else {
                         guard let uid = res?.user.uid else {return completable(.error(CustomError.isNil))}
                         print("로그인 성공")
-                        UserDefaults.standard.setValue(uid , forKey: "uid")
+                        UserDefaults.standard.setValue(uid, forKey: "uid")
                         
                         self.getDocument(key: uid).subscribe({ event in
-                            switch(event){
+                            switch event {
                             case(.success(let user)):
-                                if( CustomFormatter.shared.dateCompare(targetString: user.freezeDate ?? "")  ) {
+                                if CustomFormatter.shared.dateCompare(targetString: user.freezeDate ?? "") {
                                     completable(.completed)
                                     
                                     
-                                }else{
+                                } else {
                                     completable(.error(CustomError.freeze))
                                 }
                             case(.failure(let err)):
@@ -352,7 +346,7 @@ final class FirebaseService {
         
     }
     
-    func signInCredential(credential :AuthCredential) -> Completable{
+    func signInCredential(credential: AuthCredential) -> Completable {
         
         return Completable.create { completable in
             
@@ -369,19 +363,19 @@ final class FirebaseService {
                 guard let authUser = authResult?.user else { return }
                 
                 UserDefaults.standard.set(authUser.email, forKey: "email")
-                UserDefaults.standard.set( authUser.uid  , forKey: "uid")
+                UserDefaults.standard.set( authUser.uid, forKey: "uid")
                 
                 
                 
                 
                 self.getDocument(key: authUser.uid ).subscribe({ event in
-                    switch(event){
+                    switch event {
                     case(.success(let user)):
-                        if( CustomFormatter.shared.dateCompare(targetString: user.freezeDate ?? "")  ) {
+                        if CustomFormatter.shared.dateCompare(targetString: user.freezeDate ?? "") {
                             completable(.completed)
                             
                             
-                        }else{
+                        } else {
                             completable(.error(CustomError.freeze))
                         }
                     case(.failure(let err)):
@@ -399,12 +393,12 @@ final class FirebaseService {
         }
     }
     
-    func getDocument( key : String ) -> Single<UserModel> {
+    func getDocument( key: String ) -> Single<UserModel> {
         return Single.create { [weak self] single in
             
             
             
-            self?.db.collection("HealthySecretUsers").document(key).getDocument{ doc , err in
+            self?.db.collection("HealthySecretUsers").document(key).getDocument { doc, err in
                 if let err = err { single(.failure(err))}
                 
                 
@@ -424,7 +418,7 @@ final class FirebaseService {
                         single(.failure(CustomError.isNil))
                         
                     }
-                }else{
+                } else {
                     single(.failure(CustomError.isNil))
                 }
                 
@@ -444,8 +438,8 @@ final class FirebaseService {
     
     
     
-    func createUsers(model : UserModel) -> Completable {
-        return Completable.create{ completable in
+    func createUsers(model: UserModel) -> Completable {
+        return Completable.create { completable in
             
             self.db.collection("HealthySecretUsers").document( model.uuid ).setData(model.dictionary!) {  err in
                 if let err = err {
@@ -484,18 +478,18 @@ extension FirebaseService {
     
     
     func getIngredientsList() -> Single<[Row]> {
-        Single.create{ [weak self] single in guard let self = self else {return Disposables.create()}
-            self.db.collection("HealthySecret").getDocuments() { (querySnapshot , err) in
-                var list : [Row] = []
+        Single.create { [weak self] single in guard let self = self else {return Disposables.create()}
+            self.db.collection("HealthySecret").getDocuments {(querySnapshot, err) in
+                var list: [Row] = []
                 
                 if let err = err {
                     single(.failure(err))
                     
                     
                 } else {
-                    for document in querySnapshot!.documents{
-                        do{
-                            let jsonData = try JSONSerialization.data(withJSONObject: document.data() , options: [])
+                    for document in querySnapshot!.documents {
+                        do {
+                            let jsonData = try JSONSerialization.data(withJSONObject: document.data(), options: [])
                             
                             
                             
@@ -504,8 +498,7 @@ extension FirebaseService {
                             list = responseFile.row
                             single(.success(list))
                             
-                        }
-                        catch let err {
+                        } catch let err {
                             print("Error \(err)")
                             single(.failure(err))
                             
@@ -526,11 +519,11 @@ extension FirebaseService {
     
     
     
-    func getExercisesList() -> Single<ExerciseDTO>{
+    func getExercisesList() -> Single<ExerciseDTO> {
         return Single.create { [weak self] single in
             guard let self = self else { return Disposables.create() }
             
-            self.db.collection("HealthySecretExercises").getDocuments{ snapshot , error in
+            self.db.collection("HealthySecretExercises").getDocuments { snapshot, error in
                 
                 if let error = error { single(.failure(error))}
                 
@@ -571,34 +564,33 @@ extension FirebaseService {
     
     
     
-    func addDiary(diary : Diary , key : String) -> Completable {
-        return Completable.create{ completable in
+    func addDiary(diary: Diary, key: String) -> Completable {
+        return Completable.create { completable in
             
             completable(.completed)
             let path = self.db.collection("HealthySecretUsers").document(key)
             
-            path.updateData(["diarys" :FieldValue.arrayUnion([diary.dictionary!])])
+            path.updateData(["diarys": FieldValue.arrayUnion([diary.dictionary!])])
             return Disposables.create()
         }
         
     }
     
     
-    func updateIngredients(ingredients : [Ingredients] , key : String) -> Completable{
-        return Completable.create{ completable in
+    func updateIngredients(ingredients: [Ingredients], key: String) -> Completable {
+        return Completable.create { completable in
             
             let arr = ingredients.map({
                 return $0.dictionary
             })
             
-            self.db.collection("HealthySecretUsers").document(key).getDocument{ doc, err in
+            self.db.collection("HealthySecretUsers").document(key).getDocument { doc, err in
                 
-                if let err = err{
+                if let err = err {
                     completable(.error(err))
-                }
-                else{
+                } else {
                     doc?.reference.updateData([
-                        "ingredients" : arr
+                        "ingredients": arr
                     ])
                     completable(.completed)
                     
@@ -616,8 +608,8 @@ extension FirebaseService {
     }
     
     
-    func updateExercises(exercise : [ExerciseModel] , key : String) -> Completable {
-        return Completable.create{ completable in
+    func updateExercises(exercise: [ExerciseModel], key: String) -> Completable {
+        return Completable.create { completable in
             
             let exercise = exercise.map({
                 $0.dictionary
@@ -632,10 +624,10 @@ extension FirebaseService {
                     
                     completable(.error(err))
                     // Some error occured
-                }  else {
+                } else {
                     
                     doc?.reference.updateData([
-                        "exercise" : exercise
+                        "exercise": exercise
                     ])
                     
                     
@@ -655,8 +647,8 @@ extension FirebaseService {
     
     
     
-    func updateDiary(diary : [Diary] , key : String) -> Completable {
-        return Completable.create{ completable in
+    func updateDiary(diary: [Diary], key: String) -> Completable {
+        return Completable.create { completable in
             
             let diary = diary.map({
                 $0.dictionary
@@ -672,11 +664,10 @@ extension FirebaseService {
                     completable(.error(err))
                     // Some error occured
                     
-                }
-                else {
+                } else {
                     guard let doc = doc else { return }
                     doc.reference.updateData([
-                        "diarys" : diary
+                        "diarys": diary
                     ])
                     
                     
@@ -698,10 +689,10 @@ extension FirebaseService {
 
 extension FirebaseService {
     
-    func updateSignUpData( signUpModel : SignUpModel , uuid : String ) -> Completable {
-        return Completable.create{ completable in
+    func updateSignUpData( signUpModel: SignUpModel, uuid: String ) -> Completable {
+        return Completable.create { completable in
             
-            self.db.collection("HealthySecretUsers").document( uuid ).getDocument() { (doc, err) in
+            self.db.collection("HealthySecretUsers").document( uuid ).getDocument { (doc, err) in
                 
                 if let err = err {
                     
@@ -709,17 +700,16 @@ extension FirebaseService {
                     
                     completable(.error(err))
                     // Some error occured
-                }
-                else {
+                } else {
                     
                     doc?.reference.updateData([
-                        "age" : signUpModel.age ,
-                        "tall" : signUpModel.tall ,
-                        "sex" : signUpModel.sex,
-                        "goalWeight" : signUpModel.goalWeight,
-                        "nowWeight" : signUpModel.nowWeight,
-                        "calorie" : signUpModel.calorie,
-                        "activity" : signUpModel.activity
+                        "age": signUpModel.age,
+                        "tall": signUpModel.tall,
+                        "sex": signUpModel.sex,
+                        "goalWeight": signUpModel.goalWeight,
+                        "nowWeight": signUpModel.nowWeight,
+                        "calorie": signUpModel.calorie,
+                        "activity": signUpModel.activity
                         
                     ])
                     completable(.completed)
@@ -741,19 +731,19 @@ extension FirebaseService {
     }
     
     
-    func updateValues( valuesDic : Dictionary<String , String> , uuid : String ) -> Completable {
+    func updateValues( valuesDic: Dictionary<String, String>, uuid: String ) -> Completable {
         
         
         
         
         
-        return Completable.create{ completable in
+        return Completable.create { completable in
             
             print("update Values")
             
             
             
-            self.db.collection("HealthySecretUsers").document(uuid).getDocument() { (doc, err) in
+            self.db.collection("HealthySecretUsers").document(uuid).getDocument { (doc, err) in
                 
                 if let err = err {
                     
@@ -762,18 +752,18 @@ extension FirebaseService {
                     completable(.error(err))
                     // Some error occured
                 } else {
-
+                    
                     doc?.reference.updateData(
                         valuesDic
                     )
                     
-                  
+                    
                     completable( .completed)
                     
                     
                 }
                 
-
+                
                 
                 
             }
@@ -783,54 +773,52 @@ extension FirebaseService {
     }
     
     
-    func updateFollowers(  ownUid : String , opponentUid : String  , follow : Bool) -> Completable {
-        return Completable.create{ completable in
+    func updateFollowers(ownUid: String, opponentUid: String, follow: Bool) -> Completable {
+        return Completable.create { completable in
             
-            print("\(ownUid) , \(opponentUid) , \(follow)")
-            self.db.collection("HealthySecretUsers").document(ownUid).getDocument{ doc , err in
+            print("\(ownUid), \(opponentUid), \(follow)")
+            self.db.collection("HealthySecretUsers").document(ownUid).getDocument { doc, err in
                 if let err = err {
                     completable(.error(err))
-                }else{
+                } else {
                     
-                    if(follow){
+                    if follow {
                         doc?.reference.updateData([
                             
-                            "followings" : FieldValue.arrayUnion([opponentUid])
+                            "followings": FieldValue.arrayUnion([opponentUid])
                             
-                        ])}
-                    else{
-                        
-                        doc?.reference.updateData([
+                        ])} else {
                             
-                            "followings" : FieldValue.arrayRemove([opponentUid])
-                            
-                        ])
-                    }
+                            doc?.reference.updateData([
+                                
+                                "followings": FieldValue.arrayRemove([opponentUid])
+                                
+                            ])
+                        }
                     
                     
                 }
                 
-                self.db.collection("HealthySecretUsers").document(opponentUid).getDocument{ doc , err in
+                self.db.collection("HealthySecretUsers").document(opponentUid).getDocument { doc, err in
                     if let err = err {
                         completable(.error(err))
-                    }else{
+                    } else {
                         
-                        if(follow){
+                        if follow {
                             doc?.reference.updateData([
                                 
-                                "followers" : FieldValue.arrayUnion([ownUid])
+                                "followers": FieldValue.arrayUnion([ownUid])
                                 
-                            ])}
-                        else{
-                            
-                            doc?.reference.updateData([
+                            ])} else {
                                 
-                                "followers" : FieldValue.arrayRemove([ownUid])
+                                doc?.reference.updateData([
+                                    
+                                    "followers": FieldValue.arrayRemove([ownUid])
+                                    
+                                ])
                                 
-                            ])
-                            
-                            
-                        }
+                                
+                            }
                         
                         completable(.completed)
                     }
@@ -852,26 +840,26 @@ extension FirebaseService {
         
     }
     
-    func report(url : String , uid : String  , uuid : String , event : String) -> Completable{
-        return Completable.create{ completable in
+    func report(url: String, uid: String, uuid: String, event: String) -> Completable {
+        return Completable.create { completable in
             
-            self.db.collection(url).document(uid).getDocument{ doc , err in
+            self.db.collection(url).document(uid).getDocument { doc, err in
                 if let err = err {
                     completable(.error(err))
-                }else{
+                } else {
                     
-                    if(event == "feed"){
+                    if event == "feed" {
                         doc?.reference.updateData([
                             
-                            "report" : FieldValue.arrayUnion([uuid])
+                            "report": FieldValue.arrayUnion([uuid])
                             
                         ])
                         
                         let report = doc?.get("report") as! [String]
-                        if(report.count >= 5){
+                        if report.count >= 5 {
                             
                             
-                            self.db.collection("HealthySecretStartMessages").document(uuid).setData(["report":"신고 누적으로 피드가 삭제 되었습니다"])
+                            self.db.collection("HealthySecretStartMessages").document(uuid).setData(["report": "신고 누적으로 피드가 삭제 되었습니다"])
                             
                             
                             
@@ -880,21 +868,20 @@ extension FirebaseService {
                         
                         completable(.completed)
                         
-                    }
-                    else if(event == "coment"){
-                        if(doc?.data() != nil){
+                    } else if event == "coment" {
+                        if doc?.data() != nil {
                             doc?.reference.updateData([
                                 
-                                "report" : FieldValue.arrayUnion([uuid])
+                                "report": FieldValue.arrayUnion([uuid])
                                 
                             ])
                             
                             let report = doc?.get("report") as! [String]
-                            if(report.count >= 5){
+                            if report.count >= 5 {
                                 
                                 doc?.reference.delete()
                                 
-                                self.db.collection("HealthySecretStartMessages").document(uuid).setData(["report":"신고 누적으로 댓글이 삭제 되었습니다"])
+                                self.db.collection("HealthySecretStartMessages").document(uuid).setData(["report": "신고 누적으로 댓글이 삭제 되었습니다"])
                                 
                                 
                                 completable(.error(CustomError.delete))
@@ -902,8 +889,8 @@ extension FirebaseService {
                                 
                                 
                             }
-                        }else{
-                            doc?.reference.setData(["report":[uuid]])
+                        } else {
+                            doc?.reference.setData(["report": [uuid]])
                         }
                         
                         
@@ -911,25 +898,25 @@ extension FirebaseService {
                         
                         
                         
-                    }else if(event == "user"){
+                    } else if event == "user" {
                         
                         doc?.reference.updateData([
                             
-                            "report" : FieldValue.arrayUnion([uuid])
+                            "report": FieldValue.arrayUnion([uuid])
                             
                         ])
                         
                         
                         
                         if let report = doc?.get("report") as? [String] {
-                            if(report.count >= 5){
+                            if report.count >= 5 {
                                 
                                 
                                 
                                 doc?.reference.updateData([
                                     
                                     
-                                    "freezeDate" :  CustomFormatter.shared.DateToString(date: Calendar.current.date(byAdding: .month, value: +1, to: Date() )!)
+                                    "freezeDate": CustomFormatter.shared.DateToString(date: Calendar.current.date(byAdding: .month, value: +1, to: Date())!)
                                     
                                     
                                 ])
@@ -939,8 +926,7 @@ extension FirebaseService {
                             
                             
                         }
-                    }
-                    else{
+                    } else {
                         completable(.error(CustomError.isNil))
                         
                     }
@@ -962,35 +948,35 @@ extension FirebaseService {
         
     }
     
-    func blockUser(ownUid : String , opponentUid : String  , block : Bool) -> Completable {
-        return Completable.create{ completable in
+    func blockUser(ownUid: String, opponentUid: String, block: Bool) -> Completable {
+        return Completable.create { completable in
             
-            self.db.collection("HealthySecretUsers").document(ownUid).getDocument{ doc , err in
+            self.db.collection("HealthySecretUsers").document(ownUid).getDocument { doc, err in
                 if let err = err {
                     completable(.error(err))
-                }else{
+                } else {
                     
-                    if(block){
+                    if block {
                         doc?.reference.updateData([
                             
-                            "blocking" : FieldValue.arrayUnion([opponentUid]),
-                            "followings" : FieldValue.arrayRemove([opponentUid]),
-                            "followers" : FieldValue.arrayRemove([opponentUid]),
+                            "blocking": FieldValue.arrayUnion([opponentUid]),
+                            "followings": FieldValue.arrayRemove([opponentUid]),
+                            "followers": FieldValue.arrayRemove([opponentUid])
                             
                         ])
                         
                         
-                        self.db.collection("HealthySecretUsers").document(opponentUid).getDocument{ doc , err in
+                        self.db.collection("HealthySecretUsers").document(opponentUid).getDocument { doc, err in
                             if let err = err {
                                 completable(.error(err))
-                            }else{
+                            } else {
                                 
                                 
                                 doc?.reference.updateData([
                                     
-                                    "blocked" : FieldValue.arrayUnion([ownUid]),
-                                    "followings" : FieldValue.arrayRemove([ownUid]),
-                                    "followers" : FieldValue.arrayRemove([ownUid]),
+                                    "blocked": FieldValue.arrayUnion([ownUid]),
+                                    "followings": FieldValue.arrayRemove([ownUid]),
+                                    "followers": FieldValue.arrayRemove([ownUid])
                                 ])
                                 
                                 
@@ -1003,25 +989,25 @@ extension FirebaseService {
                             
                             
                         }
-                    }else{
+                    } else {
                         
                         doc?.reference.updateData([
                             
-                            "blocking" : FieldValue.arrayRemove([opponentUid]),
+                            "blocking": FieldValue.arrayRemove([opponentUid])
                             
                             
                         ])
                         
                         
-                        self.db.collection("HealthySecretUsers").document(opponentUid).getDocument{ doc , err in
+                        self.db.collection("HealthySecretUsers").document(opponentUid).getDocument { doc, err in
                             if let err = err {
                                 completable(.error(err))
-                            }else{
+                            } else {
                                 
                                 
                                 doc?.reference.updateData([
                                     
-                                    "blocked" : FieldValue.arrayRemove([ownUid]),
+                                    "blocked": FieldValue.arrayRemove([ownUid])
                                     
                                 ])
                                 
@@ -1066,8 +1052,8 @@ extension FirebaseService {
             guard let imageData = imageData else {
                 single(.success(""))
                 return Disposables.create()  }
-           
-        
+            
+            
             let metaData = StorageMetadata()
             metaData.contentType = "image/jpeg"
             let imageName = UUID().uuidString + String(Date().timeIntervalSince1970)
@@ -1075,7 +1061,7 @@ extension FirebaseService {
             let firebaseReference = Storage.storage().reference().child("\(pathRoot)/\(imageName)")
             
             
-            firebaseReference.putData(imageData, metadata: metaData) { metaData, error in
+            firebaseReference.putData(imageData, metadata: metaData) { _, _ in
                 firebaseReference.downloadURL { url, _ in
                     single(.success(url?.absoluteString ?? ""))
                 }
@@ -1096,12 +1082,12 @@ extension FirebaseService {
             let storageReference = Storage.storage().reference(forURL: urlString)
             
             
-            storageReference.delete{ error in
-                if let error = error{
+            storageReference.delete { error in
+                if let error = error {
                     
                     completable(.error(error))
                     
-                }else{
+                } else {
                     completable(.completed)
                     
                 }
@@ -1120,16 +1106,16 @@ extension FirebaseService {
     
     
     
-    func updateFeed( feedDto : FeedDTO) -> Completable {
-        return Completable.create{ completable in
-            self.db.collection("HealthySecretFeed").document(feedDto.feedUid).getDocument{ doc , err in
+    func updateFeed( feedDto: FeedDTO) -> Completable {
+        return Completable.create { completable in
+            self.db.collection("HealthySecretFeed").document(feedDto.feedUid).getDocument { doc, err in
                 if let err = err {
                     completable(.error(err))
-                }else{
+                } else {
                     
                     doc?.reference.updateData([
-                        "contents" :  feedDto.contents ,
-                        "mainImgUrl" : feedDto.mainImgUrl
+                        "contents": feedDto.contents,
+                        "mainImgUrl": feedDto.mainImgUrl
                         
                     ])}
                 
@@ -1148,8 +1134,8 @@ extension FirebaseService {
         
     }
     
-    func addFeed(feed : FeedDTO) -> Completable {
-        return Completable.create{ completable in
+    func addFeed(feed: FeedDTO) -> Completable {
+        return Completable.create { completable in
             
             self.db.collection("HealthySecretFeed").document( feed.feedUid ).setData(feed.dictionary!) {  err in
                 if let err = err {
@@ -1169,24 +1155,23 @@ extension FirebaseService {
     }
     
     
-    func updateFeedLikes( feedUid : String , uuid : String  , like : Bool) -> Completable {
-        return Completable.create{ completable in
-            self.db.collection("HealthySecretFeed").document(feedUid).getDocument{ doc , err in
+    func updateFeedLikes( feedUid: String, uuid: String, like: Bool) -> Completable {
+        return Completable.create { completable in
+            self.db.collection("HealthySecretFeed").document(feedUid).getDocument { doc, err in
                 if let err = err {
                     completable(.error(err))
-                }else{
+                } else {
                     
-                    if(like){
+                    if like {
                         doc?.reference.updateData([
                             
-                            "likes" : FieldValue.arrayUnion([uuid])
+                            "likes": FieldValue.arrayUnion([uuid])
                             
-                        ])}
-                    else{
+                        ])} else {
                         
                         doc?.reference.updateData([
                             
-                            "likes" : FieldValue.arrayRemove([uuid])
+                            "likes": FieldValue.arrayRemove([uuid])
                             
                         ])
                     }
@@ -1212,41 +1197,39 @@ extension FirebaseService {
     
     
     
-    func getFeedPagination(feeds:[FeedDTO] , pagesCount : Int , follow : [String] , getFollow : Bool , followCount : Int , block : [String]) -> Single<[FeedDTO]> {
+    func getFeedPagination(feeds: [FeedDTO], pagesCount: Int, follow: [String], getFollow: Bool, followCount: Int, block: [String]) -> Single<[FeedDTO]> {
         return Single<[FeedDTO]>.create { [weak self] single in
             
             guard let self = self else {return single(.failure(FireStoreError.unknown)) as! Disposable}
-            var newFeeds : [FeedDTO] = []
-            let lastFeeds : [FeedDTO] = feeds
+            var newFeeds: [FeedDTO] = []
+            let lastFeeds: [FeedDTO] = feeds
             var followCount = followCount
             if let query = self.query {
-                //There is last query
+                
                 self.requestQuery = query
-
+                
             } else {
-                //It's First query request
+                
                 self.requestQuery = self.db.collection("HealthySecretFeed")
-                    .order(by: "date" , descending: true )
+                    .order(by: "date", descending: true )
                     .limit(to: pagesCount)
             }
             
-            self.requestQuery?.getDocuments{ [weak self] (snapshot, error) in
+            self.requestQuery?.getDocuments { [weak self] (snapshot, _) in
                 
                 guard let self = self else { return }
                 print("nniill")
-                guard let snapshot = snapshot,
-                      let lastDocument = snapshot.documents.last else {
+                guard let snapshot = snapshot, let lastDocument = snapshot.documents.last else {
                     single(.failure(CustomError.isNil))
                     
                     return
                 }
                 
                 let next = self.db.collection("HealthySecretFeed")
-                    .order(by: "date" , descending: true)
+                    .order(by: "date", descending: true)
                     .limit(to: pagesCount)
                     .start(afterDocument: lastDocument)
                 
-                //Set next query
                 self.query = next
                 
                 
@@ -1257,13 +1240,13 @@ extension FirebaseService {
                     do {
                         let feedModel = try document.data(as: FeedDTO.self)
                         
-                        if(getFollow){
+                        if getFollow {
                             
-                            if(follow.contains(feedModel.uuid) && !block.contains(feedModel.uuid)) {
+                            if follow.contains(feedModel.uuid) && !block.contains(feedModel.uuid) {
                                 newFeeds.append(feedModel)
                                 followCount += 1
                             }
-                        }else if(!block.contains(feedModel.uuid)){
+                        } else if !block.contains(feedModel.uuid) {
                             
                             newFeeds.append(feedModel)
                             followCount += 1
@@ -1281,9 +1264,9 @@ extension FirebaseService {
                 print("total \(totalFeeds)")
                 
                 
-                if (followCount < 4 || getFollow ) {
+                if followCount < 4 || getFollow {
                     getFeedPagination(feeds: totalFeeds, pagesCount: 4, follow: follow, getFollow: getFollow, followCount: followCount, block: block ).subscribe({ event in
-                        switch(event){
+                        switch event {
                             
                         case.success(let feeds):
                             
@@ -1291,9 +1274,9 @@ extension FirebaseService {
                             
                             single(.success(feeds))
                         case.failure(let err):
-                            if (err as! CustomError == CustomError.isNil){
+                            if err as! CustomError == CustomError.isNil {
                                 
-                                if (totalFeeds.isEmpty ){
+                                if totalFeeds.isEmpty {
                                     single(.failure(CustomError.isNil))
                                 }
                                 
@@ -1305,7 +1288,7 @@ extension FirebaseService {
                         
                     }).disposed(by: disposeBag)
                     
-                }else{
+                } else {
                     
                     print("else")
                     
@@ -1339,20 +1322,20 @@ extension FirebaseService {
     
     
     
-    func getFeedFeedUid(feedUid : String) -> Single<FeedDTO>{
+    func getFeedFeedUid(feedUid: String) -> Single<FeedDTO> {
         return Single.create { [weak self] single in
-            guard let self = self else { single(.failure(FireStoreError.unknown) ) 
-                                            return Disposables.create()}
-            self.db.collection("HealthySecretFeed").document(feedUid).getDocument{ [weak self] doc,err in
-                if let err = err{
+            guard let self = self else { single(.failure(FireStoreError.unknown) )
+                return Disposables.create()}
+            self.db.collection("HealthySecretFeed").document(feedUid).getDocument { doc, err in
+                if let err = err {
                     single(.failure(err))
-                }else{
+                } else {
                     if let data = doc?.data() {
-                        do{
+                        do {
                             let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
                             var feed = try JSONDecoder().decode(FeedDTO.self, from: jsonData)
                             single(.success(feed))
-                        }catch{
+                        } catch {
                             
                             single(.failure(CustomError.isNil))
                         }
@@ -1374,12 +1357,12 @@ extension FirebaseService {
     
     
     
-    func getFeedsUid( uid : String ) -> Single<[FeedDTO]>{
-        return Single.create{ single in
+    func getFeedsUid( uid: String ) -> Single<[FeedDTO]> {
+        return Single.create { single in
             
             
-            var feedModels : [FeedDTO] = []
-            self.db.collection("HealthySecretFeed").whereField("uuid", isEqualTo: uid).order(by: "date" , descending: true ).getDocuments() { (querySnapshot, err) in
+            var feedModels: [FeedDTO] = []
+            self.db.collection("HealthySecretFeed").whereField("uuid", isEqualTo: uid).order(by: "date", descending: true ).getDocuments { (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
                     single(.failure(err))
@@ -1412,10 +1395,10 @@ extension FirebaseService {
         
     }
     
-    func deleteFeed(feedUid:String) -> Completable {
-        return Completable.create{ completable in
+    func deleteFeed(feedUid: String) -> Completable {
+        return Completable.create { completable in
             
-            self.db.collection("HealthySecretFeed").document(feedUid).delete() { err in
+            self.db.collection("HealthySecretFeed").document(feedUid).delete { err in
                 if let err = err {
                     print("Error removing document: \(err)")
                     completable(.error(err))
@@ -1444,19 +1427,19 @@ extension FirebaseService {
 
 extension FirebaseService {
     
-    //댓글 수정 삭제
+    // 댓글 수정 삭제
     
     
-    func deleteComents(  coment : ComentDTO , feedUid : String ) -> Single<[ComentDTO]> {
-        return Single.create{ single in
+    func deleteComents(  coment: ComentDTO, feedUid: String ) -> Single<[ComentDTO]> {
+        return Single.create { single in
             
             
             
             
             
             
-            self.listener = self.db.collection("HealthySecretFeed").whereField("feedUid", isEqualTo: feedUid).addSnapshotListener{  [weak self]  querySnapshot, error in
-                guard let self = self else  {return}
+            self.listener = self.db.collection("HealthySecretFeed").whereField("feedUid", isEqualTo: feedUid).addSnapshotListener {  [weak self]  querySnapshot, error in
+                guard let self = self else {return}
                 guard let snapshot = querySnapshot else {
                     print("Error fetching snapshots: \(error!)")
                     return
@@ -1468,26 +1451,24 @@ extension FirebaseService {
                     
                     print("\(diff) diff")
                     var idx = 0
-                    if (diff.type == .modified) {
+                    if diff.type == .modified {
                         //document 안에있는 Arr 안의 데이터를 삭제하므로 modified 를 찾는다.
                         
-                        do{
+                        do {
                             let jsonData = try JSONSerialization.data(withJSONObject: diff.document.data(), options: [])
                             let feed = try JSONDecoder().decode(FeedDTO.self, from: jsonData)
                             
-                          
-                                if(feed.coments.isEmpty){
-                                    single(.success([]))
-                                }
+                            
+                            if feed.coments.isEmpty {
+                                single(.success([]))
+                            }
                             single(.success(feed.coments))
-                                
-                          
                             
                             
-                        }
-                        catch{
+                            
+                            
+                        } catch {
                             single(.failure(CustomError.isNil))
-                            
                         }
                         
                     } else {
@@ -1496,7 +1477,7 @@ extension FirebaseService {
                         if let coment = coment.dictionary {
                             diff.document .reference.updateData([
                                 
-                                "coments" : FieldValue.arrayRemove([coment])
+                                "coments": FieldValue.arrayRemove([coment])
                                 
                             ])
                         }
@@ -1520,10 +1501,10 @@ extension FirebaseService {
     
     
     
-    func updateComents( feedUid : String , coment : ComentDTO  ) -> Single<[ComentDTO]> {
-        return Single.create{ [weak self] single in
+    func updateComents( feedUid: String, coment: ComentDTO  ) -> Single<[ComentDTO]> {
+        return Single.create { [weak self] single in
             guard let self = self else { return Disposables.create()}
-            self.listener = self.db.collection("HealthySecretFeed").whereField("feedUid", isEqualTo: feedUid).addSnapshotListener{  querySnapshot, error in
+            self.listener = self.db.collection("HealthySecretFeed").whereField("feedUid", isEqualTo: feedUid).addSnapshotListener {  querySnapshot, error in
                 guard let snapshot = querySnapshot else {
                     print("Error fetching snapshots: \(error!)")
                     return
@@ -1534,20 +1515,19 @@ extension FirebaseService {
                     
                     
                     
-                    if (diff.type == .modified) {
-                        //document 안에있는 Arr 안의 데이터를 추가하므로 modified 를 찾는다.
+                    if diff.type == .modified {
+                        // document 안에있는 Arr 안의 데이터를 추가하므로 modified 를 찾는다.
                         
-                        do{
+                        do {
                             let jsonData = try JSONSerialization.data(withJSONObject: diff.document.data(), options: [])
                             let feed = try JSONDecoder().decode(FeedDTO.self, from: jsonData)
-                            var coments = feed.coments
+                            let coments = feed.coments
                             
                             single(.success(coments))
                             self.listener?.remove()
-    
                             
-                        }
-                        catch{
+                            
+                        } catch {
                             single(.failure(CustomError.isNil))
                             
                         }
@@ -1558,7 +1538,7 @@ extension FirebaseService {
                         if let coment = coment.dictionary {
                             diff.document .reference.updateData([
                                 
-                                "coments" : FieldValue.arrayUnion([coment])
+                                "coments": FieldValue.arrayUnion([coment])
                                 
                             ])
                         }
@@ -1584,28 +1564,27 @@ extension FirebaseService {
         
     }
     
-    func getComents(feedUid : String) -> Single<[ComentDTO]>{
-        return Single.create{ [weak self] single in
+    func getComents(feedUid: String) -> Single<[ComentDTO]> {
+        return Single.create { [weak self] single in
             
             guard let self = self else {return Disposables.create()}
             
-            self.db.collection("HealthySecretFeed").document(feedUid).getDocument{ doc , err in
+            self.db.collection("HealthySecretFeed").document(feedUid).getDocument { doc, err in
                 
                 if let err = err {
                     single(.failure(err))
-                }else{
+                } else {
                     guard let data = doc?.data() else {return}
-                    do{
-                        let jsonData = try JSONSerialization.data(withJSONObject: data , options: [])
+                    do {
+                        let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
                         let feed = try JSONDecoder().decode(FeedDTO.self, from: jsonData)
                         
-                    
+                        
                         
                         single(.success(feed.coments))
-
                         
-                    }
-                    catch{
+                        
+                    } catch {
                         single(.failure(CustomError.isNil))
                         
                     }
@@ -1629,35 +1608,34 @@ extension FirebaseService {
     
     
     
-    func getFollowsLikes(uid:[String] ) -> Single<[UserModel]>{
-        return Single.create{ single in
+    func getFollowsLikes(uid: [String] ) -> Single<[UserModel]> {
+        return Single.create { single in
             
-            var usersArr : [UserModel] = []
+            var usersArr: [UserModel] = []
             
-            if(uid.isEmpty){
+            if uid.isEmpty {
                 single(.success(usersArr))
-            }else{
+            } else {
                 
                 
                 
-                self.db.collection("HealthySecretUsers").whereField( "uuid" , in : uid ).getDocuments{ query , err in
-                    if let err = err{
+                self.db.collection("HealthySecretUsers").whereField( "uuid", in: uid ).getDocuments { query, err in
+                    if let err = err {
                         single(.failure(err))
-                    }else{
+                    } else {
                         
                         let docs = query!.documents
                         for doc in docs {
                             
                             
-                            do{
+                            do {
                                 
-                                let jsonData = try JSONSerialization.data( withJSONObject: doc.data() , options: [] )
+                                let jsonData = try JSONSerialization.data( withJSONObject: doc.data(), options: [] )
                                 let user = try JSONDecoder().decode( UserModel.self, from: jsonData )
                                 
                                 usersArr.append(user)
                                 
-                            }
-                            catch{
+                            } catch {
                                 
                                 
                                 single(.failure(CustomError.isNil))
@@ -1666,7 +1644,7 @@ extension FirebaseService {
                             
                             
                         }
-                                                
+                        
                         single(.success(usersArr))
                     }
                     
@@ -1684,5 +1662,3 @@ extension FirebaseService {
     
     
 }
-
-

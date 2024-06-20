@@ -10,7 +10,7 @@ import RxCocoa
 import RxSwift
 
 
-class AddFeedVM : ViewModel {
+class AddFeedVM: ViewModel {
    
     
    
@@ -20,10 +20,10 @@ class AddFeedVM : ViewModel {
     var disposeBag = DisposeBag()
   
     
-    weak var coordinator : Coordinator?
-    private let commuUseCase : CommuUseCase
+    weak var coordinator: Coordinator?
+    private let commuUseCase: CommuUseCase
     
-    init( coordinator : Coordinator , commuUseCase : CommuUseCase ){
+    init( coordinator: Coordinator, commuUseCase: CommuUseCase ) {
         self.coordinator =  coordinator
         self.commuUseCase = commuUseCase
     }
@@ -31,9 +31,9 @@ class AddFeedVM : ViewModel {
     
     
     struct Input {
-        let addButtonTapped : Observable<Void>
-        let feedText : Observable<String>
-        let imagesDatas : Observable<[UIImage]>
+        let addButtonTapped: Observable<Void>
+        let feedText: Observable<String>
+        let imagesDatas: Observable<[UIImage]>
         
         
     }
@@ -59,27 +59,27 @@ class AddFeedVM : ViewModel {
             input.imagesDatas.subscribe(onNext: { arr in
                 
                 input.feedText.subscribe(onNext: { text in
-                        var urlArr : [String] = []
+                        var urlArr: [String] = []
                     
                     LoadingIndicator.showLoading()
                         for image in arr {
                             guard let imageData = image.jpegData(compressionQuality: 0.1) else { return  }
 
                             self.commuUseCase.uploadImage( imageData: imageData, pathRoot: uuid ).subscribe({ event in
-                                switch(event){
+                                switch event {
                                 case.success(let url): urlArr.append(url)
                                 case.failure(let err):
                                     print(err)
                                     break
                                 }
                                 
-                                if(urlArr.count == arr.count){
+                                if urlArr.count == arr.count {
                                 
-                                    var feed = FeedModel(uuid: uuid , feedUid: UUID().uuidString+CustomFormatter.shared.getToday(), date: date, profileImage : "", nickname: name , contents: text, mainImgUrl: urlArr , likes: [], report: [], coments: []  )
+                                    let feed = FeedModel(uuid: uuid, feedUid: UUID().uuidString+CustomFormatter.shared.getToday(), date: date, profileImage: "", nickname: name, contents: text, mainImgUrl: urlArr, likes: [], report: [], coments: []  )
                                   
                                     
                                     self.commuUseCase.addFeed(feed: feed).subscribe({ event in
-                                        switch(event){
+                                        switch event { 
                                         case.completed:
                                             DispatchQueue.main.async {
                                                        LoadingIndicator.hideLoading()

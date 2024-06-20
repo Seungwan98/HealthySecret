@@ -15,10 +15,10 @@ class LikesUseCase  {
     
     private let disposeBag = DisposeBag()
     
-    private let followsRepository : FollowsRepository
-    private let feedRepository : FeedRepository
+    private let followsRepository: FollowsRepository
+    private let feedRepository: FeedRepository
     
-    init( feedRepository : FeedRepository , followsRepository : FollowsRepository ){
+    init( feedRepository: FeedRepository, followsRepository: FollowsRepository ) {
         self.feedRepository = feedRepository
         self.followsRepository = followsRepository
         
@@ -29,7 +29,7 @@ class LikesUseCase  {
     
     
         
-    func updateFollowers( opponentUid: String  , follow: Bool) -> Completable{
+    func updateFollowers( opponentUid: String, follow: Bool) -> Completable {
         guard let uid = UserDefaults.standard.string(forKey: "uid") else {return Completable.error(CustomError.isNil)}
         return self.followsRepository.updateFollowers(ownUid: uid, opponentUid: opponentUid, follow: follow)
     }
@@ -37,17 +37,17 @@ class LikesUseCase  {
     
     
         
-    func getLikes(feedUid : String) -> Single<[UserModel]> {
-        return Single.create{ [weak self] single in
+    func getLikes(feedUid: String) -> Single<[UserModel]> {
+        return Single.create { [weak self] single in
             guard let self else { single(.failure(CustomError.isNil) )
                 return Disposables.create() }
 
             self.feedRepository.getFeedFeedUid(feedUid: feedUid).subscribe({ event in
-                switch(event){
+                switch event {
                 case.success(let feed):
                     
                     self.followsRepository.getFollowsLikes(uid: feed.likes ).subscribe({ event in
-                        switch(event){
+                        switch event {
                         case.success(let likes):
                             print(likes)
                             single( .success(likes))

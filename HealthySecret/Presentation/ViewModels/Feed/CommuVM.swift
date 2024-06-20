@@ -10,18 +10,18 @@ import RxCocoa
 import RxSwift
 
 
-class CommuVM : ViewModel {
+class CommuVM: ViewModel {
     
     
     var disposeBag = DisposeBag()
     
-    var reset : Bool = false
+    var reset: Bool = false
     
     var reload = PublishSubject<Int>()
-
+    
     struct Input {
         let viewWillAppearEvent: Observable<Void>
-        let likesButtonTapped: Observable<[String : Bool]>
+        let likesButtonTapped: Observable<[String: Bool]>
         let comentsTapped: Observable<String>
         let addButtonTapped: Observable<Void>
         let deleteFeed: Observable<String>
@@ -39,8 +39,8 @@ class CommuVM : ViewModel {
     struct Output {
         
         var feedModel = PublishSubject<[FeedModel]>()
-        var likesCount = BehaviorSubject<[ String : [ String ] ]>(value: [:] )
-        var isLastPage = BehaviorSubject<Bool>(value:false)
+        var likesCount = BehaviorSubject<[ String: [ String ] ]>(value: [:] )
+        var isLastPage = BehaviorSubject<Bool>(value: false)
         var isPaging = BehaviorSubject<Bool>(value: false)
         var endRefreshing = BehaviorSubject<Bool>(value: false)
         var alert = PublishSubject<Bool>()
@@ -50,16 +50,16 @@ class CommuVM : ViewModel {
     
     var getFollow: Bool = false
     
-    var likesCount: [ String : [ String ] ] = [:]
+    var likesCount: [ String: [ String ] ] = [:]
     
     var feedModels = [FeedModel]()
-
+    
     
     weak var coordinator: CommuCoordinator?
     private let commuUseCase: CommuUseCase
     
     
-    init( coordinator: CommuCoordinator , commuUseCase: CommuUseCase ){
+    init( coordinator: CommuCoordinator, commuUseCase: CommuUseCase ) {
         self.coordinator = coordinator
         self.commuUseCase = commuUseCase
     }
@@ -68,7 +68,7 @@ class CommuVM : ViewModel {
     
     
     
-    func transform(input: Input , disposeBag: DisposeBag) -> Output {
+    func transform(input: Input, disposeBag: DisposeBag) -> Output {
         let authUid = UserDefaults.standard.string(forKey: "uid") ?? ""
         
         
@@ -76,17 +76,17 @@ class CommuVM : ViewModel {
         let output = Output()
         
         input.segmentChanged.subscribe(onNext: { [weak self]  event in
-        
+            
             guard let self = self else {return}
             var count = self.feedModels.count
-
+            
             self.resetValue()
             
             self.getFollow = !event
-
-
-            self.reload.onNext( self.feedModels.isEmpty ? 4 : count )
-
+            
+            
+            self.reload.onNext( self.feedModels.isEmpty ? 4: count )
+            
             
             
         }).disposed(by: disposeBag)
@@ -96,29 +96,29 @@ class CommuVM : ViewModel {
             self?.resetValue()
             
             
-          
+            
             DispatchQueue.main.asyncAfter(wallDeadline: .now() + 0.6) {}
-                
-                self?.reload.onNext(4)
-   
+            
+            self?.reload.onNext(4)
+            
             
         }).disposed(by: self.disposeBag)
         
-        input.profileTapped.subscribe(onNext : { feedUid in
+        input.profileTapped.subscribe(onNext: { feedUid in
             
             var feed: FeedModel?
-            _ = self.feedModels.map({  if($0.feedUid == feedUid){ feed = $0}  })
+            _ = self.feedModels.map({  if $0.feedUid == feedUid { feed = $0}  })
             if let uuid = feed?.uuid {
                 self.coordinator?.pushProfileVC(uuid: uuid )
             }
-
+            
             
         }).disposed(by: disposeBag)
         
-        input.updateFeed.subscribe(onNext :{ feedUid in
+        input.updateFeed.subscribe(onNext: { feedUid in
             
             var feed: FeedModel?
-            _ = self.feedModels.map({  if($0.feedUid == feedUid){ feed = $0}  })
+            _ = self.feedModels.map({ if $0.feedUid == feedUid { feed = $0} })
             
             
             self.coordinator?.pushUpdateFeed(feed: feed!)
@@ -128,27 +128,25 @@ class CommuVM : ViewModel {
         input.deleteFeed.subscribe(onNext: { [weak self] feedUid in
             guard let self = self else {return}
             self.commuUseCase.deleteFeed(feedUid: feedUid).subscribe({ event in
-                switch(event){
+                switch event {
                 case.completed:
-         
-      
-                        
+                    
+                    
+                    
                     var count = 4
-
-                    for i in 0..<self.feedModels.count{
-
-                        if (self.feedModels[i].feedUid == feedUid){
-                            self.feedModels.remove(at: 0)
-                            break
-                            }
-                        }
+                    
+                    for i in 0..<self.feedModels.count where self.feedModels[i].feedUid == feedUid {
+                        
+                        self.feedModels.remove(at: 0)
+                        
+                    }
                     count = self.feedModels.count
                     
                     self.resetValue()
-
-                    self.reload.onNext(self.feedModels.isEmpty ? 4 : count )
-
-
+                    
+                    self.reload.onNext(self.feedModels.isEmpty ? 4: count )
+                    
+                    
                     
                     
                     
@@ -167,28 +165,28 @@ class CommuVM : ViewModel {
         }).disposed(by: disposeBag)
         
         input.comentsTapped.subscribe(onNext: { [weak self] feedUid in
-
+            
             var feed: FeedModel?
             
-            _ = self?.feedModels.map({  if($0.feedUid == feedUid){ feed = $0}  })
+            _ = self?.feedModels.map({  if $0.feedUid == feedUid { feed = $0}  })
             
             guard let feed = feed else { return }
             
-            self?.coordinator?.pushComents(coments: feed.coments ?? [] , feedUid: feedUid, feedUuid: feed.uuid )
+            self?.coordinator?.pushComents(coments: feed.coments, feedUid: feedUid, feedUuid: feed.uuid )
             
             
         }).disposed(by: disposeBag)
         
         
         input.likesTapped.subscribe(onNext: { [weak self] feedUid in
-
+            
             var feed: FeedModel?
             
-            _ = self?.feedModels.map({  if($0.feedUid == feedUid){ feed = $0}  })
+            _ = self?.feedModels.map({  if $0.feedUid == feedUid { feed = $0}  })
             
             guard let feed = feed else { return }
             
-            self?.coordinator?.pushLikes(uid: feed.uuid , feedUid : feed.feedUid )
+            self?.coordinator?.pushLikes(uid: feed.uuid, feedUid: feed.feedUid )
             
             
         }).disposed(by: disposeBag)
@@ -196,7 +194,7 @@ class CommuVM : ViewModel {
         input.likesButtonTapped.throttle(.seconds(1), scheduler: MainScheduler.instance).subscribe(onNext: { dic in
             guard let feedUid = dic.keys.first else {return}
             guard let like = dic.values.first else {return}
-            self.commuUseCase.updateFeedLikes(feedUid: feedUid , uuid: authUid, like: like ).subscribe({ [weak self] event in
+            self.commuUseCase.updateFeedLikes(feedUid: feedUid, uuid: authUid, like: like ).subscribe({ [weak self] event in
                 guard let self = self else {return}
                 switch event {
                 case(.completed):
@@ -209,7 +207,7 @@ class CommuVM : ViewModel {
                         }
                         
                         
-                    }else{
+                    } else {
                         guard let index = self.likesCount[feedUid]?.firstIndex(of: authUid) else {return}
                         self.likesCount[feedUid]?.remove(at: index )
                     }
@@ -223,13 +221,13 @@ class CommuVM : ViewModel {
             }).disposed(by: disposeBag)
             
             
-        }).disposed(by:disposeBag )
+        }).disposed(by: disposeBag)
         
         input.addButtonTapped.subscribe(onNext: { [weak self] _ in
             
             
             self?.coordinator?.pushAddFeedVC()
-           
+            
             
         }).disposed(by: disposeBag)
         
@@ -239,14 +237,14 @@ class CommuVM : ViewModel {
             self.coordinator?.refreshChild()
             
             self.commuUseCase.getUser().subscribe({ event in
-                switch (event) {
+                switch event {
                 case.completed:
                     
                     let count = self.feedModels.count
                     
                     self.resetValue()
-
-                    self.reload.onNext( self.feedModels.isEmpty ? 4 : count )
+                    
+                    self.reload.onNext( self.feedModels.isEmpty ? 4: count )
                     
                     
                     
@@ -258,10 +256,10 @@ class CommuVM : ViewModel {
             }).disposed(by: disposeBag)
             
             
-         
             
             
-           
+            
+            
             
             
             
@@ -273,72 +271,70 @@ class CommuVM : ViewModel {
             print("\(count) count")
             guard let self = self else {return}
             
-            self.commuUseCase.getFeedPagination(feedModels: self.feedModels , getFollow: self.getFollow , count: count, reset: self.reset ).subscribe({ event in
+            self.commuUseCase.getFeedPagination(feedModels: self.feedModels, getFollow: self.getFollow, count: count, reset: self.reset ).subscribe({ event in
+                
+                switch event {
                     
-                    switch(event){
+                case.success(let feeds):
+                    
+                    self.reset = false
+                    
+                    self.feedModels = feeds
+                    
+                    for i in 0..<feeds.count {
                         
-                    case.success(let feeds):
+                        self.likesCount[feeds[i].feedUid ] = feeds[i].likes
                         
-                        self.reset = false
-                        
-                        self.feedModels = feeds
-                        
-                        for i in 0..<feeds.count {
-                            
-                            self.likesCount[feeds[i].feedUid ] = feeds[i].likes
-                            
-                        }
-                        
-              
-                            
-                            output.isLastPage.onNext(false)
-                 
-                        
-                        
-                        
-                        
-                        output.feedModel.onNext(self.feedModels)
-                        output.likesCount.onNext(self.likesCount)
-                        output.isPaging.onNext(false)
-                        output.endRefreshing.onNext(true)
-                        
-                        
-                    case .failure(let err):
-                        print("fail")
-                        output.isPaging.onNext(false)
-                        output.isLastPage.onNext(true)
-                        output.feedModel.onNext(self.feedModels)
-                        output.likesCount.onNext(self.likesCount)
-                        output.endRefreshing.onNext(true)
-
-
                     }
                     
                     
                     
-                }).disposed(by: disposeBag)
-
+                    output.isLastPage.onNext(false)
+                    
+                    
+                    
+                    
+                    
+                    output.feedModel.onNext(self.feedModels)
+                    output.likesCount.onNext(self.likesCount)
+                    output.isPaging.onNext(false)
+                    output.endRefreshing.onNext(true)
+                    
+                    
+                case .failure(let err):
+                    print("fail")
+                    output.isPaging.onNext(false)
+                    output.isLastPage.onNext(true)
+                    output.feedModel.onNext(self.feedModels)
+                    output.likesCount.onNext(self.likesCount)
+                    output.endRefreshing.onNext(true)
+                    
+                    
+                }
+                
+                
+                
+            }).disposed(by: disposeBag)
+            
             
         }).disposed(by: disposeBag)
         
-        input.paging.subscribe(onNext:{ [weak self] event in
-            
-            
-            if(event){
-
+        input.paging.subscribe(onNext: { [weak self] event in
+            if event {
+                
                 self?.reload.onNext(4)
             }
             
             
         }).disposed(by: disposeBag)
         
-        input.reportFeed.subscribe(onNext : { [weak self] feedUid in
+        input.reportFeed.subscribe(onNext: { [weak self] feedUid in
             guard let self = self else {return}
             
             
-            self.commuUseCase.report(url: "HealthySecretFeed", uid: feedUid , uuid: authUid, event: "feed" ).subscribe({ event in
+            self.commuUseCase.report(url: "HealthySecretFeed", uid: feedUid, uuid: authUid, event: "feed" ).subscribe({ event in
                 
-                switch(event){
+                switch event {
                 case.completed:
                     output.alert.onNext(true)
                 case.error(let err):
@@ -359,12 +355,12 @@ class CommuVM : ViewModel {
         return output
         
     }
-
+    
     
     struct AddInput {
-        let addButtonTapped : Observable<Void>
-        let feedText : Observable<String>
-        let imagesDatas : Observable<[UIImage]>
+        let addButtonTapped: Observable<Void>
+        let feedText: Observable<String>
+        let imagesDatas: Observable<[UIImage]>
         
         
     }
@@ -384,33 +380,32 @@ class CommuVM : ViewModel {
         let uuid = UserDefaults.standard.string(forKey: "uid") ?? ""
         let name = UserDefaults.standard.string(forKey: "name") ?? ""
         
-    
+        
         
         input.addButtonTapped.subscribe(onNext: { [weak self] _ in
             
             input.imagesDatas.subscribe(onNext: { arr in
                 
                 input.feedText.subscribe(onNext: { text in
-                    var urlArr : [String] = []
+                    var urlArr: [String] = []
                     
                     LoadingIndicator.showLoading()
                     
                     for image in arr {
                         guard let imageData = image.jpegData(compressionQuality: 0.1) else { return  }
-
+                        
                         self?.commuUseCase.uploadImage(imageData: imageData, pathRoot: uuid).subscribe({ event in
-                            switch(event){
+                            switch event {
                             case.success(let url): urlArr.append(url)
-                            case.failure(let err):
-                                print(err)
+                            case.failure(_):
                                 break
                             }
                             
-                            if(urlArr.count == arr.count){
-                                let feed = FeedModel(uuid: uuid , feedUid: UUID().uuidString, date: date, profileImage: "", nickname: name , contents: text, mainImgUrl: urlArr , likes: [], report: [], coments: []  )
+                            if urlArr.count == arr.count {
+                                let feed = FeedModel(uuid: uuid, feedUid: UUID().uuidString, date: date, profileImage: "", nickname: name, contents: text, mainImgUrl: urlArr, likes: [], report: [], coments: []  )
                                 
                                 self?.commuUseCase.addFeed(feed: feed).subscribe({ event in
-                                    switch(event){
+                                    switch event {
                                     case .completed:
                                         
                                         DispatchQueue.main.async {
@@ -458,11 +453,11 @@ class CommuVM : ViewModel {
     
     
     
-    func resetValue(){
+    func resetValue() {
         
         self.feedModels = []
         self.reset = true
     }
     
- 
+    
 }

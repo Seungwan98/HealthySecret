@@ -8,28 +8,28 @@
 import Foundation
 import RxSwift
 
-class DefaultFeedRepository : FeedRepository {
+class DefaultFeedRepository: FeedRepository {
     
     
-    private let firebaseService : FirebaseService
+    private let firebaseService: FirebaseService
 
     
     private let disposeBag = DisposeBag()
     
-    init( firebaseService : FirebaseService   ) {
+    init( firebaseService: FirebaseService   ) {
         self.firebaseService = firebaseService
 
     }
  
     
 
-    func getFeedPagination(feeds: [FeedDTO], pagesCount: Int, follow: [String], getFollow: Bool, followCount: Int, block: [String] , reset : Bool) -> Single<[FeedDTO]> {
-        if(reset){
+    func getFeedPagination(feeds: [FeedDTO], pagesCount: Int, follow: [String], getFollow: Bool, followCount: Int, block: [String], reset: Bool) -> Single<[FeedDTO]> {
+        if reset {
             self.firebaseService.query = nil
         }
         
         print("\(pagesCount)  pagesCount")
-        return self.firebaseService.getFeedPagination(feeds: feeds, pagesCount: pagesCount, follow: follow, getFollow: getFollow , followCount: 0, block: block)
+        return self.firebaseService.getFeedPagination(feeds: feeds, pagesCount: pagesCount, follow: follow, getFollow: getFollow, followCount: 0, block: block)
     }
     
     
@@ -44,7 +44,7 @@ class DefaultFeedRepository : FeedRepository {
     }
     
     
-    func report(url : String , uid : String , uuid : String , event : String) -> Completable {
+    func report(url: String, uid: String, uuid: String, event: String) -> Completable {
         
         return firebaseService.report(url: url, uid: uid, uuid: uuid, event: event)
     }
@@ -54,7 +54,7 @@ class DefaultFeedRepository : FeedRepository {
         return firebaseService.addFeed(feed: feed)
     }
     
-    func getFeedFeedUid(feedUid : String) -> Single<FeedDTO> {
+    func getFeedFeedUid(feedUid: String) -> Single<FeedDTO> {
         
         return self.firebaseService.getFeedFeedUid(feedUid: feedUid )
     }

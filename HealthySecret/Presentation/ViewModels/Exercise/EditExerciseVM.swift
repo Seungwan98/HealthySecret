@@ -10,17 +10,17 @@ import RxCocoa
 import RxSwift
 
 
-class EditExerciseVM : ViewModel {
+class EditExerciseVM: ViewModel {
         
     var disposeBag = DisposeBag()
     
-    var exercises : [ExerciseModel]
+    var exercises: [ExerciseModel]
     
     struct Input {
-        let viewWillApearEvent : Observable<Void>
-        let edmitButtonTapped : Observable<Void>
-        let inputArr : Observable<[ExerciseModel]>
-        let addButtonTapped : Observable<Void>
+        let viewWillApearEvent: Observable<Void>
+        let edmitButtonTapped: Observable<Void>
+        let inputArr: Observable<[ExerciseModel]>
+        let addButtonTapped: Observable<Void>
     }
     
     struct Output {
@@ -30,12 +30,12 @@ class EditExerciseVM : ViewModel {
     }
     
     
-    weak var coordinator : ExerciseCoordinator?
-    private let exerciseUseCase : ExerciseUseCase
+    weak var coordinator: ExerciseCoordinator?
+    private let exerciseUseCase: ExerciseUseCase
     
 
     
-    init( coordinator : ExerciseCoordinator , exercises : [ExerciseModel] , exerciseUseCase : ExerciseUseCase){
+    init( coordinator: ExerciseCoordinator, exercises: [ExerciseModel], exerciseUseCase: ExerciseUseCase) {
         self.coordinator =  coordinator
         self.exercises =  exercises
         self.exerciseUseCase = exerciseUseCase
@@ -53,7 +53,7 @@ class EditExerciseVM : ViewModel {
         output.exerciseArr.onNext(self.exercises)
 
         input.edmitButtonTapped.subscribe(onNext: { [weak self] _ in guard let self = self else {return}
-            input.inputArr.subscribe(onNext : { exercises in
+            input.inputArr.subscribe(onNext: { exercises in
                 
                 self.exerciseUseCase.updateUsersExercise(exercises: exercises).subscribe({ event in
                         self.coordinator?.finish()

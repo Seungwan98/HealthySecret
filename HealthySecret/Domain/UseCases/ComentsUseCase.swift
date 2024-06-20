@@ -14,19 +14,19 @@ class ComentsUseCase  {
     
     
     private let disposeBag = DisposeBag()
-    private let comentsRepository : ComentsRepository
-    private let userRepository : UserRepository
+    private let comentsRepository: ComentsRepository
+    private let userRepository: UserRepository
     
-    init( userRepository : UserRepository , comentsRepository : ComentsRepository){
+    init( userRepository: UserRepository, comentsRepository: ComentsRepository) {
         self.comentsRepository = comentsRepository
         self.userRepository = userRepository
         
     }
     
-    func getModels(comentsDtos : [ComentDTO] ) -> Single<[ComentModel]>{
+    func getModels(comentsDtos: [ComentDTO] ) -> Single<[ComentModel]> {
         
         var index = 0
-        var comentsModels = comentsDtos.map{ $0.toDomain(nickname: "", profileImage: "" ) }
+        var comentsModels = comentsDtos.map { $0.toDomain(nickname: "", profileImage: "" ) }
         return Single.create { [weak self] single in
             guard let self else {  single( .failure(CustomError.isNil))
                 return Disposables.create()}
@@ -35,15 +35,15 @@ class ComentsUseCase  {
             for i in 0..<comentsDtos.count {
                 self.userRepository.getUser(uid: comentsDtos[i].uid ).subscribe({ event in
                     
-                    switch(event){
+                    switch event {
                     case.success(let user):
                         
                         
-                        comentsModels[i] = comentsDtos[i].toDomain(nickname: user.name , profileImage: user.profileImage ?? "")
+                        comentsModels[i] = comentsDtos[i].toDomain(nickname: user.name, profileImage: user.profileImage ?? "")
                         
-                        if(index + 1 >= comentsDtos.count){
+                        if index + 1 >= comentsDtos.count {
                             single(.success(comentsModels))
-                        }else{
+                        } else {
                             index += 1
                         }
                         
@@ -66,15 +66,15 @@ class ComentsUseCase  {
     }
     
     
-    func getComents(feedUid: String ) -> Single<[ComentModel]>{
+    func getComents(feedUid: String ) -> Single<[ComentModel]> {
         
-        return Single.create{ [weak self] single in 
+        return Single.create { [weak self] single in 
             guard let self else { single(.failure(CustomError.isNil))
             return Disposables.create() }
             
             comentsRepository.getComents(feedUid: feedUid ).subscribe({ [weak self] event in
                 guard let self = self else {return}
-                switch(event){
+                switch event {
                 case .success(let dtos):
                     
 
@@ -108,19 +108,19 @@ class ComentsUseCase  {
     
   
     
-    func reportComents( uid: String , uuid : String , coment : ComentModel , feedUid : String) -> Single<[ComentModel]> {
+    func reportComents( uid: String, uuid: String, coment: ComentModel, feedUid: String) -> Single<[ComentModel]> {
         
-        return Single.create{ [weak self] single in
+        return Single.create { [weak self] single in
             guard let self else {return single(.failure(CustomError.isNil)) as! Disposable}
             self.comentsRepository.reportComents(uid: uid, uuid: uuid).subscribe({ event in
-                switch(event){
+                switch event {
                  
                 case .error(let err):
-                    if(err as! CustomError == CustomError.delete){
+                    if err as! CustomError == CustomError.delete {
                         
                         
                         self.deleteComents(coment: coment, feedUid: feedUid).subscribe({ event in
-                            switch(event){
+                            switch event {
                             case.success(let coments):
                                 single(.success(coments))
 
@@ -136,7 +136,7 @@ class ComentsUseCase  {
                 case .completed:
                     self.getComents(feedUid: feedUid ).subscribe({ event in
                         
-                        switch(event){
+                        switch event {
                             
                         case.success(let coments):
                             single(.success(coments))
@@ -162,9 +162,9 @@ class ComentsUseCase  {
         
     }
     
-    func deleteComents( coment : ComentModel , feedUid : String) -> Single<[ComentModel]> {
-        return Single.create{ [weak self] single in guard let self else {return single(.failure(CustomError.isNil)) as! Disposable}
-            self.comentsRepository.deleteComents(coment: coment.toData() , feedUid: feedUid).subscribe(onSuccess:{ comentsDtos in
+    func deleteComents( coment: ComentModel, feedUid: String) -> Single<[ComentModel]> {
+        return Single.create { [weak self] single in guard let self else {return single(.failure(CustomError.isNil)) as! Disposable}
+            self.comentsRepository.deleteComents(coment: coment.toData(), feedUid: feedUid).subscribe(onSuccess: { comentsDtos in
 
                 self.getModels(comentsDtos: comentsDtos).subscribe({ event in
                     
@@ -183,10 +183,10 @@ class ComentsUseCase  {
         
     }
     
-    func updateComents(feedUid: String , coment: ComentModel) -> Single<[ComentModel]>{
-        return Single.create{ [weak self] single in guard let self else {  single( .failure(CustomError.isNil) )
+    func updateComents(feedUid: String, coment: ComentModel) -> Single<[ComentModel]> {
+        return Single.create { [weak self] single in guard let self else {  single( .failure(CustomError.isNil) )
             return Disposables.create() }
-            self.comentsRepository.updateComents(feedUid: feedUid , coment: coment.toData()).subscribe(onSuccess: { dtos in
+            self.comentsRepository.updateComents(feedUid: feedUid, coment: coment.toData()).subscribe(onSuccess: { dtos in
                 
                 self.getModels(comentsDtos: dtos).subscribe({ event in
                     single(event)

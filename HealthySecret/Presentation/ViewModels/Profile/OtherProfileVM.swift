@@ -10,27 +10,27 @@ import RxCocoa
 import RxSwift
 
 
-class OtherProfileVM : ViewModel {
+class OtherProfileVM: ViewModel {
     
     
     var disposeBag = DisposeBag()
     
-    var feeds:[FeedModel]?
+    var feeds: [FeedModel]?
     
-    var uuid:String
-
-    var profileImage:Data?
+    var uuid: String
     
-    var name:String?
- 
+    var profileImage: Data?
+    
+    var name: String?
+    
     struct Input {
         
-        let viewWillApearEvent : Observable<Void>
-        let outputProfileImage : Observable<Data?>
-        let imageTapped : Observable<String>
-        let addButtonTapped : Observable<Bool>
-        let blockAndReport : Observable<String>
-
+        let viewWillApearEvent: Observable<Void>
+        let outputProfileImage: Observable<Data?>
+        let imageTapped: Observable<String>
+        let addButtonTapped: Observable<Bool>
+        let blockAndReport: Observable<String>
+        
     }
     
     struct Output {
@@ -38,14 +38,14 @@ class OtherProfileVM : ViewModel {
         var feedImage = BehaviorSubject<[[String]]?>(value: nil)
         var feedUid = BehaviorSubject<[String]?>(value: nil)
         var alert = PublishSubject<Bool>()
-
+        
     }
     
     struct HeaderInput {
         
-        let viewWillApearEvent : Observable<Bool>
-        let outputProfileImage : Observable<Data?>
-        let outputFollows : Observable<UITapGestureRecognizer>
+        let viewWillApearEvent: Observable<Bool>
+        let outputProfileImage: Observable<Data?>
+        let outputFollows: Observable<UITapGestureRecognizer>
         
     }
     
@@ -66,16 +66,16 @@ class OtherProfileVM : ViewModel {
     }
     
     
-    weak var coordinator : ProfileCoordinator?
+    weak var coordinator: ProfileCoordinator?
     
-    private let profileUseCase : ProfileUseCase
-    private let commuUseCase : CommuUseCase
-    private let followUseCase : FollowUseCase
+    private let profileUseCase: ProfileUseCase
+    private let commuUseCase: CommuUseCase
+    private let followUseCase: FollowUseCase
     
-    var nowUser : UserModel?
-
+    var nowUser: UserModel?
     
-    init( coordinator : ProfileCoordinator , profileUseCase : ProfileUseCase , commuUseCase : CommuUseCase , followUseCase : FollowUseCase ,uuid : String ){
+    
+    init( coordinator: ProfileCoordinator, profileUseCase: ProfileUseCase, commuUseCase: CommuUseCase, followUseCase: FollowUseCase, uuid: String ) {
         
         self.coordinator =  coordinator
         self.profileUseCase =  profileUseCase
@@ -85,46 +85,45 @@ class OtherProfileVM : ViewModel {
         
     }
     
-    func HeaderTransform(input : HeaderInput , disposeBag: DisposeBag) -> HeaderOutput {
+    func HeaderTransform(input: HeaderInput, disposeBag: DisposeBag) -> HeaderOutput {
         
         let output = HeaderOutput()
-
+        
         
         guard let ownUid = UserDefaults.standard.string(forKey: "uid") else { return output  }
         
         let uid = self.uuid
         
         
-        input.outputProfileImage.subscribe(onNext:{ image in
-
+        input.outputProfileImage.subscribe(onNext: { image in
+            
             self.profileImage = image
-
+            
         }).disposed(by: disposeBag)
         
         input.outputFollows.subscribe(onNext: { event in
-          
+            
             guard let view = event.view else {return}
             let name = self.name ?? ""
             
-            if(view.tag == 1 ){
-                self.coordinator?.pushFollowsVC(follow: true , uid : uid , name: name)
+            if view.tag == 1 {
+                self.coordinator?.pushFollowsVC(follow: true, uid: uid, name: name)
                 
-            }else{
+            } else {
                 
-                self.coordinator?.pushFollowsVC(follow: false , uid : uid , name: name)
+                self.coordinator?.pushFollowsVC(follow: false, uid: uid, name: name)
             }
             
             
         }).disposed(by: disposeBag)
         
-       
         
-        input.viewWillApearEvent.subscribe(onNext: { event in
+        
+        input.viewWillApearEvent.subscribe(onNext: { [weak self] event in
+            guard let self = self else {return}
             
-            self.profileUseCase.getUser( uid : uid ).subscribe{ [weak self]
-                event in
-                guard let self = self else {return}
-                switch(event){
+            self.profileUseCase.getUser( uid: uid ).subscribe { event in
+                switch event {
                 case.success(let user):
                     
                     
@@ -152,12 +151,12 @@ class OtherProfileVM : ViewModel {
                         
                         print("\(followers) followers")
                         
-                        if(followers.contains(ownUid)){
-
+                        if followers.contains(ownUid) {
+                            
                             selected = true
                         }
                         output.followersCount.onNext(followers.count)
-
+                        
                     }
                     
                     
@@ -165,7 +164,7 @@ class OtherProfileVM : ViewModel {
                     
                     output.followersEnable.onNext(event)
                     output.followersSelected.onNext(selected)
-
+                    
                     
                     
                     
@@ -174,7 +173,7 @@ class OtherProfileVM : ViewModel {
                     print("fail to get Doc")
                 }
                 
-    
+                
                 
             }.disposed(by: disposeBag)
             
@@ -194,14 +193,14 @@ class OtherProfileVM : ViewModel {
         
         let output = Output()
         
-        guard let ownUid = UserDefaults.standard.string(forKey: "uid") else { return output  }
+        guard UserDefaults.standard.string(forKey: "uid") != nil else { return output  }
         
         input.blockAndReport.subscribe(onNext: { event in
             
-            if(event == "block"){
+            if event == "block" {
                 
                 self.profileUseCase.blockUser( opponentUid: uid, block: true).subscribe({ event in
-                    switch(event){
+                    switch event {
                     case.completed:
                         self.coordinator?.finish()
                         
@@ -214,15 +213,15 @@ class OtherProfileVM : ViewModel {
                     
                     
                 }).disposed(by: disposeBag)
-            }else{
+            } else {
                 
-                self.commuUseCase.report(url: "HealthySecretUsers", uid: uid , uuid: uid , event: "user").subscribe({ event in
+                self.commuUseCase.report(url: "HealthySecretUsers", uid: uid, uuid: uid, event: "user").subscribe({ event in
                     
-                    switch(event){
+                    switch event {
                         
                     case.completed:
                         output.alert.onNext(true)
-                    case.error(let err):
+                    case.error(_):
                         print("식패")
                     }
                     
@@ -234,10 +233,10 @@ class OtherProfileVM : ViewModel {
             
         }).disposed(by: disposeBag)
         
-        input.addButtonTapped.throttle(.seconds(1),  scheduler: MainScheduler.instance).subscribe(onNext:{ selected in
+        input.addButtonTapped.throttle(.seconds(1), scheduler: MainScheduler.instance).subscribe(onNext: { selected in
             
             self.followUseCase.updateFollowers( opponentUid: uid, follow: selected).subscribe({ completable in
-                switch(completable){
+                switch completable {
                     
                 case.completed: print("complete update Followers")
                     
@@ -251,11 +250,11 @@ class OtherProfileVM : ViewModel {
             
             
         }).disposed(by: disposeBag)
-      
-        input.imageTapped.subscribe(onNext:{ feedUid in
-          
+        
+        input.imageTapped.subscribe(onNext: { feedUid in
+            
             self.feeds?.forEach({
-                if(feedUid == $0.feedUid){
+                if feedUid == $0.feedUid {
                     self.coordinator?.pushProfileFeed(feedUid: feedUid)
                 }
                 
@@ -265,39 +264,39 @@ class OtherProfileVM : ViewModel {
         }).disposed(by: disposeBag)
         
         input.viewWillApearEvent.subscribe(onNext: { event in
-
+            
             self.profileUseCase.getFeeds(uid: uid).subscribe({ event in
-                    switch(event){
-                    case.success(let feedArr):
-                        self.feeds = feedArr
-                        
-                        
-                        let imageArr = feedArr.map({
-                            $0.mainImgUrl
-                        })
-                        
-                        let uidArr =  feedArr.map({
-                            $0.feedUid
-                        })
-                        
-                        
-                        output.feedImage.onNext(imageArr)
-                        output.feedUid.onNext(uidArr)
-                        
-                        
-                        
-                    case.failure(let err):
-                        print(err)
-                    }
+                switch event {
+                case.success(let feedArr):
+                    self.feeds = feedArr
                     
                     
-                }).disposed(by: disposeBag)
+                    let imageArr = feedArr.map({
+                        $0.mainImgUrl
+                    })
+                    
+                    let uidArr =  feedArr.map({
+                        $0.feedUid
+                    })
+                    
+                    
+                    output.feedImage.onNext(imageArr)
+                    output.feedUid.onNext(uidArr)
+                    
+                    
+                    
+                case.failure(let err):
+                    print(err)
+                }
+                
+                
+            }).disposed(by: disposeBag)
             
             
         }).disposed(by: disposeBag)
         
         
-     
+        
         
         
         return output
@@ -308,5 +307,5 @@ class OtherProfileVM : ViewModel {
     
     
     
-   
+    
 }

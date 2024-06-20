@@ -10,34 +10,34 @@ import Kingfisher
 import SnapKit
 
 
-class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate , FollowsBlocksCellDelegate   {
+class FollowsVC: UIViewController, UIScrollViewDelegate, UISearchBarDelegate, FollowsBlocksCellDelegate {
     func didPressbutton(for index: String, like: Bool) {
-        self.pressedFollows.onNext([index:like])
-
+        self.pressedFollows.onNext([index: like])
+        
     }
     
     func didPressProfile(for index: String) {
         self.pressedProfile.onNext(index)
         
-
+        
     }
- 
+    
     
     
     private var cellTouchToSearch = PublishSubject<String>()
-    private var likesInputArr = PublishSubject<[String:Int]>()
+    private var likesInputArr = PublishSubject<[String: Int]>()
     private var getBool = PublishSubject<Bool>()
     private var cellTouchToDetail = PublishSubject<Row>()
     private var segmentChanged = PublishSubject<Bool>()
-    private var pressedFollows = PublishSubject<[String:Bool]>()
+    private var pressedFollows = PublishSubject<[String: Bool]>()
     private var pressedProfile = PublishSubject<String>()
     
     
     let disposeBag = DisposeBag()
     
-    private var viewModel : FollowsVM?
-  
-        
+    private var viewModel: FollowsVM?
+    
+    
     
     private lazy var containerView: UIView = {
         let container = UIView()
@@ -52,7 +52,7 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
         segment.selectedSegmentTintColor = .clear
         
         segment.setBackgroundImage(UIImage(), for: .normal, barMetrics: .default)
-
+        
         segment.setDividerImage(UIImage(), forLeftSegmentState: .normal, rightSegmentState: .normal, barMetrics: .default)
         
         segment.insertSegment(withTitle: "팔로워", at: 0, animated: false)
@@ -80,7 +80,7 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
     
     
     
-    lazy private var tableView : UITableView = {
+    lazy private var tableView: UITableView = {
         let tableView = UITableView()
         tableView.separatorColor = .clear
         tableView.allowsMultipleSelection = true
@@ -99,7 +99,7 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
     
     
     
-    init(viewModel : FollowsVM){
+    init(viewModel: FollowsVM) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         
@@ -114,7 +114,7 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
     
     
     
-    override func viewDidLoad(){
+    override func viewDidLoad() {
         super.viewDidLoad()
         
         self.setUI()
@@ -154,33 +154,33 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
     
     
     
-    //SearchController로 SearchBar 추가
+    // SearchController로 SearchBar 추가
     
     
     let mainView = UIView()
     
     
     @objc private func didChangeValue(segment: UISegmentedControl) {
-        print(segment.selectedSegmentIndex)
-        if(segmentControl.selectedSegmentIndex == 0){
+        // print(segment.selectedSegmentIndex)
+        if segmentControl.selectedSegmentIndex == 0 {
             
             self.segmentChanged.onNext(true)
             self.backgroundView.backgroundLabel.text = "아직 팔로우한 상대가 없어요"
-
-
-        }else{
+            
+            
+        } else {
             self.segmentChanged.onNext(false)
             self.backgroundView.backgroundLabel.text = "아직 팔로잉한 상대가 없어요"
-
-
+            
+            
         }
         
     }
     
     
     
-    func setUI(){
-     
+    func setUI() {
+        
         
         self.view.backgroundColor = .white
         
@@ -190,11 +190,11 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
         tableView.dataSource = nil
         tableView.register(FollowsBlocksCell.self, forCellReuseIdentifier: "FollowsBlocksCell")
-
+        
         
         self.view.addSubview(self.mainView)
         
-
+        
         self.mainView.addSubview(self.tableView)
         
         
@@ -206,27 +206,27 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
         containerView.addSubview(segmentControl)
         
         
-        self.loadingView.snp.makeConstraints{
+        self.loadingView.snp.makeConstraints {
             $0.trailing.bottom.top.leading.equalTo(self.view)
         }
-        self.containerView.snp.makeConstraints{
+        self.containerView.snp.makeConstraints {
             $0.leading.trailing.top.equalTo(self.view.safeAreaLayoutGuide)
             $0.height.equalTo(40)
         }
-        self.segmentControl.snp.makeConstraints{
+        self.segmentControl.snp.makeConstraints {
             $0.top.leading.centerY.centerX.equalTo(self.containerView)
         }
-        self.mainView.snp.makeConstraints{
+        self.mainView.snp.makeConstraints {
             $0.top.equalTo(self.containerView.snp.bottom)
             $0.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
-        self.tableView.snp.makeConstraints{
+        self.tableView.snp.makeConstraints {
             $0.top.bottom.leading.trailing.equalTo(mainView)
         }
-        self.backgroundView.snp.makeConstraints{
+        self.backgroundView.snp.makeConstraints {
             $0.top.bottom.leading.trailing.equalTo(mainView)
         }
-     
+        
         
         
         
@@ -234,27 +234,27 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
     }
     
     
-  
+    
     
     
     var loadingView = LoadingView()
-
+    
     func setBindings() {
         
         loadingView.isLoading = true
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.loadingView.isLoading = false
             
-          }
+        }
         
         guard let ownUid = UserDefaults.standard.string(forKey: "uid") else {
             print("ownUid nil")
             return  }
         
         
-        let input = FollowsVM.Input( viewWillApearEvent : self.rx.methodInvoked(#selector(viewWillAppear(_:)))
-            .map( { _ in }).asObservable() , backButtonTapped : self.backBarButtonItem.rx.tap.asObservable() , segmentChanged: self.segmentChanged.asObservable(), pressedFollows: self.pressedFollows.asObservable()  , pressedProfile : self.pressedProfile.asObservable()
+        let input = FollowsVM.Input( viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:)))
+            .map( { _ in }).asObservable(), backButtonTapped: self.backBarButtonItem.rx.tap.asObservable(), segmentChanged: self.segmentChanged.asObservable(), pressedFollows: self.pressedFollows.asObservable(), pressedProfile: self.pressedProfile.asObservable()
                                      
                                      
         )
@@ -275,37 +275,36 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
         output.backgroundViewHidden.bind(to: self.backgroundView.rx.isHidden).disposed(by: disposeBag)
         
         output.follow.subscribe(onNext: { [weak self] follow in
-            guard let follow = follow  , let self = self else {return}
+            guard let follow = follow, let self = self else {return}
             
-            if(follow){
+            if follow {
                 self.segmentControl.selectedSegmentIndex = 0
                 
                 self.backgroundView.backgroundLabel.text = "아직 팔로우한 상대가 없어요"
-            }else{
+            } else {
                 self.segmentControl.selectedSegmentIndex = 1
                 self.backgroundView.backgroundLabel.text = "아직 팔로잉한 상대가 없어요"
             }
-         
-
+            
+            
             
         }).disposed(by: disposeBag)
         
         
         
-        output.userModels.bind(to: tableView.rx.items(cellIdentifier: "FollowsBlocksCell" , cellType: FollowsBlocksCell.self )){
-            [weak self] index , item , cell in
+        output.userModels.bind(to: tableView.rx.items(cellIdentifier: "FollowsBlocksCell", cellType: FollowsBlocksCell.self )) { [weak self] _, item, cell in
             guard let self = self else {return}
             
             cell.setFollowButton()
             if ownUid == item.uuid {
                 cell.button.isHidden = true
                 
-            }else{
+            } else {
                 if let followers = item.followers {
-                    if(followers.contains(ownUid)){
+                    if followers.contains(ownUid) {
                         cell.followIsTouched  = true
                         cell.button.isSelected = true
-                    }else{
+                    } else {
                         cell.followIsTouched = false
                         cell.button.isSelected = false
                     }
@@ -316,7 +315,7 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
             cell.index = item.uuid
             cell.nickname.text = item.name
             
-        
+            
             
             
             cell.delegate = self
@@ -328,12 +327,12 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
                 if let url = URL(string: item.profileImage ?? "" ) {
                     
                     
-                    let processor = DownsamplingImageProcessor(size: CGSize(width: cell.profileImage.bounds.width , height: cell.profileImage.bounds.height) ) // 크기 지정 다운 샘플링
+                    let processor = DownsamplingImageProcessor(size: CGSize(width: cell.profileImage.bounds.width, height: cell.profileImage.bounds.height) ) // 크기 지정 다운 샘플링
                     |> RoundCornerImageProcessor(cornerRadius: 0) // 모서리 둥글게
                     cell.profileImage.kf.indicatorType = .activity  // indicator 활성화
                     cell.profileImage.kf.setImage(
                         with: url,  // 이미지 불러올 url
-                        placeholder: UIImage(named: "일반적.png") ,  // 이미지 없을 때의 이미지 설정
+                        placeholder: UIImage(named: "일반적.png"), // 이미지 없을 때의 이미지 설정
                         options: [
                             .processor(processor),
                             .scaleFactor(UIScreen.main.scale),
@@ -344,55 +343,11 @@ class FollowsVC : UIViewController, UIScrollViewDelegate , UISearchBarDelegate ,
                     
                     
                     
-                }else{
+                } else {
                     cell.profileImage.image = UIImage(named: "일반적.png")
                 }
-                
-                
-                
-                
             }
-            
-            
-            
-            
-            
-            
-            
+  
         }.disposed(by: disposeBag)
-        
-        
-        
-        
-        
-        
-        
-        
-        
     }
-    
-    
-    
-    
-    
-    
-    
-    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

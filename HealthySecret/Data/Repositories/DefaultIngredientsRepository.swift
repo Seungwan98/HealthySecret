@@ -7,14 +7,14 @@
 
 import Foundation
 import RxSwift
-class DefaultIngredientsRepository : IngredientsRepository {
+class DefaultIngredientsRepository: IngredientsRepository {
     
-    private let firebaseService : FirebaseService
+    private let firebaseService: FirebaseService
 
     
     private let disposeBag = DisposeBag()
     
-    init( firebaseService : FirebaseService   ) {
+    init( firebaseService: FirebaseService   ) {
         self.firebaseService = firebaseService
         
         
@@ -22,14 +22,14 @@ class DefaultIngredientsRepository : IngredientsRepository {
     
     func getIngredients() -> Single<[IngredientsModel]> {
     
-        return Single.create{ [weak self] single in
+        return Single.create { [weak self] single in
             
             guard let self = self else {return single(.failure(CustomError.isNil)) as! Disposable}
             self.firebaseService.getIngredientsList().subscribe({ event in
                 
-                switch(event){
+                switch event {
                 case.success(let dtos):
-                    single(.success(dtos.map{ $0.toDomain()  }))
+                    single(.success(dtos.map { $0.toDomain()  }))
                 case.failure(let err):
                     single(.failure(err))
                 }

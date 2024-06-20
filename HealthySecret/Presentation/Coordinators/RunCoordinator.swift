@@ -12,7 +12,7 @@ import Firebase
 
 
 
-class RunCoordinator : Coordinator  {
+class RunCoordinator: Coordinator {
     
     
     // MARK: - Properties
@@ -24,7 +24,7 @@ class RunCoordinator : Coordinator  {
     var disposeBag = DisposeBag()
     
     // MARK: - Initializers
-    required init(_ navigationController : UINavigationController ){
+    required init(_ navigationController: UINavigationController ) {
         self.navigationController = navigationController
         self.type = CoordinatorType.run
         self.firebaseService = FirebaseService()
@@ -65,12 +65,9 @@ extension RunCoordinator: CoordinatorFinishDelegate {
     }
     
     func coordinatorDidFinish(childCoordinator: Coordinator) {
-        print("RunCoordinatorDidfinish")
+        // print("RunCoordinatorDidfinish")
         self.childCoordinator = self.childCoordinator
             .filter({ $0.type != childCoordinator.type })
         childCoordinator.navigationController.popToRootViewController(animated: true)
     }
 }
-
-
-

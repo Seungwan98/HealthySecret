@@ -11,5 +11,5 @@ import RxSwift
 protocol FireStorageRepository {
     
     func uploadImage(imageData: Data, pathRoot: String) -> Single<String>
-    func deleteImage(urlString : String) -> Completable
+    func deleteImage(urlString: String) -> Completable
 }

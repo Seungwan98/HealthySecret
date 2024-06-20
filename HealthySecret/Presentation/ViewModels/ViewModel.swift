@@ -7,7 +7,7 @@
 import RxSwift
 protocol ViewModel {
     
-    func transform(input : Input , disposeBag : DisposeBag ) -> Output
+    func transform(input: Input, disposeBag: DisposeBag ) -> Output
     
     associatedtype Input
     associatedtype Output

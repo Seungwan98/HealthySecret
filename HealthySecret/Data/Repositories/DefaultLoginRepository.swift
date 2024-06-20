@@ -9,17 +9,17 @@ import Foundation
 import RxSwift
 import FirebaseAuth
 
-class  DefaultLoginRepository : LoginRepository {
+class  DefaultLoginRepository: LoginRepository {
  
    
     
-    private let firebaseService : FirebaseService
-    private let appleService : AppleService
-    private let kakaoService : KakaoService
+    private let firebaseService: FirebaseService
+    private let appleService: AppleService
+    private let kakaoService: KakaoService
     
     private let disposeBag = DisposeBag()
     
-    init( firebaseService : FirebaseService , appleService : AppleService , kakaoServcie : KakaoService  ) {
+    init( firebaseService: FirebaseService, appleService: AppleService, kakaoServcie: KakaoService  ) {
         
         
         self.firebaseService = firebaseService
@@ -30,13 +30,13 @@ class  DefaultLoginRepository : LoginRepository {
     }
     func login() -> Completable {
         
-        return Completable.create{ completable in
+        return Completable.create { completable in
             guard let loginMethod = UserDefaults.standard.string(forKey: "loginMethod") else { return Disposables.create() }
 
             
-            if(loginMethod == "kakao"){
+            if loginMethod == "kakao" {
                 self.kakaoService.kakaoLogin().subscribe({ event in
-                    switch event{
+                    switch event {
                     case .success( let inform ):
                         
                         UserDefaults.standard.set(inform["email"], forKey: "email")
@@ -44,11 +44,10 @@ class  DefaultLoginRepository : LoginRepository {
                         UserDefaults.standard.set(inform["pw"], forKey: "password")
 
                     
-                        self.firebaseService.signIn(email:inform["email"] ?? "" ,
+                        self.firebaseService.signIn(email:inform["email"] ?? "",
                                                      pw:inform["pw"] ?? "" ).subscribe({ event in
                            
                             
-                            print("signIn \(event)")
                             completable(event)
 
                             
@@ -76,13 +75,13 @@ class  DefaultLoginRepository : LoginRepository {
         
     }
     
-    func login(credential : OAuthCredential) -> Completable {
+    func login(credential: OAuthCredential) -> Completable {
             
-        return Completable.create{ [weak self] completable in
+        return Completable.create { [weak self] completable in
          
-            guard let loginMethod = UserDefaults.standard.string(forKey: "loginMethod") , let self = self else {return Disposables.create()  }
+            guard let loginMethod = UserDefaults.standard.string(forKey: "loginMethod"), let self = self else {return Disposables.create()  }
             
-            if(loginMethod == "apple"){
+            if loginMethod == "apple" {
                 
                 self.firebaseService.signInCredential(credential: credential).subscribe({ event in
                     
@@ -99,7 +98,7 @@ class  DefaultLoginRepository : LoginRepository {
     
     
   
-    func signUp(email : String , pw : String) -> Completable {
+    func signUp(email: String, pw: String) -> Completable {
         
         return self.firebaseService.signUp(email: email, pw: pw)
     }
@@ -133,8 +132,8 @@ class  DefaultLoginRepository : LoginRepository {
         return self.kakaoService.kakaoSessionOut()
     }
     
-    func appleSecession(refreshToken : String , userId : String) -> Completable {
-        return self.appleService.removeAccount(refreshToken: refreshToken , userId: userId )
+    func appleSecession(refreshToken: String, userId: String) -> Completable {
+        return self.appleService.removeAccount(refreshToken: refreshToken, userId: userId )
     }
     
    

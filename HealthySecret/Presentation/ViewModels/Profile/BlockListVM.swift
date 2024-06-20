@@ -10,7 +10,7 @@ import RxCocoa
 import RxSwift
 
 
-class BlockListVM : ViewModel {
+class BlockListVM: ViewModel {
  
    
     
@@ -19,8 +19,8 @@ class BlockListVM : ViewModel {
 
     
     struct Input {
-        let viewWillApearEvent : Observable<Void>
-        let pressedBlock : Observable<[String:Bool]>
+        let viewWillApearEvent: Observable<Void>
+        let pressedBlock: Observable<[String: Bool]>
 
     }
     
@@ -34,14 +34,14 @@ class BlockListVM : ViewModel {
     }
     
     
-    weak var coordinator : ProfileCoordinator?
+    weak var coordinator: ProfileCoordinator?
     
     
     
     
-    private let profileUseCase : ProfileUseCase
+    private let profileUseCase: ProfileUseCase
     
-    init( coordinator : ProfileCoordinator , profileUseCase : ProfileUseCase ){
+    init( coordinator: ProfileCoordinator, profileUseCase: ProfileUseCase ) {
         self.coordinator =  coordinator
         self.profileUseCase =  profileUseCase
         
@@ -55,7 +55,7 @@ class BlockListVM : ViewModel {
         let output = Output()
 
         
-        guard let ownUid = UserDefaults.standard.string(forKey: "uid") else {
+        guard UserDefaults.standard.string(forKey: "uid") != nil else {
             print("ownUid nil")
             return output }
         
@@ -67,17 +67,17 @@ class BlockListVM : ViewModel {
             
             guard let self = self else {return}
             
-            if(data.count > 1 ){
+            if data.count > 1 {
                 return
-            }else{
+            } else {
                 
 
                 
-                guard let block = data.first?.value , let uid = data.first?.key  else {return}
+                guard let block = data.first?.value, let uid = data.first?.key  else {return}
                 
-                self.profileUseCase.blockUser( opponentUid: uid , block: block).subscribe({ event in
+                self.profileUseCase.blockUser( opponentUid: uid, block: block).subscribe({ event in
                     
-                    switch(event){
+                    switch event {
                         
                     case.completed:
                         
@@ -126,13 +126,13 @@ class BlockListVM : ViewModel {
         reload.subscribe(onNext: {[weak self]  _ in
             guard let self = self else {return}
             self.profileUseCase.getUser().subscribe({ [weak self] event in
-                switch(event){
+                switch event {
                 case.success(let user):
                     
                     self?.profileUseCase.getFollowsLikes(uid: user.blocking).subscribe({ event in
-                        switch(event){
+                        switch event {
                         case.success(let users):
-                            if(users.isEmpty){
+                            if users.isEmpty {
                                 output.backgroundViewHidden.onNext(false)
                             }
                             output.userModels.onNext(users)

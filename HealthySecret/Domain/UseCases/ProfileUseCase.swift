@@ -9,19 +9,19 @@ import Foundation
 import RxSwift
 import FirebaseAuth
 
-class ProfileUseCase  {
+class ProfileUseCase {
     
     
     
     
     private let disposeBag = DisposeBag()
-    private let userRepository : UserRepository
-    private let feedRepository : FeedRepository
-    private let loginRepository : LoginRepository
-    private let followRepository : FollowsRepository
-    private let fireStorageRepository : FireStorageRepository
+    private let userRepository: UserRepository
+    private let feedRepository: FeedRepository
+    private let loginRepository: LoginRepository
+    private let followRepository: FollowsRepository
+    private let fireStorageRepository: FireStorageRepository
     
-    init( userRepository : UserRepository , feedRepository : FeedRepository , loginRepository : LoginRepository , fireStorageRepository : FireStorageRepository , followRepository : FollowsRepository ){
+    init( userRepository: UserRepository, feedRepository: FeedRepository, loginRepository: LoginRepository, fireStorageRepository: FireStorageRepository, followRepository: FollowsRepository ) {
         self.userRepository = userRepository
         self.feedRepository = feedRepository
         self.fireStorageRepository = fireStorageRepository
@@ -30,45 +30,45 @@ class ProfileUseCase  {
     }
     
     
-    func getUser() -> Single<UserModel>{
-
+    func getUser() -> Single<UserModel> {
+        
         return userRepository.getUser()
-    }  
+    }
     
-    func getUser( uid : String) -> Single<UserModel>{
-
-        return userRepository.getUser( uid : uid )
+    func getUser( uid: String) -> Single<UserModel> {
+        
+        return userRepository.getUser( uid: uid )
     }
     
     
-    func getFeeds(uid : String) -> Single<[FeedModel]>{
+    func getFeeds(uid: String) -> Single<[FeedModel]> {
         
-        return Single.create{ [weak self] single in
-            guard let self else {single(.failure(CustomError.isNil))  
+        return Single.create { [weak self] single in
+            guard let self else {single(.failure(CustomError.isNil))
                 return Disposables.create()}
             
             feedRepository.getFeedsUid(uid: uid).subscribe({ event in
-                switch(event){
-                
+                switch event {
+                    
                 case .success(let feedDtos):
                     var index = 0
-                    var feedModels = feedDtos.map{ $0.toDomain(nickname: "" , profileImage: "" ) }
-                    if(feedDtos.isEmpty){
+                    var feedModels = feedDtos.map { $0.toDomain(nickname: "", profileImage: "" ) }
+                    if feedDtos.isEmpty {
                         single(.success([]))
-                    }else{
+                    } else {
                         for i in 0..<feedDtos.count {
                             self.userRepository.getUser(uid: feedDtos[i].uuid ).subscribe({ event in
                                 
-                                switch(event){
+                                switch event {
                                 case.success(let user):
                                     
-                                    print("feedDtos \(feedDtos)")
+                                    // print("feedDtos \(feedDtos)")
                                     
-                                    feedModels[i] = feedDtos[i].toDomain(nickname: user.name , profileImage: user.profileImage ?? "")
+                                    feedModels[i] = feedDtos[i].toDomain(nickname: user.name, profileImage: user.profileImage ?? "")
                                     
-                                    if(index + 1 >= feedDtos.count){
+                                    if index + 1 >= feedDtos.count {
                                         single(.success(feedModels))
-                                    }else{
+                                    } else {
                                         index += 1
                                     }
                                     
@@ -86,9 +86,9 @@ class ProfileUseCase  {
                         }
                     }
                     
-                case .failure(let err):
+                case .failure(_):
                     single(.failure(CustomError.isNil))
-
+                    
                 }
                 
                 
@@ -96,66 +96,66 @@ class ProfileUseCase  {
             return Disposables.create()
         }
         
-
+        
     }
     
-    func signOut() -> Completable{
-            
-            if( UserDefaults.standard.string(forKey: "loginMethod") == "kakao" ){
-                
-                self.loginRepository.kakaoSignOut().subscribe{ event in
-                    switch(event){
-                    case.completed:
-                        print("completedkakao")
-                        
-                        
-                    case.error(_):
-                        print("kako err")
-
-                        
-                    }
-
-                }.disposed(by: disposeBag)
-                
-                
-            }
-            
+    func signOut() -> Completable {
         
-       
+        if UserDefaults.standard.string(forKey: "loginMethod") == "kakao" {
+            
+            self.loginRepository.kakaoSignOut().subscribe { event in
+                switch event {
+                case.completed:
+                    print("completedkakao")
+                    
+                    
+                case.error(_):
+                    print("kako err")
+                    
+                    
+                }
+                
+            }.disposed(by: disposeBag)
+            
+            
+        }
+        
+        
+        
         
         return self.loginRepository.signOut()
         
     }
-        
+    
     
     func kakaoSecessionOut() -> Completable {
-        return Completable.create{ [weak self] completable in
-            guard let email = UserDefaults.standard.string(forKey: "email") , let self else {
+        return Completable.create { [weak self] completable in
+            guard let email = UserDefaults.standard.string(forKey: "email"), let self else {
                 
                 completable(.error(CustomError.isNil))
                 return Disposables.create()
             }
-
+            
             self.loginRepository.kakaoGetToken().subscribe({ event in
                 
-                switch(event){
+                switch event {
                 case .success(let password):
                     let credential = EmailAuthProvider.credential(withEmail: email, password: password)
-                    self.loginRepository.deleteAccount(credential : credential ).subscribe({ com in
-                        switch(com){
+                    self.loginRepository.deleteAccount(credential: credential ).subscribe({ com in
+                        switch com {
                         case .completed:
                             
                             self.loginRepository.kakaoSecession().subscribe({ event in
-                              
+                                
                                 completable(event)
                                 
                             }).disposed(by: self.disposeBag)
-
+                            
                             
                         case.error(let err):
                             print(err)
-
-
+                            
+                            
                         }
                     }).disposed(by: self.disposeBag)
                 case .failure(let err):
@@ -166,16 +166,16 @@ class ProfileUseCase  {
             
             return Disposables.create()
         }
-
-       
         
-
+        
+        
+        
     }
     
     
-    func appleSecession(codeString : String , userId : String , credential : OAuthCredential) -> Completable {
+    func appleSecession(codeString: String, userId: String, credential: OAuthCredential) -> Completable {
         
-        Completable.create{ [weak self] completable in
+        Completable.create { [weak self] completable in
             guard let self else {
                 completable( .error(CustomError.isNil))
                 return Disposables.create()}
@@ -185,9 +185,9 @@ class ProfileUseCase  {
                     let refreshToken = String(data: data, encoding: .utf8) ?? ""
                     
                     
-                    return self.loginRepository.appleSecession(refreshToken : refreshToken, userId: userId).subscribe({ [weak self] event in
+                    return self.loginRepository.appleSecession(refreshToken: refreshToken, userId: userId).subscribe({ [weak self] event in
                         guard let self else {return}
-                        switch(event){
+                        switch event {
                         case .completed:
                             self.loginRepository.deleteAccount(credential: credential).subscribe({ event in
                                 
@@ -200,41 +200,41 @@ class ProfileUseCase  {
                         }
                         
                     }).disposed(by: self.disposeBag)
-  
-                }else{
+                    
+                } else {
                     completable( .error(CustomError.isNil))
-
+                    
                 }
             }
             
             
             return Disposables.create()
-
+            
         }
     }
     
     
-    func blockUser( opponentUid: String , block: Bool) -> Completable {
+    func blockUser( opponentUid: String, block: Bool) -> Completable {
         
-        return userRepository.blockUser(opponentUid: opponentUid , block: block)
+        return userRepository.blockUser(opponentUid: opponentUid, block: block)
     }
     
     
     
     
     
-    func updateValues(name: String , introduce: String  , uuid: String , image : UIImage? , beforeImage: String, profileChage: Bool ) -> Completable {
-        return Completable.create{ [weak self] completable in
+    func updateValues(name: String, introduce: String, uuid: String, image: UIImage?, beforeImage: String, profileChage: Bool ) -> Completable {
+        return Completable.create { [weak self] completable in
             guard let self else { completable( .error(CustomError.isNil) )
                 return Disposables.create()}
             
-            self.userRepository.updateValues(valuesDic: [ "name" : name , "introduce" : introduce ], uuid: uuid).subscribe({ event in
-                switch(event){
+            self.userRepository.updateValues(valuesDic: [ "name": name, "introduce": introduce ], uuid: uuid).subscribe({ event in
+                switch event {
                 case .completed:
                     completable( .completed )
                 case .error(let err):
                     completable( .error(err) )
-
+                    
                 }
                 
                 
@@ -242,34 +242,34 @@ class ProfileUseCase  {
             }).disposed(by: disposeBag )
             
             
-            if( profileChage ){
+            if profileChage {
                 guard let imageData = image?.jpegData(compressionQuality: 0.1) else { return Disposables.create() }
                 let path = UserDefaults.standard.string(forKey: "uid") ?? "/" + "profile"
                 self.fireStorageRepository.uploadImage(imageData: imageData, pathRoot: path).subscribe( { event in
-                    switch(event){
+                    switch event {
                     case .success(let url):
-                        self.userRepository.updateValues(valuesDic: [ "profileImage" : url ], uuid: uuid).subscribe({ event in
-                            switch(event){
+                        self.userRepository.updateValues(valuesDic: [ "profileImage": url ], uuid: uuid).subscribe({ event in
+                            switch event {
                             case .completed:
                                 print("이미지 업로드 성공")
-                            case .error(let err):
+                            case .error(_):
                                 print("이미지 업로드 실패")
                             }
                             
                             
                         }).disposed(by: self.disposeBag)
-
-                      
+                        
+                        
                     case .failure(let err):
                         print(err)
                     }
                     
                 }).disposed(by: disposeBag)
                 
-                if !((beforeImage).isEmpty){
-                    self.fireStorageRepository.deleteImage(urlString: beforeImage).subscribe{ [weak self] event in
+                if !(beforeImage).isEmpty {
+                    self.fireStorageRepository.deleteImage(urlString: beforeImage).subscribe { [weak self] event in
                         guard let self = self else {return}
-                        switch(event){
+                        switch event {
                             
                         case .error(_):
                             print("이미지없음")
@@ -290,15 +290,15 @@ class ProfileUseCase  {
         }
     }
     
-    func updateSignUpData( signUpModel : SignUpModel  ) -> Completable {
+    func updateSignUpData( signUpModel: SignUpModel  ) -> Completable {
         
-       return self.userRepository.updateSignUpData( signUpModel : signUpModel )
+        return self.userRepository.updateSignUpData( signUpModel: signUpModel )
     }
     
     
     
-    func getFollowsLikes(uid : [String]) -> Single<[UserModel]> {
-    
+    func getFollowsLikes(uid: [String]) -> Single<[UserModel]> {
+        
         return self.followRepository.getFollowsLikes(uid: uid)
     }
     

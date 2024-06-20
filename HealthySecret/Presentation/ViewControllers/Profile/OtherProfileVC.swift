@@ -1,7 +1,3 @@
-
-
-
-//
 //  OtherProfileVC.swift
 //  MovieProject
 //
@@ -14,8 +10,8 @@ import RxSwift
 import Kingfisher
 import SnapKit
 
-class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
-
+class OtherProfileVC: UIViewController, CustomCollectionCellDelegate {
+    
     
     
     func imageTapped(feedUid: String) {
@@ -31,12 +27,12 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     
     var loadControll = false
     
-    var own : String?
+    var own: String?
     
-    private var viewModel : OtherProfileVM?
+    private var viewModel: OtherProfileVM?
     
     
-    init(viewModel : OtherProfileVM){
+    init(viewModel: OtherProfileVM) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         
@@ -59,7 +55,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         layout.scrollDirection = .vertical
         layout.sectionInset = UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 0)
         layout.headerReferenceSize = CGSize(width: self.view.frame.width, height: 400)
-        layout.footerReferenceSize = CGSize(width: 0 , height: 0)
+        layout.footerReferenceSize = CGSize(width: 0, height: 0)
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
@@ -78,7 +74,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         return collectionView
     }()
     
-    let followButton : UIButton = {
+    let followButton: UIButton = {
         let button = UIButton()
         button.layer.cornerRadius = 30
         button.tintColor = .white
@@ -103,11 +99,11 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     
     
     var loadingView = LoadingView()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-      
-      
+        
+        
         
         self.collectionView.dataSource = self
         
@@ -126,27 +122,27 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     
     let backgroundView = CustomBackgroundView()
     
-
+    
     override func viewWillAppear(_ animated: Bool) {
-      
+        
         
         loadingView.isLoading = true
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
             self.loadingView.isLoading = false
             self.navigationController?.setNavigationBarHidden(false, animated: false)
             self.navigationController?.navigationBar.backgroundColor = .clear
             
             self.headerAppearEvent.onNext(true)
-          }
-
+        }
+        
         
     }
     override func viewWillDisappear(_ animated: Bool) {
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
-
+        
         
     }
     
@@ -163,20 +159,20 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         self.view.addSubview(self.followButton)
         
         self.followButton.addTarget(self, action: #selector(self.didPressedFollowButton), for: .touchUpInside)
-        self.followButton.snp.makeConstraints{
+        self.followButton.snp.makeConstraints {
             $0.centerX.equalTo(self.view)
             $0.width.equalTo(160)
             $0.height.equalTo(60)
             $0.bottom.equalTo(self.view).inset(40)
         }
-    
+        
         
         
         
         
     }
     
-    func setUI(){
+    func setUI() {
         
         self.view.backgroundColor = .white
         
@@ -186,18 +182,18 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         view.addSubview(self.collectionView)
         view.addSubview(self.backgroundView)
         view.addSubview(self.loadingView)
-
         
-        self.backgroundView.snp.makeConstraints{
+        
+        self.backgroundView.snp.makeConstraints {
             $0.trailing.bottom.top.leading.equalTo(self.view.safeAreaLayoutGuide)
         }
-        self.collectionView.snp.makeConstraints{
+        self.collectionView.snp.makeConstraints {
             $0.trailing.bottom.top.leading.equalTo(self.view.safeAreaLayoutGuide)
         }
-        self.loadingView.snp.makeConstraints{
+        self.loadingView.snp.makeConstraints {
             $0.trailing.bottom.top.leading.equalTo(self.view.safeAreaLayoutGuide)
         }
-     
+        
         
         
         
@@ -213,14 +209,14 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     
     
     @objc
-    func didPressedFollowers(_ sender: UITapGestureRecognizer){
+    func didPressedFollowers(_ sender: UITapGestureRecognizer) {
         
         self.outputFollows.onNext(true)
         
     }
     
     @objc
-    func didPressedFollowings(_ sender: UITapGestureRecognizer){
+    func didPressedFollowings(_ sender: UITapGestureRecognizer) {
         
         self.outputFollows.onNext(false)
         
@@ -256,7 +252,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
             if isTouched == true {
                 followButton.backgroundColor = .lightGray
                 followButton.setTitle("팔로잉", for: .normal)
-            }else{
+            } else {
                 followButton.backgroundColor = .systemBlue
                 followButton.setTitle("팔로우", for: .normal)
             }
@@ -266,22 +262,22 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     
     
     
-    var followersCount : Int?
+    var followersCount: Int?
     
-    var imagesArr : [[String]] = []
+    var imagesArr: [[String]] = []
     
-    var uidsArr : [String] = []
+    var uidsArr: [String] = []
     
-    var profileHeader : ProfileHeaderView?
+    var profileHeader: ProfileHeaderView?
     
-    func setHeadersCount( selected : Bool ){
+    func setHeadersCount( selected: Bool ) {
         
         var count =  self.followersCount ?? 0
         
         
-        if(selected){
+        if selected {
             count += 1
-        }else{
+        } else {
             count -= 1
         }
         self.profileHeader?.feedInformValLabels[1].text = String(count)
@@ -291,13 +287,13 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     
     
     
-    func setHeaderBindings(header : ProfileHeaderView){
+    func setHeaderBindings(header: ProfileHeaderView) {
         
         
         
         
         
-        let input = OtherProfileVM.HeaderInput( viewWillApearEvent: headerAppearEvent.asObservable()  ,  outputProfileImage: self.outputProfileImage.asObservable()   , outputFollows : Observable.merge( header.feedInformValLabels[1].rx.tapGesture().when(.recognized).asObservable() , header.feedInformValLabels[2].rx.tapGesture().when(.recognized).asObservable()  ) )
+        let input = OtherProfileVM.HeaderInput( viewWillApearEvent: headerAppearEvent.asObservable(), outputProfileImage: self.outputProfileImage.asObservable(), outputFollows: Observable.merge( header.feedInformValLabels[1].rx.tapGesture().when(.recognized).asObservable(), header.feedInformValLabels[2].rx.tapGesture().when(.recognized).asObservable() ) )
         
         
         guard let output = self.viewModel?.HeaderTransform(input: input, disposeBag: header.disposeBag) else { return }
@@ -318,7 +314,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         input.viewWillApearEvent.subscribe({ [weak self] _ in
             
             guard self != nil else {return}
-            //will appear
+            // will appear
             
             
         }).disposed(by: header.disposeBag)
@@ -326,7 +322,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         
         
         
-        Observable.zip( output.calorie , output.goalWeight , output.nowWeight , output.name , output.introduce , output.profileImage ).subscribe(onNext: { [self] in
+        Observable.zip( output.calorie, output.goalWeight, output.nowWeight, output.name, output.introduce, output.profileImage ).subscribe(onNext: { [self] in
             
             
             
@@ -337,17 +333,17 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
             
             
             self.navigationItem.title = $3
-
+            
             
             let weight = (Double($1) ?? 0.0) - (Double($2) ?? 0.0)
             
             if weight > 0 {
                 header.gramLabel.text = "+" + String(weight) + " kg"
-            }else{
+            } else {
                 header.gramLabel.text = String(weight) + " kg"
             }
             
-            if let url = URL(string: $5 ?? ""){
+            if let url = URL(string: $5 ?? "") {
                 
                 
                 DispatchQueue.main.async {
@@ -427,9 +423,9 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
             
             self?.followButton.isHidden = enable
             
-            if(!enable){
+            if !enable {
                 self?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "", image: UIImage(systemName: "ellipsis"), target: self, action: #selector(self?.actionSheetAlert))
-            }else{
+            } else {
                 self?.navigationItem.rightBarButtonItem = nil
             }
             
@@ -450,15 +446,15 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         
         
         
-        let input = OtherProfileVM.Input(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable()  , outputProfileImage : outputProfileImage.asObservable(), imageTapped: self.imageTapped.asObservable() , addButtonTapped : addButtonTapped.asObservable() , blockAndReport: self.blockAndReport.asObservable()
+        let input = OtherProfileVM.Input(viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }).asObservable(), outputProfileImage: outputProfileImage.asObservable(), imageTapped: self.imageTapped.asObservable(), addButtonTapped: addButtonTapped.asObservable(), blockAndReport: self.blockAndReport.asObservable()
                                          
         )
         
         guard let output = self.viewModel?.transform(input: input, disposeBag: self.disposeBag) else { return }
         
-        output.alert.subscribe(onNext: { [weak self] event in
+        output.alert.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
-
+            
             AlertHelper.shared.showResult(title: "신고가 접수되었습니다", message: "신고는 24시간 이내 검토 후 반영됩니다", over: self)
             
             
@@ -485,7 +481,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
         
         output.feedUid.subscribe( onNext: { [weak self] uidsArr in
             guard let uidsArr = uidsArr else { return }
-
+            
             self?.uidsArr = uidsArr
             
         }).disposed(by: disposeBag)
@@ -507,7 +503,7 @@ class OtherProfileVC : UIViewController , CustomCollectionCellDelegate  {
     
 }
 
-extension OtherProfileVC :  UICollectionViewDataSource , UICollectionViewDelegate{
+extension OtherProfileVC: UICollectionViewDataSource, UICollectionViewDelegate {
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -517,8 +513,8 @@ extension OtherProfileVC :  UICollectionViewDataSource , UICollectionViewDelegat
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-     
-        if kind == UICollectionView.elementKindSectionHeader{
+        
+        if kind == UICollectionView.elementKindSectionHeader {
             guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ProfileHeaderView.identifier, for: indexPath) as? ProfileHeaderView  else {
                 
                 return UICollectionViewCell()
@@ -526,7 +522,7 @@ extension OtherProfileVC :  UICollectionViewDataSource , UICollectionViewDelegat
             
             
             
-            if(firstBind){
+            if firstBind {
                 print("바인드")
                 self.setHeaderBindings(header: header)
                 
@@ -539,12 +535,12 @@ extension OtherProfileVC :  UICollectionViewDataSource , UICollectionViewDelegat
             
             
             return header
-        }else{
+        } else {
             guard let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DummyCollectionCell.identifier, for: indexPath) as? DummyCollectionCell else {
                 return UICollectionViewCell()
                 
             }
-        
+            
             
             return footer
         }
@@ -561,13 +557,13 @@ extension OtherProfileVC :  UICollectionViewDataSource , UICollectionViewDelegat
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomCollectionViewCell.identifier, for: indexPath) as? CustomCollectionViewCell else {
             return UICollectionViewCell()
         }
-        if let url = URL(string: self.imagesArr[indexPath.row].first ?? "" ){
+        if let url = URL(string: self.imagesArr[indexPath.row].first ?? "" ) {
             cell.delegate = self
             cell.feedUid = uidsArr[indexPath.row]
             
             if self.imagesArr[indexPath.row].count > 1 {
                 cell.squareImage.isHidden = false
-            }else{
+            } else {
                 cell.squareImage.isHidden = true
             }
             
@@ -614,28 +610,28 @@ extension OtherProfileVC: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-       
+        
         if !(self.imagesArr.isEmpty) {
-            return CGSize(width: 0 , height: 0 )
+            return CGSize(width: 0, height: 0)
         } else {
             return CGSize(width: collectionView.frame.width, height: collectionView.frame.width)
-
+            
         }
         
-      
-     }
+        
+    }
 }
 
 extension OtherProfileVC: UINavigationControllerDelegate {
-    @objc func actionSheetAlert( ){
-        let alert = UIAlertController(title: nil , message: nil , preferredStyle: .actionSheet)
+    @objc func actionSheetAlert() {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
         alert.addAction(cancel)
         alert.view.tintColor = .black
         
         
-      
+        
         
         
         
@@ -643,22 +639,22 @@ extension OtherProfileVC: UINavigationControllerDelegate {
         
         let report = UIAlertAction(title: "신고하기", style: .default) { [weak self] _ in
             guard let self = self else {return}
-
+            
             self.blockAndReport.onNext("report")
         }
         report.setValue(UIColor.red, forKey: "titleTextColor")
-
+        
         alert.addAction(report)
         
         let block = UIAlertAction(title: "차단하기", style: .default) { [weak self] _ in
             guard let self = self else {return}
-
+            
             AlertHelper.shared.showResult(title: "차단이 완료되었습니다", message: "차단 목록에서 차단을 해제할 수 있습니다", over: self)
-
+            
             self.blockAndReport.onNext("block")
         }
         block.setValue(UIColor.red, forKey: "titleTextColor")
-
+        
         alert.addAction(block)
         
     }

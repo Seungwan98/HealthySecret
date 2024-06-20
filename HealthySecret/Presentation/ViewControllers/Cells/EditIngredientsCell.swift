@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SnapKit
 
-class EditIngredientsCell : UITableViewCell {
+class EditIngredientsCell: UITableViewCell {
     let name = UILabel()
     let gram = UILabel()
     let kcal = UILabel()
@@ -28,7 +28,7 @@ class EditIngredientsCell : UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func layoutToEdit(){
+    func layoutToEdit() {
        
 
         
@@ -44,25 +44,25 @@ class EditIngredientsCell : UITableViewCell {
         
         self.name.font = .systemFont(ofSize: 22)
         
-        self.deleteButton.setImage(UIImage(systemName: "xmark") , for: .normal)
+        self.deleteButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         self.deleteButton.tintColor = .black
         
         
         
-        self.gram.snp.makeConstraints{
+        self.gram.snp.makeConstraints {
             $0.leading.equalTo(self).inset(20)
             $0.centerY.equalTo(self).offset(14)
         }
-        self.name.snp.makeConstraints{
+        self.name.snp.makeConstraints {
             $0.leading.equalTo(self).inset(20)
             $0.centerY.equalTo(self).offset(-14)
         }
-        self.deleteButton.snp.makeConstraints{
+        self.deleteButton.snp.makeConstraints {
             $0.centerY.equalTo(self)
             $0.trailing.equalTo(self).inset(20)
             $0.width.height.equalTo(20)
         }
-        self.kcal.snp.makeConstraints{
+        self.kcal.snp.makeConstraints {
             $0.trailing.equalTo(self.deleteButton).inset(30)
             $0.centerY.equalTo(self)
         }

@@ -1,4 +1,3 @@
-
 import UIKit
 import RxSwift
 import SnapKit
@@ -23,12 +22,12 @@ final class SplashVC: UIViewController {
         
         viewModel.selectStart()
         
-       
+        
         
         viewModel.freeze.subscribe(onNext: { [weak self] _ in
             guard let self else {return}
             print("feeze")
-            AlertHelper.shared.showResult(title: "계정 정지", message: "신고 누적으로 계정이 정지되었습니다" , over: self)
+            AlertHelper.shared.showResult(title: "계정 정지", message: "신고 누적으로 계정이 정지되었습니다", over: self)
             
         }).disposed(by: disposeBag)
         
@@ -40,33 +39,33 @@ final class SplashVC: UIViewController {
         imageView.image = UIImage(named: "mainImage.jpeg")
         return imageView
     }()
-     private lazy var mainView: UIImageView = {
+    private lazy var mainView: UIImageView = {
         let view = UIImageView()
-         view.backgroundColor = .systemBlue.withAlphaComponent(0.5)
+        view.backgroundColor = .systemBlue.withAlphaComponent(0.5)
         return view
     }()
     
     func startAnimation() {
-
+        
     }
     
     private func setAutoLayout() {
         view.addSubview(mainView)
-
-        view.addSubview(logoImageView)
-
-   
         
-        logoImageView.snp.makeConstraints{
+        view.addSubview(logoImageView)
+        
+        
+        
+        logoImageView.snp.makeConstraints {
             $0.centerX.centerY.equalTo(self.view)
             $0.height.width.equalTo(240)
         }
         
-        mainView.snp.makeConstraints{
+        mainView.snp.makeConstraints {
             $0.top.bottom.leading.trailing.equalTo(self.view)
             
         }
         
-
+        
     }
 }

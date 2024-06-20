@@ -20,10 +20,10 @@ class IngredientsUseCase {
     
     
     private let disposeBag = DisposeBag()
-    private let ingredientsRepository : IngredientsRepository
-    private let userRepository : UserRepository
+    private let ingredientsRepository: IngredientsRepository
+    private let userRepository: UserRepository
     
-    init( ingredientsRepository : IngredientsRepository , userRepository : UserRepository ){
+    init( ingredientsRepository: IngredientsRepository, userRepository: UserRepository ) {
         self.ingredientsRepository = ingredientsRepository
         self.userRepository = userRepository
         
@@ -40,28 +40,28 @@ class IngredientsUseCase {
     }
     
     
-    func updateUsersIngredients(models : [IngredientsModel]) -> Completable {
+    func updateUsersIngredients(models: [IngredientsModel]) -> Completable {
         
         
-        return Completable.create{ [weak self] completable in
-            guard let meal = UserDefaults.standard.string(forKey: "meal") , let date =  UserDefaults.standard.string(forKey: "date") , let self = self else {return completable(.error(CustomError.isNil)) as! Disposable}
+        return Completable.create { [weak self] completable in
+            guard let meal = UserDefaults.standard.string(forKey: "meal"), let date = UserDefaults.standard.string(forKey: "date"), let self = self else {return completable(.error(CustomError.isNil)) as! Disposable}
             
             self.userRepository.getUser().subscribe({ event in
-                switch(event){
+                switch event {
                 case.success(let user):
                     var userIngredients  = user.ingredients
-                    var userIngredient = Ingredients(date: date, morning: [], lunch: [], dinner: [] , snack: [])
+                    var userIngredient = Ingredients(date: date, morning: [], lunch: [], dinner: [], snack: [])
                     
                     var count = 0
                     userIngredients.forEach({
-                        if($0.date == date){
+                        if $0.date == date {
                             userIngredient = $0
                             userIngredients.remove(at: count)
                         }
                         count += 1
                     })
                     
-                    switch meal{
+                    switch meal {
                     case "아침식사":
                         userIngredient.morning = models
                     case "점심식사":

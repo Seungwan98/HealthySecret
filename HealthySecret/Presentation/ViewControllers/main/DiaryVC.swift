@@ -15,9 +15,9 @@ import AVFoundation
 import Photos
 import SnapKit
 
-class DiaryViewController : UIViewController {
+class DiaryViewController: UIViewController {
     
-    let viewModel : DiaryVM?
+    let viewModel: DiaryVM?
     let disposeBag = DisposeBag()
     init(viewModel: DiaryVM) {
         self.viewModel = viewModel
@@ -35,14 +35,14 @@ class DiaryViewController : UIViewController {
         return scrollView
     }()
     
-    private let contentView : UIView = {
+    private let contentView: UIView = {
         let view = UIView()
         return view
     }()
     
     
     
-    var pieChart : PieChartView = {
+    var pieChart: PieChartView = {
         let pieChart = PieChartView()
         
         
@@ -71,30 +71,30 @@ class DiaryViewController : UIViewController {
     let nutrientsLabel1 = UILabel()
     let nutrientsLabel2 = UILabel()
     let nutrientsLabel3 = UILabel()
-    lazy var nutrientsLabelsArr : [UILabel] =  [self.nutrientsLabel1 , self.nutrientsLabel2 , self.nutrientsLabel3]
+    lazy var nutrientsLabelsArr: [UILabel] =  [self.nutrientsLabel1, self.nutrientsLabel2, self.nutrientsLabel3]
     
     
     
-    //메인 차트뷰
-    var chartView : UIView = {
+    // 메인 차트뷰
+    var chartView: UIView = {
         let view = UIView()
-       // view.backgroundColor = UIColor.brown.withAlphaComponent(0.5)
+        // view.backgroundColor = UIColor.brown.withAlphaComponent(0.5)
         view.backgroundColor = .chartViewColor
-
+        
         view.frame = CGRect(x: 0, y: 0, width: 110, height: 100)
         
         let leftLabel = UILabel()
         leftLabel.font = .systemFont(ofSize: 24, weight: .bold)
         leftLabel.text = "오늘 하루"
         leftLabel.textColor = .black
-
+        
         view.addSubview(leftLabel)
         
-        leftLabel.snp.makeConstraints{
+        leftLabel.snp.makeConstraints {
             $0.leading.top.equalTo(view).inset(20)
         }
         
-   
+        
         
         return view
         
@@ -105,19 +105,19 @@ class DiaryViewController : UIViewController {
     
     
     
-    lazy var buttonStackView : UIStackView = {
-        let view = UIStackView(arrangedSubviews: [mealButtons[0] , mealButtons[1]] )
+    lazy var buttonStackView: UIStackView = {
+        let view = UIStackView(arrangedSubviews: [mealButtons[0], mealButtons[1]] )
         view.axis = .horizontal
         view.distribution = .fillEqually
         view.spacing = 10
-
+        
         return view
         
     }()
     
-    lazy var buttonStackView2 : UIStackView = {
-        let view = UIStackView(arrangedSubviews: [mealButtons[2] , mealButtons[3]] )
-      //  view.backgroundColor = UIColor(red: 0.686, green: 0.776, blue: 0.627, alpha: 1)
+    lazy var buttonStackView2: UIStackView = {
+        let view = UIStackView(arrangedSubviews: [mealButtons[2], mealButtons[3]] )
+        //  view.backgroundColor = UIColor(red: 0.686, green: 0.776, blue: 0.627, alpha: 1)
         view.axis = .horizontal
         view.spacing = 10
         view.distribution = .fillEqually
@@ -125,12 +125,12 @@ class DiaryViewController : UIViewController {
         
     }()
     
-
     
     
     
     
-    lazy var majorLabelsStackView : UIStackView = {
+    
+    lazy var majorLabelsStackView: UIStackView = {
         let view = UIStackView(arrangedSubviews: nutrientsLabelsArr )
         view.axis = .vertical
         view.spacing = 0
@@ -143,8 +143,8 @@ class DiaryViewController : UIViewController {
     let nutrientsLabel11 = UILabel()
     let nutrientsLabel21 = UILabel()
     let nutrientsLabel31 = UILabel()
-    lazy var nutrientsLabelsArr2 : [UILabel] =  [self.nutrientsLabel11 , self.nutrientsLabel21 , self.nutrientsLabel31]
-    lazy var majorLabelsStackView2 : UIStackView = {
+    lazy var nutrientsLabelsArr2: [UILabel] =  [self.nutrientsLabel11, self.nutrientsLabel21, self.nutrientsLabel31]
+    lazy var majorLabelsStackView2: UIStackView = {
         
         let view = UIStackView(arrangedSubviews: nutrientsLabelsArr2 )
         view.axis = .vertical
@@ -161,7 +161,7 @@ class DiaryViewController : UIViewController {
     var majorImageArr = [ UIImageView(image: UIImage(named: "firstDout.png")), UIImageView(image: UIImage(named: "secondDout.png")), UIImageView(image: UIImage(named: "thirdDout.png")) ]
     
     
-    lazy var majorImageStackView : UIStackView = {
+    lazy var majorImageStackView: UIStackView = {
         let view = UIStackView()
         
         view.axis = .vertical
@@ -187,12 +187,12 @@ class DiaryViewController : UIViewController {
     var fattyAcidLabel = UILabel()
     var transFatLabel = UILabel()
     
-    lazy var ingredientsLabels : [UILabel] = [ kcalLabel , carbohydratesLabel , proteinLabel , provinceLabel , sugarsLabel , sodiumLabel , cholesterolLabel , fattyAcidLabel , transFatLabel ]
-
+    lazy var ingredientsLabels: [UILabel] = [ kcalLabel, carbohydratesLabel, proteinLabel, provinceLabel, sugarsLabel, sodiumLabel, cholesterolLabel, fattyAcidLabel, transFatLabel ]
     
-    lazy var ingredientsStackView : UIStackView = {
+    
+    lazy var ingredientsStackView: UIStackView = {
         _ = self.ingredientsLabels.map { $0.isHidden = true }
-        let labels = self.ingredientsLabels.map({ (label : UILabel ) -> UILabel in
+        let labels = self.ingredientsLabels.map({ (label: UILabel ) -> UILabel in
             label.font = UIFont.systemFont(ofSize: 12)
             return label
         })
@@ -204,7 +204,7 @@ class DiaryViewController : UIViewController {
         view.axis = .vertical
         view.distribution = .fillEqually
         view.alignment = .center
-//        view.layer.cornerRadius = 20
+        //        view.layer.cornerRadius = 20
         view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         return view
     }()
@@ -216,19 +216,19 @@ class DiaryViewController : UIViewController {
     var dinnerBottomImage =  UIImageView()
     var snackBottomImage =  UIImageView()
     
-    lazy var mealBottomImages = [breakFastBottomImage ,lunchBottomImage , dinnerBottomImage , snackBottomImage]
+    lazy var mealBottomImages = [breakFastBottomImage, lunchBottomImage, dinnerBottomImage, snackBottomImage]
     
-    lazy var mealButtonViews = [breakfastButtonView , lunchButtonView , dinnerButtonView , snackButtonView]
+    lazy var mealButtonViews = [breakfastButtonView, lunchButtonView, dinnerButtonView, snackButtonView]
     
-    lazy var breakfastButtonView : UIView = {
+    lazy var breakfastButtonView: UIView = {
         
         let buttonView = UIView()
         let backgroundImageView = UIImageView()
         let bottomImageView = UIImageView()
         let label = UILabel()
         
-        backgroundImageView.image = UIImage(named:"breakfast.png")
-
+        backgroundImageView.image = UIImage(named: "breakfast.png")
+        
         
         label.text = "아침"
         label.font = .systemFont(ofSize: 20)
@@ -237,66 +237,66 @@ class DiaryViewController : UIViewController {
         buttonView.addSubview(label)
         
         
-        label.snp.makeConstraints{
+        label.snp.makeConstraints {
             $0.top.leading.equalTo(buttonView).inset(20)
         }
-
-        backgroundImageView.snp.makeConstraints{
+        
+        backgroundImageView.snp.makeConstraints {
             $0.width.height.equalTo(buttonView)
         }
         
         
         return buttonView
     }()
-    lazy var lunchButtonView : UIView = {
+    lazy var lunchButtonView: UIView = {
         let buttonView = UIView()
         let backgroundImageView = UIImageView()
         let bottomImageView = UIImageView()
         let label = UILabel()
         
-        backgroundImageView.image = UIImage(named:"lunch.png")
-
+        backgroundImageView.image = UIImage(named: "lunch.png")
+        
         
         label.text = "점심"
         label.font = .systemFont(ofSize: 20)
-      
+        
         
         
         buttonView.addSubview(backgroundImageView)
         buttonView.addSubview(label)
         
-        label.snp.makeConstraints{
+        label.snp.makeConstraints {
             $0.top.leading.equalTo(buttonView).inset(20)
         }
-
-        backgroundImageView.snp.makeConstraints{
+        
+        backgroundImageView.snp.makeConstraints {
             $0.width.height.equalTo(buttonView)
         }
         return buttonView
         
     }()
-    lazy var dinnerButtonView : UIView = {
+    lazy var dinnerButtonView: UIView = {
         let buttonView = UIView()
         let backgroundImageView = UIImageView()
         let bottomImageView = UIImageView()
         let label = UILabel()
         
-        backgroundImageView.image = UIImage(named:"dinner.png")
-
+        backgroundImageView.image = UIImage(named: "dinner.png")
+        
         
         label.text = "저녁"
         label.font = .systemFont(ofSize: 20)
-  
+        
         
         
         buttonView.addSubview(backgroundImageView)
         buttonView.addSubview(label)
         
-        label.snp.makeConstraints{
+        label.snp.makeConstraints {
             $0.top.leading.equalTo(buttonView).inset(20)
         }
-
-        backgroundImageView.snp.makeConstraints{
+        
+        backgroundImageView.snp.makeConstraints {
             $0.width.height.equalTo(buttonView)
         }
         
@@ -304,33 +304,33 @@ class DiaryViewController : UIViewController {
         
     }()
     
-    lazy var snackButtonView : UIView = {
+    lazy var snackButtonView: UIView = {
         
         let buttonView = UIView()
         let backgroundImageView = UIImageView()
         let bottomImageView = UIImageView()
         let label = UILabel()
         
-        backgroundImageView.image = UIImage(named:"snack.png")
-
+        backgroundImageView.image = UIImage(named: "snack.png")
+        
         
         label.text = "간식"
         label.font = .systemFont(ofSize: 20)
-
-
+        
+        
         
         
         buttonView.addSubview(backgroundImageView)
         buttonView.addSubview(label)
         
-        label.snp.makeConstraints{
+        label.snp.makeConstraints {
             $0.top.leading.equalTo(buttonView).inset(20)
         }
-
-        backgroundImageView.snp.makeConstraints{
+        
+        backgroundImageView.snp.makeConstraints {
             $0.width.height.equalTo(buttonView)
         }
-
+        
         
         
         return buttonView
@@ -338,72 +338,49 @@ class DiaryViewController : UIViewController {
     
     
     
-    var breakfastLabel : UILabel = {
+    var breakfastLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
         return label
     }()
     
-    var lunchLabel : UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16)
-
-        
-        return label
-    }()
-    var dinnerLabel : UILabel = {
+    var lunchLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
         
+        
+        return label
+    }()
+    var dinnerLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 16)
+        
         return label
     }()
     
-    var snackLabel : UILabel = {
+    var snackLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
         return label
     }()
     
     
-    lazy var mealButtons = [breakfastButton  , lunchButton , dinnerButton , snackButton]
+    lazy var mealButtons = [breakfastButton, lunchButton, dinnerButton, snackButton]
     
-    var breakfastButton : UIButton = {
-        let button = UIButton()
-
-        return button
-    }()
-    
-    
-    
-    
-    var lunchButton : UIButton = {
-        let button = UIButton()
-
-        return button
-    }()
-    var dinnerButton : UIButton = {
-        let button = UIButton()
-
-        return button
-    }()
-    
-    
-    
-      var snackButton : UIButton = {
-        let button = UIButton()
- 
-        return button
-    }()
+    var breakfastButton = UIButton()
+    var lunchButton = UIButton()
+    var dinnerButton = UIButton()
+    var snackButton = UIButton()
     
     
     
     
     
     
-    var detailButton : UIButton = {
+    var detailButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .chartLightColor
-
+        
         button.setTitle("상세정보", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 20)
         button.setTitleColor(.black, for: .normal)
@@ -414,23 +391,12 @@ class DiaryViewController : UIViewController {
     
     
     
-    var majorView : UIView = {
-        let view = UIView()
-        
-        return view
-    }()
+    var majorView = UIView()
+    var bottomView = UIView()
     
-    var bottomView : UIView = {
-        let view = UIView()
-        
-        return view
-    }()
-    
-    lazy var calendarLabel : UILabel = {
+    lazy var calendarLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 17)
-        
-        
         
         return label
         
@@ -438,21 +404,19 @@ class DiaryViewController : UIViewController {
     
     
     
-    var ingredientsLabelArr : [UILabel] = []
+    var ingredientsLabelArr: [UILabel] = []
     
     
-    var ingredientsName : [String] = [  "탄수화물" , "단백질" , "지방" ]
+    var ingredientsName: [String] = [  "탄수화물", "단백질", "지방" ]
     
-    var ingredientsPercent : [Double] = [ 0.0 , 0.0 , 0.0]
+    var ingredientsPercent: [Double] = [0.0, 0.0, 0.0]
     
-    var ingredientsColor : [UIColor] = [ .carbohydrates , .protein , .province  ]
+    var ingredientsColor: [UIColor] = [ .carbohydrates, .protein, .province  ]
     
     
     
-    var rightBarButton : UIBarButtonItem = {
-        let barButton = UIBarButtonItem(image: UIImage(systemName: "chevron.right"),
-                                        style: .plain,
-                                        target: DiaryViewController.self, action: nil)
+    var rightBarButton: UIBarButtonItem = {
+        let barButton = UIBarButtonItem(image: UIImage(systemName: "chevron.right"), style: .plain, target: DiaryViewController.self, action: nil)
         barButton.tintColor = .black
         
         return barButton
@@ -461,19 +425,17 @@ class DiaryViewController : UIViewController {
         
     }()
     
-
     
-    var leftBarButton : UIBarButtonItem = {
-        let barButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"),
-                                        style:  .plain,
-                                        target:  DiaryViewController.self , action: nil)
+    
+    var leftBarButton: UIBarButtonItem = {
+        let barButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: DiaryViewController.self, action: nil)
         barButton.tintColor = .black
         return barButton
         
     }()
     
     
-    var exerciseButton : UIButton = {
+    var exerciseButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 20)
@@ -489,35 +451,35 @@ class DiaryViewController : UIViewController {
     let informLabel1 = UILabel()
     let informLabel2 = UILabel()
     let informLabel3 = UILabel()
-    lazy var informLabelArr = [informLabel1 , informLabel2 , informLabel3]
-    lazy var informDataArr = [goalLabel , eatLabel , consumeLabel]
-    lazy var informationView : UIView = {
-       let view = UIView()
-   
+    lazy var informLabelArr = [informLabel1, informLabel2, informLabel3]
+    lazy var informDataArr = [goalLabel, eatLabel, consumeLabel]
+    lazy var informationView: UIView = {
+        let view = UIView()
+        
         let stackView = UIStackView(arrangedSubviews: informLabelArr )
-     
+        
         view.addSubview(stackView)
         view.addSubview(self.leftCalorieLabel)
-     
-        self.leftCalorieLabel.snp.makeConstraints{
+        
+        self.leftCalorieLabel.snp.makeConstraints {
             $0.centerX.equalTo(view)
             $0.top.equalTo(view).inset(10)
         }
-        stackView.snp.makeConstraints{
+        stackView.snp.makeConstraints {
             $0.leading.trailing.equalTo(view).inset(50)
             $0.height.equalTo(20)
             $0.bottom.equalTo(view).inset(10)
         }
         
         
-
+        
         leftCalorieLabel.font = .systemFont(ofSize: 16)
         leftCalorieLabel.textColor = .black
         leftCalorieLabel.text = "120kcal 초과됐습니다"
         
         
-
-      
+        
+        
         
         
         stackView.alignment = .center
@@ -526,43 +488,43 @@ class DiaryViewController : UIViewController {
         
         
         
-      
+        
         view.layer.cornerRadius = 8
- 
+        
         view.backgroundColor = .chartLightColor
         
-
+        
         return view
         
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-            
+        
         setUI()
         setBinds()
-
+        
         self.navigationItem.rightBarButtonItem = rightBarButton
         self.navigationItem.leftBarButtonItem = leftBarButton
         
     }
     
-
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-
+        
         self.navigationController?.navigationBar.backgroundColor = .clear
         self.navigationController?.setNavigationBarHidden(false, animated: false)
-
+        
     }
     override func viewWillDisappear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
-    let buttonView : UIView = {
+    let buttonView: UIView = {
         let view = UIView()
         view.backgroundColor = .mealGreen
         
@@ -572,11 +534,11 @@ class DiaryViewController : UIViewController {
         leftLabel.textColor = .black
         view.addSubview(leftLabel)
         
-        leftLabel.snp.makeConstraints{
+        leftLabel.snp.makeConstraints {
             $0.leading.top.equalTo(view).inset(20)
         }
         
-
+        
         
         return view
         
@@ -586,7 +548,7 @@ class DiaryViewController : UIViewController {
     
     var minuteLabel = UILabel()
     var exCalorieLabel = UILabel()
-    lazy var exerciseView : UIView = {
+    lazy var exerciseView: UIView = {
         let image = UIImageView(image: UIImage(named: "ic_health.png"))
         let view = UIView()
         let centerLabel = UILabel()
@@ -619,7 +581,7 @@ class DiaryViewController : UIViewController {
         
         
         view.backgroundColor = .systemBlue.withAlphaComponent(0.5)
-
+        
         
         self.exerciseButton.backgroundColor = view.backgroundColor?.withAlphaComponent(0.2)
         
@@ -631,41 +593,41 @@ class DiaryViewController : UIViewController {
         view.addSubview(self.exerciseButton)
         view.addSubview(self.exCalorieLabel)
         
-        centerLabel.snp.makeConstraints{
+        centerLabel.snp.makeConstraints {
             $0.centerX.equalTo(view)
             $0.bottom.equalTo(self.minuteLabel.snp.top).offset(-16)
-        }  
-        self.minuteLabel.snp.makeConstraints{
+        }
+        self.minuteLabel.snp.makeConstraints {
             $0.centerX.equalTo(view)
             $0.bottom.equalTo(image.snp.top).offset(-30)
         }
-        image.snp.makeConstraints{
+        image.snp.makeConstraints {
             $0.center.equalTo(view)
             $0.height.width.equalTo(180)
         }
-        leftLabel.snp.makeConstraints{
+        leftLabel.snp.makeConstraints {
             $0.leading.top.equalTo(view).inset(20)
         }
-        self.exCalorieLabel.snp.makeConstraints{
+        self.exCalorieLabel.snp.makeConstraints {
             $0.centerX.equalTo(view)
             $0.top.equalTo(image.snp.bottom).offset(30)
         }
-        self.exerciseButton.snp.makeConstraints{
+        self.exerciseButton.snp.makeConstraints {
             $0.height.equalTo(60)
             $0.leading.trailing.bottom.equalTo(view).inset(60)
         }
         
-  
-
+        
+        
         
         return view
     }()
- 
     
     
     
     
-    var piechartCenterLabel : UILabel = {
+    
+    var piechartCenterLabel: UILabel = {
         let label = UILabel()
         
         label.text = "kcal"
@@ -675,7 +637,7 @@ class DiaryViewController : UIViewController {
         return label
     }()
     
-    var morningCheckImageView : UIImageView = {
+    var morningCheckImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "check.png"))
         imageView.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
         return imageView
@@ -687,12 +649,12 @@ class DiaryViewController : UIViewController {
     
     
     
-   
     
     
-    func setButtons(){
+    
+    func setButtons() {
         
-        for i in 0..<4{
+        for i in 0..<4 {
             let view = mealButtonViews[i]
             let image = mealBottomImages[i]
             
@@ -703,16 +665,16 @@ class DiaryViewController : UIViewController {
             
             mealButtons[i].addSubview(view)
             
-            image.snp.makeConstraints{
+            image.snp.makeConstraints {
                 $0.bottom.trailing.equalTo(view).inset(10)
                 $0.height.width.equalTo(22)
             }
-
             
-            view.snp.makeConstraints{
+            
+            view.snp.makeConstraints {
                 $0.height.width.equalTo(mealButtons[i])
             }
-      
+            
             
             
             
@@ -725,18 +687,18 @@ class DiaryViewController : UIViewController {
     }
     
     
-    func setUI(){
+    func setUI() {
         self.navigationItem.titleView = calendarLabel
         self.view.backgroundColor = .white
-
+        
         
         self.view.addSubview(contentScrollView)
         
         
         self.contentScrollView.addSubview(contentView)
-            
         
-    
+        
+        
         self.contentView.addSubview(chartView)
         self.chartView.addSubview(pieChart)
         self.chartView.addSubview(bottomView)
@@ -744,7 +706,7 @@ class DiaryViewController : UIViewController {
         self.bottomView.addSubview(informationView)
         
         
-      
+        
         self.contentView.addSubview(buttonView)
         self.contentView.addSubview(exerciseView)
         self.contentView.addSubview(detailButton)
@@ -763,15 +725,15 @@ class DiaryViewController : UIViewController {
         setButtons()
         
         
-      
         
-        let imgArr = [UIImage(named: "firstDout") , UIImage(named: "secondDout") , UIImage(named: "thirdDout")]
-        let attributedString =  [NSMutableAttributedString(string: ""),NSMutableAttributedString(string: ""),NSMutableAttributedString(string: "")]
-        let imageAttachment = [ NSTextAttachment(),NSTextAttachment(),NSTextAttachment()]
-      
-       
-        let text = ["내 목표" , "섭취량" , "소모량"]
-        for i in 0..<3{
+        
+        let imgArr = [UIImage(named: "firstDout"), UIImage(named: "secondDout"), UIImage(named: "thirdDout")]
+        let attributedString =  [NSMutableAttributedString(string: ""), NSMutableAttributedString(string: ""), NSMutableAttributedString(string: "")]
+        let imageAttachment = [ NSTextAttachment(), NSTextAttachment(), NSTextAttachment()]
+        
+        
+        let text = ["내 목표", "섭취량", "소모량"]
+        for i in 0..<3 {
             informLabelArr[i].text = text[i]
             informLabelArr[i].textColor = .black
             informLabelArr[i].font = .systemFont(ofSize: 16)
@@ -783,26 +745,26 @@ class DiaryViewController : UIViewController {
             informDataArr[i].text = "1200"
             
             
-            informDataArr[i].snp.makeConstraints{
+            informDataArr[i].snp.makeConstraints {
                 $0.centerX.equalTo(informLabelArr[i])
                 $0.centerY.equalTo(informationView)
             }
-       
-                       
+            
+            
             
         }
-         
-           
-       
         
         
         
         
         
- 
         
         
-        for i in 0 ..< 3{
+        
+        
+        
+        
+        for i in 0 ..< 3 {
             imageAttachment[i].image = imgArr[i]
             imageAttachment[i].bounds = CGRect(x: 0, y: 0, width: 12, height: 12)
             
@@ -811,7 +773,7 @@ class DiaryViewController : UIViewController {
             attributedString[i].append(NSAttributedString(string: "  \(ingredientsName[i])"))
             
             nutrientsLabelsArr[i].attributedText = attributedString[i]
-
+            
             
             
             nutrientsLabelsArr[i].font =  UIFont.systemFont(ofSize: 18)
@@ -825,89 +787,89 @@ class DiaryViewController : UIViewController {
         
         
         
-        self.contentScrollView.snp.makeConstraints{
+        self.contentScrollView.snp.makeConstraints {
             $0.top.leading.trailing.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
-             
-        self.contentView.snp.makeConstraints{
+        
+        self.contentView.snp.makeConstraints {
             $0.top.leading.trailing.width.bottom.equalTo(self.contentScrollView)
         }
-        self.piechartCenterLabel.snp.makeConstraints{
+        self.piechartCenterLabel.snp.makeConstraints {
             $0.centerX.equalTo(pieChart)
             $0.centerY.equalTo(pieChart).offset(14)
         }
-        self.majorLabelsStackView.snp.makeConstraints{
+        self.majorLabelsStackView.snp.makeConstraints {
             $0.top.bottom.equalTo(majorView)
             $0.trailing.equalTo(majorView.snp.centerX).offset(-20)
         }
-        self.majorLabelsStackView2.snp.makeConstraints{
+        self.majorLabelsStackView2.snp.makeConstraints {
             $0.top.bottom.equalTo(majorView)
             $0.leading.equalTo(majorView.snp.centerX).offset(20)
-        }  
-        self.chartView.snp.makeConstraints{
+        }
+        self.chartView.snp.makeConstraints {
             $0.top.leading.trailing.equalTo(contentView)
             $0.height.equalTo(contentScrollView).offset(20)
         }
-        self.detailButton.snp.makeConstraints{
+        self.detailButton.snp.makeConstraints {
             $0.leading.trailing.equalTo(informationView)
             $0.height.equalTo(40)
             $0.bottom.equalTo(chartView).inset(20)
         }
-        self.ingredientsStackView.snp.makeConstraints{
+        self.ingredientsStackView.snp.makeConstraints {
             $0.leading.trailing.equalTo(self.view)
             $0.height.equalTo(400)
             $0.top.equalTo(chartView.snp.bottom)
         }
-        self.pieChart.snp.makeConstraints{
+        self.pieChart.snp.makeConstraints {
             $0.centerX.equalTo(chartView)
             $0.top.equalTo(chartView).inset(40)
             $0.width.equalTo(360)
             $0.bottom.equalTo(self.chartView.snp.centerY)
         }
-        self.bottomView.snp.makeConstraints{
+        self.bottomView.snp.makeConstraints {
             $0.leading.trailing.bottom.equalTo(self.chartView)
             $0.top.equalTo(self.pieChart.snp.bottom)
         }
-        self.majorView.snp.makeConstraints{
+        self.majorView.snp.makeConstraints {
             $0.centerX.equalTo(self.chartView.snp.centerX)
             $0.top.equalTo(self.bottomView)
             $0.bottom.equalTo(self.bottomView.snp.centerY).offset(-40)
             $0.leading.trailing.equalTo(self.view).inset(20)
         }
-        self.informationView.snp.makeConstraints{
+        self.informationView.snp.makeConstraints {
             $0.top.equalTo(self.majorView.snp.bottom).offset(16)
             $0.bottom.equalTo(self.detailButton.snp.top).offset(-16)
-         
+            
             $0.leading.trailing.equalTo(self.chartView).inset(30)
         }
-         
-        self.buttonStackView.snp.makeConstraints{
+        
+        self.buttonStackView.snp.makeConstraints {
             $0.leading.trailing.equalTo(self.buttonView.safeAreaLayoutGuide).inset(10)
             $0.height.equalTo(170)
             $0.bottom.equalTo(self.buttonView.snp.centerY).offset(-5)
-         
+            
         }
-          
-        self.buttonStackView2.snp.makeConstraints{
+        
+        self.buttonStackView2.snp.makeConstraints {
             $0.leading.trailing.equalTo(self.buttonView.safeAreaLayoutGuide).inset(10)
             $0.height.equalTo(170)
             $0.top.equalTo(self.buttonView.snp.centerY).offset(5)
-         
+            
         }
-        self.buttonView.snp.makeConstraints{
+        self.buttonView.snp.makeConstraints {
             $0.top.equalTo(self.chartView.snp.bottom)
             $0.leading.trailing.equalTo(self.contentView.safeAreaLayoutGuide)
             $0.height.equalTo(contentScrollView).offset(-50)
-        } 
+        }
         
-        self.exerciseView.snp.makeConstraints{
+        self.exerciseView.snp.makeConstraints {
             $0.leading.trailing.equalTo(self.contentView.safeAreaLayoutGuide)
             $0.top.equalTo(buttonView.snp.bottom)
             $0.height.equalTo(self.contentScrollView)
             $0.bottom.equalTo(self.contentView)
         }
         
-   
+        
         
         
         
@@ -916,7 +878,7 @@ class DiaryViewController : UIViewController {
     
     
     
-    func setBinds(){
+    func setBinds() {
         
         let breakfast = breakfastButton.rx.tap.map { _ in return UserDefaults.standard.set("아침식사", forKey: "meal")}
         let lunch = lunchButton.rx.tap.map {  _ in return UserDefaults.standard.set("점심식사", forKey: "meal")}
@@ -924,26 +886,26 @@ class DiaryViewController : UIViewController {
         let snack = snackButton.rx.tap.map {  _ in return UserDefaults.standard.set("간식", forKey: "meal")}
         let leftEvent = self.leftBarButton.rx.tap.map {_ in return UserDefaults.standard.set({
             let calendar = Calendar.current
-
-            let formattedDate = CustomFormatter().StringToDate(date : UserDefaults.standard.string(forKey: "date") ?? "")
             
-            var yesterday = CustomFormatter().DateToString(date: calendar.date(byAdding: .day, value: -1, to: formattedDate)!)
+            let formattedDate = CustomFormatter().StringToDate(date: UserDefaults.standard.string(forKey: "date") ?? "")
+            
+            let yesterday = CustomFormatter().DateToString(date: calendar.date(byAdding: .day, value: -1, to: formattedDate)!)
             return yesterday
-        }() , forKey: "date"
-        
-                                                                                                
+        }(), forKey: "date"
+                                                                                             
+                                                                                             
         )}
         
         let rightEvent = self.rightBarButton.rx.tap.map {_ in return UserDefaults.standard.set({
             let calendar = Calendar.current
-
-            let formattedDate = CustomFormatter().StringToDate(date : UserDefaults.standard.string(forKey: "date") ?? "")
+            
+            let formattedDate = CustomFormatter().StringToDate(date: UserDefaults.standard.string(forKey: "date") ?? "")
             
             let tomorrow = CustomFormatter().DateToString(date: calendar.date(byAdding: .day, value: +1, to: formattedDate)!)
             return tomorrow
-        }() , forKey: "date"
-        
-                                                                                                
+        }(), forKey: "date"
+                                                                                               
+                                                                                               
         )}
         
         
@@ -951,23 +913,20 @@ class DiaryViewController : UIViewController {
         
         
         
-        let tags = Observable.of(breakfast, lunch , dinner , snack).merge()
-        let willAppearTags = Observable.of(leftEvent , willAppear , rightEvent ).merge()
+        let tags = Observable.of(breakfast, lunch, dinner, snack).merge()
+        let willAppearTags = Observable.of(leftEvent, willAppear, rightEvent ).merge()
         
         
-        let input = DiaryVM.Input( viewWillApearEvent :  willAppearTags  ,
-                                   mealButtonsTapped :
-                                    tags.asObservable()  , calendarLabelTapped: calendarLabel.rx.tapGesture() , execiseButtonTapped: self.exerciseButton.rx.tap.asObservable() , rightBarButtonTapped :self.rightBarButton.rx.tap.asObservable() , leftBarButtonTapped: self.leftBarButton.rx.tap.asObservable() , detailButtonTapped : self.detailButton.rx.tap.asObservable() )
+        let input = DiaryVM.Input( viewWillApearEvent: willAppearTags, mealButtonsTapped: tags.asObservable(), calendarLabelTapped: calendarLabel.rx.tapGesture(), execiseButtonTapped: self.exerciseButton.rx.tap.asObservable(), rightBarButtonTapped: self.rightBarButton.rx.tap.asObservable(), leftBarButtonTapped: self.leftBarButton.rx.tap.asObservable(), detailButtonTapped: self.detailButton.rx.tap.asObservable())
         
         guard let output = viewModel?.transform(input: input, disposeBag: disposeBag) else {return}
-
+        
         
         
         
         output.date.subscribe(onNext: { date in
             
             self.calendarLabel.attributedText = date
-            
             
         }).disposed(by: disposeBag)
         
@@ -976,7 +935,7 @@ class DiaryViewController : UIViewController {
             if valid {
                 
                 self?.breakFastBottomImage.image = UIImage(named: "check.png")
-            }else{
+            } else {
                 self?.breakFastBottomImage.image = UIImage(named: "add.png")
                 
             }
@@ -989,7 +948,7 @@ class DiaryViewController : UIViewController {
             if valid {
                 
                 self?.lunchBottomImage.image = UIImage(named: "check.png")
-            }else{
+            } else {
                 self?.lunchBottomImage.image = UIImage(named: "add.png")
                 
             }
@@ -1002,7 +961,7 @@ class DiaryViewController : UIViewController {
             if valid {
                 
                 self?.dinnerBottomImage.image = UIImage(named: "check.png")
-            }else{
+            } else {
                 self?.dinnerBottomImage.image = UIImage(named: "add.png")
                 
             }
@@ -1015,7 +974,7 @@ class DiaryViewController : UIViewController {
             if valid {
                 
                 self?.snackBottomImage.image = UIImage(named: "check.png")
-            }else{
+            } else {
                 self?.snackBottomImage.image = UIImage(named: "add.png")
                 
             }
@@ -1024,15 +983,14 @@ class DiaryViewController : UIViewController {
         
         
         
-        output.totalIngredients.subscribe(onNext: {
-            total in
+        output.totalIngredients.subscribe(onNext: { total in
             
             
             let totalValues = (total.carbohydrates * 4) + (total.protein * 4) + (total.province * 9)
             
             
             
-            if(totalValues != 0.0){
+            if totalValues != 0.0 {
                 
                 let carbohydratesPer = total.carbohydrates  * 4 / totalValues * 100
                 let proteinPer =  total.protein  * 4 / totalValues * 100
@@ -1042,20 +1000,19 @@ class DiaryViewController : UIViewController {
                 self.ingredientsPercent[1] = (proteinPer)
                 self.ingredientsPercent[2] = (provincePer)
                 
-                self.ingredientsColor =  [ .carbohydrates , .protein  ,  .province ]
+                self.ingredientsColor = [ .carbohydrates, .protein, .province ]
                 
                 
                 
-                self.setPieData(pieChartView: self.pieChart, pieChartDataEntries: self.entryData(values: self.ingredientsPercent , dataPoints: []))
-            }
-            else {
+                self.setPieData(pieChartView: self.pieChart, pieChartDataEntries: self.entryData(values: self.ingredientsPercent, dataPoints: []))
+            } else {
                 
                 
                 self.ingredientsPercent = self.ingredientsPercent.map({ $0 * 0 })
                 
                 
                 self.ingredientsColor = [.white.withAlphaComponent(0.6)]
-                self.setPieData(pieChartView: self.pieChart, pieChartDataEntries: self.entryData(values: [1] , dataPoints: []))
+                self.setPieData(pieChartView: self.pieChart, pieChartDataEntries: self.entryData(values: [1], dataPoints: []))
             }
             
             
@@ -1068,8 +1025,8 @@ class DiaryViewController : UIViewController {
             
             
             
-            for i in 0 ..< self.ingredientsPercent.count  {
-                self.nutrientsLabelsArr2[i].text = (String(format: "%.2f" , self.ingredientsPercent[i]) + "%" )
+            for i in 0..<self.ingredientsPercent.count {
+                self.nutrientsLabelsArr2[i].text = (String(format: "%.2f", self.ingredientsPercent[i]) + "%" )
                 
                 
             }
@@ -1098,27 +1055,27 @@ class DiaryViewController : UIViewController {
         
         output.minuteLabel.subscribe(onNext: { text in
             self.minuteLabel.text = "\(text)분"
-            if(text == "0"){
+            if text == "0" {
                 self.exerciseButton.setTitle("기록하기", for: .normal)
-            }else{
+            } else {
                 self.exerciseButton.setTitle("수정하기", for: .normal)
                 
-
+                
             }
         }).disposed(by: disposeBag)
         
-  
         
         
-       
-     
-       
+        
+        
+        
+        
         let a = output.goalLabel
         let b = output.ingTotalCalorie
         let c = output.exCalorieLabel
         
         
-        Observable.combineLatest( a, b , c ).subscribe( onNext : { [weak self] in guard let self = self else {return}
+        Observable.combineLatest( a, b, c ).subscribe(onNext: { [weak self] in guard let self = self else {return}
             
             
             
@@ -1127,7 +1084,7 @@ class DiaryViewController : UIViewController {
             self.exCalorieLabel.text = "소모량  \($2)kcal"
             
             self.consumeLabel.text = $2
-
+            
             
             
             let leftCalorie = (Int( $0 ) ?? 0) - (Int($1) ?? 0) + (Int($2) ?? 0)
@@ -1137,14 +1094,14 @@ class DiaryViewController : UIViewController {
             if leftCalorie > 0 {
                 self.leftCalorieLabel.text = ("\(leftCalorie)kcal 더 먹을 수 있어요")
                 
-            }else {
+            } else {
                 self.leftCalorieLabel.text = ("\(-leftCalorie)kcal 초과됐어요")
-
+                
             }
             
             
             
-            let attrString = NSAttributedString(string: $1 + "\n" ,   attributes: [ NSAttributedString.Key.font: UIFont.systemFont(ofSize: 22) , .foregroundColor: UIColor.black as Any ])
+            let attrString = NSAttributedString(string: $1 + "\n", attributes: [ NSAttributedString.Key.font: UIFont.systemFont(ofSize: 22), .foregroundColor: UIColor.black as Any ])
             
             
             self.eatLabel.text = $1
@@ -1154,11 +1111,11 @@ class DiaryViewController : UIViewController {
             
             
             
-        }    ).disposed(by: disposeBag)
+        }).disposed(by: disposeBag)
         
-        output.alert.subscribe(onNext:{ text in
+        output.alert.subscribe(onNext: { text in
             
-            AlertHelper.shared.showResult(title: "알림", message: text , over: self)
+            AlertHelper.shared.showResult(title: "알림", message: text, over: self)
             
         }).disposed(by: disposeBag)
         
@@ -1168,12 +1125,12 @@ class DiaryViewController : UIViewController {
     // 데이터 적용하기
     func setPieData(pieChartView: PieChartView, pieChartDataEntries: [ChartDataEntry]) {
         // Entry들을 이용해 Data Set 만들기
-        let pieChartdataSet = PieChartDataSet( entries: pieChartDataEntries , label: ""  )
+        let pieChartdataSet = PieChartDataSet( entries: pieChartDataEntries, label: ""  )
         
         pieChartdataSet.entryLabelColor = .white
         
-        pieChartdataSet.valueFont = UIFont(name: "ArialHebrew" ,size: 0)!
-        pieChartdataSet.entryLabelFont = UIFont(name: "ArialHebrew" ,size: 0)!
+        pieChartdataSet.valueFont = UIFont(name: "ArialHebrew", size: 0)!
+        pieChartdataSet.entryLabelFont = UIFont(name: "ArialHebrew", size: 0)!
         
         // 색상 추가
         pieChartdataSet.colors = self.ingredientsColor
@@ -1191,17 +1148,16 @@ class DiaryViewController : UIViewController {
     
     
     // entry 만들기
-    func entryData(values: [Double] , dataPoints: [String] ) -> [ChartDataEntry] {
+    func entryData(values: [Double], dataPoints: [String] ) -> [ChartDataEntry] {
         // entry 담을 array
         var pieDataEntries: [ChartDataEntry] = []
         // 담기
-        for i in 0 ..< values.count {
-            //, label: dataPoints[i] ,data: dataPoints[i]
+        for i in 0..<values.count {
+            //, label: dataPoints[i],data: dataPoints[i]
             let pieDataEntry = PieChartDataEntry(value: values[i] )
             pieDataEntries.append(pieDataEntry)
         }
         // 반환
         return pieDataEntries
     }
-    
 }

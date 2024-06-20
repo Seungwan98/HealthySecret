@@ -10,20 +10,20 @@ import RxCocoa
 import RxSwift
 
 
-class ExerciseDetailVM : ViewModel {
+class ExerciseDetailVM: ViewModel {
     
-    var model : ExerciseModel?
+    var model: ExerciseModel?
     
-    var exercises : [ExerciseModel]?
+    var exercises: [ExerciseModel]?
     
     var disposeBag = DisposeBag()
     
     
     struct Input {
-        let viewWillApearEvent : Observable<Void>
-        let addBtnTapped : Observable<Void>
-        let minuteTextField : Observable<String>
-        let memoTextField : Observable<String>
+        let viewWillApearEvent: Observable<Void>
+        let addBtnTapped: Observable<Void>
+        let minuteTextField: Observable<String>
+        let memoTextField: Observable<String>
     }
     
     struct Output {
@@ -33,11 +33,11 @@ class ExerciseDetailVM : ViewModel {
     }
     
     
-    weak var coordinator : ExerciseCoordinator?
+    weak var coordinator: ExerciseCoordinator?
     
-    private var firebaseService : FirebaseService
+    private var firebaseService: FirebaseService
     
-    init( coordinator : ExerciseCoordinator , firebaseService : FirebaseService ){
+    init( coordinator: ExerciseCoordinator, firebaseService: FirebaseService ) {
         self.coordinator =  coordinator
         self.firebaseService =  firebaseService
         
@@ -68,7 +68,7 @@ class ExerciseDetailVM : ViewModel {
         
         input.minuteTextField.subscribe(onNext: { text in
             time = text
-            finalCalorie = self.getCalorie(text: text , weight : weight as! Int) 
+            finalCalorie = self.getCalorie(text: text, weight: weight as! Int) 
             output.guessLabel.onNext(finalCalorie)
             
             output.buttonEnable.onNext(text.isEmpty)
@@ -84,7 +84,7 @@ class ExerciseDetailVM : ViewModel {
         
         input.addBtnTapped.subscribe(onNext: { _ in
             
-            let exercise = ExerciseModel(date: UserDefaults.standard.string(forKey: "date") ?? "", name: name , time: time  , finalCalorie : finalCalorie , memo : memo  , key: UUID().uuidString , exerciseGram: exerciseGram)
+            let exercise = ExerciseModel(date: UserDefaults.standard.string(forKey: "date") ?? "", name: name, time: time, finalCalorie: finalCalorie, memo: memo, key: UUID().uuidString, exerciseGram: exerciseGram)
 
             var exercises = self.exercises ?? []
             exercises.append(exercise)
@@ -101,7 +101,7 @@ class ExerciseDetailVM : ViewModel {
         return output
     }
     
-    func getCalorie(text : String , weight : Int ) -> String {
+    func getCalorie(text: String, weight: Int ) -> String {
         let weight = Double(weight)
         let min = Double(text) ?? 0
         let met = Double(model!.exerciseGram ) ?? 0
