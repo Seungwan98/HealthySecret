@@ -17,7 +17,7 @@ class DetailPageCoordinator: Coordinator {
     
     
     var childCoordinator: [Coordinator] = []
-        
+    
     var navigationController: UINavigationController
     
     var finishDelegate: CoordinatorFinishDelegate?
@@ -26,17 +26,17 @@ class DetailPageCoordinator: Coordinator {
     
     required init(_ navigationController: UINavigationController ) {
         self.navigationController = navigationController
-      //  self.coordinatorDidFinish(childCoordinator: self)
+        //  self.coordinatorDidFinish(childCoordinator: self)
     }
     
-    func startVC(model : Data) {
-       
+    func startVC(model: Data) {
+        
     }
     
-
+    
 }
 
-extension DetailPageCoordinator : CoordinatorFinishDelegate {
+extension DetailPageCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinishNotRoot(childCoordinator: any Coordinator) {
         //
     }

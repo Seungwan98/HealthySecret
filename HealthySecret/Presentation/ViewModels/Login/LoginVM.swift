@@ -38,7 +38,7 @@ class LoginVM: ViewModel {
     }
     
     
-    init(  loginUseCase: LoginUseCase,   loginCoordinator: LoginCoordinator  ) {
+    init( loginUseCase: LoginUseCase, loginCoordinator: LoginCoordinator ) {
         
         self.loginUseCase =  loginUseCase
         self.loginCoordinator = loginCoordinator
@@ -55,7 +55,7 @@ class LoginVM: ViewModel {
         input.appleLogin.subscribe(onNext: { credential in
             
             
-            UserDefaults.standard.set("apple",forKey: "loginMethod")
+            UserDefaults.standard.set("apple", forKey: "loginMethod")
             
             
             self.loginUseCase.loginApple(credential: credential ).subscribe({ completable in
@@ -86,13 +86,12 @@ class LoginVM: ViewModel {
         
         
         
-        input.kakaoLoginButtonTapped.subscribe(onNext: {
-            _ in
-            UserDefaults.standard.set("kakao",forKey: "loginMethod")
+        input.kakaoLoginButtonTapped.subscribe(onNext: { _ in
+            UserDefaults.standard.set("kakao", forKey: "loginMethod")
             
             self.loginUseCase.loginKakao().subscribe({ completable in
                 
-                switch(completable) {
+                switch completable {
                 case.completed:
                     
                     self.loginCoordinator?.login()

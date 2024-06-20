@@ -140,11 +140,8 @@ class CalendarVM: ViewModel {
         
         self.selectingDate.subscribe(onNext: { _ in
             
-            for i in 0..<self.diarys.count {
-                if self.diarys[i].date == self.pickDate {
-                    output.writedText.onNext(self.diarys[i].diary)
-                }
-                
+            for i in 0..<self.diarys.count where self.diarys[i].date == self.pickDate {
+                output.writedText.onNext(self.diarys[i].diary)
                 
             }
             
@@ -157,10 +154,9 @@ class CalendarVM: ViewModel {
                     
                     let diary = Diary(date: self.pickDate ?? "", diary: text )
                     
-                    for i in 0..<self.diarys.count {
-                        if self.diarys[i].date == self.pickDate {
-                            self.diarys.remove(at: i)
-                        }
+                    for i in 0..<self.diarys.count where self.diarys[i].date == self.pickDate {
+
+                        self.diarys.remove(at: i)
                         
                         
                     }

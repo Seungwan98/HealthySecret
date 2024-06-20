@@ -68,7 +68,7 @@ class SignUpVC: UIViewController {
     
     
     lazy var questionStackView: UIStackView = {
-        let stackview = UIStackView(arrangedSubviews:  [firstView, secondView, thirdView ])
+        let stackview = UIStackView(arrangedSubviews: [firstView, secondView, thirdView ])
         
         stackview.axis = .vertical
         stackview.spacing = 15
@@ -524,4 +524,3 @@ class SignUpVC: UIViewController {
     }
     
 }
-

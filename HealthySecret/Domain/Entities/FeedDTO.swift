@@ -23,24 +23,11 @@ struct FeedDTO: Codable {
     
     
     
-    
-    enum CodingKeys: String, CodingKey {
-        case uuid = "uuid"
-        case feedUid = "feedUid"
-        case date = "date"
-        case likes = "likes"
-        case contents = "contents"
-        case mainImgUrl = "mainImgUrl"
-        case coments = "coments"
-        case report = "report"
-        
-        
-        
-    }
+  
     
     
-    func toDomain(nickname:String, profileImage: String) -> FeedModel{
-        return FeedModel(uuid: self.uuid, feedUid: self.feedUid, date: self.date, profileImage: profileImage, nickname: nickname, contents: self.contents, mainImgUrl: self.mainImgUrl, likes: self.likes, report: self.report, coments: self.coments.map { $0.toDomain(nickname: "", profileImage: "") } )
+    func toDomain(nickname: String, profileImage: String) -> FeedModel {
+        return FeedModel(uuid: self.uuid, feedUid: self.feedUid, date: self.date, profileImage: profileImage, nickname: nickname, contents: self.contents, mainImgUrl: self.mainImgUrl, likes: self.likes, report: self.report, coments: self.coments.map { $0.toDomain(nickname: "", profileImage: "")})
         
     }
     
@@ -54,20 +41,10 @@ struct ComentDTO: Codable {
     var feedUid: String
     
     
-    enum CodingKeys: String, CodingKey {
-        case coment = "coment"
-        case date = "date"
-        case uid = "uid"
-        case comentUid = "comentUid"
-        case feedUid = "feedUid"
-        
-
-    }
     
-    func toDomain(nickname:String, profileImage: String) -> ComentModel{
+    
+    func toDomain(nickname: String, profileImage: String) -> ComentModel {
         return ComentModel(coment: self.coment, date: self.date, nickname: nickname, profileImage: profileImage, uid: self.uid, comentUid: self.comentUid, feedUid: self.feedUid)
         
     }
 }
-
-

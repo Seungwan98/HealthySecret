@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-class ComentsUseCase  {
+class ComentsUseCase {
     
     
     
@@ -141,7 +141,7 @@ class ComentsUseCase  {
                         case.success(let coments):
                             single(.success(coments))
 
-                        case.failure(let err):
+                        case.failure(_):
                          
                             break
                         }

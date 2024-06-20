@@ -14,13 +14,13 @@ import FirebaseAuth
 class CommuUseCase {
     
     
-
+    
     private let disposeBag = DisposeBag()
     private let userRepository: UserRepository
     private let feedRepository: FeedRepository
     private let fireStorageRepository: FireStorageRepository
     
-  
+    
     private var follow: [String] = []
     private var block: [String] = []
     
@@ -31,7 +31,7 @@ class CommuUseCase {
         self.fireStorageRepository = fireStorageRepository
     }
     
-
+    
     
     func getUser() -> Completable {
         return Completable.create { [weak self]  completable in guard let self = self else { return Disposables.create() }
@@ -40,7 +40,7 @@ class CommuUseCase {
                 switch event {
                 case.success(let user):
                     print(user)
-
+                    
                     self.follow = user.followings ?? []
                     self.block = user.blocking + user.blocked
                     
@@ -53,7 +53,7 @@ class CommuUseCase {
                 case .failure(let err):
                     print("err \(err)")
                     completable(.error(err))
-
+                    
                 }
                 
                 
@@ -62,7 +62,7 @@ class CommuUseCase {
             
             return Disposables.create()
         }
-    
+        
     }
     
     
@@ -71,12 +71,12 @@ class CommuUseCase {
             
             self.feedRepository.getFeedPagination(feeds: feedModels.map { $0.toData() }, pagesCount: count, follow: self.follow, getFollow: getFollow, followCount: 0, block: self.block, reset: reset ).subscribe({ event in
                 
-
+                
                 
                 switch event {
                     
                 case.success(let feedDtos):
-                  var idx = 0
+                    var idx = 0
                     var feedModels = feedDtos.map { $0.toDomain(nickname: "", profileImage: "") }
                     
                     for i in 0..<feedDtos.count {
@@ -109,8 +109,8 @@ class CommuUseCase {
             return Disposables.create()
         }
     }
-   
-
+    
+    
     func deleteFeed(feedUid: String) -> Completable {
         
         return self.feedRepository.deleteFeed(feedUid: feedUid)
@@ -124,12 +124,12 @@ class CommuUseCase {
     }
     
     func report(url: String, uid: String, uuid: String, event: String) -> Completable {
-
+        
         return self.feedRepository.report(url: url, uid: uid, uuid: uuid, event: event)
     }
     
     
-  
+    
     
     func addFeed(feed: FeedModel) -> Completable {
         
@@ -149,7 +149,7 @@ class CommuUseCase {
                     
                     self.userRepository.getUser(uid: dto.uuid).subscribe({ event in
                         switch event {
-                        case .success(let user): 
+                        case .success(let user):
                             single(.success(dto.toDomain(nickname: user.name, profileImage: user.profileImage ?? "")))
                         case .failure(let err):
                             single( .failure(err))
@@ -169,7 +169,7 @@ class CommuUseCase {
         
     }
     
-   
+    
     
     func updateFeed(feed: FeedModel) -> Completable {
         

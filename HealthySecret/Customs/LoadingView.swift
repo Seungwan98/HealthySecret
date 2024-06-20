@@ -9,15 +9,15 @@ import Foundation
 import UIKit
 
 final class MyLoadingView: UIView {
-  private let contentView: UIView = {
-    let view = UIView()
-    view.backgroundColor = .white
-    view.alpha = 0
-    return view
-  }()
-  private let loadingView: AnimationView = {
-    let view = AnimationView(name: "loading_ball")
-    view.loopMode = .loop
-    return view
-  }()
+    private let contentView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.alpha = 0
+        return view
+    }()
+    private let loadingView: AnimationView = {
+        let view = AnimationView(name: "loading_ball")
+        view.loopMode = .loop
+        return view
+    }()
 }

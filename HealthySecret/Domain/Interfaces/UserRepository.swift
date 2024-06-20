@@ -18,7 +18,7 @@ protocol UserRepository {
     func updateUsersIngredients(ingredients: [Ingredients]) -> Completable
     func updateUsersExercises( exercises: [ExerciseModel] ) -> Completable
     func updateUsersDiays( diarys: [Diary] ) -> Completable
-    func updateValues( valuesDic: Dictionary< String, String >, uuid: String ) -> Completable
+    func updateValues( valuesDic: [String: String], uuid: String ) -> Completable
     func updateSignUpData( signUpModel: SignUpModel ) -> Completable
     
     

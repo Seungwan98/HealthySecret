@@ -53,11 +53,11 @@ class ExerciseVM: ViewModel {
                 switch event {
                 case.success(let models):
                     input.searchText.subscribe(onNext: { [weak self] text in
-                        guard let self = self else {return}
+                        guard self != nil else {return}
                         var arr = models
                         
                         print("\(text) text")
-                        if text.isEmpty{
+                        if text.isEmpty {
                             output.exerciseArr.onNext(arr)
                             
                         } else {
@@ -81,8 +81,7 @@ class ExerciseVM: ViewModel {
             
         }).disposed(by: disposeBag)
         
-        input.cellTapped.subscribe(onNext: {
-            model in
+        input.cellTapped.subscribe(onNext: { model in
             
             print("model \(model)")
             self.coordinator?.pushExerciseDetailVC(model: model, exercises: self.exercises ?? [])

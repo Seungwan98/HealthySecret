@@ -17,16 +17,11 @@ struct SignUpModel {
     var nowWeight: Int
     var goalWeight: Int
     var activity: Int
-   
-
+    
+    
     func toData( ) -> UserModel {
-        return UserModel(uuid: self.uuid, name: self.name, tall: self.tall, age: self.age, sex: self.sex,
-                         calorie: self.calorie, nowWeight: self.nowWeight, goalWeight: self.goalWeight, ingredients: [], exercise: [], diarys: [], activity: self.activity, loginMethod: "", blocked: [], blocking: [], report: [] )
-        }
-
-
+        return UserModel(uuid: self.uuid, name: self.name, tall: self.tall, age: self.age, sex: self.sex, calorie: self.calorie, nowWeight: self.nowWeight, goalWeight: self.goalWeight, ingredients: [], exercise: [], diarys: [], activity: self.activity, loginMethod: "", blocked: [], blocking: [], report: [] )
     }
-
-
-
-
+    
+    
+}

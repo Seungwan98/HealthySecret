@@ -78,7 +78,7 @@ class CommuVM: ViewModel {
         input.segmentChanged.subscribe(onNext: { [weak self]  event in
             
             guard let self = self else {return}
-            var count = self.feedModels.count
+            let count = self.feedModels.count
             
             self.resetValue()
             
@@ -301,7 +301,7 @@ class CommuVM: ViewModel {
                     output.endRefreshing.onNext(true)
                     
                     
-                case .failure(let err):
+                case .failure(_):
                     print("fail")
                     output.isPaging.onNext(false)
                     output.isLastPage.onNext(true)

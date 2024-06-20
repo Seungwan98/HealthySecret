@@ -32,8 +32,8 @@ class FollowUseCase {
     }
     
     
-    func getFollows(uid: String) -> Single<Dictionary< FollowType, [UserModel]>> {
-        var followDic = Dictionary<FollowType, [UserModel]>()
+    func getFollows(uid: String) -> Single< [FollowType: [UserModel]]> {
+        var followDic = [FollowType: [UserModel]]()
         return Single.create { [weak self] single in
             guard let self else { single(.failure(CustomError.isNil))
                 return Disposables.create() }

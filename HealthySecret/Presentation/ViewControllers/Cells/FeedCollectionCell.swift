@@ -226,12 +226,7 @@ class FeedCollectionCell: UITableViewCell, UIScrollViewDelegate {
         
         
     }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-        
-    }
+
     
     
     

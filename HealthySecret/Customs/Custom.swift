@@ -21,7 +21,7 @@ extension Encodable {
     var dictionary: [String: Any]? {
         guard let data = try? JSONEncoder().encode(self) else { return nil }
         return (try? JSONSerialization.jsonObject(with: data, options: .allowFragments)).flatMap { $0 as? [String: Any] }
-      }
+    }
     
 }
 
@@ -33,7 +33,7 @@ struct CustomMath {
         return round(data * digit) / digit
     }
 }
-    
+
 struct CustomFormatter {
     static let shared = CustomFormatter()
     
@@ -132,7 +132,7 @@ struct CustomFormatter {
             
             switch targetDate.compare( Date.now ) {
                 
-            case.orderedDescending: 
+            case.orderedDescending:
                 print("des")
                 return false
                 
@@ -152,7 +152,7 @@ struct CustomFormatter {
                 
             }
         }
-                  
+        
     }
     
     
@@ -168,7 +168,7 @@ struct CustomFormatter {
         
         var changedDate = String()
         
-        let offsetComps = Calendar.current.dateComponents([.year,.month, .day, .hour, .minute ], from: stringToDate, to: Date())
+        let offsetComps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute ], from: stringToDate, to: Date())
         
         if case let (y?, m?, d?, h?, min?) = (offsetComps.year, offsetComps.month, offsetComps.day, offsetComps.hour, offsetComps.minute ) {
             
@@ -180,7 +180,7 @@ struct CustomFormatter {
                     changedDate = "\(d)일 전"
                     if d == 0 {
                         changedDate = "\(h)시간 전"
-                        if h == 0  {
+                        if h == 0 {
                             changedDate = "\(min)분 전"
                             if min == 0 {
                                 changedDate = "방금"
@@ -204,6 +204,3 @@ struct CustomFormatter {
     
     
 }
-
-    
-

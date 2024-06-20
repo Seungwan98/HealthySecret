@@ -11,7 +11,7 @@ import RxSwift
 
 
 class EditExerciseVM: ViewModel {
-        
+    
     var disposeBag = DisposeBag()
     
     var exercises: [ExerciseModel]
@@ -26,14 +26,14 @@ class EditExerciseVM: ViewModel {
     struct Output {
         var exerciseArr = BehaviorSubject<[ExerciseModel]>(value: [])
         
-
+        
     }
     
     
     weak var coordinator: ExerciseCoordinator?
     private let exerciseUseCase: ExerciseUseCase
     
-
+    
     
     init( coordinator: ExerciseCoordinator, exercises: [ExerciseModel], exerciseUseCase: ExerciseUseCase) {
         self.coordinator =  coordinator
@@ -46,25 +46,25 @@ class EditExerciseVM: ViewModel {
     
     func transform(input: Input, disposeBag: DisposeBag ) -> Output {
         
-       
-
+        
+        
         let output = Output()
-
+        
         output.exerciseArr.onNext(self.exercises)
-
+        
         input.edmitButtonTapped.subscribe(onNext: { [weak self] _ in guard let self = self else {return}
             input.inputArr.subscribe(onNext: { exercises in
                 
-                self.exerciseUseCase.updateUsersExercise(exercises: exercises).subscribe({ event in
-                        self.coordinator?.finish()
+                self.exerciseUseCase.updateUsersExercise(exercises: exercises).subscribe({ _ in
+                    self.coordinator?.finish()
                     
                 }).disposed(by: disposeBag)
                 
-
                 
-           
                 
-
+                
+                
+                
             }).disposed(by: DisposeBag.init())
             
         }).disposed(by: disposeBag )
@@ -74,14 +74,14 @@ class EditExerciseVM: ViewModel {
             self.coordinator?.pushExerciseVC(exercises: self.exercises)
             
         }).disposed(by: disposeBag)
-       
+        
         
         
         
         return output
     }
     
-   
+    
     
     
     

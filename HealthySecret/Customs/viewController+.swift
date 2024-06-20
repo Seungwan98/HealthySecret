@@ -12,10 +12,6 @@ extension UIViewController {
         view.endEditing(true)
     }
     
-    
-    
-    
-    
 }
 
 extension UIViewController {

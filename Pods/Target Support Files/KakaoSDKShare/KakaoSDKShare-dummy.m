@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-@interface PodsDummy_KakaoSDKShare: NSObject
+@interface PodsDummy_KakaoSDKShare : NSObject
 @end
 @implementation PodsDummy_KakaoSDKShare
 @end

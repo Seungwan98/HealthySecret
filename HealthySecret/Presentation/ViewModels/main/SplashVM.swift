@@ -42,7 +42,7 @@ final class SplashVM {
             case.success(let select):
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
                     
-                    switch(select) {
+                    switch select {
                     case(.logIn):
                         self.coordinator?.showLoginViewController()
                     case(.signUp):
@@ -50,17 +50,13 @@ final class SplashVM {
                         
                     case(.main):
                         self.coordinator?.showMainViewController()
-                        
-                        
-                        
-                    default:
-                        self.coordinator?.showLoginViewController()
+                 
                         
                     }
                     
                 }
                 
-            case.failure(let err):
+            case.failure(_):
                 break
             }
             

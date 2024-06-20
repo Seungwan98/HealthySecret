@@ -79,12 +79,9 @@ struct Diary: Codable {
         case date, diary
     }
     
-    init(date: String, diary: String) {
+    init( date: String, diary: String) {
         self.date = date
         self.diary = diary
     }
     
 }
-
-
-

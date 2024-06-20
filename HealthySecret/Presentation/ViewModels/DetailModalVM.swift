@@ -8,14 +8,14 @@
 import Foundation
 import RxSwift
 
-class DetailModalVM : ViewModel {
+class DetailModalVM: ViewModel {
    
     var disposeBag = DisposeBag()
     
-    let arr : [String:Any]
+    let arr: [String: Any]
         
     
-    init( coordinator : DiaryCoordinator , arr : [String:Any] ){
+    init( coordinator: DiaryCoordinator, arr: [String: Any] ) {
         self.coordinator =  coordinator
         self.arr = arr
         
@@ -41,6 +41,6 @@ class DetailModalVM : ViewModel {
     
     
     
-    weak var coordinator : DiaryCoordinator?
+    weak var coordinator: DiaryCoordinator?
     
 }

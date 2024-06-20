@@ -93,7 +93,7 @@ class DefaultUserRepository: UserRepository {
         return self.firebaseService.blockUser(ownUid: uid, opponentUid: opponentUid, block: block)
     }
  
-    func updateValues( valuesDic: Dictionary< String, String >, uuid: String ) -> Completable {
+    func updateValues( valuesDic: [String: String], uuid: String ) -> Completable {
         return self.firebaseService.updateValues(valuesDic: valuesDic, uuid: uuid)
     }
     

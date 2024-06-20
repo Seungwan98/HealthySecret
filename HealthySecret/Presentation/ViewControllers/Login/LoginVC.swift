@@ -93,7 +93,7 @@ class LoginViewController: UIViewController {
     
     
     lazy var loginStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [ kakaoButton,appleButton ])
+        let stackView = UIStackView(arrangedSubviews: [ kakaoButton, appleButton ])
         stackView.axis = .vertical
         stackView.spacing = 15
         stackView.distribution = .fillEqually
@@ -312,10 +312,7 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
                 print("Unable to fetch identity token")
                 return
             }
-            guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
-                print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
-                return
-            }
+            guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else { return }
             
             
             let given = appleIDCredential.fullName?.givenName ?? ""
@@ -325,12 +322,7 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
             UserDefaults.standard.set( "\(family)\(given)", forKey: "name")
             let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString, rawNonce: nonce)
             
-            if let authorizationCode = appleIDCredential.authorizationCode, let codeString = String(data: authorizationCode, encoding: .utf8) {
-                
-                
-            }
-            
-            
+       
             
             
             

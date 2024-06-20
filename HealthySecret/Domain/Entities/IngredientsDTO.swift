@@ -98,7 +98,7 @@ enum SamplingMonthCd: String, Codable {
 }
 
 enum SamplingMonthName: String, Codable {
-    case 평균 = "평균"
+    case 평균
 }
 
 enum SubRefName: String, Codable {

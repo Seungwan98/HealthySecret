@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import FirebaseAuth
 
-protocol LoginRepository  {
+protocol LoginRepository {
     func login() -> Completable
     func login(credential: OAuthCredential) -> Completable
     func signUp( email: String, pw: String ) -> Completable

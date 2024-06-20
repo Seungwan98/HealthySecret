@@ -53,7 +53,7 @@ final class KakaoService {
             var password: String = ""
             if AuthApi.hasToken() {
                 
-                UserApi.shared.accessTokenInfo { token, err  in
+                UserApi.shared.accessTokenInfo { token, _  in
                     password =  "kakao_" + String(token?.id ?? 0)
                     
                     single(.success(password))

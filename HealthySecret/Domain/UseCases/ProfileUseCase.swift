@@ -180,7 +180,7 @@ class ProfileUseCase {
                 completable( .error(CustomError.isNil))
                 return Disposables.create()}
             let url = URL(string: "https://us-central1-healthysecrets-f1b20.cloudfunctions.net/getRefreshToken?code=\(codeString)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "https://apple.com")!
-            _ = URLSession.shared.dataTask(with: url) {(data, response, error) in
+            _ = URLSession.shared.dataTask(with: url) {(data, _, _) in
                 if let data = data {
                     let refreshToken = String(data: data, encoding: .utf8) ?? ""
                     
@@ -189,7 +189,7 @@ class ProfileUseCase {
                         guard let self else {return}
                         switch event {
                         case .completed:
-                            self.loginRepository.deleteAccount(credential: credential).subscribe({ event in
+                            self.loginRepository.deleteAccount(credential: credential).subscribe({ _ in
                                 
                                 
                                 
@@ -268,7 +268,7 @@ class ProfileUseCase {
                 
                 if !(beforeImage).isEmpty {
                     self.fireStorageRepository.deleteImage(urlString: beforeImage).subscribe { [weak self] event in
-                        guard let self = self else {return}
+                        guard self != nil else {return}
                         switch event {
                             
                         case .error(_):

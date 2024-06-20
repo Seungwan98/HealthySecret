@@ -13,7 +13,7 @@ class AlertHelper {
     private init() { }
     
     
-    typealias Action = () -> ()
+    typealias Action = () -> Void
         
     func showDeleteConfirmation(title: String, message: String?, onConfirm: @escaping Action, over viewController: UIViewController) {
         let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -78,4 +78,3 @@ extension UIAlertAction {
         return cancel
     }
 }
-

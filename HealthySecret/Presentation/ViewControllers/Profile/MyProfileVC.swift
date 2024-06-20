@@ -407,7 +407,7 @@ class MyProfileVC: UIViewController, CustomCollectionCellDelegate {
         
         output.followingsCount.subscribe(onNext: { [weak self] count in
             
-            guard let self = self else {return}
+            guard self != nil else {return}
             
             header.feedInformValLabels[2].text = String(count)
             

@@ -18,7 +18,7 @@ class ChangeSignUpVM: ViewModel {
     private let profileUseCase: ProfileUseCase
     
     private let exerciseArr = ["활동적음", "일반적", "활동많음"]
-        
+    
     private let defaultSex = ["남성", "여성"]
     
     private let defaultCalorie = [  [30, 35, 40], [25, 30, 35]]
@@ -30,12 +30,12 @@ class ChangeSignUpVM: ViewModel {
         let tallInput: Observable<String>
         let startWeight: Observable<String>
         let goalWeight: Observable<String>
-
+        
         let nextButtonTapped: Observable<Void>
         
-         
         
-      
+        
+        
     }
     
     struct Output {
@@ -48,15 +48,15 @@ class ChangeSignUpVM: ViewModel {
         var goalWeight = BehaviorSubject<String>(value: "")
         
         var nextButtonEnable = BehaviorSubject<Bool>(value: false)
-
+        
         
     }
-
+    
     
     var signUpModel = SignUpModel(uuid: "", name: "", tall: "", age: "", sex: "", calorie: 0, nowWeight: 0, goalWeight: 0, activity: 0)
     
-
-
+    
+    
     
     weak var coordinator: ProfileCoordinator?
     
@@ -72,7 +72,7 @@ class ChangeSignUpVM: ViewModel {
         
         
         let output = Output()
-
+        
         output.ageOutput.onNext(signUpModel.age)
         output.exerciseOutput.onNext(signUpModel.activity)
         output.goalWeight.onNext(String(signUpModel.goalWeight))
@@ -90,29 +90,29 @@ class ChangeSignUpVM: ViewModel {
         
         var isValid: Observable<Bool> {
             return Observable.combineLatest(input.ageInput, input.goalWeight, input.sexInput, input.startWeight, input.tallInput, input.exerciseInput).map { age, goal, sex, start, tall, exercise in
-                       
-                       return !age.isEmpty && !goal.isEmpty && (sex < 2) && !start.isEmpty && !tall.isEmpty && (exercise < 3 )
-                   }
-           }
+                
+                return !age.isEmpty && !goal.isEmpty && (sex < 2) && !start.isEmpty && !tall.isEmpty && (exercise < 3 )
+            }
+        }
         
         isValid.subscribe(onNext: { event in
-        output.nextButtonEnable.onNext(event)
+            output.nextButtonEnable.onNext(event)
             
         }).disposed(by: disposeBag)
         
         
         input.nextButtonTapped.subscribe(onNext: { _ in
-
             
             
-        
+            
+            
             
             input.sexInput.subscribe(onNext: { sex in
                 self.signUpModel.sex = self.defaultSex[sex]
                 input.exerciseInput.subscribe(onNext: { exercise in
                     
                     input.goalWeight.subscribe(onNext: { goal in
-       
+                        
                         self.signUpModel.activity = Int(exercise)
                         self.signUpModel.goalWeight = Int(goal) ?? 0
                         self.signUpModel.calorie = Int(goal)! * self.defaultCalorie[sex][exercise]
@@ -127,7 +127,7 @@ class ChangeSignUpVM: ViewModel {
                                     
                                     
                                     self.profileUseCase.updateSignUpData(signUpModel: self.signUpModel).subscribe({event in
-                                         
+                                        
                                         switch event {
                                             
                                         case .error(_):
@@ -154,7 +154,7 @@ class ChangeSignUpVM: ViewModel {
                         
                         
                         
-                     
+                        
                         
                     }).disposed(by: disposeBag)
                     
@@ -165,38 +165,20 @@ class ChangeSignUpVM: ViewModel {
                 
             }).disposed(by: disposeBag)
             
-            
-            
-            
-            
-           
-                    
-
-                    
-                    
-          
-                 
-         
-                    
-           
-                
-                
-                
-                
-
+ 
             
         }).disposed(by: disposeBag)
-       
         
         
-     
+        
+        
         
         return output
     }
     
     
-   
-        
-        
-        
-    }
+    
+    
+    
+    
+}

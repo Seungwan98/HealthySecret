@@ -23,7 +23,7 @@ class IngredientsVM: ViewModel {
     
     var filteredArr: [IngredientsModel] = []
     
-    var likes: [String:Int] = [:]
+    var likes: [String: Int] = [:]
     
     var recentSearchArr: [String] = []
     
@@ -39,7 +39,7 @@ class IngredientsVM: ViewModel {
     private let ingredientsUseCase: IngredientsUseCase
     
     private let searchText = BehaviorRelay<Bool>(value: false)
-    private let touchedArr = BehaviorRelay<[String:Int]>(value: [:])
+    private let touchedArr = BehaviorRelay<[String: Int]>(value: [:])
     
     
     init( coordinator: IngredientsCoordinator, firebaseService: FirebaseService, ingredientsUseCase: IngredientsUseCase ) {
@@ -94,7 +94,7 @@ class IngredientsVM: ViewModel {
         input.searchText.map({ [self] text in
             print("\(text) text")
             var check: Bool = false
-            if text.isEmpty{
+            if text.isEmpty {
                 check = false
             } else {
                 self.searchArr = self.ingredientsArr.filter { $0.descKor.localizedCaseInsensitiveContains(text) }

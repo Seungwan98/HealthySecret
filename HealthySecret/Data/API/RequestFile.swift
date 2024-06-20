@@ -5,10 +5,10 @@
 ////  Created by 양승완 on 2023/10/09.
 ////
 //
-//import Alamofire
-//import UIKit
-//import RxSwift
-//class RequestFile {
+// import Alamofire
+// import UIKit
+// import RxSwift
+// class RequestFile {
 //
 //    func getRequestData(_ ingredientsViewController: IngredientsViewController) -> Completable {
 //
@@ -82,7 +82,7 @@
 //
 //
 //
-//}
+// }
 //
 //
 //

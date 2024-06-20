@@ -55,7 +55,7 @@ class ExerciseDetailVM: ViewModel {
         var memo = ""
         let name = self.model?.name ?? ""
         let exerciseGram = self.model?.exerciseGram ?? ""
-
+        
         let output = Output()
         
         input.viewWillApearEvent.subscribe(onNext: { [weak self] in
@@ -64,11 +64,11 @@ class ExerciseDetailVM: ViewModel {
             
         }).disposed(by: disposeBag)
         
-
+        
         
         input.minuteTextField.subscribe(onNext: { text in
             time = text
-            finalCalorie = self.getCalorie(text: text, weight: weight as! Int) 
+            finalCalorie = self.getCalorie(text: text, weight: weight as! Int)
             output.guessLabel.onNext(finalCalorie)
             
             output.buttonEnable.onNext(text.isEmpty)
@@ -85,13 +85,13 @@ class ExerciseDetailVM: ViewModel {
         input.addBtnTapped.subscribe(onNext: { _ in
             
             let exercise = ExerciseModel(date: UserDefaults.standard.string(forKey: "date") ?? "", name: name, time: time, finalCalorie: finalCalorie, memo: memo, key: UUID().uuidString, exerciseGram: exerciseGram)
-
+            
             var exercises = self.exercises ?? []
             exercises.append(exercise)
             
             self.coordinator?.navigationController.popViewController(animated: false)
             self.coordinator?.pushEditExerciseVC(exercises: exercises)
-              
+            
             
         }).disposed(by: disposeBag)
         
@@ -105,7 +105,7 @@ class ExerciseDetailVM: ViewModel {
         let weight = Double(weight)
         let min = Double(text) ?? 0
         let met = Double(model!.exerciseGram ) ?? 0
-       let result =  lroundl(( ( met * (3.5 *  weight * min  )) / 1000 ) * 5 )
+        let result =  lroundl(( ( met * (3.5 *  weight * min  )) / 1000 ) * 5 )
         return String(result)
         
         

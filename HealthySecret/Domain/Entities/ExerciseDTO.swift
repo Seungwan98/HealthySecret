@@ -10,7 +10,7 @@ struct ExerciseDTO: Codable {
     let data: [ExerciseDtoData]
     
     enum CodingKeys: String, CodingKey {
-        case data = "data"
+        case data
     }
 }
 

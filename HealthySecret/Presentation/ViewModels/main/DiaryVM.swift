@@ -172,7 +172,7 @@ class DiaryVM: ViewModel {
      
             
             
-            //날짜로 검색
+            // 날짜로 검색
             var pickedDate: String = ""
             var outputDate: String = ""
             

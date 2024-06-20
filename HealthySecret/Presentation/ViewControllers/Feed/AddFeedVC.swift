@@ -240,7 +240,7 @@ class AddFeedVC: UIViewController {
         
         if self.imagesArr.count <= 5 {
             print(imagesArr.count)
-            for i in 0..<self.imagesArr.count {
+            self.imagesArr.forEach { _ in
                 print(imagesArr.count)
                 for i in 0..<self.imagesArr.count {
                     
@@ -420,7 +420,7 @@ class AddFeedVC: UIViewController {
         
         let input = AddFeedVM.Input(addButtonTapped: self.addButton.rx.tap.asObservable(), feedText: self.addFeedTextView.rx.text.orEmpty.asObservable(), imagesDatas: self.imagesDatas.asObservable() )
         
-        guard let output = self.viewModel?.transform(input: input, disposeBag: disposeBag) else {return}
+        guard (self.viewModel?.transform(input: input, disposeBag: disposeBag)) != nil else {return}
         
         
         self.plusImage.rx.tapGesture().when(.recognized).subscribe(onNext: { _ in

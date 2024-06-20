@@ -731,7 +731,7 @@ extension FirebaseService {
     }
     
     
-    func updateValues( valuesDic: Dictionary<String, String>, uuid: String ) -> Completable {
+    func updateValues( valuesDic: [String: String], uuid: String ) -> Completable {
         
         
         
@@ -1333,7 +1333,7 @@ extension FirebaseService {
                     if let data = doc?.data() {
                         do {
                             let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
-                            var feed = try JSONDecoder().decode(FeedDTO.self, from: jsonData)
+                            let feed = try JSONDecoder().decode(FeedDTO.self, from: jsonData)
                             single(.success(feed))
                         } catch {
                             
@@ -1439,7 +1439,7 @@ extension FirebaseService {
             
             
             self.listener = self.db.collection("HealthySecretFeed").whereField("feedUid", isEqualTo: feedUid).addSnapshotListener {  [weak self]  querySnapshot, error in
-                guard let self = self else {return}
+                guard self != nil else {return}
                 guard let snapshot = querySnapshot else {
                     print("Error fetching snapshots: \(error!)")
                     return
@@ -1450,9 +1450,8 @@ extension FirebaseService {
                     
                     
                     print("\(diff) diff")
-                    var idx = 0
                     if diff.type == .modified {
-                        //document 안에있는 Arr 안의 데이터를 삭제하므로 modified 를 찾는다.
+                        // document 안에있는 Arr 안의 데이터를 삭제하므로 modified 를 찾는다.
                         
                         do {
                             let jsonData = try JSONSerialization.data(withJSONObject: diff.document.data(), options: [])
@@ -1659,6 +1658,5 @@ extension FirebaseService {
         
         
     }
-    
     
 }

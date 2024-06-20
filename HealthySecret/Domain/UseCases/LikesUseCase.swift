@@ -8,10 +8,7 @@
 import Foundation
 import RxSwift
 
-class LikesUseCase  {
-  
-    
-    
+class LikesUseCase {
     
     private let disposeBag = DisposeBag()
     

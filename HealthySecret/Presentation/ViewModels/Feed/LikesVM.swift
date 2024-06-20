@@ -131,7 +131,7 @@ class LikesVM: ViewModel {
                     
                     
                     
-                case.failure(let err):
+                case.failure(_):
                     break
                     
                 }

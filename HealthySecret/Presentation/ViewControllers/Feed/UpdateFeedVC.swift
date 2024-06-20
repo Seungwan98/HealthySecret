@@ -520,11 +520,11 @@ extension UpdateFeedVC: UIImagePickerControllerDelegate, UINavigationControllerD
         let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
         
         let camera = UIAlertAction(title: "카메라", style: .default) { [weak self] _ in
-            guard let self else {return}
+            guard self != nil else {return}
             PrivacyChecker.requestCameraPermission()
         }
         let album = UIAlertAction(title: "앨범", style: .default) { [weak self] _ in
-            guard let self else {return}
+            guard self != nil else {return}
             PrivacyChecker.requestAlbumPermission()
         }
         

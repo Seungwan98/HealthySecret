@@ -1,10 +1,10 @@
-//import UIKit
+// import UIKit
 //
-//protocol FeedCollectionCellDelegate {
+// protocol FeedCollectionCellDelegate {
 //    func didPressHeart(for index: String, like: Bool)
-//}
+// }
 //
-//class FeedCollectionCell: UITableViewCell {
+// class FeedCollectionCell: UITableViewCell {
 //    static let identifier = "FeedCollectionCell"
 //    var mainImage : UIImageView = {
 //        let image = UIImageView()
@@ -335,4 +335,4 @@
 //    
 //    
 //
-//}
+// }

@@ -206,8 +206,7 @@ class BlockListVC: UIViewController, UIScrollViewDelegate, UISearchBarDelegate, 
         }).disposed(by: disposeBag)
         
         
-        output.userModels.bind(to: tableView.rx.items(cellIdentifier: "FollowsBlocksCell", cellType: FollowsBlocksCell.self )) {
-            [weak self] _, item, cell in
+        output.userModels.bind(to: tableView.rx.items(cellIdentifier: "FollowsBlocksCell", cellType: FollowsBlocksCell.self )) { [weak self] _, item, cell in
             guard let self = self else {return}
             
             

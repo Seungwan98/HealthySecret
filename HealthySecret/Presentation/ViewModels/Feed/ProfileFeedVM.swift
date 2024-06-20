@@ -153,9 +153,8 @@ class ProfileFeedVM: ViewModel {
 
         
         
-        input.viewWillApearEvent.subscribe(onNext: { event in
-            
-           
+        input.viewWillApearEvent.subscribe(onNext: { [weak self] _ in
+            guard let self else { return }
             print("viewWillAppeear")
             self.reload.onNext(true)
            

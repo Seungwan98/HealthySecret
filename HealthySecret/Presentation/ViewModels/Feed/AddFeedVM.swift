@@ -11,14 +11,14 @@ import RxSwift
 
 
 class AddFeedVM: ViewModel {
-   
     
-   
+    
+    
     
     
     
     var disposeBag = DisposeBag()
-  
+    
     
     weak var coordinator: Coordinator?
     private let commuUseCase: CommuUseCase
@@ -59,51 +59,50 @@ class AddFeedVM: ViewModel {
             input.imagesDatas.subscribe(onNext: { arr in
                 
                 input.feedText.subscribe(onNext: { text in
-                        var urlArr: [String] = []
+                    var urlArr: [String] = []
                     
                     LoadingIndicator.showLoading()
-                        for image in arr {
-                            guard let imageData = image.jpegData(compressionQuality: 0.1) else { return  }
-
-                            self.commuUseCase.uploadImage( imageData: imageData, pathRoot: uuid ).subscribe({ event in
-                                switch event {
-                                case.success(let url): urlArr.append(url)
-                                case.failure(let err):
-                                    print(err)
-                                    break
-                                }
-                                
-                                if urlArr.count == arr.count {
-                                
-                                    let feed = FeedModel(uuid: uuid, feedUid: UUID().uuidString+CustomFormatter.shared.getToday(), date: date, profileImage: "", nickname: name, contents: text, mainImgUrl: urlArr, likes: [], report: [], coments: []  )
-                                  
-                                    
-                                    self.commuUseCase.addFeed(feed: feed).subscribe({ event in
-                                        switch event { 
-                                        case.completed:
-                                            DispatchQueue.main.async {
-                                                       LoadingIndicator.hideLoading()
-                                                   }
-                                            self.coordinator?.finish()
-                                            
-                                        case .error(_):
-                                            break
-                                        }
-                                        
-                                    }).disposed(by: disposeBag)
-                                }
-                                
-                                
-                            }).disposed(by: disposeBag)
+                    for image in arr {
+                        guard let imageData = image.jpegData(compressionQuality: 0.1) else { return  }
+                        
+                        self.commuUseCase.uploadImage( imageData: imageData, pathRoot: uuid ).subscribe({ event in
+                            switch event {
+                            case.success(let url): urlArr.append(url)
+                            case.failure(let err):
+                                print(err)
+                            }
                             
-                        }
+                            if urlArr.count == arr.count {
+                                
+                                let feed = FeedModel(uuid: uuid, feedUid: UUID().uuidString+CustomFormatter.shared.getToday(), date: date, profileImage: "", nickname: name, contents: text, mainImgUrl: urlArr, likes: [], report: [], coments: []  )
+                                
+                                
+                                self.commuUseCase.addFeed(feed: feed).subscribe({ event in
+                                    switch event {
+                                    case.completed:
+                                        DispatchQueue.main.async {
+                                            LoadingIndicator.hideLoading()
+                                        }
+                                        self.coordinator?.finish()
+                                        
+                                    case .error(_):
+                                        break
+                                    }
+                                    
+                                }).disposed(by: disposeBag)
+                            }
+                            
+                            
+                        }).disposed(by: disposeBag)
+                        
+                    }
                     
-                        
-                        
-                        
-                        
                     
-
+                    
+                    
+                    
+                    
+                    
                 }).disposed(by: disposeBag)
                 
                 
@@ -119,13 +118,5 @@ class AddFeedVM: ViewModel {
         
     }
     
-    
-    
 
-    
-    
-    
-    
-    
-    
 }

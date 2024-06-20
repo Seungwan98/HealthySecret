@@ -509,11 +509,7 @@ class DiaryViewController: UIViewController {
         
     }
     
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-    }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         
         self.navigationController?.navigationBar.backgroundColor = .clear
@@ -1153,7 +1149,6 @@ class DiaryViewController: UIViewController {
         var pieDataEntries: [ChartDataEntry] = []
         // 담기
         for i in 0..<values.count {
-            //, label: dataPoints[i],data: dataPoints[i]
             let pieDataEntry = PieChartDataEntry(value: values[i] )
             pieDataEntries.append(pieDataEntry)
         }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		52305BA8F5CB9198C728A276 /* Pods_HealthySecret.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F59E559E041FBDE3CE69053D /* Pods_HealthySecret.framework */; };
 		6003998A2BDB9C7F0030D9EF /* ProfileHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600399892BDB9C7F0030D9EF /* ProfileHeaderView.swift */; };
 		60050C6F2AF8E399000FAAA4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 60050C6E2AF8E399000FAAA4 /* GoogleService-Info.plist */; };
 		600DE92F2B511E9D00D5D797 /* CalendarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600DE92E2B511E9D00D5D797 /* CalendarVM.swift */; };
@@ -186,12 +187,9 @@
 		60FC86202BF66CE800471983 /* LikesVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC861F2BF66CE800471983 /* LikesVM.swift */; };
 		60FC86222BF6766F00471983 /* FollowsBlocksCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC86212BF6766F00471983 /* FollowsBlocksCell.swift */; };
 		60FC86242BF6981B00471983 /* thirdIcons.png in Resources */ = {isa = PBXBuildFile; fileRef = 60FC86232BF6981B00471983 /* thirdIcons.png */; };
-		CB62F41F787B287CE4FA2161 /* Pods_HealthySecret.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		00F289C4F415E7A5F0E88499 /* Pods-HealthySecret.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthySecret.debug.xcconfig"; path = "Target Support Files/Pods-HealthySecret/Pods-HealthySecret.debug.xcconfig"; sourceTree = "<group>"; };
-		39942C4C2E7B3B63F8C36424 /* Pods-HealthySecret.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthySecret.release.xcconfig"; path = "Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"; sourceTree = "<group>"; };
 		600399892BDB9C7F0030D9EF /* ProfileHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeaderView.swift; sourceTree = "<group>"; };
 		60050C6E2AF8E399000FAAA4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		600DE92A2B5043C000D5D797 /* FSCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FSCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -377,7 +375,9 @@
 		60FC861F2BF66CE800471983 /* LikesVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesVM.swift; sourceTree = "<group>"; };
 		60FC86212BF6766F00471983 /* FollowsBlocksCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsBlocksCell.swift; sourceTree = "<group>"; };
 		60FC86232BF6981B00471983 /* thirdIcons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = thirdIcons.png; path = ../../../../../../Downloads/thirdIcons.png; sourceTree = "<group>"; };
-		DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthySecret.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A381B240B2626743CF038A4C /* Pods-HealthySecret.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthySecret.debug.xcconfig"; path = "Target Support Files/Pods-HealthySecret/Pods-HealthySecret.debug.xcconfig"; sourceTree = "<group>"; };
+		F24C71E7A26862AB05FA2046 /* Pods-HealthySecret.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthySecret.release.xcconfig"; path = "Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"; sourceTree = "<group>"; };
+		F59E559E041FBDE3CE69053D /* Pods_HealthySecret.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthySecret.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -392,7 +392,7 @@
 				60BC98D62AF919B40013FAD9 /* FirebaseFirestoreCombine-Community in Frameworks */,
 				60BC98EF2B0CB0560013FAD9 /* FirebaseStorage in Frameworks */,
 				60BC98D42AF919B40013FAD9 /* FirebaseFirestore in Frameworks */,
-				CB62F41F787B287CE4FA2161 /* Pods_HealthySecret.framework in Frameworks */,
+				52305BA8F5CB9198C728A276 /* Pods_HealthySecret.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -884,7 +884,7 @@
 				600DE9572B59250500D5D797 /* KakaoSDKAuth.framework */,
 				600DE92C2B50443400D5D797 /* FSCalendar.framework */,
 				600DE92A2B5043C000D5D797 /* FSCalendar.framework */,
-				DFDB89242D2DF44874863953 /* Pods_HealthySecret.framework */,
+				F59E559E041FBDE3CE69053D /* Pods_HealthySecret.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -892,8 +892,8 @@
 		EF80A9A0DA043E2738D44813 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				00F289C4F415E7A5F0E88499 /* Pods-HealthySecret.debug.xcconfig */,
-				39942C4C2E7B3B63F8C36424 /* Pods-HealthySecret.release.xcconfig */,
+				A381B240B2626743CF038A4C /* Pods-HealthySecret.debug.xcconfig */,
+				F24C71E7A26862AB05FA2046 /* Pods-HealthySecret.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -905,13 +905,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6094C5492ACD915300D62B0A /* Build configuration list for PBXNativeTarget "HealthySecret" */;
 			buildPhases = (
+				5A5858D145AD6A86A7FFF4E4 /* [CP] Check Pods Manifest.lock */,
 				6093DB062C1AF5010078CAC6 /* SwiftLint Script */,
-				B4D6822BDEED533E9C9AFE7F /* [CP] Check Pods Manifest.lock */,
 				6094C52E2ACD915300D62B0A /* Sources */,
 				6094C52F2ACD915300D62B0A /* Frameworks */,
 				6094C5302ACD915300D62B0A /* Resources */,
-				CACE6A6AE5C3B57F09D9A4D8 /* [CP] Embed Pods Frameworks */,
-				EC586D0250B737BDF6EEBF74 /* [CP] Copy Pods Resources */,
+				365FFD51C1D3EB3CAE274422 /* [CP] Embed Pods Frameworks */,
+				3E326C6A91924432CBA5A2E1 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1023,25 +1023,41 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		6093DB062C1AF5010078CAC6 /* SwiftLint Script */ = {
+		365FFD51C1D3EB3CAE274422 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HealthySecret/Pods-HealthySecret-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
-			name = "SwiftLint Script";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HealthySecret/Pods-HealthySecret-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HealthySecret/Pods-HealthySecret-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
-		B4D6822BDEED533E9C9AFE7F /* [CP] Check Pods Manifest.lock */ = {
+		3E326C6A91924432CBA5A2E1 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HealthySecret/Pods-HealthySecret-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HealthySecret/Pods-HealthySecret-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HealthySecret/Pods-HealthySecret-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5A5858D145AD6A86A7FFF4E4 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1063,39 +1079,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		CACE6A6AE5C3B57F09D9A4D8 /* [CP] Embed Pods Frameworks */ = {
+		6093DB062C1AF5010078CAC6 /* SwiftLint Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HealthySecret/Pods-HealthySecret-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			inputPaths = (
+			);
+			name = "SwiftLint Script";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HealthySecret/Pods-HealthySecret-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HealthySecret/Pods-HealthySecret-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		EC586D0250B737BDF6EEBF74 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HealthySecret/Pods-HealthySecret-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HealthySecret/Pods-HealthySecret-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HealthySecret/Pods-HealthySecret-resources.sh\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1367,7 +1367,7 @@
 		};
 		6094C54A2ACD915300D62B0A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 00F289C4F415E7A5F0E88499 /* Pods-HealthySecret.debug.xcconfig */;
+			baseConfigurationReference = A381B240B2626743CF038A4C /* Pods-HealthySecret.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1455,7 +1455,7 @@
 		};
 		6094C54B2ACD915300D62B0A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 39942C4C2E7B3B63F8C36424 /* Pods-HealthySecret.release.xcconfig */;
+			baseConfigurationReference = F24C71E7A26862AB05FA2046 /* Pods-HealthySecret.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

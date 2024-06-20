@@ -4,7 +4,7 @@ import UIKit
 enum TrailingContent {
     case readmore
     case readless
-
+    
     var text: String {
         switch self {
         case .readmore: return " \n ...더보기"
@@ -15,7 +15,7 @@ enum TrailingContent {
 
 
 extension UILabel {
-
+    
     private var minimumLines: Int { return 4 }
     private var highlightColor: UIColor { return .lightGray }
     
@@ -23,18 +23,18 @@ extension UILabel {
     
     private var paragraphStyle: NSMutableParagraphStyle {return NSMutableParagraphStyle()}
     
-
+    
     var attributes: [NSAttributedString.Key: Any] {
         return [.font: self.font ?? .systemFont(ofSize: 16)]
     }
     
-
     
-
+    
+    
     
     public func requiredHeight(for text: String) -> CGFloat {
         
-       
+        
         
         
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: frame.width, height: CGFloat.greatestFiniteMagnitude))
@@ -44,22 +44,22 @@ extension UILabel {
         label.text = text
         label.sizeToFit()
         return label.frame.height
-      }
-
+    }
+    
     func highlight(_ text: String, color: UIColor) {
         guard let labelText = self.text else { return }
         let range = (labelText as NSString).range(of: text)
-
+        
         let mutableAttributedString = NSMutableAttributedString.init(string: labelText)
         mutableAttributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: range)
         self.attributedText = mutableAttributedString
     }
-
+    
     func appendReadmore(after text: String, trailingContent: TrailingContent) {
         
         self.lineBreakMode = .byCharWrapping
         
-
+        
         
         
         self.numberOfLines = minimumLines
@@ -75,30 +75,30 @@ extension UILabel {
                 break
             }
             endIndex -= 1
-
-           
+            
+            
             
             truncatedSentence = NSString(string: sentenceText.substring(with: NSRange(location: 0, length: endIndex)))
             truncatedSentence = (String(truncatedSentence) + trailingContent.text) as NSString
             
             
-
+            
         }
         self.text = truncatedSentence as String
         self.highlight(trailingContent.text, color: highlightColor)
         
         
-
-
+        
+        
     }
-
+    
     func appendReadLess(after text: String, trailingContent: TrailingContent) {
         self.numberOfLines = 0
         self.text = text + trailingContent.text
         self.highlight(trailingContent.text, color: highlightColor)
         
         
-
-
+        
+        
     }
 }

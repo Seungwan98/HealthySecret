@@ -14,17 +14,17 @@ class FireStoreService {
     let db =  Firestore.firestore()
     
     
-    func getAllIngredients(completionHandler: @escaping([Row]) -> () ) {
-        self.db.collection("HealthySecret").getDocuments() { (querySnapshot , err) in
-            var parsed : [Row] = []
+    func getAllIngredients(completionHandler: @escaping([Row]) -> Void ) {
+        self.db.collection("HealthySecret").getDocuments { (querySnapshot, err) in
+            var parsed: [Row] = []
 
             if let err = err {
                 print("error : \(err)")
                 
             } else {
-                for document in querySnapshot!.documents{
-                    do{
-                        let jsonData = try JSONSerialization.data(withJSONObject: document.data() , options: [])
+                for document in querySnapshot!.documents {
+                    do {
+                        let jsonData = try JSONSerialization.data(withJSONObject: document.data(), options: [])
                         
                         
                         
@@ -32,8 +32,7 @@ class FireStoreService {
                         
                         parsed = responseFile.row
                         
-                    }
-                    catch let err {
+                    } catch let err {
                         print("Error \(err)")
                         return
                     }
@@ -50,4 +49,3 @@ class FireStoreService {
 
     
 }
-

@@ -39,7 +39,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         
         // 5
-                
+        
         self.window = appWindow
         
         
@@ -48,12 +48,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-            if let url = URLContexts.first?.url {
-                if AuthApi.isKakaoTalkLoginUrl(url) {
-                    _ = AuthController.handleOpenUrl(url: url)
-                }
+        if let url = URLContexts.first?.url {
+            if AuthApi.isKakaoTalkLoginUrl(url) {
+                _ = AuthController.handleOpenUrl(url: url)
             }
         }
+    }
     
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
@@ -88,4 +88,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     
 }
-
