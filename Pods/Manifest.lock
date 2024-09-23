@@ -66,7 +66,7 @@ DEPENDENCIES:
   - RxCocoa (= 6.6.0)
   - RxGesture
   - RxSwift (= 6.6.0)
-  - SnapKit (~> 5.6.0)
+  - SnapKit
   - SwiftyJSON
 
 SPEC REPOS:
@@ -120,6 +120,6 @@ SPEC CHECKSUMS:
   SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
   SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
 
-PODFILE CHECKSUM: 9a1de863ddda7ecdbf51c58e6d97acc9f48f3117
+PODFILE CHECKSUM: 254cb93059fb2c8d5f26322f314b03204b095d8c
 
-COCOAPODS: 1.13.0
+COCOAPODS: 1.15.2

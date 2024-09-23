@@ -21,6 +21,9 @@ struct IngredientsModel: Codable {
     var transFat: Double
     let servingSize: Double
     var addServingSize: Double?
+    let serveStyle: String
+    
+    
     
 
     

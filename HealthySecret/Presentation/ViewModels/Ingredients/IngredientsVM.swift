@@ -92,14 +92,23 @@ class IngredientsVM: ViewModel {
         
         
         input.searchText.map({ [self] text in
-            print("\(text) text")
             var check: Bool = false
             if text.isEmpty {
                 check = false
             } else {
-                self.searchArr = self.ingredientsArr.filter { $0.descKor.localizedCaseInsensitiveContains(text) }
-                output.ingredientsArr.onNext(self.searchArr)
-                check = true
+                RequestFile.shared.getRequestData(text: text).subscribe({ single in
+                    switch single {
+                    case .success(let models):
+                        self.searchArr = models
+                        output.ingredientsArr.onNext(self.searchArr)
+                        check = true
+                    case .failure(let err):
+                        print(err)
+                    }
+                    
+                    
+                }).disposed(by: disposeBag)
+               
                 
             }
             

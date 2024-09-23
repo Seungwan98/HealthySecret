@@ -39,7 +39,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         
         // 5
-        
         self.window = appWindow
         
         

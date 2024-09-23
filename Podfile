@@ -20,7 +20,7 @@ target 'HealthySecret' do
    	 pod 'FSCalendar'
 
     	
-    	pod 'SnapKit', '~> 5.6.0'
+    	pod 'SnapKit'
 end	
 
 

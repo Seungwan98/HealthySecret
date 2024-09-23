@@ -217,7 +217,7 @@ class IngredientsViewController: UIViewController, UIScrollViewDelegate, Ingredi
     func setBind() {
         
         let input = IngredientsVM.Input( viewWillAppear: self.rx.methodInvoked(#selector(viewWillAppear(_:)))
-            .map( { _ in }).asObservable(), rightButtonTapped: rightButton.rx.tap.asObservable(), searchText: Observable.merge( searchController.searchBar.rx.text.orEmpty.distinctUntilChanged().asObservable()), likesInputArr: self.likesInputArr.asObservable(), cellTouchToDetail: tableView.rx.modelSelected(IngredientsModel.self).asObservable()
+            .map( { _ in }).asObservable(), rightButtonTapped: rightButton.rx.tap.asObservable(), searchText: Observable.merge( searchController.searchBar.rx.text.orEmpty.debounce(.seconds(1), scheduler: MainScheduler.instance).distinctUntilChanged().asObservable()), likesInputArr: self.likesInputArr.asObservable(), cellTouchToDetail: tableView.rx.modelSelected(IngredientsModel.self).asObservable()
                                          
         )
         
@@ -252,7 +252,7 @@ class IngredientsViewController: UIViewController, UIScrollViewDelegate, Ingredi
             
             cell.title.text = item.descKor
             cell.index = item.num
-            cell.kcal.text = "( " + String(item.servingSize) + "g )" + " " + String(item.calorie) + " kcal"
+            cell.kcal.text = "( " + String(Int(item.servingSize)) + "\(item.serveStyle) )" + " " + String(item.calorie) + " kcal"
             cell.delegate = self
             
             if self.likes[index] == 1 {

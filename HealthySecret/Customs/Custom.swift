@@ -25,6 +25,34 @@ extension Encodable {
     
 }
 
+extension String {
+    func splitNumberAndUnit() -> (number: String, unit: String)? {
+        // 정규 표현식을 사용하여 숫자와 단위를 분리합니다.
+        let pattern = "([0-9]+)([a-zA-Z]+)"
+        
+        // 정규 표현식 객체 생성
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
+            return nil
+        }
+        
+        // 첫 번째 일치하는 부분을 찾습니다.
+        if let match = regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: self.count)) {
+            // 첫 번째 캡처 그룹: 숫자
+            if let numberRange = Range(match.range(at: 1), in: self) {
+                let number = String(self[numberRange])
+                
+                // 두 번째 캡처 그룹: 단위
+                if let unitRange = Range(match.range(at: 2), in: self) {
+                    let unit = String(self[unitRange])
+                    
+                    return (number, unit)
+                }
+            }
+        }
+        
+        return nil
+    }
+}
 
 struct CustomMath {
     
