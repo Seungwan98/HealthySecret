@@ -277,6 +277,8 @@ class FollowsVC: UIViewController, UIScrollViewDelegate, UISearchBarDelegate, Fo
         output.follow.subscribe(onNext: { [weak self] follow in
             guard let follow = follow, let self = self else {return}
             
+            
+            print("\(follow) follow Check")
             if follow {
                 self.segmentControl.selectedSegmentIndex = 0
                 

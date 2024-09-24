@@ -148,6 +148,7 @@ class FollowsVM: ViewModel {
             if let follow = self.follow {
                 
                 
+                
                 output.follow.onNext(follow)
                 
                 
@@ -160,6 +161,7 @@ class FollowsVM: ViewModel {
                     
                     switch event {
                     case.success(let dic):
+                        print("\(dic) suc")
                         self.followers = dic[ .followers ] ?? []
                         self.followings = dic[ .followings ] ?? []
                         
@@ -175,7 +177,8 @@ class FollowsVM: ViewModel {
                         
                         
                         
-                    case.failure(_):
+                    case.failure(let err):
+                        print("\(err)errrrr")
                         break
                         
                     }
@@ -186,6 +189,7 @@ class FollowsVM: ViewModel {
                 }).disposed(by: disposeBag )
                 
             }
+
             
             
         }).disposed(by: disposeBag)

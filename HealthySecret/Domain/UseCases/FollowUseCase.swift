@@ -35,14 +35,14 @@ class FollowUseCase {
     func getFollows(uid: String) -> Single< [FollowType: [UserModel]]> {
         var followDic = [FollowType: [UserModel]]()
         return Single.create { [weak self] single in
-            guard let self else { single(.failure(CustomError.isNil))
+            guard let self else {
+                single(.failure(CustomError.isNil))
                 return Disposables.create() }
             self.userRepository.getUser(uid: uid).subscribe({ event in
                 switch event {
                     
                 case .success(let user):
                    
-                    
                     
                     self.followsRepository.getFollowsLikes(uid: user.followers ?? []).subscribe({ event in
                         switch event {
@@ -52,8 +52,10 @@ class FollowUseCase {
                                 switch event {
                                 case .success(let followings):
                                     followDic[ .followings ] = followings
+                                    print("\(followDic)followDic")
                                     single( .success(followDic))
                                 case .failure(let err):
+                                    print("\(err)errr")
                                     single(.failure(err))
 
                                     
@@ -61,6 +63,7 @@ class FollowUseCase {
                             }).disposed(by: self.disposeBag)
                             
                         case.failure(let err):
+                            print("\(err) errrr")
                             single(.failure(err))
                         }
                         
@@ -71,6 +74,8 @@ class FollowUseCase {
                     
                     
                 case .failure(let err):
+                    print("\(err) errrrrrr")
+
                     single(.failure(err))
                 }
                 

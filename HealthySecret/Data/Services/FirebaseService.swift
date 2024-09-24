@@ -1630,12 +1630,14 @@ extension FirebaseService {
                             do {
                                 
                                 let jsonData = try JSONSerialization.data( withJSONObject: doc.data(), options: [] )
-                                let user = try JSONDecoder().decode( UserModel.self, from: jsonData )
                                 
+                                let user = try JSONDecoder().decode( UserModel.self, from: jsonData )
                                 usersArr.append(user)
                                 
-                            } catch {
-                                
+                            }
+                            
+                            catch(let err) {
+                                print(err)
                                 
                                 single(.failure(CustomError.isNil))
                                 
