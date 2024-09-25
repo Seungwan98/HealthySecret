@@ -1634,10 +1634,7 @@ extension FirebaseService {
                                 let user = try JSONDecoder().decode( UserModel.self, from: jsonData )
                                 usersArr.append(user)
                                 
-                            }
-                            
-                            catch(let err) {
-                                print(err)
+                            } catch let err {
                                 
                                 single(.failure(CustomError.isNil))
                                 

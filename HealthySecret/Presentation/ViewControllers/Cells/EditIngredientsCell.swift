@@ -55,6 +55,7 @@ class EditIngredientsCell: UITableViewCell {
         }
         self.name.snp.makeConstraints {
             $0.leading.equalTo(self).inset(20)
+            $0.width.equalTo(200)
             $0.centerY.equalTo(self).offset(-14)
         }
         self.deleteButton.snp.makeConstraints {

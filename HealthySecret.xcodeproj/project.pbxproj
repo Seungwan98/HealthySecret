@@ -42,6 +42,7 @@
 		6067B99B2B4D578B00D536FF /* calendarIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6067B99A2B4D578B00D536FF /* calendarIcon.png */; };
 		6067B99D2B502A2900D536FF /* CalendarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6067B99C2B502A2900D536FF /* CalendarCoordinator.swift */; };
 		6067B99F2B502A5E00D536FF /* CalendarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6067B99E2B502A5E00D536FF /* CalendarVC.swift */; };
+		6068DA0B2CA43B3A00FB6E8B /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6068DA0A2CA43B3A00FB6E8B /* SearchVC.swift */; };
 		607ABE502B9824B400C3FCCF /* ViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607ABE4F2B9824B400C3FCCF /* ViewController+.swift */; };
 		608DF96B2AD4352F00DD27DB /* IngredientsDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608DF96A2AD4352F00DD27DB /* IngredientsDTO.swift */; };
 		608DF96D2AD4364B00DD27DB /* RequestFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608DF96C2AD4364B00DD27DB /* RequestFile.swift */; };
@@ -233,6 +234,7 @@
 		6067B99A2B4D578B00D536FF /* calendarIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendarIcon.png; sourceTree = "<group>"; };
 		6067B99C2B502A2900D536FF /* CalendarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCoordinator.swift; sourceTree = "<group>"; };
 		6067B99E2B502A5E00D536FF /* CalendarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarVC.swift; sourceTree = "<group>"; };
+		6068DA0A2CA43B3A00FB6E8B /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
 		607ABE4F2B9824B400C3FCCF /* ViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+.swift"; sourceTree = "<group>"; };
 		608DF96A2AD4352F00DD27DB /* IngredientsDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsDTO.swift; sourceTree = "<group>"; };
 		608DF96C2AD4364B00DD27DB /* RequestFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestFile.swift; sourceTree = "<group>"; };
@@ -423,6 +425,7 @@
 				60A3801B2B7F22E400C9A2E6 /* DetailModalVC.swift */,
 				606343C82B8F34430084E2CC /* AddDiaryVC.swift */,
 				6067B99E2B502A5E00D536FF /* CalendarVC.swift */,
+				6068DA0A2CA43B3A00FB6E8B /* SearchVC.swift */,
 			);
 			path = main;
 			sourceTree = "<group>";
@@ -1210,6 +1213,7 @@
 				606343C72B8E34CD0084E2CC /* ChangeIntroduceVC.swift in Sources */,
 				6052D5C52BEBF1410085B826 /* DiaryCoordinator.swift in Sources */,
 				600DE9782B62A12000D5D797 /* ExerciseCoordinator.swift in Sources */,
+				6068DA0B2CA43B3A00FB6E8B /* SearchVC.swift in Sources */,
 				60B36B0D2BF6EBBE00E01335 /* SplashVM.swift in Sources */,
 				60C391F42C08581B00465156 /* DefaultFollowsRepositoy.swift in Sources */,
 				60C391F22C08576900465156 /* FollowUseCase.swift in Sources */,

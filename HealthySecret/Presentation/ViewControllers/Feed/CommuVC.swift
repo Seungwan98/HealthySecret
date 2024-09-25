@@ -296,6 +296,7 @@ class CommuVC: UIViewController, UIScrollViewDelegate, FeedCollectionCellDelegat
     
     let refreshControl = UIRefreshControl()
     
+    var searchTapped = PublishSubject<Void>()
     
     // (delegate) Cell터치 시.
     func didPressHeart(for index: String, like: Bool) {
@@ -437,10 +438,15 @@ class CommuVC: UIViewController, UIScrollViewDelegate, FeedCollectionCellDelegat
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.backgroundColor = .clear
         
         
+        let image = UIImage(systemName: "magnifyingglass")
+        let rightBarButton = UIBarButtonItem(image: image, style: .plain, target: self, action: nil)
+        rightBarButton.rx.tap.bind(to: self.searchTapped).disposed(by: disposeBag)
+        rightBarButton.tintColor = .black
+        navigationItem.rightBarButtonItem = rightBarButton
         
         
         
@@ -516,11 +522,10 @@ class CommuVC: UIViewController, UIScrollViewDelegate, FeedCollectionCellDelegat
         let paging = PublishSubject<Bool>()
         
         
-        let input = CommuVM.Input( viewWillAppearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), likesButtonTapped: likesButtonTapped, comentsTapped: self.comentsTapped.asObservable(), addButtonTapped: self.addButton.rx.tap.asObservable(), deleteFeed: deleteFeed, reportFeed: reportFeed, updateFeed: updateFeed, paging: paging.asObservable(), profileTapped: profileTapped.asObservable(), likesTapped: self.likesTapped.asObservable(), refreshControl: self.refreshControl.rx.controlEvent(.valueChanged).asObservable(), segmentChanged: segmentChanged.asObservable())
+        let input = CommuVM.Input( viewWillAppearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:))).map({ _ in }), likesButtonTapped: likesButtonTapped, comentsTapped: self.comentsTapped.asObservable(), addButtonTapped: self.addButton.rx.tap.asObservable(), deleteFeed: deleteFeed, reportFeed: reportFeed, updateFeed: updateFeed, paging: paging.asObservable(), profileTapped: profileTapped.asObservable(), likesTapped: self.likesTapped.asObservable(), refreshControl: self.refreshControl.rx.controlEvent(.valueChanged).asObservable(), segmentChanged: segmentChanged.asObservable(), searchTapped: self.searchTapped.asObservable())
         
         
         guard let output = viewModel?.transform(input: input, disposeBag: disposeBag) else {return}
-        
         
         
         output.endRefreshing.subscribe(onNext: { event in
