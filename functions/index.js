@@ -1,97 +1,170 @@
+
 const functions = require("firebase-functions");
-// The Cloud Functions for Firebase SDK to create Cloud Functions and triggers.
-const {logger} = require("firebase-functions");
-const {onRequest} = require("firebase-functions/v2/https");
-const {onDocumentCreated} = require("firebase-functions/v2/firestore");
+const admin = require("firebase-admin");
+const algoliasearch = require("algoliasearch").default;
 
-// The Firebase Admin SDK to access Firestore.
-const {initializeApp} = require("firebase-admin/app");
-const {getFirestore} = require("firebase-admin/firestore");
+// Firebase Admin 초기화
+admin.initializeApp(functions.config().firestore);
 
-initializeApp();
+// Firestore 참조
+// const firestore = admin.firestore();
 
-exports.helloWorld = functions.https.onRequest((request, response) => {
-    const qs = require('qs');
+// Algolia 클라이언트 초기화
+// const ALGOLIA_APP_ID = "L0ZWCL0CYR";
+// const ALGOLIA_API_KEY = "7caf5c06565eab83d67cca55ac449dc2";
+const ALGOLIA_INDEX_NAME = "HealthySecretUsers";
 
-    response.send(request.query.code);
-    
-});
+const client = algoliasearch("L0ZWCL0CYR", "7caf5c06565eab83d67cca55ac449dc2");
+const index = client.initIndex(ALGOLIA_INDEX_NAME);
+exports.sendCollectionToAlgolia = functions
+    .region("asia-northeast2")
+    .https.onRequest(async (request, response) => {
+      const firestore = admin.firestore();
+      const algoliaRecords = [];
+      const snapshot = await firestore
+          .collection("HealthySecretUsers").get();
+      snapshot.forEach((doc) => {
+        const document = doc.data();
+        const record = {
+          objectID: doc.id,
+          activity: document.activity,
+          age: document.age,
+          blocked: document.blocked,
+          blocking: document.blocking,
+          calorie: document.calorie,
+          diarys: document.diarys,
+          exercise: document.exercise,
+          followers: document.followers,
+          followings: document.followings,
+          goalWeight: document.goalWeight,
+          ingredients: document.ingredients,
+          loginMethod: document.loginMethod,
+          name: document.name,
+          nowWeight: document.nowWeight,
+          report: document.report,
+          sex: document.sex,
+          tall: document.tall,
+          uuid: document.uuid,
+        };
 
-function makeJWT(){
-    const jwt = require('jsonwebtoken')
-    const fs = require('fs')
-    // Path to download key file from developer.apple.com/account/resources/authkeys/list
-    let privateKey = fs.readFileSync('AuthKey_ZL24X6HW63.p8');
+        algoliaRecords.push(record);
+      });
 
-
-    //Sign with your team ID and key ID information.
-    let token = jwt.sign({
-        iss: 'YH4A87H8M4',
-        iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000) + 120,
-        aud: 'https://appleid.apple.com',
-        sub: 'com.wan.HealthySecret'
-    },
-        privateKey,{
-        algorithm: 'ES256',
-        header: { alg: 'ES256', kid: 'ZL24X6HW63' },
+      // After all records are created, save them to Algolia
+      index.saveObjects(algoliaRecords, (_error, content) => {
+        response.status(200)
+            .send("COLLECTION was indexed to Algolia successfully.");
+      });
     });
 
-    return token;
-}
+exports.collectionOnCreate = functions
+    .region("asia-northeast2")
+    .firestore.document("HealthySecretUsers/{documentId}")
+    .onCreate(async (snapshot, context) => {
+      await saveDocumentInAlgolia(snapshot);
+    });
 
-
-exports.getRefreshToken = functions.https.onRequest( async (request, response) => {
-    
-    //import the module to use
-    const axios = require('axios');
-    const qs = require('qs');
-    const code = request.query.code
-
-    const client_secret = makeJWT();
-    let data = {
-        'code': code,
-        'client_id': 'com.wan.HealthySecret',
-        'client_secret': client_secret,
-        'grant_type': 'authorization_code'
+const saveDocumentInAlgolia = async (snapshot) => {
+  if (snapshot.exists) {
+    const document = snapshot.data();
+    console.log(snapshot.id);
+    if (document) {
+      const record = {
+        objectID: snapshot.id,
+        activity: document.activity,
+        age: document.age,
+        blocked: document.blocked,
+        blocking: document.blocking,
+        calorie: document.calorie,
+        diarys: document.diarys,
+        exercise: document.exercise,
+        followers: document.followers,
+        followings: document.followings,
+        goalWeight: document.goalWeight,
+        ingredients: document.ingredients,
+        loginMethod: document.loginMethod,
+        name: document.name,
+        nowWeight: document.nowWeight,
+        report: document.report,
+        sex: document.sex,
+        tall: document.tall,
+        uuid: document.uuid,
+      };
+      index.saveObject(record)
+          .catch((res) => console.log("Error with: ", res));
     }
+  }
+};
 
-
-    return axios.post(`https://appleid.apple.com/auth/token`, qs.stringify(data), {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-    }).then(async res => {
-        const refresh_token = res.data.refresh_token;
-
-        response.send(refresh_token);
+exports.ticcleOnUpdate = functions
+    .region("asia-northeast2")
+    .firestore.document("HealthySecretUsers/{documentId}")
+    .onUpdate(async (change, context) => {
+      await updateDocumentInAlgolia(context.params.documentId, change);
     });
-});
 
 
-exports.revokeToken = functions.https.onRequest(async (request, response) => {
-    //import the module to use
-    const axios = require('axios');
-    const qs = require('qs');
-    
+const updateDocumentInAlgolia = async (objectID, change) => {
+  const after = change.after.data();
+  const before = change.before.data();
+  const record = {objectID: objectID,
+    activity: after.activity,
+    age: after.age,
+    blocked: after.blocked,
+    blocking: after.blocking,
+    calorie: after.calorie,
+    diarys: after.diarys,
+    exercise: after.exercise,
+    followers: after.followers,
+    followings: after.followings,
+    goalWeight: after.goalWeight,
+    ingredients: after.ingredients,
+    loginMethod: after.loginMethod,
+    name: after.name,
+    nowWeight: after.nowWeight,
+    report: after.report,
+    sex: after.sex,
+    tall: after.tall,
+    uuid: after.uuid,
+  };
+  let flag = false;
+  if (before.activity != after.activity || before.age != after.age ||
+before.blocked != after.blocked ||
+before.blocking != after.blocking ||
+before.calorie != after.calorie || before.diarys != after.diarys ||
+before.exercise != after.exercise ||
+before.followers != after.followers ||
+before.followings != after.followings ||
+before.goalWeight != after.goalWeight ||
+before.ingredients != after.ingredients ||
+before.loginMethod != after.loginMethod ||
+before.name != after.name ||
+before.nowWeight != after.nowWeight || before.report != after.report ||
+before.sex != after.sex ||
+before.tall != after.tall || before.uuid != after.uuid ) {
+    flag = true;
+  }
+
+  if (flag) {
+    // update
+    index.partialUpdateObject(record)
+        .catch((res) => console.log("Error with: ", res));
+  }
+};
 
 
-    const refresh_token = request.query.refresh_token;
-    const client_secret = makeJWT();
-
-    let data = {
-        'token': refresh_token,
-        'client_id': 'com.wan.HealthySecret',
-        'client_secret': client_secret,
-        'token_type_hint': 'refresh_token'
-    };
-
-    return axios.post(`https://appleid.apple.com/auth/revoke`, qs.stringify(data), {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-    }).then(async res => {
-        console.log(res.data)
-        response.send( "Success" );
+// Firestore 문서가 삭제될 때 Algolia에서 삭제
+exports.ticcleOnDelete = functions
+    .region("asia-northeast2")
+    .firestore.document("HealthySecretUsers/{documentId}")
+    .onDelete(async (snapshot, context) => {
+      await deleteDocumentInAlgolia(snapshot);
     });
-});
+
+const deleteDocumentInAlgolia = async (snapshot) => {
+  if (snapshot.exists) {
+    const objectID = snapshot.id;
+    index.deleteObject(objectID)
+        .catch((res) => console.log("Error with: ", res));
+  }
+};

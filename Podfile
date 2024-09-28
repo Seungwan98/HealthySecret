@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-# platform:ios, '9.0'
+# platform:ios, '17.2'
 
 target 'HealthySecret' do
   # Comment the next line if you don't want to use dynamic frameworks
@@ -8,6 +8,9 @@ target 'HealthySecret' do
   # Pods for HealthySecret
 
  	pod 'KakaoSDK'
+
+
+
  	pod 'SwiftyJSON'
   
  	pod 'RxSwift', '6.6.0'
@@ -21,6 +24,7 @@ target 'HealthySecret' do
 
     	
     	pod 'SnapKit'
+	pod 'AlgoliaSearchClient', '~> 8.0'
 end	
 
 
