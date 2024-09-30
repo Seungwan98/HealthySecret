@@ -22,7 +22,7 @@ class RequestFile {
         }
         
         
-        return IngredientsModel(num: foodDto.num ?? "", descKor: foodDto.foodNmKr ?? "", carbohydrates: (Double(foodDto.carbohydrates ?? "0.0") ?? 0), calorie: Int(Double(foodDto.calorie ?? "0.0") ?? 0), protein: Double(foodDto.protein ?? "0.0") ?? 0.0, province: (Double(foodDto.province ?? "0.0") ?? 0.0), sugars: Double(foodDto.sugars ?? "0.0") ?? 0.0, sodium: (Double(foodDto.sodium ?? "0.0") ?? 0.0), cholesterol: (Double(foodDto.cholesterol ?? "0.0") ?? 0.0), fattyAcid: (Double(foodDto.fattyAcid ?? "0.0") ?? 0.0), transFat: (Double(foodDto.transFat ?? "0.0") ?? 0.0), servingSize: splitDouble, serveStyle: splitStr)
+        return IngredientsModel(num: foodDto.num ?? "", descKor: foodDto.foodNmKr ?? "", carbohydrates: (Double(foodDto.carbohydrates ?? "0.0") ?? 0), calorie: Int(Double(foodDto.calorie ?? "0.0") ?? 0), protein: Double(foodDto.protein ?? "0.0") ?? 0.0, province: (Double(foodDto.province ?? "0.0") ?? 0.0), sugars: Double(foodDto.sugars ?? "0.0") ?? 0.0, sodium: (Double(foodDto.sodium ?? "0.0") ?? 0.0), cholesterol: (Double(foodDto.cholesterol ?? "0.0") ?? 0.0), fattyAcid: (Double(foodDto.fattyAcid ?? "0.0") ?? 0.0), transFat: (Double(foodDto.transFat ?? "0.0") ?? 0.0), servingSize: splitDouble, serveStyle: splitStr, food_CD: foodDto.foodCD!)
     }
     static let shared = RequestFile()
     
@@ -43,6 +43,7 @@ class RequestFile {
                         print(data)
                         let decoder = JSONDecoder()
                         let result = try decoder.decode(FoodDTO.self, from: data)
+                        
                         let dtos = result.body.items.map { self.foodToDomain(foodDto: $0) }
                         
                         single(.success(dtos))

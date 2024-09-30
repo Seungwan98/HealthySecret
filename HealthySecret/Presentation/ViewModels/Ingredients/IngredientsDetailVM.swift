@@ -102,7 +102,6 @@ class IngredientsDetailVM: ViewModel {
                     
                     if tag == 0 {
                         if text.isEmpty {
-                            print("empty")
                             
                             newRow = self.getServingOnce(selectText: 0, model: self.model)
                             

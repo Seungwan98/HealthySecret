@@ -22,6 +22,8 @@ struct IngredientsModel: Codable {
     let servingSize: Double
     var addServingSize: Double?
     let serveStyle: String
+    let food_CD: String?
+
     
     
     

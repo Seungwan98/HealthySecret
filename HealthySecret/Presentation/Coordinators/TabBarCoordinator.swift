@@ -342,10 +342,18 @@ class CommuCoordinator: Coordinator {
         
     }
     
-    func pushSearchVC() {
-        
-    }
-    
+    func pushSearchView() {
+        let likesUseCase = LikesUseCase(feedRepository: DefaultFeedRepository(firebaseService: self.firebaseService), followsRepository: DefaultFollowsRepositoy(firebaseService: self.firebaseService))
+        let viewModel = SearchVM(coordinator: self, likesUseCase: likesUseCase)
+           let viewController = SearchVC(viewModel: viewModel)
+           
+           
+           self.navigationController.navigationBar.topItem?.title = ""
+           self.navigationController.navigationBar.tintColor = .black
+
+           self.navigationController.pushViewController(viewController, animated: false)
+           
+       }
     
     
 }

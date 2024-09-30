@@ -68,7 +68,7 @@ class DiaryUseCase {
                 var total = [IngredientsModel]()
                 
                 
-                var ingredientsModel = IngredientsModel( num: "", descKor: "", carbohydrates: 0.0, calorie: 0, protein: 0.0, province: 0.0, sugars: 0.0, sodium: 0.0, cholesterol: 0.0, fattyAcid: 0.0, transFat: 0.0, servingSize: 0.0, addServingSize: 0.0, serveStyle: "")
+                var ingredientsModel = IngredientsModel( num: "", descKor: "", carbohydrates: 0.0, calorie: 0, protein: 0.0, province: 0.0, sugars: 0.0, sodium: 0.0, cholesterol: 0.0, fattyAcid: 0.0, transFat: 0.0, servingSize: 0.0, addServingSize: 0.0, serveStyle: "", food_CD: "")
                 
                 
                 

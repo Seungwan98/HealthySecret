@@ -173,90 +173,91 @@ class LikesVC: UIViewController, UIScrollViewDelegate, UISearchBarDelegate, Foll
             self.loadingView.isLoading = false
         }
         
-        guard let ownUid = UserDefaults.standard.string(forKey: "uid") else {
-            print("ownUid nil")
-            return  }
-        
-        
-        let input = LikesVM.Input( viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:)))
-            .map( { _ in }).asObservable(), pressedFollows: self.pressedFollows.asObservable(), pressedProfile: self.pressedProfile.asObservable()
-                                   
-                                   
-        )
-        
-        
-        
-        
-        guard let output = viewModel?.transform(input: input, disposeBag: self.disposeBag ) else {return}
-        
-        
-        
-        tableView.rx.rowHeight.onNext(60)
-        
-        tableView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
-            self?.tableView.deselectRow(at: indexPath, animated: true)
-        }).disposed(by: disposeBag)
-        
-        output.backgroundViewHidden.bind(to: self.backgroundView.rx.isHidden).disposed(by: disposeBag)
-        
-        
-        
-        
-        output.userModels.bind(to: tableView.rx.items(cellIdentifier: "FollowsBlocksCell", cellType: FollowsBlocksCell.self )) { [weak self] _, item, cell in
-            guard let self = self else {return}
+            guard let ownUid = UserDefaults.standard.string(forKey: "uid") else {
+                print("ownUid nil")
+                return  }
             
-            cell.setFollowButton()
-            if ownUid == item.uuid {
-                cell.button.isHidden = true
-                
-            } else {
-                if let followers = item.followers {
-                    if followers.contains(ownUid) {
-                        cell.followIsTouched = true
-                        cell.button.isSelected = true
-                    } else {
-                        cell.followIsTouched = false
-                        cell.button.isSelected = false
-                    }
-                }
-                
-                
-            }
-            cell.index = item.uuid
-            cell.nickname.text = item.name
+            
+            let input = LikesVM.Input( viewWillApearEvent: self.rx.methodInvoked(#selector(viewWillAppear(_:)))
+                .map( { _ in }).asObservable(), pressedFollows: self.pressedFollows.asObservable(), pressedProfile: self.pressedProfile.asObservable()
+                                       
+                                       
+            )
             
             
             
             
-            cell.delegate = self
+            guard let output = viewModel?.transform(input: input, disposeBag: self.disposeBag ) else {return}
             
-            DispatchQueue.main.async {
+            
+            
+            tableView.rx.rowHeight.onNext(60)
+            
+            tableView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
+                self?.tableView.deselectRow(at: indexPath, animated: true)
+            }).disposed(by: disposeBag)
+            
+            output.backgroundViewHidden.bind(to: self.backgroundView.rx.isHidden).disposed(by: disposeBag)
+            
+            
+            
+            
+            output.userModels.bind(to: tableView.rx.items(cellIdentifier: "FollowsBlocksCell", cellType: FollowsBlocksCell.self )) { [weak self] _, item, cell in
+                guard let self = self else {return}
                 
-                
-                
-                if let url = URL(string: item.profileImage ?? "" ) {
-                    
-                    
-                    let processor = DownsamplingImageProcessor(size: CGSize(width: cell.profileImage.bounds.width, height: cell.profileImage.bounds.height) ) // 크기 지정 다운 샘플링
-                    |> RoundCornerImageProcessor(cornerRadius: 0) // 모서리 둥글게
-                    cell.profileImage.kf.indicatorType = .activity  // indicator 활성화
-                    cell.profileImage.kf.setImage(
-                        with: url,  // 이미지 불러올 url
-                        placeholder: UIImage(named: "일반적.png"),  // 이미지 없을 때의 이미지 설정
-                        options: [
-                            .processor(processor),
-                            .scaleFactor(UIScreen.main.scale),
-                            .transition(.none),  // 애니메이션 효과
-                            .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
-                        ])
-                    
-                    
-                    
+                cell.setFollowButton()
+                if ownUid == item.uuid {
+                    cell.button.isHidden = true
                     
                 } else {
-                    cell.profileImage.image = UIImage(named: "일반적.png")
+                    if let followers = item.followers {
+                        if followers.contains(ownUid) {
+                            cell.followIsTouched = true
+                            cell.button.isSelected = true
+                        } else {
+                            cell.followIsTouched = false
+                            cell.button.isSelected = false
+                        }
+                    }
+                    
+                    
                 }
-            }
-        }.disposed(by: disposeBag)
+                cell.index = item.uuid
+                cell.nickname.text = item.name
+                
+                
+                
+                
+                cell.delegate = self
+                
+                DispatchQueue.main.async {
+                    
+                    
+                    
+                    if let url = URL(string: item.profileImage ?? "" ) {
+                        
+                        
+                        let processor = DownsamplingImageProcessor(size: CGSize(width: cell.profileImage.bounds.width, height: cell.profileImage.bounds.height) ) // 크기 지정 다운 샘플링
+                        |> RoundCornerImageProcessor(cornerRadius: 0) // 모서리 둥글게
+                        cell.profileImage.kf.indicatorType = .activity  // indicator 활성화
+                        cell.profileImage.kf.setImage(
+                            with: url,  // 이미지 불러올 url
+                            placeholder: UIImage(named: "일반적.png"),  // 이미지 없을 때의 이미지 설정
+                            options: [
+                                .processor(processor),
+                                .scaleFactor(UIScreen.main.scale),
+                                .transition(.none),  // 애니메이션 효과
+                                .cacheOriginalImage // 이미 캐시에 다운로드한 이미지가 있으면 가져오도록
+                            ])
+                        
+                        
+                        
+                        
+                    } else {
+                        cell.profileImage.image = UIImage(named: "일반적.png")
+                    }
+                }
+            }.disposed(by: disposeBag)
+        
     }
 }

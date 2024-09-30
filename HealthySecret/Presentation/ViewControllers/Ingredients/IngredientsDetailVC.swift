@@ -482,6 +482,8 @@ class IngredientsDetailVC: UIViewController {
             
             nameLabel.snp.makeConstraints {
                 $0.leading.equalTo(informCircle1)
+                $0.trailing.equalTo(informCircle3)
+            
                 $0.top.equalTo(informationView).inset(10)
             }
             labelStackView.snp.makeConstraints {

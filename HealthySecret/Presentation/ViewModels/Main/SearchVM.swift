@@ -1,29 +1,39 @@
 //
-//  LikesVM.swift
+//  AnalyzeVM.swift
 //  HealthySecret
 //
-//  Created by 양승완 on 2023/11/28.
+//  Created by 양승완 on 2023/12/11.
 //
 
 import Foundation
-import RxCocoa
 import RxSwift
+import RxRelay
+import RxCocoa
 
-
-class LikesVM: ViewModel {
-    
-    var uid: String?
-    var feedUid: String?
-    
+class SearchVM: ViewModel {
     
     var disposeBag = DisposeBag()
+ 
     
+    
+    
+    
+    weak var coordinator: CommuCoordinator?
+
+    private let likesUseCase: LikesUseCase
+    
+    init( coordinator: CommuCoordinator, likesUseCase: LikesUseCase ) {
+        self.coordinator =  coordinator
+        self.likesUseCase =  likesUseCase
+        
+    }
     
     
     struct Input {
         let viewWillApearEvent: Observable<Void>
         let pressedFollows: Observable<[String: Bool]>
         let pressedProfile: Observable<String>
+        let searchText: Observable<String>
         
     }
     
@@ -35,33 +45,14 @@ class LikesVM: ViewModel {
         
     }
     
-    
-    weak var coordinator: CommuCoordinator?
-    
-    
-    
-    
-    private let likesUseCase: LikesUseCase
-    
-    init( coordinator: CommuCoordinator, likesUseCase: LikesUseCase ) {
-        self.coordinator =  coordinator
-        self.likesUseCase =  likesUseCase
-        
-    }
-    
-    
-    
-    func transform(input: Input, disposeBag: DisposeBag ) -> Output {
+   
+ 
+    func transform(input: Input, disposeBag: DisposeBag) -> Output {
         
         let output = Output()
         
         
-        guard UserDefaults.standard.string(forKey: "uid") != nil else {
-            print("ownUid nil")
-            return output }
-        
-        
-        
+        let algoliaSearch = AlgoliaService()
         
         
         input.pressedProfile.subscribe(onNext: { [weak self] idx in
@@ -76,6 +67,25 @@ class LikesVM: ViewModel {
         }).disposed(by: disposeBag)
         
         
+        input.searchText.subscribe(onNext: { [weak self] text in
+            if !text.isEmpty {
+                
+                algoliaSearch.searchTeams(searchText: text).subscribe({ single in
+                    switch single {
+                    case .success(let users):
+                        output.userModels.onNext(users)
+                    case .failure(let err):
+                        print(err)
+                    }
+                    
+                    
+                    
+                    
+                }).disposed(by: disposeBag)
+            }
+            
+        }).disposed(by: disposeBag)
+      
         
         
         
@@ -112,56 +122,14 @@ class LikesVM: ViewModel {
             
         }).disposed(by: disposeBag)
         
-        
-        
-        input.viewWillApearEvent.subscribe({ [weak self] _ in
-            guard let self = self, let feedUid = self.feedUid else { return }
-            
-            
-            
-            self.likesUseCase.getLikes(feedUid: feedUid).subscribe({ event in
-                
-                
-                
-                
-                switch event {
-                case.success(let likes):
-                    output.userModels.onNext( likes)
-                    output.backgroundViewHidden.onNext(!likes.isEmpty)
-                    
-                    
-                    
-                case.failure(_):
-                    break
-                    
-                }
-                
-                
-                
-                
-            }).disposed(by: disposeBag )
-            
-            
-            
-            
-        }).disposed(by: disposeBag)
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         return output
+        
     }
     
     
     
     
+   
     
     
     

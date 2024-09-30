@@ -32,8 +32,8 @@ class CommuVM: ViewModel {
         let likesTapped: Observable<String>
         let refreshControl: Observable<Void>
         let segmentChanged: Observable<Bool>
-        let searchTapped: Observable<Void>
-
+        let searchTapped:Observable<Void>
+        
         
     }
     
@@ -77,11 +77,7 @@ class CommuVM: ViewModel {
         let output = Output()
         
         input.searchTapped.subscribe(onNext: { [weak self] _ in
-            
-            guard let self else {return}
-            
-            print("tapped")
-        //    self.coordinator.pushSearchView()
+            self?.coordinator?.pushSearchView()
             
         }).disposed(by: disposeBag)
         

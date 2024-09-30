@@ -16,14 +16,12 @@ class IngredientsVM: ViewModel {
     var disposeBag = DisposeBag()
     
     var firebaseService: FirebaseService
-    
-    var ingredientsArr: [IngredientsModel] = []
-    
+        
     var searchArr: [IngredientsModel] = []
     
     var filteredArr: [IngredientsModel] = []
     
-    var likes: [String: Int] = [:]
+//    var likes: [String: Int] = [:]
     
     var recentSearchArr: [String] = []
     
@@ -34,6 +32,7 @@ class IngredientsVM: ViewModel {
     var realIndex: String?
     
     var lastArr: [IngredientsModel] = []
+     
     
     
     private let ingredientsUseCase: IngredientsUseCase
@@ -57,29 +56,31 @@ class IngredientsVM: ViewModel {
         
         
         
-        
-        
-        input.viewWillAppear.subscribe(onNext: { [self] in
-            
-            self.ingredientsUseCase.getIngredientsList().subscribe({ [weak self] event in
-                
-                switch event {
-                    
-                case.success(let arr):
-                    self?.ingredientsArr = arr
-                case.failure(let err):
-                    print(err)
+        input.likesInputArr.subscribe(onNext: { [weak self] likes in
+            guard let self else {return}
+            self.filteredArr = []
+
+            _ = likes.map({ (key, value) in
+                print("\(likes)")
+
+
+                if let idx = self.searchArr.firstIndex(where: { $0.food_CD == key }) {
+                    print("\(idx)idx")
+                    if value == 1 {
+                        
+                        self.filteredNumbersArr.append(key)
+                        
+                        
+                        self.filteredArr.append(self.searchArr[idx])
+                        
+                        
+                    }
                 }
-                
-                
-            }).disposed(by: disposeBag)
-            
-            
-            
-            
+            })
             
         }).disposed(by: disposeBag)
         
+
         
         
         input.cellTouchToDetail.subscribe(onNext: { model in
@@ -92,6 +93,7 @@ class IngredientsVM: ViewModel {
         
         
         input.searchText.map({ [self] text in
+            print("\(text)  text")
             var check: Bool = false
             if text.isEmpty {
                 check = false
@@ -129,17 +131,18 @@ class IngredientsVM: ViewModel {
             
             
             
-            
-            _ = self.likes.map({ (key, value) in
-                if value == 1 {
-                    self.filteredNumbersArr.append(key)
-                    
-                    if let idx = self.ingredientsArr.firstIndex(where: { $0.num == key }) {
-                        self.filteredArr.append(self.ingredientsArr[idx])
-                    }
-                    
-                }
-            })
+//            
+//            _ = self.likes.map({ (key, value) in
+//                if value == 1 {
+//                    self.filteredNumbersArr.append(key)
+//                    
+//                    if let idx = self.ingredientsArr.firstIndex(where: { $0.num == key }) {
+//                        print("\(self.ingredientsArr[idx]) idx")
+//                        self.filteredArr.append(self.ingredientsArr[idx])
+//                    }
+//                    
+//                }
+//            })
             
             self.filteredArr += self.lastArr
             
@@ -174,7 +177,6 @@ class IngredientsVM: ViewModel {
         
         
         
-        
     }
     
     
@@ -201,51 +203,7 @@ class IngredientsVM: ViewModel {
     
     
     
-    func cellTransform(input: CellInput, disposeBag: DisposeBag) -> CellOutput {
-        let output = CellOutput()
-        
-        
-        input.checkBoxTapped.subscribe(onNext: {
-            input.idx.subscribe(onNext: { idx in
-                print("touch \(idx)")
-                
-                if self.likes[idx] == 1 {
-                    self.likes[idx] = nil
-                    
-                } else {
-                    
-                    self.likes[idx] = 1
-                    
-                }
-                print(self.likes)
-                
-                
-                
-                
-                
-                
-            }).disposed(by: disposeBag)
-            
-            
-            
-            
-        }).disposed(by: disposeBag)
-        
-        
-        return output
-    }
-    
-    
-    
-    struct CellInput {
-        let checkBoxTapped: Observable<Void>
-        let idx: Observable<String>
-    }
-    struct CellOutput {
-        let outputPushedCheck = BehaviorRelay<Bool>(value: false)
-        
-    }
-    
+  
     
     
 }

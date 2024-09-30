@@ -17,9 +17,7 @@ class IngredientsViewController: UIViewController, UIScrollViewDelegate, Ingredi
     let disposeBag = DisposeBag()
     
     private var viewModel: IngredientsVM?
-    
-    private var ingredientsArr: [IngredientsModel] = []
-    
+        
     private var recentsearchArr: [String] = []
     
     private var filteredArr: [IngredientsModel] = []
@@ -29,6 +27,8 @@ class IngredientsViewController: UIViewController, UIScrollViewDelegate, Ingredi
     private var cellController: Bool = false
     
     private var likes: [String: Int] = [:]
+    
+    
     
     lazy private var tableView: UITableView = {
         let tableView = UITableView()
@@ -80,6 +80,9 @@ class IngredientsViewController: UIViewController, UIScrollViewDelegate, Ingredi
     private var backgroundView = UIView()
     
     private var cellTouchToSearch = PublishSubject<String>()
+    
+    private var likesOutput = BehaviorSubject<[String: Int]>(value: [:])
+
     
     
     
@@ -217,7 +220,7 @@ class IngredientsViewController: UIViewController, UIScrollViewDelegate, Ingredi
     func setBind() {
         
         let input = IngredientsVM.Input( viewWillAppear: self.rx.methodInvoked(#selector(viewWillAppear(_:)))
-            .map( { _ in }).asObservable(), rightButtonTapped: rightButton.rx.tap.asObservable(), searchText: Observable.merge( searchController.searchBar.rx.text.orEmpty.debounce(.seconds(1), scheduler: MainScheduler.instance).distinctUntilChanged().asObservable()), likesInputArr: self.likesInputArr.asObservable(), cellTouchToDetail: tableView.rx.modelSelected(IngredientsModel.self).asObservable()
+            .map( { _ in }).asObservable(), rightButtonTapped: rightButton.rx.tap.asObservable(), searchText: Observable.merge( searchController.searchBar.rx.text.orEmpty.debounce(.milliseconds(600), scheduler: MainScheduler.instance).distinctUntilChanged().asObservable()), likesInputArr: self.likesInputArr.asObservable(), cellTouchToDetail: tableView.rx.modelSelected(IngredientsModel.self).asObservable()
                                          
         )
         
@@ -245,17 +248,17 @@ class IngredientsViewController: UIViewController, UIScrollViewDelegate, Ingredi
         }).disposed(by: disposeBag)
         
         
-        output.ingredientsArr.bind(to: tableView.rx.items(cellIdentifier: "IngredientsCell", cellType: IngredientsCell.self )) { index, item, cell in
+        output.ingredientsArr.bind(to: tableView.rx.items(cellIdentifier: "IngredientsCell", cellType: IngredientsCell.self )) { idx, item, cell in
             
-            let index = item.num
+            let index = item.food_CD
             cell.backgroundColor = .clear
             
             cell.title.text = item.descKor
-            cell.index = item.num
+            cell.index = index
             cell.kcal.text = "( " + String(Int(item.servingSize)) + "\(item.serveStyle) )" + " " + String(item.calorie) + " kcal"
             cell.delegate = self
             
-            if self.likes[index] == 1 {
+            if self.likes[index ?? ""] == 1 {
                 cell.checkBoxButton.isSelected = true
                 cell.isTouched = true
                 
@@ -265,7 +268,6 @@ class IngredientsViewController: UIViewController, UIScrollViewDelegate, Ingredi
                 cell.isTouched = false
             }
             
-            print(item.descKor)
             
             
         }.disposed(by: disposeBag)
@@ -288,7 +290,6 @@ class IngredientsViewController: UIViewController, UIScrollViewDelegate, Ingredi
 }
 
 
-var checkBoxButtonTapped = PublishSubject<Void>()
 
 extension IngredientsViewController {
     func rightButtonEnabled() {
@@ -304,14 +305,14 @@ extension IngredientsViewController {
     
     
     
-    
     func didPressHeart(for index: String, like: Bool) {
         if like {
             likes[index] = 1
         } else {
             likes[index] = nil
         }
-        viewModel?.likes = likes
+        
+        self.likesInputArr.onNext(likes)
     }
     
     
@@ -392,9 +393,11 @@ class IngredientsCell: UITableViewCell {
     var index: String?
     
     
-    @IBAction func didPressedHeart(_ sender: UIButton) {
+    @objc
+    func didPressedHeart(_ sender: UIButton) {
         
-        guard let idx = index else {return}
+        guard let idx = self.index else {return}
+        print("idx \(idx) title \(title)")
         
         sender.isSelected = !sender.isSelected
         
