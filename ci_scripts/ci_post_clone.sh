@@ -14,8 +14,8 @@ CONFIG_FILENAME="Config.xcconfig"
 CONFIG_FILE_PATH="$FOLDER_PATH/$CONFIG_FILENAME"
 
 # 환경 변수에서 값을 가져와서 *.xconfig 파일에 추가하기
-echo "BASE_URL = $AlgoliaAppId" >> "$CONFIG_FILE_PATH"
-echo "APP_NAME = $AlgoliaApikey" >> "$CONFIG_FILE_PATH"
+echo "AlgoliaAppId = $AlgoliaAppId" >> "$CONFIG_FILE_PATH"
+echo "AlgoliaApikey = $AlgoliaApikey" >> "$CONFIG_FILE_PATH"
 #echo "#include "Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.debug.xcconfig"" >> "$CONFIG_FILE_PATH"
 #echo "#include "Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"" >> "$CONFIG_FILE_PATH"
 
