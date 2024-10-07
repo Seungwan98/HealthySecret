@@ -6,7 +6,7 @@ FOLDER_PATH="/Volumes/workspace/repository/HealthySecret"
 
 
 # *.xconfig 파일 이름
-PODS_XCCONFIG_RELEASE_PATH="/Volumes/workspace/repository/HealthySecretPods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"
+PODS_XCCONFIG_RELEASE_PATH="/Volumes/workspace/repository/HealthySecret/Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"
 
 CONFIG_FILENAME="Config.xcconfig"
 pod init
