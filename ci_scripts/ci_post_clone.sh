@@ -2,11 +2,11 @@
 
 #  ci_post_clone.sh
 # *.xconfig 파일이 생성될 폴더 경로
-FOLDER_PATH="/Volumes/workspace/repository"
+FOLDER_PATH="/Volumes/workspace/repository/HealthySecret"
 
 
 # *.xconfig 파일 이름
-PODS_XCCONFIG_RELEASE_PATH="/Volumes/workspace/repository/Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"
+PODS_XCCONFIG_RELEASE_PATH="/Volumes/workspace/repository/HealthySecretPods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"
 
 CONFIG_FILENAME="Config.xcconfig"
 pod init
