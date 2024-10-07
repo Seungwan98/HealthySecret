@@ -9,6 +9,9 @@ FOLDER_PATH="/Volumes/workspace/repository"
 PODS_XCCONFIG_RELEASE_PATH="/Volumes/workspace/repository/Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"
 
 CONFIG_FILENAME="Config.xcconfig"
+pod init
+pod install
+pod update
 
 # *.xconfig 파일의 전체 경로 계산
 CONFIG_FILE_PATH="$FOLDER_PATH/$CONFIG_FILENAME"
