@@ -11,7 +11,10 @@ Pods/
 *.xcworkspace
 #CocoaPods
 Pods
+*Podfile.lock
+/Podfile.lock
 Podfile.lock
+
 
 ### Swift ###
 # Xcode
