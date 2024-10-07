@@ -7,9 +7,6 @@ FOLDER_PATH="/Volumes/workspace/repository"
 
 # *.xconfig 파일 이름
 
-brew install cocoapods
-
-pod install
 CONFIG_FILENAME="Config.xcconfig"
 
 # *.xconfig 파일의 전체 경로 계산
