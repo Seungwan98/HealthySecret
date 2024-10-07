@@ -7,7 +7,7 @@ FOLDER_PATH="/Volumes/workspace/repository"
 
 # *.xconfig 파일 이름
 PODS_XCCONFIG_RELEASE_PATH="/Volumes/workspace/repository/Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"
-PODS_XCCONFIG_DEBUG_PATH="/Volumes/workspace/repository/Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.debug.xcconfig"
+
 CONFIG_FILENAME="Config.xcconfig"
 
 # *.xconfig 파일의 전체 경로 계산
@@ -17,7 +17,6 @@ CONFIG_FILE_PATH="$FOLDER_PATH/$CONFIG_FILENAME"
 echo "AlgoliaAppId = $AlgoliaAppId" >> "$CONFIG_FILE_PATH"
 echo "AlgoliaApikey = $AlgoliaApikey" >> "$CONFIG_FILE_PATH"
 echo "#include \"$PODS_XCCONFIG_RELEASE_PATH\"" >> "$CONFIG_FILE_PATH"
-echo "#include \"$PODS_XCCONFIG_DEBUG_PATH\"" >> "$CONFIG_FILE_PATH"
 
 
 
