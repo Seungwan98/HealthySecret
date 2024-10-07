@@ -23,6 +23,7 @@
 		600DE9762B62A00A00D5D797 /* ExerciseVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600DE9752B62A00A00D5D797 /* ExerciseVM.swift */; };
 		600DE9782B62A12000D5D797 /* ExerciseCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600DE9772B62A12000D5D797 /* ExerciseCoordinator.swift */; };
 		600DE97C2B67A23E00D5D797 /* ExerciseDetialVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600DE97B2B67A23E00D5D797 /* ExerciseDetialVM.swift */; };
+		6010DC442CB42D7A00AC07CB /* ci_post_clone.sh in Resources */ = {isa = PBXBuildFile; fileRef = 6026E5BB2CABDD1400A22225 /* ci_post_clone.sh */; };
 		6026E5BF2CADA7A600A22225 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6026E5BE2CADA7A600A22225 /* Config.xcconfig */; };
 		6052D5C52BEBF1410085B826 /* DiaryCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6052D5C42BEBF1410085B826 /* DiaryCoordinator.swift */; };
 		6058F6322CA1BF09000C393F /* 활동적음.png in Resources */ = {isa = PBXBuildFile; fileRef = 6058F6312CA1BF09000C393F /* 활동적음.png */; };
@@ -1017,6 +1018,7 @@
 				60A653ED2C9EADF100659A8D /* GmarketSansTTFLight.ttf in Resources */,
 				600DE9682B60E1C000D5D797 /* check.png in Resources */,
 				606343B12B84961A0084E2CC /* edmitSnack.png in Resources */,
+				6010DC442CB42D7A00AC07CB /* ci_post_clone.sh in Resources */,
 				60A654002C9EAF4800659A8D /* secondDout.png in Resources */,
 				60EF3C8B2BDC34560007862F /* .gitattributes in Resources */,
 				6058F6322CA1BF09000C393F /* 활동적음.png in Resources */,
