@@ -9,7 +9,11 @@ FOLDER_PATH="/Volumes/workspace/repository/HealthySecret"
 PODS_XCCONFIG_RELEASE_PATH="/Volumes/workspace/repository/HealthySecret/Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"
 
 CONFIG_FILENAME="Config.xcconfig"
-pod init
+# Install CocoaPods using Homebrew.
+brew install cocoapods
+
+
+# Install dependencies you manage with CocoaPods.
 pod install
 pod update
 
