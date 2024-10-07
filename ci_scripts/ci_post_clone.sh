@@ -6,7 +6,7 @@ FOLDER_PATH="/Volumes/workspace/repository"
 
 
 # *.xconfig 파일 이름
-PODS_XCCONFIG_RELEASE_PATH="/Volumes/workspace/repository/HealthySecret/Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"
+PODS_XCCONFIG_RELEASE_PATH="/Volumes/workspace/repository/Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"
 
 CONFIG_FILENAME="Config.xcconfig"
 # Install CocoaPods using Homebrew.
