@@ -13,14 +13,13 @@ brew install cocoapods
 pod install
 CONFIG_FILENAME="Config.xcconfig"
 
-# *.xconfig 파일의 전체 경로 계산
-CONFIG_FILE_PATH="$FOLDER_PATH/$CONFIG_FILENAME"
-
 # 환경 변수에서 값을 가져와서 *.xconfig 파일에 추가하기
 echo "AlgoliaAppId = $AlgoliaAppId" >> "$CONFIG_FILE_PATH"
 echo "AlgoliaApikey = $AlgoliaApikey" >> "$CONFIG_FILE_PATH"
-echo "#include \"$PODS_XCCONFIG_RELEASE_PATH\"" >> "$CONFIG_FILE_PATH"
-echo "#include \"$PODS_XCCONFIG_DEBUG_PATH\"" >> "$CONFIG_FILE_PATH"
+echo "#include "/Volumes/workspace/repository/Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.debug.xcconfig
+"" >> "$CONFIG_FILE_PATH"
+echo "#include "/Volumes/workspace/repository/Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig
+"" >> "$CONFIG_FILE_PATH"
 
 
 
