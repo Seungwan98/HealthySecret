@@ -1296,6 +1296,7 @@
 /* Begin XCBuildConfiguration section */
 		6094C5472ACD915300D62B0A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 232DD235C0F2F0EE526B207C /* Pods-HealthySecret.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1358,6 +1359,7 @@
 		};
 		6094C5482ACD915300D62B0A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 73A8D18A538DCF84505EEF9C /* Pods-HealthySecret.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
