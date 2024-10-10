@@ -1903,7 +1903,7 @@
 		414137E3840ACBA8A48D8016B3AF1DFF /* URLSessionConfiguration+Alamofire.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "URLSessionConfiguration+Alamofire.swift"; path = "Source/Extensions/URLSessionConfiguration+Alamofire.swift"; sourceTree = "<group>"; };
 		41B64A1DC6A52619CAF9D805900245D7 /* DictionarySearchResponse.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DictionarySearchResponse.swift; path = Sources/AlgoliaSearchClient/Models/Dictionaries/DictionarySearchResponse.swift; sourceTree = "<group>"; };
 		41F6225B6593CDDAA6AC47F331DDB3B9 /* Date+Dispatch.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Date+Dispatch.swift"; path = "RxSwift/Date+Dispatch.swift"; sourceTree = "<group>"; };
-		421A71E99CABDA66BA58E10B48AFEE64 /* Pods_HealthySecret.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthySecret.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		421A71E99CABDA66BA58E10B48AFEE64 /* Pods-HealthySecret */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-HealthySecret"; path = Pods_HealthySecret.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4257EC39B80E4A705C0931930128316B /* URLConvertible+URLRequestConvertible.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "URLConvertible+URLRequestConvertible.swift"; path = "Source/Core/URLConvertible+URLRequestConvertible.swift"; sourceTree = "<group>"; };
 		42856A9B9E5127FACE2060775DB85A66 /* SdkError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SdkError.swift; path = Sources/KakaoSDKCommon/common/common/SdkError.swift; sourceTree = "<group>"; };
 		430DFA9C9706E36A290FC14D2385E10B /* EventConstructionError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = EventConstructionError.swift; path = Sources/AlgoliaSearchClient/Models/Insights/EventConstructionError.swift; sourceTree = "<group>"; };
@@ -4588,7 +4588,7 @@
 				1353D6A467F43A6A3EA21D310BD35A31 /* KakaoSDKUser */,
 				C3F44C782D64D7EB20B61CE3844EBFAD /* Kingfisher */,
 				C298ABB78D9B05529B89D8322DB2E7B0 /* Kingfisher-Kingfisher */,
-				421A71E99CABDA66BA58E10B48AFEE64 /* Pods_HealthySecret.framework */,
+				421A71E99CABDA66BA58E10B48AFEE64 /* Pods-HealthySecret */,
 				BC432FD48A5932251F1CAFBC4BF74894 /* RxCocoa */,
 				4C7573034822F093BCAF13EC6B7B8454 /* RxGesture */,
 				FF8B264DFE802855D5D67E7CDDABFC3C /* RxRelay */,
@@ -5289,7 +5289,7 @@
 			);
 			name = "Pods-HealthySecret";
 			productName = Pods_HealthySecret;
-			productReference = 421A71E99CABDA66BA58E10B48AFEE64 /* Pods_HealthySecret.framework */;
+			productReference = 421A71E99CABDA66BA58E10B48AFEE64 /* Pods-HealthySecret */;
 			productType = "com.apple.product-type.framework";
 		};
 		61118587C74B2D3D0EFFE67F0116FE65 /* KakaoSDKNavi */ = {

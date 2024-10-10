@@ -10,7 +10,7 @@
 Pods/
 *.xcworkspace
 #CocoaPods
-Pods
+Pods/
 *Podfile.lock
 /Podfile.lock
 Podfile.lock
@@ -20,7 +20,8 @@ Podfile.lock
 # Xcode
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
-
+ConfigRelease.xcconfig
+ConfigDebug.xcconfig
 ## User settings
 xcuserdata/
 
