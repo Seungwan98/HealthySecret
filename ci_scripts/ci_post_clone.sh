@@ -10,8 +10,8 @@ PODS_PATH="/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.x
 #brew install cocoapods
 #
 ## Install dependencies you manage with CocoaPods.
-#pod install
-#pod update
+pod install
+pod update
 
 # *.xconfig 파일의 전체 경로 계산
 #CONFIG_FILE_PATH="$FOLDER_PATH/$CONFIG_FILENAME"
