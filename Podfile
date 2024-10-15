@@ -47,4 +47,3 @@ post_install do |installer|
         end
     end
 end
-출처: https://thoonk.tistory.com/103 [thoonk's record:티스토리]
