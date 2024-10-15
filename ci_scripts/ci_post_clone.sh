@@ -7,7 +7,7 @@ PODS_PATH="/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.x
 
 #CONFIG_FILENAME="ConfigRelease.xcconfig"
 ## Install CocoaPods using Homebrew.
-#brew install cocoapods
+brew install cocoapods
 #
 ## Install dependencies you manage with CocoaPods.
 pod install
