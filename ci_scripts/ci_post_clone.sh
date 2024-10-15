@@ -3,7 +3,7 @@
 #  ci_post_clone.sh
 # *.xconfig 파일이 생성될 폴더 경로
 #FOLDER_PATH="/Volumes/workspace/repository"
-PODS_PATH="/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"
+PODS_PATH="/Volumes/workspace/repository/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"
 
 #CONFIG_FILENAME="ConfigRelease.xcconfig"
 ## Install CocoaPods using Homebrew.
