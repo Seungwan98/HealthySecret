@@ -200,14 +200,11 @@
 		232DD235C0F2F0EE526B207C /* Pods-HealthySecret.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthySecret.debug.xcconfig"; path = "Target Support Files/Pods-HealthySecret/Pods-HealthySecret.debug.xcconfig"; sourceTree = "<group>"; };
 		600399892BDB9C7F0030D9EF /* ProfileHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeaderView.swift; sourceTree = "<group>"; };
 		60050C6E2AF8E399000FAAA4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		600DE92A2B5043C000D5D797 /* FSCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FSCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		600DE92C2B50443400D5D797 /* FSCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FSCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		600DE92E2B511E9D00D5D797 /* CalendarVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarVM.swift; sourceTree = "<group>"; };
 		600DE9302B557EC400D5D797 /* SignUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
 		600DE9322B55802A00D5D797 /* SignUpVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpVM.swift; sourceTree = "<group>"; };
 		600DE94A2B57CC1C00D5D797 /* womenButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = womenButton.png; sourceTree = "<group>"; };
 		600DE94B2B57CC1C00D5D797 /* menButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menButton.png; sourceTree = "<group>"; };
-		600DE9572B59250500D5D797 /* KakaoSDKAuth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = KakaoSDKAuth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		600DE95B2B5935F400D5D797 /* KakaoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoService.swift; sourceTree = "<group>"; };
 		600DE9672B60E1C000D5D797 /* check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = check.png; sourceTree = "<group>"; };
 		600DE96F2B610C7100D5D797 /* add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add.png; sourceTree = "<group>"; };
@@ -216,8 +213,6 @@
 		600DE9752B62A00A00D5D797 /* ExerciseVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseVM.swift; sourceTree = "<group>"; };
 		600DE9772B62A12000D5D797 /* ExerciseCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseCoordinator.swift; sourceTree = "<group>"; };
 		600DE97B2B67A23E00D5D797 /* ExerciseDetialVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseDetialVM.swift; sourceTree = "<group>"; };
-		600DE9832B695FF400D5D797 /* FSCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FSCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		600DE9872B69602500D5D797 /* FSCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FSCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6026E5BB2CABDD1400A22225 /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 		6026E5BE2CADA7A600A22225 /* ConfigRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ConfigRelease.xcconfig; sourceTree = "<group>"; };
 		6052D5C42BEBF1410085B826 /* DiaryCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryCoordinator.swift; sourceTree = "<group>"; };
@@ -271,9 +266,6 @@
 		609C06482BBD733500D61F53 /* AddFeedVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFeedVM.swift; sourceTree = "<group>"; };
 		609C064A2BBE9C2400D61F53 /* ComentsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComentsVC.swift; sourceTree = "<group>"; };
 		609C064C2BBEE3B500D61F53 /* AppleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleService.swift; sourceTree = "<group>"; };
-		60A37FF92B69609400C9A2E6 /* FSCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FSCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		60A37FFB2B6961C900C9A2E6 /* FSCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FSCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		60A380012B6963A500C9A2E6 /* FSCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FSCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		60A380042B6A37D800C9A2E6 /* Custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Custom.swift; sourceTree = "<group>"; };
 		60A380062B6A5F6B00C9A2E6 /* EditExerciseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditExerciseVC.swift; sourceTree = "<group>"; };
 		60A380082B6A663E00C9A2E6 /* EditExerciseVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditExerciseVM.swift; sourceTree = "<group>"; };
@@ -916,14 +908,6 @@
 			isa = PBXGroup;
 			children = (
 				60EF3C902BDF564A0007862F /* AdSupport.framework */,
-				60A380012B6963A500C9A2E6 /* FSCalendar.framework */,
-				60A37FFB2B6961C900C9A2E6 /* FSCalendar.framework */,
-				60A37FF92B69609400C9A2E6 /* FSCalendar.framework */,
-				600DE9872B69602500D5D797 /* FSCalendar.framework */,
-				600DE9832B695FF400D5D797 /* FSCalendar.framework */,
-				600DE9572B59250500D5D797 /* KakaoSDKAuth.framework */,
-				600DE92C2B50443400D5D797 /* FSCalendar.framework */,
-				600DE92A2B5043C000D5D797 /* FSCalendar.framework */,
 				95A5C8D470816254C9CC870E /* Pods_HealthySecret.framework */,
 			);
 			name = Frameworks;
