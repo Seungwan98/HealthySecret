@@ -521,9 +521,9 @@
 		6094C5292ACD915300D62B0A = {
 			isa = PBXGroup;
 			children = (
+				6026E5BA2CABDCF300A22225 /* ci_scripts */,
 				60DF56E02CB821B600E1F7CA /* ConfigDebug.xcconfig */,
 				6026E5BE2CADA7A600A22225 /* ConfigRelease.xcconfig */,
-				6026E5BA2CABDCF300A22225 /* ci_scripts */,
 				60EF3C8A2BDC34560007862F /* .gitattributes */,
 				6094C5342ACD915300D62B0A /* HealthySecret */,
 				6094C5332ACD915300D62B0A /* Products */,
