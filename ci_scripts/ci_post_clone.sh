@@ -17,9 +17,9 @@ CONFIG_FILE_PATH="$FOLDER_PATH/$CONFIG_FILENAME"
 PODS_FILE_PATH="$FOLDER_PATH/$PODS_PATH"
 
 # 환경 변수에서 값을 가져와서 *.xconfig 파일에 추가하기
-echo "AlgoliaAppId = $AlgoliaAppId" >> "$PODS_PATH"
-echo "AlgoliaApikey = $AlgoliaApikey" >> "$PODS_PATH"
-echo "#include "$PODS_FILE_PATH"" >> "$PODS_PATH"
+echo "AlgoliaAppId = $AlgoliaAppId" >> "$CONFIG_FILE_PATH"
+echo "AlgoliaApikey = $AlgoliaApikey" >> "$CONFIG_FILE_PATH"
+echo "#include "$PODS_FILE_PATH"" >> "$CONFIG_FILE_PATH"
 
 
 
