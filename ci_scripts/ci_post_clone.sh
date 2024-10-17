@@ -6,16 +6,16 @@ PATH="/Volumes/workspace/repository"
 CONFIGPATH="ConfigRelease.xcconfig"
 PODPATH="Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"
 
-FULLPODPATH="$PATH/$PODPATH"
+FULLPODPATH="$PODPATH"
 FULLCONFIGPATH="$PATH/$CONFIGPATH"
 
 
 echo "#include $FULLPODPATH" >> "$FULLCONFIGPATH"
 
 
-echo "AlgoliaAppId = $(AlgoliaAppId)" >> "$FULLCONFIGPATH"
+echo "AlgoliaAppId = $AlgoliaAppId" >> "$FULLCONFIGPATH"
 
-echo "AlgoliaApikey = $(AlgoliaApikey)" >> "$FULLCONFIGPATH"
+echo "AlgoliaApikey = $AlgoliaApikey" >> "$FULLCONFIGPATH"
 
 if [ -f "$FULLPODPATH" ]; then
     echo "$FULLPODPATH exists."
