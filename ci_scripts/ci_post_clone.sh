@@ -9,8 +9,10 @@ PODPATH="Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release
 FULLPODPATH="$PODPATH"
 FULLCONFIGPATH="$PATH/$CONFIGPATH"
 
-
-echo "#include $FULLPODPATH" >> "$FULLCONFIGPATH"
+cat <<'EOF' > "/Volumes/workspace/repository/ConfigRelease.xcconfig"
+#include "Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"
+EOF
+#echo "#include $FULLPODPATH" >> "$FULLCONFIGPATH"
 
 
 echo "AlgoliaAppId = $AlgoliaAppId" >> "$FULLCONFIGPATH"
