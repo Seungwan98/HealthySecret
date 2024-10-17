@@ -13,7 +13,7 @@ FULLPODPATH="$PATH/$PODPATH"
 FULLCONFIGPATH="$PATH/$CONFIGPATH"
 
 
-echo "#include "$FULLPODPATH"" >> "$FULLCONFIGPATH"
+echo "#include $FULLPODPATH" >> "$FULLCONFIGPATH"
 
 
 echo "AlgoliaAppId = $(AlgoliaAppId)" >> "$FULLCONFIGPATH"
