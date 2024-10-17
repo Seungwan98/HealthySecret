@@ -3,8 +3,8 @@ brew install cocoapods
 pod install
 # Secrets 경로 지정
 PATH="/Volumes/workspace/repository"
-CONFIGPATH="/ConfigRelease.xcconfig"
-PODPATH="/Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"
+CONFIGPATH="ConfigRelease.xcconfig"
+PODPATH="Pods/Target Support Files/Pods-HealthySecret/Pods-HealthySecret.release.xcconfig"
 
 FULLPODPATH="$PATH/$PODPATH"
 FULLCONFIGPATH="$PATH/$CONFIGPATH"
