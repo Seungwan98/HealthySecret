@@ -6,23 +6,14 @@ target 'HealthySecret' do
   use_frameworks!
 
   # Pods for HealthySecret
-
  	pod 'KakaoSDK'
-
-
-
  	pod 'SwiftyJSON'
-  
  	pod 'RxSwift', '6.6.0'
    	pod 'RxCocoa', '6.6.0'
 	pod 'RxGesture'
 	pod 'Charts'
-
   	 pod 'Kingfisher', '~> 7.0'
-
    	 pod 'FSCalendar'
-
-    	
     	pod 'SnapKit'
 	pod 'AlgoliaSearchClient', '~> 8.0'
 end	
