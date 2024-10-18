@@ -11,7 +11,7 @@ FULLCONFIGPATH="$PATH/$CONFIGPATH"
 
 
 
-echo "#include $FULLPODPATH" >> "$FULLCONFIGPATH"
+echo "#include \"$0FULLPODPATH\"" >> "$FULLCONFIGPATH"
 
 
 echo "AlgoliaAppId = $AlgoliaAppId" >> "$FULLCONFIGPATH"
