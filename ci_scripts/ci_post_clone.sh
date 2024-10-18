@@ -11,19 +11,13 @@ FULLCONFIGPATH="$PATH/$CONFIGPATH"
 
 
 
-echo "#include "$FULLPODPATH"" >> "$FULLCONFIGPATH"
+echo "#include $FULLPODPATH" >> "$FULLCONFIGPATH"
 
 
 echo "AlgoliaAppId = $AlgoliaAppId" >> "$FULLCONFIGPATH"
 
 echo "AlgoliaApikey = $AlgoliaApikey" >> "$FULLCONFIGPATH"
 
-if [ -f "$FULLPODPATH" ]; then
-    echo "$FULLPODPATH exists."
-fi
-if [ -f "$FULLCONFIGPATH" ]; then
-    echo "$FULLCONFIGPATH exists."
-fi
 
 
 
