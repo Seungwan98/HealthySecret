@@ -27,6 +27,8 @@
 		6052D5C52BEBF1410085B826 /* DiaryCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6052D5C42BEBF1410085B826 /* DiaryCoordinator.swift */; };
 		6058F6322CA1BF09000C393F /* 활동적음.png in Resources */ = {isa = PBXBuildFile; fileRef = 6058F6312CA1BF09000C393F /* 활동적음.png */; };
 		6058F6342CA1BF72000C393F /* 활동많음.png in Resources */ = {isa = PBXBuildFile; fileRef = 6058F6332CA1BF72000C393F /* 활동많음.png */; };
+		605AE82E2CC2C53300C7604A /* appleLogin.png in Resources */ = {isa = PBXBuildFile; fileRef = 605AE82D2CC2C53200C7604A /* appleLogin.png */; };
+		605AE8302CC2C54F00C7604A /* kakaoLogin.png in Resources */ = {isa = PBXBuildFile; fileRef = 605AE82F2CC2C54F00C7604A /* kakaoLogin.png */; };
 		606343B12B84961A0084E2CC /* edmitSnack.png in Resources */ = {isa = PBXBuildFile; fileRef = 606343B02B84961A0084E2CC /* edmitSnack.png */; };
 		606343B52B84976D0084E2CC /* edmitDinner.png in Resources */ = {isa = PBXBuildFile; fileRef = 606343B22B84976D0084E2CC /* edmitDinner.png */; };
 		606343B72B84976D0084E2CC /* edmitBreakfast.png in Resources */ = {isa = PBXBuildFile; fileRef = 606343B42B84976D0084E2CC /* edmitBreakfast.png */; };
@@ -97,7 +99,6 @@
 		60A654002C9EAF4800659A8D /* secondDout.png in Resources */ = {isa = PBXBuildFile; fileRef = 60A653FF2C9EAF4800659A8D /* secondDout.png */; };
 		60A654022C9EAF5400659A8D /* thirdDout.png in Resources */ = {isa = PBXBuildFile; fileRef = 60A654012C9EAF5300659A8D /* thirdDout.png */; };
 		60A654042C9EAF7F00659A8D /* ic_health.png in Resources */ = {isa = PBXBuildFile; fileRef = 60A654032C9EAF7F00659A8D /* ic_health.png */; };
-		60A654062C9EAFC200659A8D /* kakaoLogin.png in Resources */ = {isa = PBXBuildFile; fileRef = 60A654052C9EAFC200659A8D /* kakaoLogin.png */; };
 		60A654072C9EB7F700659A8D /* Pretendard-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60A653D92C9EAD0A00659A8D /* Pretendard-ExtraBold.otf */; };
 		60A654082C9EB7F700659A8D /* Pretendard-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60A653DD2C9EAD0A00659A8D /* Pretendard-Light.otf */; };
 		60A654092C9EB7F700659A8D /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60A653DF2C9EAD0A00659A8D /* Pretendard-Medium.otf */; };
@@ -182,7 +183,6 @@
 		60EF3C972BE8B04D0007862F /* FollowsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C962BE8B04D0007862F /* FollowsCoordinator.swift */; };
 		60EF3C9D2BE9E4CB0007862F /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C9C2BE9E4CB0007862F /* ProfileCoordinator.swift */; };
 		60EF3C9F2BEA2BD10007862F /* CustomBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EF3C9E2BEA2BD10007862F /* CustomBackgroundView.swift */; };
-		60FC85D12BF33B0F00471983 /* appleLogin.png in Resources */ = {isa = PBXBuildFile; fileRef = 60FC85D02BF33B0F00471983 /* appleLogin.png */; };
 		60FC85DC2BF33B5F00471983 /* 일반적_fill.png in Resources */ = {isa = PBXBuildFile; fileRef = 60FC85D62BF33B5F00471983 /* 일반적_fill.png */; };
 		60FC85E12BF468CE00471983 /* AlertHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC85E02BF468CE00471983 /* AlertHelper.swift */; };
 		60FC85E72BF523B900471983 /* mainImage.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 60FC85E62BF523B900471983 /* mainImage.jpeg */; };
@@ -217,6 +217,8 @@
 		6052D5C42BEBF1410085B826 /* DiaryCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryCoordinator.swift; sourceTree = "<group>"; };
 		6058F6312CA1BF09000C393F /* 활동적음.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "활동적음.png"; sourceTree = "<group>"; };
 		6058F6332CA1BF72000C393F /* 활동많음.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "활동많음.png"; path = "HealthySecret/Source/Image/signUp/활동많음.png"; sourceTree = SOURCE_ROOT; };
+		605AE82D2CC2C53200C7604A /* appleLogin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appleLogin.png; sourceTree = "<group>"; };
+		605AE82F2CC2C54F00C7604A /* kakaoLogin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = kakaoLogin.png; path = ../../../../../../Downloads/kakaoLogin.png; sourceTree = "<group>"; };
 		606343B02B84961A0084E2CC /* edmitSnack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edmitSnack.png; sourceTree = "<group>"; };
 		606343B22B84976D0084E2CC /* edmitDinner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edmitDinner.png; sourceTree = "<group>"; };
 		606343B42B84976D0084E2CC /* edmitBreakfast.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edmitBreakfast.png; sourceTree = "<group>"; };
@@ -299,7 +301,6 @@
 		60A653FF2C9EAF4800659A8D /* secondDout.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = secondDout.png; sourceTree = "<group>"; };
 		60A654012C9EAF5300659A8D /* thirdDout.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thirdDout.png; sourceTree = "<group>"; };
 		60A654032C9EAF7F00659A8D /* ic_health.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_health.png; sourceTree = "<group>"; };
-		60A654052C9EAFC200659A8D /* kakaoLogin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = kakaoLogin.png; path = ../../../../../../Downloads/kakaoLogin.png; sourceTree = "<group>"; };
 		60A654102C9EB8CB00659A8D /* FoodDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDTO.swift; sourceTree = "<group>"; };
 		60B36B0A2BF6EB8B00E01335 /* SplashVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashVC.swift; sourceTree = "<group>"; };
 		60B36B0C2BF6EBBE00E01335 /* SplashVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashVM.swift; sourceTree = "<group>"; };
@@ -370,7 +371,6 @@
 		60EF3C962BE8B04D0007862F /* FollowsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsCoordinator.swift; sourceTree = "<group>"; };
 		60EF3C9C2BE9E4CB0007862F /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
 		60EF3C9E2BEA2BD10007862F /* CustomBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBackgroundView.swift; sourceTree = "<group>"; };
-		60FC85D02BF33B0F00471983 /* appleLogin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appleLogin.png; path = ../../../../../../Downloads/appleLogin.png; sourceTree = "<group>"; };
 		60FC85D62BF33B5F00471983 /* 일반적_fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "일반적_fill.png"; path = "../일반적_fill.png"; sourceTree = "<group>"; };
 		60FC85E02BF468CE00471983 /* AlertHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertHelper.swift; sourceTree = "<group>"; };
 		60FC85E62BF523B900471983 /* mainImage.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = mainImage.jpeg; path = ../mainImage.jpeg; sourceTree = "<group>"; };
@@ -898,8 +898,8 @@
 			isa = PBXGroup;
 			children = (
 				60FC85E62BF523B900471983 /* mainImage.jpeg */,
-				60FC85D02BF33B0F00471983 /* appleLogin.png */,
-				60A654052C9EAFC200659A8D /* kakaoLogin.png */,
+				605AE82D2CC2C53200C7604A /* appleLogin.png */,
+				605AE82F2CC2C54F00C7604A /* kakaoLogin.png */,
 			);
 			path = login;
 			sourceTree = "<group>";
@@ -1010,7 +1010,9 @@
 				600DE9702B610C7100D5D797 /* add.png in Resources */,
 				60FC85DC2BF33B5F00471983 /* 일반적_fill.png in Resources */,
 				60A653FE2C9EAF3A00659A8D /* firstDout.png in Resources */,
+				605AE8302CC2C54F00C7604A /* kakaoLogin.png in Resources */,
 				60FC85E72BF523B900471983 /* mainImage.jpeg in Resources */,
+				605AE82E2CC2C53300C7604A /* appleLogin.png in Resources */,
 				606343B72B84976D0084E2CC /* edmitBreakfast.png in Resources */,
 				60A653FC2C9EAF2D00659A8D /* edmitLunch.png in Resources */,
 				60A653E92C9EADF100659A8D /* GmarketSansBold.otf in Resources */,
@@ -1019,9 +1021,7 @@
 				600DE94D2B57CC1C00D5D797 /* menButton.png in Resources */,
 				60A653FA2C9EAF1D00659A8D /* snack.png in Resources */,
 				60A654042C9EAF7F00659A8D /* ic_health.png in Resources */,
-				60A654062C9EAFC200659A8D /* kakaoLogin.png in Resources */,
 				6094C5422ACD915300D62B0A /* Assets.xcassets in Resources */,
-				60FC85D12BF33B0F00471983 /* appleLogin.png in Resources */,
 				60050C6F2AF8E399000FAAA4 /* GoogleService-Info.plist in Resources */,
 				60BC990C2B3583340013FAD9 /* tableBackGround.png in Resources */,
 				606343B52B84976D0084E2CC /* edmitDinner.png in Resources */,
