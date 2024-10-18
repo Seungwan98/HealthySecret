@@ -218,7 +218,7 @@
 		6058F6312CA1BF09000C393F /* 활동적음.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "활동적음.png"; sourceTree = "<group>"; };
 		6058F6332CA1BF72000C393F /* 활동많음.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "활동많음.png"; path = "HealthySecret/Source/Image/signUp/활동많음.png"; sourceTree = SOURCE_ROOT; };
 		605AE82D2CC2C53200C7604A /* appleLogin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appleLogin.png; sourceTree = "<group>"; };
-		605AE82F2CC2C54F00C7604A /* kakaoLogin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = kakaoLogin.png; path = ../../../../../../Downloads/kakaoLogin.png; sourceTree = "<group>"; };
+		605AE82F2CC2C54F00C7604A /* kakaoLogin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kakaoLogin.png; sourceTree = "<group>"; };
 		606343B02B84961A0084E2CC /* edmitSnack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edmitSnack.png; sourceTree = "<group>"; };
 		606343B22B84976D0084E2CC /* edmitDinner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edmitDinner.png; sourceTree = "<group>"; };
 		606343B42B84976D0084E2CC /* edmitBreakfast.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edmitBreakfast.png; sourceTree = "<group>"; };
